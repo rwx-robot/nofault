@@ -22,3 +22,11 @@ export default tseslint.config(
       'prefer-const': 'error',
       // 装饰器元数据拿到的目标类型在 TS 里只能表达为 `Function`
       // （`Reflect.getMetadata` 的签名就是如此），把它当成"不安全"并不合理
+      '@typescript-eslint/no-unsafe-function-type': 'off',
+    },
+  },
+  {
+    // 构建/压测脚本的输出就是给人看的界面，禁 console 等于不让说话
+    files: ['scripts/**/*.mjs', 'benchmarks/**/*.mjs'],
+    rules: { 'no-console': 'off' },
+  },
