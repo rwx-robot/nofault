@@ -14,3 +14,11 @@ export default tseslint.config(
       ecmaVersion: 2022,
       sourceType: 'module',
     },
+    rules: {
+      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
+      eqeqeq: ['error', 'always'],
+      'prefer-const': 'error',
+      // 装饰器元数据拿到的目标类型在 TS 里只能表达为 `Function`
+      // （`Reflect.getMetadata` 的签名就是如此），把它当成"不安全"并不合理
