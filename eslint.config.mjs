@@ -27,3 +27,12 @@ export default tseslint.config(
   },
   {
     // 构建/压测脚本的输出就是给人看的界面，禁 console 等于不让说话
+    files: ['scripts/**/*.mjs', 'benchmarks/**/*.mjs'],
+    rules: { 'no-console': 'off' },
+  },
+  {
+    // CLI 入口是 CJS 薄壳（`bin` 必须在任何打包器之外可执行），require 是唯一选择
+    files: ['packages/*/bin/**/*.js'],
+    rules: { '@typescript-eslint/no-require-imports': 'off' },
+  },
+  {
