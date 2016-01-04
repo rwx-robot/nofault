@@ -15,3 +15,12 @@
     "clean": "node scripts/clean.mjs",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{ts,mjs,json,md}\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "example": "node scripts/run-example.mjs",
+    "bench": "node scripts/run-bench.mjs"
+  },
+  "devDependencies": {
