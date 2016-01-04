@@ -1,0 +1,41 @@
+{
+  "name": "nofault-monorepo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "nofault - a Node.js microservice framework following Node.js/NestJS conventions",
+  "license": "MIT",
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "node scripts/build-packages.mjs",
+    "clean": "node scripts/clean.mjs",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write \"**/*.{ts,mjs,json,md}\"",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "example": "node scripts/run-example.mjs",
+    "bench": "node scripts/run-bench.mjs"
+  },
+  "devDependencies": {
+    "@eslint/js": "^9.11.0",
+    "@swc/core": "^1.16.2",
+    "@types/node": "^22.7.0",
+    "@vitest/coverage-v8": "^2.1.1",
+    "eslint": "^9.11.0",
+    "globals": "^15.9.0",
+    "prettier": "^3.3.3",
+    "reflect-metadata": "^0.2.2",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2",
+    "typescript-eslint": "^8.7.0",
+    "unplugin-swc": "^1.6.0",
+    "vitest": "^2.1.1"
+  }
+}
