@@ -1,0 +1,21 @@
+# nofault
+
+> 严格遵循 **Node.js / NestJS 生态规范**的 Node.js 微服务框架，参考行业最佳实践设计。
+
+**当前版本：v0.1.0（内核雏形）**
+
+---
+
+## 是什么
+
+nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约定优于配置、内置服务治理。
+
+| 能力 | nofault |
+| --- | --- |
+| 结构化日志 | `@nofault/logger`（v0.1.0） |
+| 配置加载与热更新 | `@nofault/config`（v0.1.0） |
+| 代码生成 | `nofaultctl`（v0.4.0 计划） |
+| Web 全栈 | `@nofault/rest`（v0.2.0 计划） |
+| RPC | `@nofault/rpc`（v0.6.0 计划） |
+
+## 快速开始
