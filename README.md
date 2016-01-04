@@ -40,3 +40,24 @@ import { Injectable, Module } from '@nofault/core';
 import { createHttpApplication } from '@nofault/http';
 
 @Injectable()
+class GreeterService {
+  greet(name = 'world') {
+    return `Hello, ${name}!`;
+  }
+}
+
+@Module({ providers: [GreeterService] })
+class AppModule {}
+
+const app = await createHttpApplication(AppModule);
+const greeter = await app.get(GreeterService);
+
+app.use((req, res) => {
+  res.end(greeter.greet());
+  return true;
+});
+
+await app.listen(3000);
+```
+
+## 已发布的包
