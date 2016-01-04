@@ -19,3 +19,24 @@ nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约�
 | RPC | `@nofault/rpc`（v0.6.0 计划） |
 
 ## 快速开始
+
+```bash
+pnpm install
+pnpm build
+pnpm test
+pnpm example v0.1.0-hello-kernel
+```
+
+- 运行/使用说明 → [`docs/v0.1.0/RUNNING.md`](./docs/v0.1.0/RUNNING.md) · [`docs/v0.1.0/USAGE.md`](./docs/v0.1.0/USAGE.md)
+- 架构图 → [`docs/v0.1.0/ARCHITECTURE.md`](./docs/v0.1.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.1.0/CHANGELOG.md`](./docs/v0.1.0/CHANGELOG.md)
+- 压测报告 → [`benchmarks/v0.1.0/REPORT.md`](./benchmarks/v0.1.0/REPORT.md)
+
+## 最小的例子
+
+```ts
+import 'reflect-metadata';
+import { Injectable, Module } from '@nofault/core';
+import { createHttpApplication } from '@nofault/http';
+
+@Injectable()
