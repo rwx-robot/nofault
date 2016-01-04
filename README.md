@@ -51,3 +51,29 @@ class AppModule {}
 
 const app = await createHttpApplication(AppModule);
 const greeter = await app.get(GreeterService);
+
+app.use((req, res) => {
+  res.end(greeter.greet());
+  return true;
+});
+
+await app.listen(3000);
+```
+
+## 已发布的包
+
+| 包 | 版本 | 职责 |
+| --- | --- | --- |
+| `@nofault/core` | v0.1.0 | IoC 容器、模块系统、生命周期 |
+| `@nofault/config` | v0.1.0 | 配置加载与热更新 |
+| `@nofault/logger` | v0.1.0 | 分级结构化日志 |
+| `@nofault/http` | v0.1.0 | 底层 HTTP 适配 |
+
+## 版本路线
+
+| Tag | 年 | 主题 |
+| --- | --- | --- |
+| v0.1.0 | 2016 | 内核雏形 |
+| v0.2.0 | 2017 | HTTP 全栈 |
+| v0.3.0 | 2018 | 运行时基座 |
+| v0.4.0 | 2019 | 代码生成 v1 |
