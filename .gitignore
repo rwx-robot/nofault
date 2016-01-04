@@ -3,3 +3,5 @@ logs/
 .tmp/
 dist/
 coverage/
+*.tsbuildinfo
+.DS_Store
