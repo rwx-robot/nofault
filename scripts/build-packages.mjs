@@ -12,3 +12,17 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const packagesDir = join(root, 'packages');
+
+function readPackage(dir) {
+  const pkgPath = join(packagesDir, dir, 'package.json');
+  if (!existsSync(pkgPath)) return null;
+  const pkg = JSON.parse(readFileSync(pkgPath, 'utf8'));
+  return { dir, name: pkg.name, deps: Object.keys(pkg.dependencies ?? {}) };
+}
+
+const packages = readdirSync(packagesDir, { withFileTypes: true })
+  .filter((d) => d.isDirectory())
+  .map((d) => readPackage(d.name))
+  .filter(Boolean);
+
+const nameToDir = new Map(packages.map((p) => [p.name, p.dir]));
