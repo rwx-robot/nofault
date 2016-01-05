@@ -6,3 +6,10 @@
  *   pnpm bench v0.1.0
  *   node scripts/run-bench.mjs v0.1.0 --duration=10 --connections=64
  */
+import { spawnSync } from 'node:child_process';
+import { existsSync, readdirSync } from 'node:fs';
+import { join, dirname, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
