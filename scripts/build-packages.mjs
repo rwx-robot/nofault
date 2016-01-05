@@ -55,3 +55,16 @@ console.log(`[build] order: ${order.map((p) => p.name).join(' -> ')}`);
 for (const p of order) {
   const cwd = join(packagesDir, p.dir);
   const tsconfig = join(cwd, 'tsconfig.build.json');
+  if (!existsSync(tsconfig)) {
+    console.log(`[build] skip ${p.name} (no tsconfig.build.json)`);
+    continue;
+  }
+  console.log(`[build] ${p.name}`);
+  execFileSync(
+    process.platform === 'win32' ? 'npx.cmd' : 'npx',
+    ['tsc', '-p', 'tsconfig.build.json'],
+    { cwd, stdio: 'inherit' },
+  );
+}
+
+console.log('[build] done');
