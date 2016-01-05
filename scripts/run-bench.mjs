@@ -17,3 +17,9 @@ const args = process.argv.slice(2);
 if (args.length === 0) {
   const available = existsSync(join(root, 'benchmarks'))
     ? readdirSync(join(root, 'benchmarks'), { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name)
+    : [];
+  console.log(`用法: node scripts/run-bench.mjs <tag> [args...]\n可用:\n${available.map((n) => `  - ${n}`).join('\n')}`);
+  process.exit(available.length ? 0 : 1);
+}
