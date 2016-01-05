@@ -4,3 +4,5 @@ packages:
 
 # pnpm 10+ 从 workspace 文件读取构建白名单（package.json 的 "pnpm" 字段已废弃）
 allowBuilds:
+  '@swc/core': true
+  esbuild: true
