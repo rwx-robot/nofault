@@ -41,3 +41,17 @@ function visit(p) {
   for (const dep of p.deps) {
     const depDir = nameToDir.get(dep);
     if (!depDir) continue;
+    visit(packages.find((x) => x.name === dep));
+  }
+  visiting.delete(p.name);
+  visited.add(p.name);
+  order.push(p);
+}
+
+for (const p of packages) visit(p);
+
+console.log(`[build] order: ${order.map((p) => p.name).join(' -> ')}`);
+
+for (const p of order) {
+  const cwd = join(packagesDir, p.dir);
+  const tsconfig = join(cwd, 'tsconfig.build.json');
