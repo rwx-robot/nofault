@@ -23,3 +23,9 @@ if (args.length === 0) {
   console.log(`用法: node scripts/run-bench.mjs <tag> [args...]\n可用:\n${available.map((n) => `  - ${n}`).join('\n')}`);
   process.exit(available.length ? 0 : 1);
 }
+
+const tag = args[0];
+const benchDir = join(root, 'benchmarks', tag);
+const script = existsSync(join(benchDir, 'bench.mjs')) ? join(benchDir, 'bench.mjs') : join(benchDir, 'bench.js');
+if (!existsSync(script)) {
+  console.error(`[bench] 未找到脚本: ${script}`);
