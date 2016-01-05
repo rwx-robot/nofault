@@ -10,3 +10,7 @@ const packagesDir = join(root, 'packages');
 for (const dir of readdirSync(packagesDir, { withFileTypes: true })) {
   if (!dir.isDirectory()) continue;
   const dist = join(packagesDir, dir.name, 'dist');
+  if (existsSync(dist)) {
+    rmSync(dist, { recursive: true, force: true });
+    console.log(`[clean] removed ${dir.name}/dist`);
+  }
