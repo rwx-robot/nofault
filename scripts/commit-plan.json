@@ -1166,3 +1166,587 @@
             "architecture notes",
             "running guide",
             "changelog",
+            "benchmark harness",
+            "benchmark report",
+            "lint cleanups"
+          ],
+          "globs": [
+            "examples/v0.5.0-data-user-api/**",
+            "tests/integration/v0.5.0/**",
+            "benchmarks/v0.5.0/**",
+            "docs/v0.5.0/**",
+            "vitest.config.ts",
+            "tsconfig.base.json"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "v0.6.0",
+      "year": 2021,
+      "releaseDate": "2021-12-21",
+      "releaseNotes": "RPC \u6846\u67b6\uff1a\u957f\u5ea6\u524d\u7f00\u5206\u5e27\u3001\u670d\u52a1\u7aef\u5206\u53d1\u3001\u5ba2\u6237\u7aef\u8fde\u63a5\u6c60/\u8d85\u65f6/\u91cd\u8bd5\u3001\u6ce8\u518c\u53d1\u73b0\u4e0e\u52a0\u6743\u8f6e\u8be2\u3001\u62e6\u622a\u5668\u94fe\uff0c\u4ee5\u53ca RPC \u9519\u8bef\u5230 HTTP \u72b6\u6001\u7684\u552f\u4e00\u6620\u5c04\u3002\\n\\n- \u8bf7\u6c42\u5e26 id\uff0c\u4e00\u6761\u8fde\u63a5\u4e0a\u53ef\u5e76\u53d1\u591a\u8c03\u7528\\n- \u53ea\u5bf9\u53ef\u91cd\u8bd5\u7684\u5931\u8d25\u91cd\u8bd5\uff08\u4e1a\u52a1\u9519\u8bef\u4e0d\u91cd\u8bd5\uff09\\n- \u8d85\u65f6\u6620\u5c04\u6210 504 \u800c\u4e0d\u662f\u7b3c\u7edf\u7684 500\\n- 50 \u5e76\u53d1 31,590 ops/sec\uff0c\u6c60\u5316\u7701 3.1 \u500d",
+      "features": [
+        {
+          "id": "F6.0",
+          "title": "framing and protocol",
+          "prefix": "feat(rpc)",
+          "startDate": "2021-01-04",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/rpc",
+            "request and response envelope",
+            "error codes",
+            "json codec",
+            "length prefixed framing",
+            "frame reader",
+            "half packet handling",
+            "sticky packet handling",
+            "oversized frame rejection"
+          ],
+          "globs": [
+            "packages/rpc/package.json",
+            "packages/rpc/tsconfig.json",
+            "packages/rpc/tsconfig.build.json",
+            "packages/rpc/src/protocol.ts"
+          ]
+        },
+        {
+          "id": "F6.1",
+          "title": "rpc server",
+          "prefix": "feat(rpc)",
+          "startDate": "2021-03-01",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "server skeleton",
+            "register handler",
+            "register service from prototype",
+            "per connection frame reader",
+            "dispatch and reply",
+            "method not found response",
+            "handler error response",
+            "interceptor composition with per call context"
+          ],
+          "globs": [
+            "packages/rpc/src/server.ts",
+            "packages/rpc/src/interceptor.ts"
+          ]
+        },
+        {
+          "id": "F6.2",
+          "title": "rpc client with pool, timeout and retry",
+          "prefix": "feat(rpc)",
+          "startDate": "2021-04-26",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "client skeleton",
+            "connection pool",
+            "deduplicate in flight connects",
+            "request id pairing",
+            "timeout handling",
+            "discard connection after timeout",
+            "retry policy",
+            "retryable classification",
+            "pool stats"
+          ],
+          "globs": [
+            "packages/rpc/src/client.ts"
+          ]
+        },
+        {
+          "id": "F6.3",
+          "title": "registry, balancing and http bridge",
+          "prefix": "feat(rpc)",
+          "startDate": "2021-06-07",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "registry interface",
+            "in memory registry",
+            "ttl expiry sweep",
+            "heartbeat",
+            "weighted round robin",
+            "rpc error to http status",
+            "di module for clients",
+            "barrel exports"
+          ],
+          "globs": [
+            "packages/rpc/src/registry.ts",
+            "packages/rpc/src/http-bridge.ts",
+            "packages/rpc/src/rpc.module.ts",
+            "packages/rpc/src/index.ts"
+          ]
+        },
+        {
+          "id": "F6.4",
+          "title": "example, tests, docs and benchmark",
+          "prefix": "docs(v0.6.0)",
+          "startDate": "2021-07-12",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "rpc gateway example",
+            "backend service without framework",
+            "gateway controller with trace id",
+            "bootstrap with registry",
+            "gateway readme",
+            "end to end gateway test",
+            "timeout returns 504",
+            "architecture notes",
+            "running guide",
+            "changelog",
+            "benchmark harness",
+            "benchmark report",
+            "lint cleanups"
+          ],
+          "globs": [
+            "examples/v0.6.0-rpc-gateway/**",
+            "tests/integration/v0.6.0/**",
+            "benchmarks/v0.6.0/**",
+            "docs/v0.6.0/**",
+            "vitest.config.ts",
+            "tsconfig.base.json"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "v0.7.0",
+      "year": 2022,
+      "releaseDate": "2022-12-20",
+      "releaseNotes": "\u670d\u52a1\u6cbb\u7406\uff1a\u4ee4\u724c\u6876\u9650\u6d41\u3001\u4e09\u6001\u7194\u65ad\u5668\u3001\u8231\u58c1\u5e76\u53d1\u9694\u79bb\u3001\u6307\u6570\u9000\u907f\uff08\u5e26\u6296\u52a8\uff09\uff0c\u4ee5\u53ca\u63a5\u8fdb HTTP \u94fe\u7684\u4e2d\u95f4\u4ef6\u3002\\n\\n- \u7194\u65ad\u6253\u5f00\u540e\u7edd\u4e0d\ufffd\ufffd\u6253\u4e0b\u6e38\uff1b\u534a\u5f00\u53ea\u653e\u884c\u6709\u9650\u63a2\u9488\\n- 429 \u5e26 Retry-After\uff1b\u7194\u65ad\u7ffb\u8bd1\u6210 503 \u800c\u4e0d\u662f\u7b3c\u7edf\u7684 500\\n- \u6cbb\u7406\u5224\u5b9a\u5168\u90e8 <1\u00b5s\uff0c\u4e0d\u5230\u4e00\u6761 HTTP \u94fe\u8def\u7684 0.2%",
+      "features": [
+        {
+          "id": "F7.0",
+          "title": "token bucket rate limiting",
+          "prefix": "feat(resilience)",
+          "startDate": "2022-01-03",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/resilience",
+            "token bucket core",
+            "refill by elapsed time",
+            "capacity ceiling",
+            "retry after calculation",
+            "keyed limiter",
+            "per key buckets",
+            "reset a key",
+            "lazy cleanup of buckets"
+          ],
+          "globs": [
+            "packages/resilience/package.json",
+            "packages/resilience/tsconfig.json",
+            "packages/resilience/tsconfig.build.json",
+            "packages/resilience/src/rate-limiter.ts"
+          ]
+        },
+        {
+          "id": "F7.1",
+          "title": "circuit breaker",
+          "prefix": "feat(resilience)",
+          "startDate": "2022-03-07",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "state machine",
+            "failure threshold",
+            "open state rejects fast",
+            "lazy transition to half open",
+            "half open probe limit",
+            "close on probe success",
+            "reopen on probe failure",
+            "custom failure predicate",
+            "stats snapshot",
+            "manual reset"
+          ],
+          "globs": [
+            "packages/resilience/src/circuit-breaker.ts"
+          ]
+        },
+        {
+          "id": "F7.2",
+          "title": "bulkhead and backoff",
+          "prefix": "feat(resilience)",
+          "startDate": "2022-05-02",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "concurrency guard",
+            "bounded queue",
+            "wait timeout",
+            "rejected error",
+            "exponential backoff",
+            "jitter to avoid retry storms",
+            "max delay ceiling",
+            "retry with backoff helper",
+            "should retry predicate"
+          ],
+          "globs": [
+            "packages/resilience/src/bulkhead.ts"
+          ]
+        },
+        {
+          "id": "F7.3",
+          "title": "http middleware wiring",
+          "prefix": "feat(resilience)",
+          "startDate": "2022-06-06",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "rate limit middleware",
+            "retry after header",
+            "remaining header",
+            "circuit breaker middleware",
+            "translate open error to 503",
+            "bulkhead middleware",
+            "overloaded response",
+            "middleware ordering",
+            "barrel exports"
+          ],
+          "globs": [
+            "packages/resilience/src/middleware.ts",
+            "packages/resilience/src/index.ts"
+          ]
+        },
+        {
+          "id": "F7.4",
+          "title": "example, tests, docs and benchmark",
+          "prefix": "docs(v0.7.0)",
+          "startDate": "2022-07-11",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "resilient api example",
+            "faulty dependency with switch",
+            "controller with circuit and retry",
+            "translate circuit open to 503",
+            "bootstrap with rate limit and bulkhead",
+            "example readme",
+            "end to end resilience test",
+            "rate limit bucket isolation",
+            "architecture notes",
+            "running guide",
+            "changelog",
+            "benchmark harness",
+            "benchmark report"
+          ],
+          "globs": [
+            "examples/v0.7.0-resilient-api/**",
+            "tests/integration/v0.7.0/**",
+            "benchmarks/v0.7.0/**",
+            "docs/v0.7.0/**",
+            "vitest.config.ts",
+            "tsconfig.base.json",
+            "packages/resilience/test/*.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "v0.8.0",
+      "year": 2023,
+      "releaseDate": "2023-12-19",
+      "releaseNotes": "\u53ef\u89c2\u6d4b\u6027\uff1aSpan\uff08\u5c5e\u6027/\u72b6\u6001/\u65f6\u957f/\u91c7\u6837/\u6279\u91cf\u5bfc\u51fa\uff09\u4e0e\u6307\u6807\uff08Counter/Gauge/Histogram + Prometheus \u6587\u672c\uff09\uff0c\u5e76\u63a5\u5165 HTTP \u8bf7\u6c42\u94fe\u3002\n\n- \u7236\u5b50 Span \u9760\u8bf7\u6c42\u4e0a\u4e0b\u6587\u91cc\u7684\u6d3b\u52a8 Span \u5efa\u7acb\uff0c\u7ed3\u675f\u65f6\u81ea\u52a8\u8fd8\u539f\n- \u4e0d\u91c7\u6837\u8fd4\u56de null\uff1a\u4e0d\u4e3a\u4e22\u5f03\u7684\u94fe\u8def\u4ed8\u4e00\u5206\u94b1\uff080.27\u00b5s vs 5.84\u00b5s\uff09\n- \u9519\u8bef\u72b6\u6001\u7801\u5728 catch \u91cc\u8bb0\uff0c\u5426\u5219\u5931\u8d25\u4f1a\u88ab\u7edf\u8ba1\u6210\u6210\u529f\n- \u8def\u7531\u6807\u7b7e\u5fc5\u987b\u6536\u655b\uff0c\u5426\u5219\u57fa\u6570\u7206\u70b8\n- Span \u5f00\u9500\u7ecf ID \u751f\u6210\u4f18\u5316\u540e\u4ece 13.93\u00b5s \u964d\u5230 5.84\u00b5s",
+      "features": [
+        {
+          "id": "F8.0",
+          "title": "tracer: spans, sampling and export",
+          "prefix": "feat(telemetry)",
+          "startDate": "2023-01-02",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/telemetry",
+            "span model",
+            "span kind",
+            "attributes and error state",
+            "tracer skeleton",
+            "start span returns null when not sampled",
+            "samplers",
+            "in memory exporter",
+            "batch buffer and flush",
+            "only finished spans are exported",
+            "trace helper with automatic end",
+            "random id generation"
+          ],
+          "globs": [
+            "packages/telemetry/package.json",
+            "packages/telemetry/tsconfig.json",
+            "packages/telemetry/tsconfig.build.json",
+            "packages/telemetry/src/tracer.ts"
+          ]
+        },
+        {
+          "id": "F8.1",
+          "title": "active span propagation",
+          "prefix": "feat(telemetry)",
+          "startDate": "2023-03-06",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "active span key",
+            "read active span from request context",
+            "parent span from active span",
+            "register self as active",
+            "restore previous on end",
+            "reuse upstream trace id",
+            "skip id generation when both come from context"
+          ],
+          "globs": [
+            "packages/telemetry/src/tracer.ts",
+            "packages/telemetry/src/index.ts"
+          ]
+        },
+        {
+          "id": "F8.2",
+          "title": "metrics and prometheus exposition",
+          "prefix": "feat(telemetry)",
+          "startDate": "2023-04-24",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "label model",
+            "metric registry",
+            "counter",
+            "gauge",
+            "histogram with buckets",
+            "cumulative bucket counts",
+            "percentile as bucket upper bound",
+            "prometheus text format",
+            "escape labels",
+            "default buckets"
+          ],
+          "globs": [
+            "packages/telemetry/src/metrics.ts"
+          ]
+        },
+        {
+          "id": "F8.3",
+          "title": "http observability middleware",
+          "prefix": "feat(telemetry)",
+          "startDate": "2023-05-29",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "observability middleware",
+            "server span per request",
+            "request counter",
+            "duration histogram",
+            "error counter",
+            "record error status in catch",
+            "trace id response header",
+            "route label collapse",
+            "expose trace id option"
+          ],
+          "globs": [
+            "packages/telemetry/src/middleware.ts",
+            "packages/telemetry/src/index.ts"
+          ]
+        },
+        {
+          "id": "F8.4",
+          "title": "span id generation speedup",
+          "prefix": "perf(telemetry)",
+          "startDate": "2023-07-03",
+          "days": 3,
+          "commitsPerDay": 20,
+          "aspects": [
+            "hex lookup table",
+            "single random fill for trace and span id",
+            "reuse id buffer",
+            "skip generation when ids come from context",
+            "benchmark the span path"
+          ],
+          "globs": [
+            "packages/telemetry/src/tracer.ts",
+            "benchmarks/v0.8.0/bench.mjs"
+          ]
+        },
+        {
+          "id": "F8.5",
+          "title": "example, tests, docs and benchmark",
+          "prefix": "docs(v0.8.0)",
+          "startDate": "2023-07-31",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "observability example",
+            "telemetry setup",
+            "ops controller for spans and metrics",
+            "bootstrap with observability middleware",
+            "route label collapsing in the example",
+            "example readme",
+            "end to end observability test",
+            "parent and child share trace id",
+            "failures recorded as 500",
+            "architecture notes",
+            "running guide",
+            "changelog",
+            "benchmark report",
+            "lint cleanups"
+          ],
+          "globs": [
+            "examples/v0.8.0-observability/**",
+            "tests/integration/v0.8.0/**",
+            "benchmarks/v0.8.0/**",
+            "docs/v0.8.0/**",
+            "vitest.config.ts",
+            "tsconfig.base.json",
+            "packages/telemetry/test/*.ts"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "v0.9.0",
+      "year": 2024,
+      "releaseDate": "2024-12-24",
+      "releaseNotes": "\u5fae\u670d\u52a1\u5168\u5bb6\u6876\uff1aSnowflake ID\u3001\u5206\u5e03\u5f0f\u9501\u3001cron \u8c03\u5ea6\u3001\u4e8b\u4ef6\u603b\u7ebf\uff0c\u4ee5\u53ca\u628a\u4e5d\u4e2a\u7248\u672c\u7684\u80fd\u529b\u4e00\u6b21\u88c5\u8d77\u6765\u7684 Microservice.bootstrap()\u3002\n\n- ID \u8fd4\u56de\u5b57\u7b26\u4e32\uff1a63 \u4f4d\u8d85\u8fc7 MAX_SAFE_INTEGER\uff0c\u8f6c number \u4f1a\u9759\u9ed8\u4e22\u7cbe\u5ea6\n- \u91ca\u653e\u9501\u6821\u9a8c token\uff0c\u7edd\u4e0d\u91ca\u653e\u522b\u4eba\u7684\u9501\n- \u88c5\u914d\u987a\u5e8f\u5373\u6b63\u786e\u6027\uff1a\u8fc1\u79fb\u5728\u76d1\u542c\u4e4b\u524d\uff0c\u5c31\u7eea\u6807\u8bb0\u6700\u540e\u6253\u5f00\uff0c\u505c\u673a\u4e25\u683c\u9006\u5e8f",
+      "features": [
+        {
+          "id": "F9.0",
+          "title": "snowflake distributed ids",
+          "prefix": "feat(micro)",
+          "startDate": "2024-01-02",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/micro",
+            "bit layout",
+            "worker and datacenter validation",
+            "sequence and timestamp state",
+            "clock rollback tolerance",
+            "clock moved back error",
+            "sequence exhaustion waits for next millisecond",
+            "compose the id",
+            "bigint and string accessors",
+            "parse an id back into parts"
+          ],
+          "globs": [
+            "packages/micro/package.json",
+            "packages/micro/tsconfig.json",
+            "packages/micro/tsconfig.build.json",
+            "packages/micro/src/id.ts"
+          ]
+        },
+        {
+          "id": "F9.1",
+          "title": "distributed locks",
+          "prefix": "feat(micro)",
+          "startDate": "2024-03-04",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "lock backend interface",
+            "memory lock backend",
+            "token checked release",
+            "ttl expiry",
+            "try acquire",
+            "acquire with wait",
+            "renewal watchdog",
+            "stop renewing when the lock is lost",
+            "run with finally release",
+            "acquisition error"
+          ],
+          "globs": [
+            "packages/micro/src/lock.ts"
+          ]
+        },
+        {
+          "id": "F9.2",
+          "title": "cron parsing and scheduling",
+          "prefix": "feat(micro)",
+          "startDate": "2024-04-29",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "five field grammar",
+            "field parsing with steps ranges and lists",
+            "day of week normalisation",
+            "match a date",
+            "day and week are OR",
+            "next match search",
+            "scheduler skeleton",
+            "tick loop",
+            "skip when previous run is still active",
+            "fixed rate and fixed delay",
+            "delayed once job",
+            "isolate failing jobs"
+          ],
+          "globs": [
+            "packages/micro/src/scheduler.ts"
+          ]
+        },
+        {
+          "id": "F9.3",
+          "title": "event bus",
+          "prefix": "feat(micro)",
+          "startDate": "2024-06-03",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "bus skeleton",
+            "subscribe and unsubscribe",
+            "once subscriptions",
+            "publish awaits delivery",
+            "fire and forget emit",
+            "sequential delivery option",
+            "isolate a throwing subscriber",
+            "record errors instead of swallowing",
+            "bridge interface",
+            "stats"
+          ],
+          "globs": [
+            "packages/micro/src/event-bus.ts"
+          ]
+        },
+        {
+          "id": "F9.4",
+          "title": "one call bootstrap and lifecycle",
+          "prefix": "feat(micro)",
+          "startDate": "2024-07-08",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "microservice skeleton",
+            "lifecycle phases",
+            "context object",
+            "ready flag",
+            "stop hooks in reverse order",
+            "unready before stopping",
+            "tear down on failed startup",
+            "signal capture",
+            "grace period timeout",
+            "shutdown timeout error",
+            "barrel exports"
+          ],
+          "globs": [
+            "packages/micro/src/microservice.ts",
+            "packages/micro/src/index.ts"
+          ]
+        },
+        {
+          "id": "F9.5",
+          "title": "example, tests, docs and benchmark",
+          "prefix": "docs(v0.9.0)",
+          "startDate": "2024-08-12",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "microservice kit example",
+            "order entity and service",
+            "distributed lock around settlement",
+            "event subscriber decoupled from the service",
+            "bootstrap with migrations and scheduler",
+            "middleware ordering with body parser",
+            "example readme",
+            "end to end microservice test",
+            "concurrent settle succeeds once",
+            "architecture notes",
+            "running guide",
+            "changelog",
+            "benchmark harness",
