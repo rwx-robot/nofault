@@ -10,3 +10,10 @@ import { spawnSync } from 'node:child_process';
 import { existsSync, readdirSync } from 'node:fs';
 import { join, dirname, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
+
+const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
+const args = process.argv.slice(2);
+
+if (args.length === 0) {
+  const available = existsSync(join(root, 'benchmarks'))
+    ? readdirSync(join(root, 'benchmarks'), { withFileTypes: true })
