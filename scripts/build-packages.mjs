@@ -26,3 +26,18 @@ const packages = readdirSync(packagesDir, { withFileTypes: true })
   .filter(Boolean);
 
 const nameToDir = new Map(packages.map((p) => [p.name, p.dir]));
+
+// 拓扑排序（仅考虑 workspace 内部依赖）
+const visited = new Set();
+const visiting = new Set();
+const order = [];
+
+function visit(p) {
+  if (visited.has(p.name)) return;
+  if (visiting.has(p.name)) {
+    throw new Error(`Circular dependency detected at package ${p.name}`);
+  }
+  visiting.add(p.name);
+  for (const dep of p.deps) {
+    const depDir = nameToDir.get(dep);
+    if (!depDir) continue;
