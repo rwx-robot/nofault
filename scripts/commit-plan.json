@@ -582,3 +582,587 @@
           "id": "F3.4",
           "title": "logger file transport and sampling",
           "prefix": "feat(logger)",
+          "startDate": "2018-07-30",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "file transport",
+            "size based rotation",
+            "daily rotation",
+            "retained history files",
+            "buffered flush",
+            "context provider hook",
+            "sampling rule",
+            "sample below threshold",
+            "transport failure guard",
+            "stderr rate limit"
+          ],
+          "globs": [
+            "packages/logger/src/file-transport.ts",
+            "packages/logger/src/logger.ts",
+            "packages/logger/src/index.ts",
+            "packages/logger/test/file-transport.test.ts"
+          ]
+        },
+        {
+          "id": "F3.5",
+          "title": "health probes and shutdown timeout",
+          "prefix": "feat(rest)",
+          "startDate": "2018-09-10",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "health registry",
+            "liveness and readiness split",
+            "probe http status mapping",
+            "degraded status handling",
+            "check timeout guard",
+            "mark ready api",
+            "route registration for probes",
+            "shutdown timeout guard",
+            "request context middleware",
+            "context reuse in middleware"
+          ],
+          "globs": [
+            "packages/rest/src/health.ts",
+            "packages/rest/src/middleware/request-context.ts",
+            "packages/rest/src/middleware/index.ts",
+            "packages/rest/src/rest-application.ts",
+            "packages/rest/src/route-explorer.ts",
+            "packages/rest/src/http/context.ts",
+            "packages/rest/src/index.ts",
+            "packages/core/src/application/nofault-application.ts"
+          ]
+        },
+        {
+          "id": "F3.6",
+          "title": "example, tests and docs",
+          "prefix": "docs(v0.3.0)",
+          "startDate": "2018-11-05",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "runtime basics example",
+            "request scoped service",
+            "runtime controller",
+            "hot reload config file",
+            "example bootstrap wiring",
+            "context integration tests",
+            "architecture diagram",
+            "running guide",
+            "usage guide",
+            "changelog",
+            "benchmark harness",
+            "benchmark report",
+            "example readme",
+            "gitignore for logs",
+            "build script order"
+          ],
+          "globs": [
+            "examples/v0.3.0-runtime-basics/**/*.ts",
+            "examples/v0.3.0-runtime-basics/**/*.json",
+            "examples/v0.3.0-runtime-basics/**/*.yaml",
+            "examples/v0.3.0-runtime-basics/**/*.md",
+            "tests/**/*.ts",
+            "benchmarks/**/*.mjs",
+            "benchmarks/**/*.md",
+            "docs/**/*.md",
+            "docs/**/*.svg",
+            "README.md",
+            "package.json",
+            "tsconfig.base.json",
+            "vitest.config.ts",
+            ".gitignore",
+            "examples/v0.3.0-runtime-basics/*.md",
+            "examples/v0.3.0-runtime-basics/*.json",
+            "examples/v0.3.0-runtime-basics/*.yaml"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "v0.4.0",
+      "year": 2019,
+      "releaseDate": "2019-12-24",
+      "releaseNotes": "\u4ee3\u7801\u751f\u6210 v1\uff1aAPI \u5951\u7ea6\uff08TS / .api\uff09\u2192 \u89e3\u6790\u5668 \u2192 Spec \u2192 \u6821\u9a8c \u2192 \u751f\u6210 controller/service/module/dto\u3002\\n\\n- \u65b0\u5305 @nofault/dsl\u3001@ nofault/parser\u3001@nofault/codegen\u3001@nofault/cli\uff08nofaultctl\uff09\\n- \u624b\u5199\u626b\u63cf\u5668 + \u9012\u5f52\u4e0b\u964d\uff0c\u9519\u8bef\u5e26\u884c\u5217\u53f7\uff0c\u4e0d\u5f15 ANTLR\\n- \u5199\u76d8\u53ea\u8986\u76d6\u751f\u6210\u5668\u81ea\u5df1\u8ba4\u9886\u8fc7\u7684\u6587\u4ef6\uff0c\u624b\u6539\u8fc7\u7684\u6c38\u4e45\u4fdd\u7559\\n- \u987a\u5e26\u4fee\u6389 query DTO \u4e0d\u6821\u9a8c\u3001query \u503c\u4e0d\u505a\u7c7b\u578b\u5f3a\u5236\u3001\u547d\u540d\u4e2d\u95f4\u4ef6\u65e0\u6cd5\u89e3\u6790\u4e09\u4e2a\u6d1e",
+      "features": [
+        {
+          "id": "F4.0",
+          "title": "api contract dsl and spec",
+          "prefix": "feat(dsl)",
+          "startDate": "2019-01-07",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/dsl",
+            "field source enum",
+            "type spec",
+            "route spec",
+            "service spec",
+            "api spec factory",
+            "spec lookup helpers",
+            "naming utilities",
+            "pascal camel kebab snake",
+            "singularize and handler naming",
+            "contract decorators",
+            "metadata readers for services, routes and fields"
+          ],
+          "globs": [
+            "packages/dsl/package.json",
+            "packages/dsl/tsconfig.json",
+            "packages/dsl/tsconfig.build.json",
+            "packages/dsl/src/**/*.ts",
+            "packages/dsl/src/*.ts"
+          ]
+        },
+        {
+          "id": "F4.1",
+          "title": "scanner and parser for .api",
+          "prefix": "feat(parser)",
+          "startDate": "2019-03-04",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "token model with line and column",
+            "scanner for identifiers and strings",
+            "comment handling",
+            "backtick tags",
+            "numeric literals",
+            "punctuation set for ts contracts",
+            "recursive descent skeleton",
+            "syntax and info blocks",
+            "type declarations with json tags",
+            "path tag support",
+            "server options block",
+            "service and route parsing",
+            "returns clause",
+            "handler override",
+            "error type with position",
+            "contract format sniffing"
+          ],
+          "globs": [
+            "packages/parser/package.json",
+            "packages/parser/tsconfig.json",
+            "packages/parser/tsconfig.build.json",
+            "packages/parser/src/scanner.ts",
+            "packages/parser/src/api-parser.ts",
+            "packages/parser/src/parse-contract.ts",
+            "packages/parser/src/index.ts",
+            "packages/parser/test/api-parser.test.ts"
+          ]
+        },
+        {
+          "id": "F4.2",
+          "title": "typescript contract parser",
+          "prefix": "feat(parser)",
+          "startDate": "2019-04-29",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "class scanning",
+            "decorator reader",
+            "dto collection",
+            "service detection",
+            "route decorators",
+            "property parsing",
+            "optional marker",
+            "type text reading",
+            "method tail skipping",
+            "void normalisation",
+            "import skipping",
+            "error when no service found",
+            "ts parse tests",
+            "error location tests"
+          ],
+          "globs": [
+            "packages/parser/src/ts-parser.ts",
+            "packages/parser/test/ts-parser.test.ts",
+            "packages/parser/test/error-location.test.ts"
+          ]
+        },
+        {
+          "id": "F4.3",
+          "title": "spec validation",
+          "prefix": "feat(codegen)",
+          "startDate": "2019-06-03",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "diagnostic model",
+            "duplicate type detection",
+            "duplicate field detection",
+            "property collision after naming",
+            "route duplication",
+            "http method whitelist",
+            "path and prefix checks",
+            "unknown request and response types",
+            "warning for empty service",
+            "aggregated validation error"
+          ],
+          "globs": [
+            "packages/codegen/package.json",
+            "packages/codegen/tsconfig.json",
+            "packages/codegen/tsconfig.build.json",
+            "packages/codegen/src/validate.ts"
+          ]
+        },
+        {
+          "id": "F4.4",
+          "title": "generators for dto, service, controller, module",
+          "prefix": "feat(codegen)",
+          "startDate": "2019-07-08",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "generator skeleton",
+            "dto rendering",
+            "validation rule mapping",
+            "literal argument whitelist",
+            "cross type imports",
+            "dto module path without extension",
+            "service skeleton",
+            "controller rendering",
+            "route to handler mapping",
+            "query for bodyless methods",
+            "path parameter binding",
+            "controller and service import sets",
+            "module rendering",
+            "app module rendering",
+            "generated file list"
+          ],
+          "globs": [
+            "packages/codegen/src/generate.ts",
+            "packages/codegen/src/default-templates.ts",
+            "packages/codegen/test/generate.test.ts"
+          ]
+        },
+        {
+          "id": "F4.5",
+          "title": "templates and write policy",
+          "prefix": "feat(codegen)",
+          "startDate": "2019-08-26",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "template engine",
+            "interpolation and dotted paths",
+            "if and unless blocks",
+            "each with item context",
+            "nested blocks kept verbatim",
+            "missing values render empty",
+            "template overrides from disk",
+            "default template set",
+            "write policy generated",
+            "marker based ownership",
+            "unchanged files skipped",
+            "dry run",
+            "write policy tests"
+          ],
+          "globs": [
+            "packages/codegen/src/template.ts",
+            "packages/codegen/src/writer.ts",
+            "packages/codegen/src/index.ts",
+            "packages/codegen/test/template.test.ts",
+            "packages/codegen/test/writer.test.ts"
+          ]
+        },
+        {
+          "id": "F4.6",
+          "title": "nofaultctl command line",
+          "prefix": "feat(cli)",
+          "startDate": "2019-09-30",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest and bin",
+            "argument parser",
+            "string and boolean option helpers",
+            "terminal output with colour control",
+            "scaffold command",
+            "project layout",
+            "sample contract",
+            "tsconfig for generated project",
+            "refuse non empty directory",
+            "generate command",
+            "validate command",
+            "routes command",
+            "help and version",
+            "command dispatch"
+          ],
+          "globs": [
+            "packages/cli/package.json",
+            "packages/cli/bin/nofaultctl.js",
+            "packages/cli/src/**/*.ts",
+            "packages/cli/test/**/*.ts",
+            "packages/cli/src/*.ts",
+            "packages/cli/test/*.ts",
+            "packages/cli/tsconfig.json",
+            "packages/cli/tsconfig.build.json"
+          ]
+        },
+        {
+          "id": "F4.7",
+          "title": "framework fixes uncovered by generated code",
+          "prefix": "feat(rest)",
+          "startDate": "2019-11-04",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "validate decorator for any source",
+            "source aware dto validation",
+            "dto field coercion",
+            "coercion by design type",
+            "path bound routes skip whole dto validation",
+            "named middleware registry",
+            "loud failure for unregistered middleware",
+            "middleware registry tests",
+            "dto binding tests"
+          ],
+          "globs": [
+            "packages/rest/src/decorators.ts",
+            "packages/rest/src/pipeline.ts",
+            "packages/rest/src/validation.ts",
+            "packages/rest/src/route-explorer.ts",
+            "packages/rest/src/rest-application.ts",
+            "packages/rest/src/index.ts",
+            "packages/rest/test/dto-binding.test.ts",
+            "packages/rest/test/middleware-registry.test.ts"
+          ]
+        },
+        {
+          "id": "F4.8",
+          "title": "example, tests, docs and benchmark",
+          "prefix": "docs(v0.4.0)",
+          "startDate": "2019-12-02",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "codegen user api example",
+            "contract for the example",
+            "generated sources",
+            "handwritten service implementation",
+            "bootstrap with middleware registry",
+            "example readme",
+            "end to end pipeline test",
+            "tsc compile gate in the test",
+            "architecture diagram",
+            "architecture notes",
+            "usage guide",
+            "running guide",
+            "changelog",
+            "benchmark harness",
+            "benchmark report",
+            "gitignore for temp output",
+            "lint policy tuning"
+          ],
+          "globs": [
+            "examples/v0.4.0-codegen-user-api/**",
+            "tests/integration/v0.4.0/**",
+            "benchmarks/v0.4.0/**",
+            "docs/v0.4.0/**",
+            "README.md",
+            ".gitignore",
+            "eslint.config.mjs",
+            "tsconfig.base.json",
+            "vitest.config.ts",
+            "package.json"
+          ]
+        }
+      ]
+    },
+    {
+      "tag": "v0.5.0",
+      "year": 2020,
+      "releaseDate": "2020-12-22",
+      "releaseNotes": "\u6570\u636e\u8bbf\u95ee\u5c42\uff1a@nofault/orm\uff08\u5b9e\u4f53\u6620\u5c04 / Repository / \u67e5\u8be2\u6784\u9020\u5668 / \u4e8b\u52a1 / \u8fc1\u79fb\uff09\u4e0e @nofault/cache\uff08TTL + LRU + \u6296\u52a8 + single-flight\uff09\u3002\\n\\n- \u65b9\u8a00\u53ea\u751f\u6210\u5b57\u7b26\u4e32\uff0c\u6570\u636e\u6e90\u662f\u552f\u4e00 IO \u8fb9\u754c\uff0c\u5185\u5b58\u5b9e\u73b0\u5f00\u7bb1\u53ef\u8dd1\\n- \u8fc1\u79fb\u7248\u672c\u5316\uff0c\u5931\u8d25\u4e0d\u7559\u7248\u672c\u53f7\uff0c\u53ef\u5b89\u5168\u91cd\u8dd1\\n- getOrSet \u8ba9\u7f13\u5b58\u51fb\u7a7f\u5728\u6e90\u5934\u6d88\u5931\\n- \u751f\u6210\u5668\u6269\u5c55\uff1a--with-orm \u4ea7\u51fa entity / repository\uff0c--watch \u81ea\u52a8\u91cd\u8dd1",
+      "features": [
+        {
+          "id": "F5.0",
+          "title": "entity mapping and metadata",
+          "prefix": "feat(orm)",
+          "startDate": "2020-01-06",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/orm",
+            "metadata keys",
+            "entity decorator",
+            "column decorator",
+            "type inference from design type",
+            "snake case naming",
+            "primary generated column",
+            "create and update date columns",
+            "entity metadata lookup",
+            "not an entity error"
+          ],
+          "globs": [
+            "packages/orm/package.json",
+            "packages/orm/tsconfig.json",
+            "packages/orm/tsconfig.build.json",
+            "packages/orm/src/metadata.ts",
+            "packages/orm/src/decorators.ts"
+          ]
+        },
+        {
+          "id": "F5.1",
+          "title": "sql dialect and data sources",
+          "prefix": "feat(orm)",
+          "startDate": "2020-03-02",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "dialect interface",
+            "ansi dialect",
+            "create table rendering",
+            "insert and update rendering",
+            "select with where and order",
+            "where rendering and empty in clause",
+            "memory data source",
+            "memory sequence for generated ids",
+            "sql data source with executor",
+            "transaction snapshot and rollback",
+            "count and pagination",
+            "raw sql for memory",
+            "mini sql engine for migrations",
+            "create drop insert select update delete"
+          ],
+          "globs": [
+            "packages/orm/src/dialect.ts",
+            "packages/orm/src/data-source.ts",
+            "packages/orm/src/memory-sql.ts"
+          ]
+        },
+        {
+          "id": "F5.2",
+          "title": "repository and query builder",
+          "prefix": "feat(orm)",
+          "startDate": "2020-04-27",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "repository skeleton",
+            "row and entity mapping",
+            "save and generated id backfill",
+            "zero primary treated as unset",
+            "update and persist",
+            "delete and find by id",
+            "query builder",
+            "where grouping",
+            "order limit offset",
+            "paginate",
+            "boolean normalisation on compare",
+            "orm module and inject repository",
+            "repository registry",
+            "repository tests"
+          ],
+          "globs": [
+            "packages/orm/src/repository.ts",
+            "packages/orm/src/orm.module.ts",
+            "packages/orm/src/index.ts",
+            "packages/orm/test/repository.test.ts"
+          ]
+        },
+        {
+          "id": "F5.3",
+          "title": "migrations",
+          "prefix": "feat(orm)",
+          "startDate": "2020-06-01",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "migration interface",
+            "migration context",
+            "schema migrations table",
+            "apply pending",
+            "idempotent apply",
+            "roll back last",
+            "version ordering",
+            "transaction per migration",
+            "create and drop table helpers"
+          ],
+          "globs": [
+            "packages/orm/src/migration.ts"
+          ]
+        },
+        {
+          "id": "F5.4",
+          "title": "cache abstraction and memory cache",
+          "prefix": "feat(cache)",
+          "startDate": "2020-06-29",
+          "days": 5,
+          "commitsPerDay": 20,
+          "aspects": [
+            "package manifest for @nofault/cache",
+            "cache interface",
+            "null cache",
+            "memory cache store",
+            "ttl expiry",
+            "lru eviction",
+            "touch ordering",
+            "ttl jitter",
+            "get or set",
+            "single flight inflight",
+            "do not cache undefined",
+            "cache null value option",
+            "stats counters",
+            "cache module and helpers",
+            "cache tests"
+          ],
+          "globs": [
+            "packages/cache/package.json",
+            "packages/cache/tsconfig.json",
+            "packages/cache/tsconfig.build.json",
+            "packages/cache/src/**/*.ts",
+            "packages/cache/test/**/*.ts",
+            "packages/cache/src/*.ts",
+            "packages/cache/test/*.ts"
+          ]
+        },
+        {
+          "id": "F5.5",
+          "title": "generator extension: orm layer and watch",
+          "prefix": "feat(codegen)",
+          "startDate": "2020-08-03",
+          "days": 4,
+          "commitsPerDay": 20,
+          "aspects": [
+            "data layer generator",
+            "entity type selection from responses",
+            "entity rendering",
+            "column type mapping",
+            "skip id column collision",
+            "repository skeleton rendering",
+            "watch mode with debounce",
+            "debounce helper",
+            "barrel exports"
+          ],
+          "globs": [
+            "packages/codegen/src/data-generator.ts",
+            "packages/codegen/src/watch.ts",
+            "packages/codegen/src/index.ts",
+            "packages/codegen/src/generate.ts",
+            "packages/cli/src/commands/generate.ts",
+            "packages/cli/src/cli.ts"
+          ]
+        },
+        {
+          "id": "F5.6",
+          "title": "example, tests, docs and benchmark",
+          "prefix": "docs(v0.5.0)",
+          "startDate": "2020-09-07",
+          "days": 5,
+          "commitsPerDay": 21,
+          "aspects": [
+            "data user api example",
+            "contract for the example",
+            "generated sources",
+            "handwritten service with cache",
+            "handwritten module wiring",
+            "data module",
+            "bootstrap with migrations",
+            "example readme",
+            "end to end data layer test",
+            "architecture diagram",
+            "architecture notes",
+            "running guide",
+            "changelog",
