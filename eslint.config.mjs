@@ -38,3 +38,9 @@ export default tseslint.config(
   {
     // 示例与测试放宽限制
     files: ['examples/**/*.ts', 'tests/**/*.ts', '**/*.test.ts'],
+    rules: {
+      'no-console': 'off',
+      '@typescript-eslint/no-explicit-any': 'off',
+    },
+  },
+);
