@@ -14,3 +14,5 @@ for (const dir of readdirSync(packagesDir, { withFileTypes: true })) {
     rmSync(dist, { recursive: true, force: true });
     console.log(`[clean] removed ${dir.name}/dist`);
   }
+}
+console.log('[clean] done');
