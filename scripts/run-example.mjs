@@ -25,3 +25,17 @@ if (args.length === 0 || args[0] === '--help' || args[0] === '-h') {
     : [];
   console.log(`用法: node scripts/run-example.mjs <example-dir> [ENV=value ...]\n`);
   console.log(`可用示例:\n${available.map((n) => `  - ${n}`).join('\n')}`);
+  process.exit(available.length ? 0 : 1);
+}
+
+const name = args[0];
+const exampleDir = join(root, 'examples', name);
+if (!existsSync(exampleDir)) {
+  console.error(`[example] 未找到示例: ${name}`);
+  process.exit(1);
+}
+
+const env = { ...process.env };
+for (const arg of args.slice(1)) {
+  const idx = arg.indexOf('=');
+  if (idx > 0) env[arg.slice(0, idx)] = arg.slice(idx + 1);
