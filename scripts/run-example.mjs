@@ -52,3 +52,15 @@ if (build.status !== 0) process.exit(build.status ?? 1);
 
 // 2) 编译示例
 console.log(`[example] building ${name}...`);
+const tsc = spawnSync('npx', ['tsc', '-p', 'tsconfig.json'], { cwd: exampleDir, stdio: 'inherit', env });
+if (tsc.status !== 0) process.exit(tsc.status ?? 1);
+
+// 3) 运行
+const entry = join(exampleDir, 'dist', 'main.js');
+if (!existsSync(entry)) {
+  console.error(`[example] 入口不存在: ${entry}`);
+  process.exit(1);
+}
+console.log(`[example] starting ${name} ...\n`);
+const child = spawn(process.execPath, [entry], { cwd: exampleDir, stdio: 'inherit', env });
+child.on('exit', (code) => process.exit(code ?? 0));
