@@ -20,3 +20,14 @@ export default defineConfig({
     }),
   ],
   test: {
+    globals: true,
+    environment: 'node',
+    include: ['packages/*/test/**/*.test.ts', 'tests/**/*.test.ts'],
+    coverage: {
+      provider: 'v8',
+      reportsDirectory: './coverage',
+      include: ['packages/*/src/**/*.ts'],
+    },
+    testTimeout: 15_000,
+  },
+  resolve: {
