@@ -42,3 +42,13 @@ export default defineConfig({
       '@nofault/parser': resolve(__dirname, 'packages/parser/src/index.ts'),
       '@nofault/codegen': resolve(__dirname, 'packages/codegen/src/index.ts'),
       '@nofault/cli': resolve(__dirname, 'packages/cli/src/index.ts'),
+      '@nofault/orm': resolve(__dirname, 'packages/orm/src/index.ts'),
+      '@nofault/cache': resolve(__dirname, 'packages/cache/src/index.ts'),
+      '@nofault/rpc': resolve(__dirname, 'packages/rpc/src/index.ts'),
+      '@nofault/resilience': resolve(__dirname, 'packages/resilience/src/index.ts'),
+      '@nofault/telemetry': resolve(__dirname, 'packages/telemetry/src/index.ts'),
+      '@nofault/micro': resolve(__dirname, 'packages/micro/src/index.ts'),
+      '@nofault/security': resolve(__dirname, 'packages/security/src/index.ts'),
+    },
+  },
+});
