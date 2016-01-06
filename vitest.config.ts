@@ -31,3 +31,14 @@ export default defineConfig({
     testTimeout: 15_000,
   },
   resolve: {
+    alias: {
+      '@nofault/core': resolve(__dirname, 'packages/core/src/index.ts'),
+      '@nofault/config': resolve(__dirname, 'packages/config/src/index.ts'),
+      '@nofault/logger': resolve(__dirname, 'packages/logger/src/index.ts'),
+      '@nofault/http': resolve(__dirname, 'packages/http/src/index.ts'),
+      '@nofault/rest': resolve(__dirname, 'packages/rest/src/index.ts'),
+      '@nofault/context': resolve(__dirname, 'packages/context/src/index.ts'),
+      '@nofault/dsl': resolve(__dirname, 'packages/dsl/src/index.ts'),
+      '@nofault/parser': resolve(__dirname, 'packages/parser/src/index.ts'),
+      '@nofault/codegen': resolve(__dirname, 'packages/codegen/src/index.ts'),
+      '@nofault/cli': resolve(__dirname, 'packages/cli/src/index.ts'),
