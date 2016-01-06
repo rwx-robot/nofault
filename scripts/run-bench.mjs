@@ -29,3 +29,8 @@ const benchDir = join(root, 'benchmarks', tag);
 const script = existsSync(join(benchDir, 'bench.mjs')) ? join(benchDir, 'bench.mjs') : join(benchDir, 'bench.js');
 if (!existsSync(script)) {
   console.error(`[bench] 未找到脚本: ${script}`);
+  process.exit(1);
+}
+
+const r = spawnSync(process.execPath, [script, ...args.slice(1)], { cwd: benchDir, stdio: 'inherit' });
+process.exit(r.status ?? 1);
