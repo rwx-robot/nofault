@@ -39,3 +39,16 @@ const env = { ...process.env };
 for (const arg of args.slice(1)) {
   const idx = arg.indexOf('=');
   if (idx > 0) env[arg.slice(0, idx)] = arg.slice(idx + 1);
+}
+
+// 1) 构建 workspace 包
+console.log('[example] building packages...');
+const build = spawnSync(process.execPath, [join(root, 'scripts', 'build-packages.mjs')], {
+  cwd: root,
+  stdio: 'inherit',
+  env,
+});
+if (build.status !== 0) process.exit(build.status ?? 1);
+
+// 2) 编译示例
+console.log(`[example] building ${name}...`);
