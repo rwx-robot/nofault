@@ -13,3 +13,11 @@ import { fileURLToPath } from 'node:url';
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const args = process.argv.slice(2);
+
+if (args.length === 0) {
+  const available = existsSync(join(root, 'benchmarks'))
+    ? readdirSync(join(root, 'benchmarks'), { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name)
+    : [];
+  console.log(`用法: node scripts/run-bench.mjs <tag> [args...]\n可用:\n${available.map((n) => `  - ${n}`).join('\n')}`);
