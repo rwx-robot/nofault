@@ -11,3 +11,6 @@ export const MODULE_METADATA = {
 export const PROVIDER_METADATA = {
   SCOPE: 'nofault:provider:scope',
   DEPENDENCIES: 'nofault:provider:dependencies',
+} as const;
+
+export const PARAM_TYPES_METADATA = 'design:paramtypes';
