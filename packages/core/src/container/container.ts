@@ -80,3 +80,30 @@ export class NofaultContainer {
       const found = this.lookupWrapper(token, imported, visited);
       if (found) return found;
     }
+
+    // 模块重导出：exports: [UserModule] 的场景
+    for (const imported of moduleRef.imports) {
+      const isModuleExport = [...imported.exports].some((e) => e === imported.token);
+      if (!isModuleExport && !moduleRef.exports.has(imported.token)) continue;
+      const found = this.lookupWrapper(token, imported, visited);
+      if (found) return found;
+    }
+
+    for (const global of this.globalModules) {
+      if (global === moduleRef) continue;
+      if (!global.exports.has(token)) continue;
+      const found = this.lookupWrapper(token, global, visited);
+      if (found) return found;
+    }
+
+    return undefined;
+  }
+
+  /**
+   * 沿依赖图传播 REQUEST 作用域（captive dependency 检测）。
+   *
+   * 规则：若 A 依赖 B，而 B 是 REQUEST 作用域（或已被污染），则 A 也被污染。
+   * 迭代到不动点，覆盖任意深度的传递依赖。
+   *
+   * 为什么必须做：单例缓存住一个请求级对象，会导致**跨请求数据串号**，
+   * 这类 bug 在压测和线上偶发，靠 code review 很难发现。
