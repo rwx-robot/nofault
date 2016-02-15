@@ -53,3 +53,30 @@ export class NofaultContainer {
 
   /** 把 Provider 定义转成 InstanceWrapper（惰性，未实例化） */
   createProviders(moduleRef: ModuleRef): void {
+    const defs: Provider[] = [
+      ...((moduleRef.raw as DynamicModule).providers ?? []),
+      ...moduleRef.providerDefs,
+    ];
+    for (const def of defs) {
+      const token = getProviderToken(def);
+      if (moduleRef.hasProvider(token)) continue;
+      moduleRef.addProvider(def, this.injector.createWrapper(def, moduleRef));
+    }
+  }
+
+  /**
+   * 按可见性规则查找 InstanceWrapper。
+   * 顺序：本模块 → 导入模块的导出 → 全局模块。
+   */
+  lookupWrapper(token: InjectionToken, moduleRef: ModuleRef, visited = new Set<ModuleRef>()): InstanceWrapper | undefined {
+    if (visited.has(moduleRef)) return undefined;
+    visited.add(moduleRef);
+
+    const own = moduleRef.providers.get(token);
+    if (own) return own;
+
+    for (const imported of moduleRef.imports) {
+      if (!imported.exports.has(token)) continue;
+      const found = this.lookupWrapper(token, imported, visited);
+      if (found) return found;
+    }
