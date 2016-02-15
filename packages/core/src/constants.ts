@@ -6,3 +6,6 @@ export const MODULE_METADATA = {
   EXPORTS: 'nofault:module:exports',
   CONTROLLERS: 'nofault:module:controllers',
   GLOBAL: 'nofault:module:global',
+} as const;
+
+export const PROVIDER_METADATA = {
