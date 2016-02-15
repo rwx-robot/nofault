@@ -19,3 +19,4 @@ export const RETURN_TYPE_METADATA = 'design:returntype';
 
 /** 内置令牌 */
 export const APP_OPTIONS = Symbol('NOFAULT_APP_OPTIONS');
+export const MODULE_REF = Symbol('NOFAULT_MODULE_REF');
