@@ -1,3 +1,5 @@
 {
   "name": "@nofault/core",
   "version": "0.1.0",
+  "description": "nofault kernel: IoC container, module system and application lifecycle",
+  "license": "MIT",
