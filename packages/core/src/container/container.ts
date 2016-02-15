@@ -25,3 +25,31 @@ export class NofaultContainer {
   private readonly globalModules = new Set<ModuleRef>();
   private readonly injector: Injector;
   private locked = false;
+
+  constructor() {
+    this.injector = new Injector(this);
+  }
+
+  getModule(token: InjectionToken): ModuleRef | undefined {
+    return this.modules.get(token);
+  }
+
+  getAllModules(): ModuleRef[] {
+    return [...this.modules.values()];
+  }
+
+  /** 注册模块（幂等，同一个类只注册一次） */
+  registerModule(raw: Type<unknown> | DynamicModule): ModuleRef {
+    if (this.locked) throw new ContainerLockedError();
+    const target = (raw as DynamicModule).module ?? (raw as Type<unknown>);
+    const existing = this.modules.get(target);
+    if (existing) return existing;
+
+    const ref = new ModuleRef(target, raw);
+    this.modules.set(target, ref);
+    if (ref.isGlobal) this.globalModules.add(ref);
+    return ref;
+  }
+
+  /** 把 Provider 定义转成 InstanceWrapper（惰性，未实例化） */
+  createProviders(moduleRef: ModuleRef): void {
