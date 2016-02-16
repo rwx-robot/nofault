@@ -114,3 +114,18 @@ export class InstanceWrapper<T = unknown> {
    *
    * @returns 是否真的释放了一个实例
    */
+  clearContext(contextId: ContextId): boolean {
+    return this.contextInstances.delete(contextId);
+  }
+
+  /** 当前缓存了多少个上下文实例（测试与诊断用） */
+  get contextInstanceCount(): number {
+    return this.contextInstances.size;
+  }
+
+  /** 覆盖实例（测试替身、mock 用） */
+  override(value: T): void {
+    this.instance = value;
+    this.isResolved = true;
+  }
+}
