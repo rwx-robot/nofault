@@ -18,3 +18,4 @@ export const PROPERTY_TYPE_METADATA = 'design:type';
 export const RETURN_TYPE_METADATA = 'design:returntype';
 
 /** 内置令牌 */
+export const APP_OPTIONS = Symbol('NOFAULT_APP_OPTIONS');
