@@ -174,3 +174,24 @@ export class Injector {
       return wrapper.resolve(contextId);
     } finally {
       this.resolutionStack.pop();
+    }
+  }
+
+  private async resolveMany(
+    tokens: InjectionToken[],
+    moduleRef: ModuleRef,
+    owner: InjectionToken,
+    contextId?: ContextId,
+  ): Promise<unknown[]> {
+    const out: unknown[] = [];
+    for (const t of tokens) {
+      try {
+        out.push(await this.resolveFromModule(t, moduleRef, contextId));
+      } catch {
+        // 上抛时带上"谁在注入它"，比不明来源的原始错误好排查得多
+        throw new UnknownDependencyError(t, `${tokenToString(owner)} factory`);
+      }
+    }
+    return out;
+  }
+}
