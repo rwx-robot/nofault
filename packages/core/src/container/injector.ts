@@ -42,3 +42,25 @@ export class Injector {
   /** 计算某个 Provider 的作用域 */
   static resolveScope(provider: Provider): Scope {
     if (typeof provider === 'function') return readScope(provider);
+    if (isClassProvider(provider)) return provider.scope ?? readScope(provider.useClass);
+    if (isFactoryProvider(provider)) return provider.scope ?? Scope.SINGLETON;
+    // 值 / 别名 Provider 本质上都是单例
+    return Scope.SINGLETON;
+  }
+
+  /** 为 Provider 创建实例包装器（惰性，不立即实例化） */
+  createWrapper(provider: Provider, moduleRef: ModuleRef): InstanceWrapper {
+    const token = typeof provider === 'function' ? provider : provider.provide;
+    const scope = Injector.resolveScope(provider);
+    const wrapper = new InstanceWrapper(
+      token,
+      scope,
+      (contextId) => this.instantiate(provider, moduleRef, token, contextId),
+      isFactoryProvider(provider) || this.isAsyncProvider(provider),
+    );
+    wrapper.hostModule = moduleRef.name;
+    return wrapper;
+  }
+
+  private isAsyncProvider(provider: Provider): boolean {
+    return isFactoryProvider(provider);
