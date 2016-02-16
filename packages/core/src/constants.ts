@@ -16,3 +16,5 @@ export const PROVIDER_METADATA = {
 export const PARAM_TYPES_METADATA = 'design:paramtypes';
 export const PROPERTY_TYPE_METADATA = 'design:type';
 export const RETURN_TYPE_METADATA = 'design:returntype';
+
+/** 内置令牌 */
