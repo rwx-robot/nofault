@@ -9,3 +9,6 @@ export class UnknownDependencyError extends Error {
       `nofault can't resolve dependencies of the provider \`${tokenToString(token)}\`${where}. ` +
         `Please make sure the provider is declared in a module, or the module exporting it is imported.`,
     );
+    this.name = 'UnknownDependencyError';
+  }
+}
