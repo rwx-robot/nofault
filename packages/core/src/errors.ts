@@ -16,3 +16,6 @@ export class UnknownDependencyError extends Error {
 /** 循环依赖 */
 export class CircularDependencyError extends Error {
   constructor(chain: string[]) {
+    super(`Circular dependency detected: ${chain.join(' -> ')}`);
+    this.name = 'CircularDependencyError';
+  }
