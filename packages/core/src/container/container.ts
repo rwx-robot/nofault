@@ -189,3 +189,29 @@ export class NofaultContainer {
   hasRequestScopedProviders(): boolean {
     for (const mod of this.modules.values()) {
       for (const wrapper of mod.providers.values()) {
+        if (wrapper.scope === Scope.REQUEST) return true;
+      }
+    }
+    return false;
+  }
+
+  getInjector(): Injector {
+    return this.injector;
+  }
+
+  lock(): void {
+    this.locked = true;
+  }
+
+  /** 调试用：打印已注册模块树 */
+  toString(): string {
+    return [...this.modules.values()].map((m) => `- ${m.name} (providers: ${m.providers.size})`).join('\n');
+  }
+}
+
+class UnknownTokenError extends Error {
+  constructor(token: InjectionToken) {
+    super(`No provider found for token \`${tokenToString(token)}\` in the whole container.`);
+    this.name = 'UnknownTokenError';
+  }
+}
