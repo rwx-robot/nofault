@@ -64,3 +64,20 @@ export class InstanceWrapper<T = unknown> {
    */
   async resolve(contextId?: ContextId): Promise<T> {
     if (this.scope === Scope.REQUEST || this.contextDependent) {
+      if (contextId === undefined) {
+        throw new MissingContextIdError(this.token);
+      }
+      const cached = this.contextInstances.get(contextId);
+      if (cached !== undefined) return cached;
+      const created = await this.factory(contextId);
+      this.contextInstances.set(contextId, created);
+      return created;
+    }
+
+    if (this.scope === Scope.SINGLETON) {
+      if (this.instance !== undefined) return this.instance;
+      if (this.pending !== undefined) return this.pending;
+
+      const creating = (async () => {
+        const value = await this.factory(contextId);
+        this.instance = value;
