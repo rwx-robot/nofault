@@ -15,3 +15,19 @@ export type ContextId = object;
  *
  * 职责：
  * 1. 持有"如何创建对象"的知识（工厂或类）
+ * 2. 按作用域缓存实例：单例全局一份 / 请求级每 contextId 一份 / 瞬时每次新建
+ * 3. 记录依赖是否解析完成，用于循环依赖检测
+ */
+export class InstanceWrapper<T = unknown> {
+  /** 单例缓存；非单例为 undefined */
+  private instance?: T;
+  /** 解析中的 Promise，避免并发重复创建 */
+  private pending?: Promise<T>;
+  /** REQUEST 作用域：每个上下文一份实例 */
+  private readonly contextInstances = new Map<ContextId, T>();
+  /** 是否已完成实例化（用于生命周期钩子去重） */
+  public isResolved = false;
+  /** 所属模块名，便于报错定位 */
+  public hostModule?: string;
+  /** 解析栈标记：true 表示正在解析中，用于循环依赖检测 */
+  public isResolving = false;
