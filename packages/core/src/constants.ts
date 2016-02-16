@@ -7,3 +7,5 @@ export const MODULE_METADATA = {
   CONTROLLERS: 'nofault:module:controllers',
   GLOBAL: 'nofault:module:global',
 } as const;
+
+export const PROVIDER_METADATA = {
