@@ -86,3 +86,25 @@ export class Injector {
       const deps = provider.inject ?? [];
       const args = await this.resolveMany(deps, moduleRef, token, contextId);
       return provider.useFactory(...(args as never[]));
+    }
+    if (isExistingProvider(provider)) {
+      return this.resolveFromModule(provider.useExisting, moduleRef, contextId);
+    }
+    throw new UnknownDependencyError(token, moduleRef.name);
+  }
+
+  private async instantiateClass(
+    ctor: { new (...args: never[]): unknown },
+    target: Function,
+    moduleRef: ModuleRef,
+    token: InjectionToken,
+    contextId?: ContextId,
+  ): Promise<unknown> {
+    const paramTypes = readParamTypes(target);
+    const overrides = readDependencyOverrides(target);
+    const optionals = readOptionalParams(target);
+    const length = Math.max(paramTypes.length, overrides.length);
+
+    const args: unknown[] = [];
+    for (let i = 0; i < length; i++) {
+      const depToken = overrides[i] ?? paramTypes[i];
