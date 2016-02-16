@@ -11,3 +11,9 @@ import type { InstanceWrapper } from './instance-wrapper';
  */
 export class ModuleRef {
   public readonly providers = new Map<InjectionToken, InstanceWrapper>();
+  public readonly imports = new Set<ModuleRef>();
+  public readonly exports = new Set<InjectionToken>();
+  public readonly isGlobal: boolean;
+  /** Provider 原始定义，实例化阶段使用 */
+  public readonly providerDefs: Provider[] = [];
+  /** 本模块声明的控制器（供 Web 层扫描） */
