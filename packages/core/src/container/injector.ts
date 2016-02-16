@@ -130,3 +130,25 @@ export class Injector {
         throw err;
       }
     }
+
+    const instance = new ctor(...(args as never[]));
+    await this.injectProperties(instance, target, moduleRef, contextId);
+    return instance;
+  }
+
+  private isBuiltinType(token: InjectionToken): boolean {
+    if (typeof token !== 'function') return false;
+    const name = token.name;
+    return ['Number', 'String', 'Boolean', 'Object', 'Array', 'Function', 'Symbol', 'Promise', 'Date'].includes(name);
+  }
+
+  /** 属性注入 */
+  private async injectProperties(
+    instance: unknown,
+    target: Function,
+    moduleRef: ModuleRef,
+    contextId?: ContextId,
+  ): Promise<void> {
+    const props = readPropertyInjections(target);
+    for (const prop of props) {
+      try {
