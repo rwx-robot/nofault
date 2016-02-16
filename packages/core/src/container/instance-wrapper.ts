@@ -48,3 +48,19 @@ export class InstanceWrapper<T = unknown> {
      *
      * 必须接收 contextId：Provider 的依赖里可能有 REQUEST 作用域的成员，
      * 若工厂闭包把 contextId 固定成 undefined，请求上下文就传不下去了。
+     */
+    private readonly factory: (contextId?: ContextId) => T | Promise<T>,
+    public readonly isAsync = false,
+  ) {}
+
+  get hasInstance(): boolean {
+    return this.instance !== undefined;
+  }
+
+  /**
+   * 获取（或创建）实例。
+   *
+   * @param contextId REQUEST 作用域必需；其它作用域忽略
+   */
+  async resolve(contextId?: ContextId): Promise<T> {
+    if (this.scope === Scope.REQUEST || this.contextDependent) {
