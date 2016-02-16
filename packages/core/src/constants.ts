@@ -9,3 +9,4 @@ export const MODULE_METADATA = {
 } as const;
 
 export const PROVIDER_METADATA = {
+  SCOPE: 'nofault:provider:scope',
