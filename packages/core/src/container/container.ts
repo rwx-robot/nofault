@@ -135,3 +135,29 @@ export class NofaultContainer {
             if (target && (target.scope === Scope.REQUEST || target.contextDependent)) {
               wrapper.contextDependent = true;
               changed = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /** 在任意模块里找 token 对应的 Provider 定义 */
+  private findProviderDef(token: InjectionToken): Provider | undefined {
+    for (const mod of this.modules.values()) {
+      for (const def of mod.providerDefs) {
+        if (getProviderToken(def) === token) return def;
+      }
+    }
+    return undefined;
+  }
+
+  /** 全局查找（不校验可见性），用于 `app.get()` */
+  lookupGlobal(token: InjectionToken): InstanceWrapper | undefined {
+    for (const mod of this.modules.values()) {
+      const w = mod.providers.get(token);
+      if (w) return w;
+    }
+    return undefined;
+  }
