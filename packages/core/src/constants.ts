@@ -5,3 +5,4 @@ export const MODULE_METADATA = {
   PROVIDERS: 'nofault:module:providers',
   EXPORTS: 'nofault:module:exports',
   CONTROLLERS: 'nofault:module:controllers',
+  GLOBAL: 'nofault:module:global',
