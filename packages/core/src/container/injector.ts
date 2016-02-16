@@ -108,3 +108,25 @@ export class Injector {
     const args: unknown[] = [];
     for (let i = 0; i < length; i++) {
       const depToken = overrides[i] ?? paramTypes[i];
+      if (depToken === undefined) {
+        args.push(undefined);
+        continue;
+      }
+      // 跳过 JS 内置类型（Number/String/Object 等），它们无法作为 Provider
+      if (this.isBuiltinType(depToken)) {
+        if (!optionals.includes(i)) {
+          throw new UnknownDependencyError(depToken, `${tokenToString(token)}[arg${i}]`);
+        }
+        args.push(undefined);
+        continue;
+      }
+      try {
+        args.push(await this.resolveFromModule(depToken, moduleRef, contextId));
+      } catch (err) {
+        if (optionals.includes(i) && err instanceof UnknownDependencyError) {
+          args.push(undefined);
+          continue;
+        }
+        throw err;
+      }
+    }
