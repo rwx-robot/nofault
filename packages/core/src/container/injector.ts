@@ -64,3 +64,25 @@ export class Injector {
 
   private isAsyncProvider(provider: Provider): boolean {
     return isFactoryProvider(provider);
+  }
+
+  /** 真正创建对象 */
+  private async instantiate(
+    provider: Provider,
+    moduleRef: ModuleRef,
+    token: InjectionToken,
+    contextId?: ContextId,
+  ): Promise<unknown> {
+    if (typeof provider === 'function') {
+      return this.instantiateClass(provider, provider, moduleRef, token, contextId);
+    }
+    if (isClassProvider(provider)) {
+      return this.instantiateClass(provider.useClass, provider.useClass, moduleRef, token, contextId);
+    }
+    if (isValueProvider(provider)) {
+      return provider.useValue;
+    }
+    if (isFactoryProvider(provider)) {
+      const deps = provider.inject ?? [];
+      const args = await this.resolveMany(deps, moduleRef, token, contextId);
+      return provider.useFactory(...(args as never[]));
