@@ -4,3 +4,4 @@ export const MODULE_METADATA = {
   IMPORTS: 'nofault:module:imports',
   PROVIDERS: 'nofault:module:providers',
   EXPORTS: 'nofault:module:exports',
+  CONTROLLERS: 'nofault:module:controllers',
