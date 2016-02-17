@@ -17,3 +17,9 @@ export class ModuleRef {
   /** Provider 原始定义，实例化阶段使用 */
   public readonly providerDefs: Provider[] = [];
   /** 本模块声明的控制器（供 Web 层扫描） */
+  public readonly controllers: Array<Type<unknown>> = [];
+
+  constructor(
+    public readonly token: Type<unknown>,
+    public readonly raw: Type<unknown> | DynamicModule,
+  ) {
