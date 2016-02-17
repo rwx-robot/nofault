@@ -89,3 +89,16 @@ export function readParamTypes(target: object): InjectionToken[] {
 
 /** 读取 `@Inject` 显式覆盖的构造参数令牌 */
 export function readDependencyOverrides(target: object): Array<InjectionToken | undefined> {
+  return (Reflect.getMetadata(PROVIDER_METADATA.DEPENDENCIES, target) as Array<InjectionToken | undefined>) ?? [];
+}
+
+export function readOptionalParams(target: object): number[] {
+  return (Reflect.getMetadata('nofault:optional:params', target) as number[] | undefined) ?? [];
+}
+
+/** 读取属性注入清单：[[propertyKey, token, optional], ...] */
+export function readPropertyInjections(
+  target: Function,
+): Array<{ key: string | symbol; token: InjectionToken; optional: boolean }> {
+  const keys: Array<string | symbol> = Reflect.getMetadata('nofault:property:inject:keys', target) ?? [];
+  const optionals: Array<string | symbol> = Reflect.getMetadata('nofault:optional:props', target) ?? [];
