@@ -19,3 +19,7 @@ export class CircularDependencyError extends Error {
     super(`Circular dependency detected: ${chain.join(' -> ')}`);
     this.name = 'CircularDependencyError';
   }
+}
+
+/**
+ * 请求级（REQUEST 作用域）Provider 在没有上下文的情况下被解析。
