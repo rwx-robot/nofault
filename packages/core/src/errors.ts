@@ -57,3 +57,5 @@ export class ContainerLockedError extends Error {
   constructor() {
     super('The container is locked after bootstrap; providers can no longer be registered.');
     this.name = 'ContainerLockedError';
+  }
+}
