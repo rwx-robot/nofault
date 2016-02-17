@@ -50,3 +50,16 @@ export function Inject<T>(token: InjectionToken<T>): ParameterDecorator & Proper
       Reflect.defineMetadata(PROVIDER_METADATA.DEPENDENCIES, deps, target);
       return;
     }
+    if (propertyKey !== undefined) {
+      // 属性注入
+      const key = `nofault:property:inject:${tokenToString(propertyKey)}`;
+      Reflect.defineMetadata(key, token, target.constructor);
+      const props: Array<string | symbol> =
+        Reflect.getMetadata('nofault:property:inject:keys', target.constructor) ?? [];
+      if (!props.includes(propertyKey)) {
+        props.push(propertyKey);
+        Reflect.defineMetadata('nofault:property:inject:keys', props, target.constructor);
+      }
+    }
+  };
+}
