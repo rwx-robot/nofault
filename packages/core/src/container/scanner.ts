@@ -39,3 +39,12 @@ export class ModuleScanner {
     }
 
     // 2) 递归扫描导入的模块
+    for (const imp of meta.imports) {
+      const child = await this.scanModule((await imp) as Type<unknown> | DynamicModule);
+      ref.addImport(child);
+    }
+
+    // 3) 注册本模块 Provider
+    for (const p of meta.providers) {
+      ref.providerDefs.push(p);
+    }
