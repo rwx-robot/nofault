@@ -63,3 +63,16 @@ export function Inject<T>(token: InjectionToken<T>): ParameterDecorator & Proper
     }
   };
 }
+
+/** 标记依赖可选：找不到时不抛错，注入 undefined */
+export function Optional(): ParameterDecorator & PropertyDecorator {
+  return (target: object, propertyKey: string | symbol | undefined, index?: number) => {
+    if (typeof index === 'number') {
+      const optionals: number[] = Reflect.getMetadata('nofault:optional:params', target) ?? [];
+      optionals.push(index);
+      Reflect.defineMetadata('nofault:optional:params', optionals, target);
+      return;
+    }
+    if (propertyKey !== undefined) {
+      const optionals: Array<string | symbol> =
+        Reflect.getMetadata('nofault:optional:props', target.constructor) ?? [];
