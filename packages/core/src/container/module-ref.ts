@@ -29,3 +29,9 @@ export class ModuleRef {
   get name(): string {
     return tokenToString(this.token);
   }
+
+  addProvider(def: Provider, wrapper: InstanceWrapper): void {
+    const token = getProviderToken(def);
+    if (!this.providerDefs.includes(def)) this.providerDefs.push(def);
+    this.providers.set(token, wrapper);
+  }
