@@ -59,3 +59,13 @@ export class ModuleScanner {
 
     return ref;
   }
+
+  /** 打印模块树（调试 / 文档用） */
+  static printTree(ref: ModuleRef, depth = 0, seen = new Set<ModuleRef>()): string {
+    const pad = '  '.repeat(depth);
+    let out = `${pad}${ref.name}\n`;
+    if (seen.has(ref)) return `${pad}${ref.name} (circular)\n`;
+    seen.add(ref);
+    for (const imp of ref.imports) {
+      out += ModuleScanner.printTree(imp, depth + 1, seen);
+    }
