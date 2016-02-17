@@ -37,3 +37,16 @@ export function readScope(target: Function): Scope {
  * @Injectable()
  * export class UserService {
  *   constructor(@Inject('DB_CONFIG') private readonly config: DbConfig) {}
+ * }
+ * ```
+ */
+export function Inject<T>(token: InjectionToken<T>): ParameterDecorator & PropertyDecorator {
+  return (target: object, propertyKey: string | symbol | undefined, index?: number) => {
+    if (typeof index === 'number') {
+      // 构造函数参数注入
+      const deps: Array<InjectionToken | undefined> =
+        Reflect.getMetadata(PROVIDER_METADATA.DEPENDENCIES, target) ?? [];
+      deps[index] = token;
+      Reflect.defineMetadata(PROVIDER_METADATA.DEPENDENCIES, deps, target);
+      return;
+    }
