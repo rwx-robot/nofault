@@ -23,3 +23,9 @@ export class ModuleRef {
     public readonly token: Type<unknown>,
     public readonly raw: Type<unknown> | DynamicModule,
   ) {
+    this.isGlobal = (raw as DynamicModule)?.global === true;
+  }
+
+  get name(): string {
+    return tokenToString(this.token);
+  }
