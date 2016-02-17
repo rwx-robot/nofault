@@ -33,3 +33,5 @@ export class MissingContextIdError extends Error {
         `  → Make sure requests run inside a request context (see @nofault/context).`,
     );
     this.name = 'MissingContextIdError';
+  }
+}
