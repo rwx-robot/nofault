@@ -24,3 +24,16 @@ export function Injectable(options: InjectableOptions = {}): ClassDecorator {
 }
 
 export function readScope(target: Function): Scope {
+  return (Reflect.getMetadata(PROVIDER_METADATA.SCOPE, target) as Scope | undefined) ?? Scope.SINGLETON;
+}
+
+/**
+ * 构造函数参数注入：显式指定某个位置参数的令牌。
+ *
+ * 典型场景：依赖是接口（抽象类）、字符串令牌，或 TS 无法发射 `design:paramtypes`（如循环依赖）。
+ *
+ * @example
+ * ```ts
+ * @Injectable()
+ * export class UserService {
+ *   constructor(@Inject('DB_CONFIG') private readonly config: DbConfig) {}
