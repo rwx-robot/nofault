@@ -35,3 +35,8 @@ export class MissingContextIdError extends Error {
     this.name = 'MissingContextIdError';
   }
 }
+
+/** 模块未找到 */
+export class ModuleNotFoundError extends Error {
+  constructor(token: InjectionToken) {
+    super(`Module \`${tokenToString(token)}\` is not registered in the container.`);
