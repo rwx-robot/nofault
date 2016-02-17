@@ -43,3 +43,7 @@ export class ModuleNotFoundError extends Error {
     this.name = 'ModuleNotFoundError';
   }
 }
+
+/** 非法 Provider 定义 */
+export class InvalidProviderError extends Error {
+  constructor(token: InjectionToken) {
