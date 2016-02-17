@@ -76,3 +76,16 @@ export function Optional(): ParameterDecorator & PropertyDecorator {
     if (propertyKey !== undefined) {
       const optionals: Array<string | symbol> =
         Reflect.getMetadata('nofault:optional:props', target.constructor) ?? [];
+      optionals.push(propertyKey);
+      Reflect.defineMetadata('nofault:optional:props', optionals, target.constructor);
+    }
+  };
+}
+
+/** 读取构造函数参数类型（由 TS 发射的元数据） */
+export function readParamTypes(target: object): InjectionToken[] {
+  return (Reflect.getMetadata(PARAM_TYPES_METADATA, target) as InjectionToken[] | undefined) ?? [];
+}
+
+/** 读取 `@Inject` 显式覆盖的构造参数令牌 */
+export function readDependencyOverrides(target: object): Array<InjectionToken | undefined> {
