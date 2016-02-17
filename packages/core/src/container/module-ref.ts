@@ -47,3 +47,8 @@ export class ModuleRef {
   addExport(token: InjectionToken): void {
     this.exports.add(token);
   }
+
+  addController(controller: Type<unknown>): void {
+    if (!this.controllers.includes(controller)) this.controllers.push(controller);
+  }
+}
