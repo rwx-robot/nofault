@@ -41,3 +41,9 @@ export class ModuleRef {
   }
 
   addImport(ref: ModuleRef): void {
+    this.imports.add(ref);
+  }
+
+  addExport(token: InjectionToken): void {
+    this.exports.add(token);
+  }
