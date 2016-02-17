@@ -19,3 +19,13 @@ export class ModuleScanner {
 
   async scan(root: Type<unknown> | DynamicModule | Promise<DynamicModule>): Promise<ModuleRef> {
     const resolved = await root;
+    return this.scanModule(resolved);
+  }
+
+  private async scanModule(raw: Type<unknown> | DynamicModule): Promise<ModuleRef> {
+    const ref = this.container.registerModule(raw);
+    const meta = isDynamicModule(raw)
+      ? {
+          imports: raw.imports ?? [],
+          providers: raw.providers ?? [],
+          exports: raw.exports ?? [],
