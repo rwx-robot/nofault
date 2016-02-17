@@ -50,3 +50,7 @@ export class InvalidProviderError extends Error {
     super(`Invalid provider definition for \`${tokenToString(token)}\`.`);
     this.name = 'InvalidProviderError';
   }
+}
+
+/** 应用已启动后仍尝试注册 */
+export class ContainerLockedError extends Error {
