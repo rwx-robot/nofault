@@ -35,3 +35,9 @@ export class ModuleRef {
     if (!this.providerDefs.includes(def)) this.providerDefs.push(def);
     this.providers.set(token, wrapper);
   }
+
+  hasProvider(token: InjectionToken): boolean {
+    return this.providers.has(token);
+  }
+
+  addImport(ref: ModuleRef): void {
