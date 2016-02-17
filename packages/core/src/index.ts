@@ -10,3 +10,4 @@ import 'reflect-metadata';
 // [history] omitted at this version (not yet introduced): export * from './interfaces/type.interface';
 // [history] omitted at this version (not yet introduced): export * from './interfaces/module.interface';
 export * from './constants';
+export * from './errors';
