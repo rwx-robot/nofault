@@ -29,3 +29,7 @@ export class CircularDependencyError extends Error {
 export class MissingContextIdError extends Error {
   constructor(token: InjectionToken) {
     super(
+      `Provider \`${tokenToString(token)}\` is REQUEST-scoped but was resolved without a context id.\n` +
+        `  → Make sure requests run inside a request context (see @nofault/context).`,
+    );
+    this.name = 'MissingContextIdError';
