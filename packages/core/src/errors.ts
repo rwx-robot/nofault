@@ -26,3 +26,6 @@ export class CircularDependencyError extends Error {
  *
  * 常见原因：忘了给应用接上 `@nofault/context` 的上下文中间件。
  */
+export class MissingContextIdError extends Error {
+  constructor(token: InjectionToken) {
+    super(
