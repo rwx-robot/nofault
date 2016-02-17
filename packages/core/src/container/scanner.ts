@@ -48,3 +48,14 @@ export class ModuleScanner {
     for (const p of meta.providers) {
       ref.providerDefs.push(p);
     }
+
+    // 4) 登记控制器（Web 层在 bootstrap 后统一扫描）
+    //    控制器同时也是 Provider——它们需要注入自己的依赖
+    for (const c of meta.controllers ?? []) {
+      ref.addController(c);
+      if (!ref.providerDefs.includes(c)) ref.providerDefs.push(c);
+    }
+    this.container.createProviders(ref);
+
+    return ref;
+  }
