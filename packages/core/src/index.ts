@@ -7,3 +7,4 @@
 
 // 反射元数据必须在任何装饰器之前加载
 import 'reflect-metadata';
+// [history] omitted at this version (not yet introduced): export * from './interfaces/type.interface';
