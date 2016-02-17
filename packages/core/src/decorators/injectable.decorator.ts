@@ -11,3 +11,16 @@ interface InjectableOptions {
 /**
  * 标记一个类可以被 IoC 容器实例化与注入。
  *
+ * @example
+ * ```ts
+ * @Injectable()
+ * export class UserService {}
+ * ```
+ */
+export function Injectable(options: InjectableOptions = {}): ClassDecorator {
+  return (target) => {
+    Reflect.defineMetadata(PROVIDER_METADATA.SCOPE, options.scope ?? Scope.SINGLETON, target);
+  };
+}
+
+export function readScope(target: Function): Scope {
