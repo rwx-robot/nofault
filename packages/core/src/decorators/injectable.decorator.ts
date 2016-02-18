@@ -102,3 +102,15 @@ export function readPropertyInjections(
 ): Array<{ key: string | symbol; token: InjectionToken; optional: boolean }> {
   const keys: Array<string | symbol> = Reflect.getMetadata('nofault:property:inject:keys', target) ?? [];
   const optionals: Array<string | symbol> = Reflect.getMetadata('nofault:optional:props', target) ?? [];
+  return keys.map((key) => {
+    const explicit = Reflect.getMetadata(`nofault:property:inject:${tokenToString(key)}`, target) as
+      | InjectionToken
+      | undefined;
+    const fallback = Reflect.getMetadata(PROPERTY_TYPE_METADATA, target.prototype, key) as InjectionToken | undefined;
+    return {
+      key,
+      token: explicit ?? fallback!,
+      optional: optionals.includes(key),
+    };
+  });
+}
