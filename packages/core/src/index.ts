@@ -23,3 +23,4 @@ export { MissingContextIdError } from './errors';
 // [history] omitted at this version (not yet introduced): export type { HttpAdapter, HttpHandler } from './application/http-adapter.interface';
 // [history] omitted at this version (not yet introduced): export { NofaultApplicationContext } from './application/nofault-application-context';
 // [history] omitted at this version (not yet introduced): export type { ApplicationContextOptions } from './application/nofault-application-context';
+// [history] omitted at this version (not yet introduced): export { NofaultApplication, createApplication } from './application/nofault-application';
