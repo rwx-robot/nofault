@@ -37,3 +37,10 @@ export function Global(): ClassDecorator {
 }
 
 /** 读取模块元数据（供扫描器使用） */
+export function readModuleMetadata(target: Type<unknown>): Required<ModuleMetadata> {
+  return {
+    imports: Reflect.getMetadata(MODULE_METADATA.IMPORTS, target) ?? [],
+    providers: Reflect.getMetadata(MODULE_METADATA.PROVIDERS, target) ?? [],
+    exports: Reflect.getMetadata(MODULE_METADATA.EXPORTS, target) ?? [],
+    controllers: Reflect.getMetadata(MODULE_METADATA.CONTROLLERS, target) ?? [],
+  };
