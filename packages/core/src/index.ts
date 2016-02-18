@@ -24,3 +24,5 @@ export { MissingContextIdError } from './errors';
 // [history] omitted at this version (not yet introduced): export { NofaultApplicationContext } from './application/nofault-application-context';
 // [history] omitted at this version (not yet introduced): export type { ApplicationContextOptions } from './application/nofault-application-context';
 // [history] omitted at this version (not yet introduced): export { NofaultApplication, createApplication } from './application/nofault-application';
+// [history] omitted at this version (not yet introduced): export type { NofaultApplicationOptions } from './application/nofault-application';
+export { NofaultFactory } from './nofault-factory';
