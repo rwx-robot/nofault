@@ -19,3 +19,7 @@ export {
   Inject,
   Optional,
   readScope,
+  readParamTypes,
+  readDependencyOverrides,
+  readPropertyInjections,
+} from './decorators/injectable.decorator';
