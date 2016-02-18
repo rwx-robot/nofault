@@ -31,3 +31,9 @@ export function Module(metadata: ModuleMetadata = {}): ClassDecorator {
 
 /** 标记为全局模块：注册后任何模块都能直接注入其导出，无需显式 import */
 export function Global(): ClassDecorator {
+  return (target) => {
+    Reflect.defineMetadata(MODULE_METADATA.GLOBAL, true, target);
+  };
+}
+
+/** 读取模块元数据（供扫描器使用） */
