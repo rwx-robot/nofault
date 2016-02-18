@@ -4,3 +4,8 @@
  * 规范：遵循 Node.js / NestJS 生态约定（装饰器 + 元数据反射），
  * 工厂用 `createXxx()`，导出用 camelCase。
  */
+
+// 反射元数据必须在任何装饰器之前加载
+import 'reflect-metadata';
+
+export * from './interfaces/type.interface';
