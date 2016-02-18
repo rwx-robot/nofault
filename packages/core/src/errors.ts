@@ -40,3 +40,10 @@ export class MissingContextIdError extends Error {
 export class ModuleNotFoundError extends Error {
   constructor(token: InjectionToken) {
     super(`Module \`${tokenToString(token)}\` is not registered in the container.`);
+    this.name = 'ModuleNotFoundError';
+  }
+}
+
+/** 非法 Provider 定义 */
+export class InvalidProviderError extends Error {
+  constructor(token: InjectionToken) {
