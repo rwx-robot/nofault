@@ -11,3 +11,10 @@ import type { Type } from '../interfaces/type.interface';
  * @Module({
  *   imports: [UserModule],
  *   providers: [UserService],
+ *   exports: [UserService],
+ * })
+ * export class AppModule {}
+ * ```
+ */
+export function Module(metadata: ModuleMetadata = {}): ClassDecorator {
+  return (target) => {
