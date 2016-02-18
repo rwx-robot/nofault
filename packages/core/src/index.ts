@@ -13,3 +13,5 @@ export * from './constants';
 export * from './errors';
 // [history] omitted at this version (not yet introduced): export { Module, Global, readModuleMetadata, isGlobalModule } from './decorators/module.decorator';
 // [history] omitted at this version (not yet introduced): export { Injectable, Inject, Optional, readScope, readParamTypes, readDependencyOverrides, readPropertyInjections, } from './decorators/injectable.decorator';
+// [history] omitted at this version (not yet introduced): export { NofaultContainer } from './container/container';
+export { MissingContextIdError } from './errors';
