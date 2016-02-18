@@ -9,3 +9,8 @@
 import 'reflect-metadata';
 
 export * from './interfaces/type.interface';
+export * from './interfaces/module.interface';
+export * from './constants';
+export * from './errors';
+
+export { Module, Global, readModuleMetadata, isGlobalModule } from './decorators/module.decorator';
