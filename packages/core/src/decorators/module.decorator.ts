@@ -44,3 +44,8 @@ export function readModuleMetadata(target: Type<unknown>): Required<ModuleMetada
     exports: Reflect.getMetadata(MODULE_METADATA.EXPORTS, target) ?? [],
     controllers: Reflect.getMetadata(MODULE_METADATA.CONTROLLERS, target) ?? [],
   };
+}
+
+export function isGlobalModule(target: Type<unknown>): boolean {
+  return Reflect.getMetadata(MODULE_METADATA.GLOBAL, target) === true;
+}
