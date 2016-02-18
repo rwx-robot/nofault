@@ -19,3 +19,5 @@ export { MissingContextIdError } from './errors';
 // [history] omitted at this version (not yet introduced): export { InstanceWrapper } from './container/instance-wrapper';
 // [history] omitted at this version (not yet introduced): export type { ContextId } from './container/instance-wrapper';
 // [history] omitted at this version (not yet introduced): export { Injector } from './container/injector';
+// [history] omitted at this version (not yet introduced): export { ModuleScanner } from './container/scanner';
+// [history] omitted at this version (not yet introduced): export type { HttpAdapter, HttpHandler } from './application/http-adapter.interface';
