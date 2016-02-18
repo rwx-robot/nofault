@@ -5,3 +5,9 @@ import type { Type } from '../interfaces/type.interface';
 
 /**
  * 声明一个 nofault 模块。
+ *
+ * @example
+ * ```ts
+ * @Module({
+ *   imports: [UserModule],
+ *   providers: [UserService],
