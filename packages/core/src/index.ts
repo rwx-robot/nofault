@@ -15,3 +15,4 @@ export * from './errors';
 // [history] omitted at this version (not yet introduced): export { Injectable, Inject, Optional, readScope, readParamTypes, readDependencyOverrides, readPropertyInjections, } from './decorators/injectable.decorator';
 // [history] omitted at this version (not yet introduced): export { NofaultContainer } from './container/container';
 export { MissingContextIdError } from './errors';
+// [history] omitted at this version (not yet introduced): export { ModuleRef } from './container/module-ref';
