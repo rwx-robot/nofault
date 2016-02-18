@@ -19,3 +19,10 @@ export class CircularDependencyError extends Error {
     super(`Circular dependency detected: ${chain.join(' -> ')}`);
     this.name = 'CircularDependencyError';
   }
+}
+
+/**
+ * 请求级（REQUEST 作用域）Provider 在没有上下文的情况下被解析。
+ *
+ * 常见原因：忘了给应用接上 `@nofault/context` 的上下文中间件。
+ */
