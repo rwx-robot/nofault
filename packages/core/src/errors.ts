@@ -47,3 +47,10 @@ export class ModuleNotFoundError extends Error {
 /** 非法 Provider 定义 */
 export class InvalidProviderError extends Error {
   constructor(token: InjectionToken) {
+    super(`Invalid provider definition for \`${tokenToString(token)}\`.`);
+    this.name = 'InvalidProviderError';
+  }
+}
+
+/** 应用已启动后仍尝试注册 */
+export class ContainerLockedError extends Error {
