@@ -14,3 +14,8 @@ export * from './constants';
 export * from './errors';
 
 export { Module, Global, readModuleMetadata, isGlobalModule } from './decorators/module.decorator';
+export {
+  Injectable,
+  Inject,
+  Optional,
+  readScope,
