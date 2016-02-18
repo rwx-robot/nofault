@@ -5,3 +5,10 @@ import { tokenToString } from './interfaces/type.interface';
 export class UnknownDependencyError extends Error {
   constructor(token: InjectionToken, context?: string) {
     const where = context ? ` in ${context}` : '';
+    super(
+      `nofault can't resolve dependencies of the provider \`${tokenToString(token)}\`${where}. ` +
+        `Please make sure the provider is declared in a module, or the module exporting it is imported.`,
+    );
+    this.name = 'UnknownDependencyError';
+  }
+}
