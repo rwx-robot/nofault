@@ -16,3 +16,5 @@ export * from './errors';
 // [history] omitted at this version (not yet introduced): export { NofaultContainer } from './container/container';
 export { MissingContextIdError } from './errors';
 // [history] omitted at this version (not yet introduced): export { ModuleRef } from './container/module-ref';
+// [history] omitted at this version (not yet introduced): export { InstanceWrapper } from './container/instance-wrapper';
+// [history] omitted at this version (not yet introduced): export type { ContextId } from './container/instance-wrapper';
