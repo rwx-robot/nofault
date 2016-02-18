@@ -54,3 +54,8 @@ export class InvalidProviderError extends Error {
 
 /** 应用已启动后仍尝试注册 */
 export class ContainerLockedError extends Error {
+  constructor() {
+    super('The container is locked after bootstrap; providers can no longer be registered.');
+    this.name = 'ContainerLockedError';
+  }
+}
