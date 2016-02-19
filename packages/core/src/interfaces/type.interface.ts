@@ -47,3 +47,11 @@ export interface OnApplicationShutdown {
 }
 
 export interface NofaultApplicationContext {
+  select<T>(module: Type<unknown>): T | undefined;
+  get<T>(token: InjectionToken<T>): T | undefined;
+}
+
+/** 判断某个值是否为类构造函数 */
+export function isType(value: unknown): value is Type {
+  return typeof value === 'function' && /^\s*class\s+/.test(Function.prototype.toString.call(value));
+}
