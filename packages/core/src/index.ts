@@ -23,3 +23,9 @@ export {
   readDependencyOverrides,
   readPropertyInjections,
 } from './decorators/injectable.decorator';
+
+export { NofaultContainer } from './container/container';
+export { MissingContextIdError } from './errors';
+export { ModuleRef } from './container/module-ref';
+export { InstanceWrapper } from './container/instance-wrapper';
+export type { ContextId } from './container/instance-wrapper';
