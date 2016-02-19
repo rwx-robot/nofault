@@ -31,3 +31,11 @@ export interface OnModuleInit {
 }
 
 export interface OnApplicationBootstrap {
+  onApplicationBootstrap(): void | Promise<void>;
+}
+
+export interface OnModuleDestroy {
+  onModuleDestroy(): void | Promise<void>;
+}
+
+export interface BeforeApplicationShutdown {
