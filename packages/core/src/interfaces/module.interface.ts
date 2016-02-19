@@ -47,3 +47,14 @@ export interface FactoryProvider<T = unknown> {
   inject?: InjectionToken[];
   scope?: import('./type.interface').Scope;
 }
+
+/** 别名 Provider */
+export interface ExistingProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useExisting: InjectionToken<T>;
+}
+
+export type Provider<T = unknown> =
+  | Type<T>
+  | ValueProvider<T>
+  | ClassProvider<T>
