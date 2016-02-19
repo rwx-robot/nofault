@@ -38,3 +38,12 @@ export interface ClassProvider<T = unknown> {
   useClass: Type<T>;
   scope?: import('./type.interface').Scope;
 }
+
+/** 工厂 Provider */
+export interface FactoryProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useFactory: (...args: never[]) => T | Promise<T>;
+  /** 工厂函数的入参令牌 */
+  inject?: InjectionToken[];
+  scope?: import('./type.interface').Scope;
+}
