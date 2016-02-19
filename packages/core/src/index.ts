@@ -34,3 +34,7 @@ export { ModuleScanner } from './container/scanner';
 
 export type { HttpAdapter, HttpHandler } from './application/http-adapter.interface';
 export { NofaultApplicationContext } from './application/nofault-application-context';
+export type { ApplicationContextOptions } from './application/nofault-application-context';
+export { NofaultApplication, createApplication } from './application/nofault-application';
+export type { NofaultApplicationOptions } from './application/nofault-application';
+export { NofaultFactory } from './nofault-factory';
