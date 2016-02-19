@@ -23,3 +23,11 @@ export enum Scope {
   TRANSIENT = 'transient',
   /** 请求级：在同一请求上下文中复用（v0.3.0 引入 RequestContext 后启用） */
   REQUEST = 'request',
+}
+
+/** 生命周期钩子接口 */
+export interface OnModuleInit {
+  onModuleInit(): void | Promise<void>;
+}
+
+export interface OnApplicationBootstrap {
