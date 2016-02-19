@@ -39,3 +39,11 @@ export interface OnModuleDestroy {
 }
 
 export interface BeforeApplicationShutdown {
+  beforeApplicationShutdown(signal?: string): void | Promise<void>;
+}
+
+export interface OnApplicationShutdown {
+  onApplicationShutdown(signal?: string): void | Promise<void>;
+}
+
+export interface NofaultApplicationContext {
