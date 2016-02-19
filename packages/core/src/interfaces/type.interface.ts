@@ -14,3 +14,12 @@ export interface AbstractType<T = unknown> extends Function {
 
 /** 任意可作为依赖令牌的值 */
 export type InjectionToken<T = unknown> = string | symbol | Type<T> | AbstractType<T>;
+
+/** Provider 作用域 */
+export enum Scope {
+  /** 单例：整个应用生命周期内只创建一次（默认） */
+  SINGLETON = 'singleton',
+  /** 瞬时：每次解析都创建新实例 */
+  TRANSIENT = 'transient',
+  /** 请求级：在同一请求上下文中复用（v0.3.0 引入 RequestContext 后启用） */
+  REQUEST = 'request',
