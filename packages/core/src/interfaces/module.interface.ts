@@ -28,3 +28,13 @@ export interface DynamicModule extends ModuleMetadata {
 
 /** 值 Provider */
 export interface ValueProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useValue: T;
+}
+
+/** 类 Provider */
+export interface ClassProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useClass: Type<T>;
+  scope?: import('./type.interface').Scope;
+}
