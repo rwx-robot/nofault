@@ -29,3 +29,8 @@ export { MissingContextIdError } from './errors';
 export { ModuleRef } from './container/module-ref';
 export { InstanceWrapper } from './container/instance-wrapper';
 export type { ContextId } from './container/instance-wrapper';
+export { Injector } from './container/injector';
+export { ModuleScanner } from './container/scanner';
+
+export type { HttpAdapter, HttpHandler } from './application/http-adapter.interface';
+export { NofaultApplicationContext } from './application/nofault-application-context';
