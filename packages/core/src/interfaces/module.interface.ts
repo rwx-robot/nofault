@@ -8,3 +8,12 @@ export interface ModuleMetadata {
   imports?: Array<Type<unknown> | DynamicModule | Promise<DynamicModule>>;
   /** 本模块内声明的 Provider */
   providers?: Provider[];
+  /** 对外导出的 Provider（或导出整个模块） */
+  exports?: Array<InjectionToken | Type<unknown> | DynamicModule>;
+  /**
+   * HTTP 控制器（v0.2.0 起由 `@nofault/rest` 消费）。
+   *
+   * 内核只负责"登记"这些类，不解释它们——保持 core 对 Web 层无感知。
+   */
+  controllers?: Array<Type<unknown>>;
+}
