@@ -55,3 +55,10 @@ export interface NofaultApplicationContext {
 export function isType(value: unknown): value is Type {
   return typeof value === 'function' && /^\s*class\s+/.test(Function.prototype.toString.call(value));
 }
+
+/** 把任意令牌转换成可读字符串，便于报错与日志 */
+export function tokenToString(token: InjectionToken): string {
+  if (typeof token === 'string') return token;
+  if (typeof token === 'symbol') return token.toString();
+  return token.name || '(anonymous class)';
+}
