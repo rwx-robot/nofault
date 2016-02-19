@@ -68,3 +68,13 @@ export function isValueProvider<T>(p: Provider<T>): p is ValueProvider<T> {
 export function isClassProvider<T>(p: Provider<T>): p is ClassProvider<T> {
   return typeof p === 'object' && p !== null && 'useClass' in p;
 }
+
+export function isFactoryProvider<T>(p: Provider<T>): p is FactoryProvider<T> {
+  return typeof p === 'object' && p !== null && 'useFactory' in p;
+}
+
+export function isExistingProvider<T>(p: Provider<T>): p is ExistingProvider<T> {
+  return typeof p === 'object' && p !== null && 'useExisting' in p;
+}
+
+export function isDynamicModule(m: unknown): m is DynamicModule {
