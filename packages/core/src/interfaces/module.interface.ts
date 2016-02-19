@@ -58,3 +58,13 @@ export type Provider<T = unknown> =
   | Type<T>
   | ValueProvider<T>
   | ClassProvider<T>
+  | FactoryProvider<T>
+  | ExistingProvider<T>;
+
+export function isValueProvider<T>(p: Provider<T>): p is ValueProvider<T> {
+  return typeof p === 'object' && p !== null && 'useValue' in p;
+}
+
+export function isClassProvider<T>(p: Provider<T>): p is ClassProvider<T> {
+  return typeof p === 'object' && p !== null && 'useClass' in p;
+}
