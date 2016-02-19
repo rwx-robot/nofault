@@ -17,3 +17,14 @@ export interface ModuleMetadata {
    */
   controllers?: Array<Type<unknown>>;
 }
+
+/** 动态模块（如 `ConfigModule.forRoot()` 的返回值） */
+export interface DynamicModule extends ModuleMetadata {
+  /** 动态模块必须显式指定宿主模块 */
+  module: Type<unknown>;
+  /** 是否全局模块 */
+  global?: boolean;
+}
+
+/** 值 Provider */
+export interface ValueProvider<T = unknown> {
