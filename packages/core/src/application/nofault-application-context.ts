@@ -22,3 +22,15 @@ export interface ApplicationContextOptions {
   name?: string;
   /** 日志输出函数 */
   logger?: { info(msg: string): void; error(msg: string): void };
+}
+
+function hasHook<T>(obj: unknown, key: string): obj is T {
+  return typeof (obj as Record<string, unknown>)?.[key] === 'function';
+}
+
+/**
+ * 应用上下文：负责模块扫描、实例化、生命周期编排。
+ *
+ * 按依赖顺序编排启动与停机，用 Node 生态惯用的 IoC 语义表达。
+ */
+export class NofaultApplicationContext {
