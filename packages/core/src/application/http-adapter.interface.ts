@@ -10,3 +10,5 @@ export type HttpHandler = (
   req: IncomingMessage,
   res: ServerResponse,
 ) => void | boolean | Promise<void | boolean>;
+
+/**
