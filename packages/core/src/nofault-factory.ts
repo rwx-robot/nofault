@@ -1,0 +1,1 @@
+import type { DynamicModule } from './interfaces/module.interface';
