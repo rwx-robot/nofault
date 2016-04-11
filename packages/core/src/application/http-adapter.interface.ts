@@ -17,3 +17,5 @@ export type HttpHandler = (
  * nofault 内核不绑定任何具体实现：v0.1.0 由 `@nofault/http` 提供 `node:http` 实现，
  * 后续版本可替换为 Fastify / uWebSockets / Bun 等适配器。
  */
+export interface HttpAdapter {
+  /** 挂载请求处理函数 */
