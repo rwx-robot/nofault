@@ -14,3 +14,4 @@ export type HttpHandler = (
 /**
  * HTTP 适配器抽象。
  *
+ * nofault 内核不绑定任何具体实现：v0.1.0 由 `@nofault/http` 提供 `node:http` 实现，
