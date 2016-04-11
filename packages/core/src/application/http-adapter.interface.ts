@@ -25,3 +25,5 @@ export interface HttpAdapter {
   /** 停止监听并释放资源 */
   close(): Promise<void>;
   /** 底层原生 server（供测试与高级场景使用） */
+  getHttpServer(): unknown;
+  /** 是否已监听 */
