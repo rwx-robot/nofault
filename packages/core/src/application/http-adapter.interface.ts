@@ -21,3 +21,5 @@ export interface HttpAdapter {
   /** 挂载请求处理函数 */
   useHandler(handler: HttpHandler): void;
   /** 开始监听；返回实际监听的地址信息 */
+  listen(port: number, hostname?: string): Promise<{ port: number; hostname: string }>;
+  /** 停止监听并释放资源 */
