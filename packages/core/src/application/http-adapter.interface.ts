@@ -27,3 +27,5 @@ export interface HttpAdapter {
   /** 底层原生 server（供测试与高级场景使用） */
   getHttpServer(): unknown;
   /** 是否已监听 */
+  isListening(): boolean;
+}
