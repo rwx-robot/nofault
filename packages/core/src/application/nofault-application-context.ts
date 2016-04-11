@@ -34,3 +34,14 @@ function hasHook<T>(obj: unknown, key: string): obj is T {
  * 按依赖顺序编排启动与停机，用 Node 生态惯用的 IoC 语义表达。
  */
 export class NofaultApplicationContext {
+  protected readonly container = new NofaultContainer();
+  protected rootRef!: ModuleRef;
+  private initialized = false;
+  private closed = false;
+
+  constructor(protected readonly options: ApplicationContextOptions = {}) {}
+
+  /** 扫描模块图 + 实例化 Provider + 触发生命周期钩子 */
+  async init(root: Type<unknown> | DynamicModule): Promise<this> {
+    const scanner = new ModuleScanner(this.container);
+    this.rootRef = await scanner.scan(root);
