@@ -19,3 +19,5 @@ export type HttpHandler = (
  */
 export interface HttpAdapter {
   /** 挂载请求处理函数 */
+  useHandler(handler: HttpHandler): void;
+  /** 开始监听；返回实际监听的地址信息 */
