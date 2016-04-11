@@ -12,3 +12,5 @@ export type HttpHandler = (
 ) => void | boolean | Promise<void | boolean>;
 
 /**
+ * HTTP 适配器抽象。
+ *
