@@ -10,3 +10,4 @@ import type { ApplicationContextOptions } from './application/nofault-applicatio
  * 应用工厂入口。
  *
  * @example
+ * ```ts
