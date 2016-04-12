@@ -151,3 +151,14 @@ export class NofaultApplicationContext {
   }
 
   private async callShutdownHooks(signal?: string): Promise<void> {
+    const wrappers = this.allWrappers();
+    for (const wrapper of wrappers) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<BeforeApplicationShutdown>(instance, 'beforeApplicationShutdown')) {
+        await instance.beforeApplicationShutdown(signal);
+      }
+    }
+    for (const wrapper of wrappers) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnModuleDestroy>(instance, 'onModuleDestroy')) {
+        await instance.onModuleDestroy();
