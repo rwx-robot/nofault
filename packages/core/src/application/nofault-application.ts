@@ -46,3 +46,14 @@ export class NofaultApplication extends NofaultApplicationContext {
     }
     return this.adapter;
   }
+
+  /** 注册统一的请求处理入口（可多次调用，顺序组成链式兜底） */
+  use(handler: Parameters<HttpAdapter['useHandler']>[0]): this {
+    this.handlers.push(handler);
+    return this;
+  }
+
+  async listen(port: number, hostname = '0.0.0.0'): Promise<{ port: number; hostname: string }> {
+    const adapter = await this.getAdapter();
+    const handlers = [...this.handlers];
+    adapter.useHandler((req, res) => this.runHandlers(handlers, req, res));
