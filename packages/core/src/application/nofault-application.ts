@@ -66,3 +66,13 @@ export class NofaultApplication extends NofaultApplicationContext {
   /** 启用 SIGTERM/SIGINT 优雅退出 */
   enableShutdownHooks(signals: NodeJS.Signals[] = ['SIGTERM', 'SIGINT']): this {
     if (this.shutdownHooksEnabled) return this;
+    this.shutdownHooksEnabled = true;
+    for (const signal of signals) {
+      process.once(signal, () => {
+        void this.close(signal);
+      });
+    }
+    return this;
+  }
+
+  /**
