@@ -92,3 +92,15 @@ export class NofaultApplicationContext {
     if (!wrapper) {
       throw new Error(`No provider found for ${tokenToString(token)}`);
     }
+    return (await wrapper.resolve(contextId)) as T;
+  }
+
+  /** 请求结束：释放该上下文的全部请求级实例 */
+  clearRequestContext(contextId: ContextId): number {
+    return this.container.clearRequestContext(contextId);
+  }
+
+  /** 是否声明过 REQUEST 作用域的 Provider */
+  hasRequestScopedProviders(): boolean {
+    return this.container.hasRequestScopedProviders();
+  }
