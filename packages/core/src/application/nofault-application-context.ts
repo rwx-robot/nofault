@@ -57,3 +57,15 @@ export class NofaultApplicationContext {
     // 实例化所有 Provider（惰性包装器在此刻真正执行工厂）
     for (const mod of this.container.getAllModules()) {
       for (const wrapper of mod.providers.values()) {
+        // 四类不在此刻实例化：
+        // - TRANSIENT：按需创建
+        // - REQUEST：必须有 contextId，启动期拿不到
+        // - 被 REQUEST 污染（captive dependency）：同上
+        // - 控制器：它可能依赖请求级 Provider，交给 Web 层在请求内解析
+        if (
+          wrapper.scope === Scope.TRANSIENT ||
+          wrapper.scope === Scope.REQUEST ||
+          wrapper.contextDependent ||
+          controllerTokens.has(wrapper.token)
+        ) {
+          continue;
