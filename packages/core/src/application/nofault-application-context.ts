@@ -45,3 +45,15 @@ export class NofaultApplicationContext {
   async init(root: Type<unknown> | DynamicModule): Promise<this> {
     const scanner = new ModuleScanner(this.container);
     this.rootRef = await scanner.scan(root);
+
+    // 先沿依赖图传播 REQUEST 作用域，再决定谁该在启动期实例化
+    this.container.propagateRequestScope();
+
+    const controllerTokens = new Set<unknown>();
+    for (const mod of this.container.getAllModules()) {
+      for (const c of mod.controllers) controllerTokens.add(c);
+    }
+
+    // 实例化所有 Provider（惰性包装器在此刻真正执行工厂）
+    for (const mod of this.container.getAllModules()) {
+      for (const wrapper of mod.providers.values()) {
