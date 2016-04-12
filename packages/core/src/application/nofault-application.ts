@@ -57,3 +57,12 @@ export class NofaultApplication extends NofaultApplicationContext {
     const adapter = await this.getAdapter();
     const handlers = [...this.handlers];
     adapter.useHandler((req, res) => this.runHandlers(handlers, req, res));
+    const addr = await adapter.listen(port, hostname);
+    this.listening = true;
+    this.log('info', `[nofault] ${this.appOptions.name ?? 'app'} listening on http://${addr.hostname}:${addr.port}`);
+    return addr;
+  }
+
+  /** 启用 SIGTERM/SIGINT 优雅退出 */
+  enableShutdownHooks(signals: NodeJS.Signals[] = ['SIGTERM', 'SIGINT']): this {
+    if (this.shutdownHooksEnabled) return this;
