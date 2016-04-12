@@ -7,3 +7,4 @@ import { NofaultApplicationContext } from './application/nofault-application-con
 import type { ApplicationContextOptions } from './application/nofault-application-context';
 
 /**
+ * 应用工厂入口。
