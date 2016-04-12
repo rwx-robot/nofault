@@ -104,3 +104,15 @@ export class NofaultApplicationContext {
   hasRequestScopedProviders(): boolean {
     return this.container.hasRequestScopedProviders();
   }
+
+  /** 选择某个模块，返回该模块的解析句柄 */
+  select(moduleToken: Type<unknown>): {
+    get<T>(token: InjectionToken<T>, contextId?: ContextId): Promise<T>;
+  } {
+    const ref = this.container.getModule(moduleToken);
+    if (!ref) throw new Error(`Module ${tokenToString(moduleToken)} not found`);
+    return {
+      get: async <T>(token: InjectionToken<T>, contextId?: ContextId): Promise<T> => {
+        const wrapper = this.container.lookupWrapper(token, ref);
+        if (!wrapper) throw new Error(`No provider ${tokenToString(token)} in module ${ref.name}`);
+        return (await wrapper.resolve(contextId)) as T;
