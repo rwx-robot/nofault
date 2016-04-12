@@ -174,3 +174,15 @@ export class NofaultApplicationContext {
 
   protected allWrappers() {
     return this.container.getAllModules().flatMap((m) => [...m.providers.values()]);
+  }
+
+  protected log(level: 'info' | 'error', msg: string): void {
+    if (this.options.quiet) return;
+    this.options.logger?.[level](msg);
+  }
+
+  /**
+   * 返回全部模块引用。
+   *
+   * 供上层（如 `@nofault/rest` 的路由扫描器）读取模块自带的元数据，
+   * 内核本身不理解"控制器"这类 Web 概念。
