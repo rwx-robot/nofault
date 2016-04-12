@@ -18,3 +18,13 @@ export interface NofaultApplicationOptions extends ApplicationContextOptions {
  * ```ts
  * const app = await NofaultFactory.create(AppModule);
  * await app.listen(3000);
+ * ```
+ */
+export class NofaultApplication extends NofaultApplicationContext {
+  private adapter?: HttpAdapter;
+  private listening = false;
+  private shutdownHooksEnabled = false;
+  private readonly handlers: Array<Parameters<HttpAdapter['useHandler']>[0]> = [];
+
+  constructor(private readonly appOptions: NofaultApplicationOptions = {}) {
+    super(appOptions);
