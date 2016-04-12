@@ -69,3 +69,14 @@ export class NofaultApplicationContext {
           controllerTokens.has(wrapper.token)
         ) {
           continue;
+        }
+        await wrapper.resolve();
+      }
+    }
+
+    this.container.lock();
+    await this.callInitHooks();
+    await this.callBootstrapHooks();
+    this.initialized = true;
+    return this;
+  }
