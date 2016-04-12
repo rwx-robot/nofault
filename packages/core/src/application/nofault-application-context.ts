@@ -116,3 +116,14 @@ export class NofaultApplicationContext {
         const wrapper = this.container.lookupWrapper(token, ref);
         if (!wrapper) throw new Error(`No provider ${tokenToString(token)} in module ${ref.name}`);
         return (await wrapper.resolve(contextId)) as T;
+      },
+    };
+  }
+
+  /** 有序关闭：先 beforeApplicationShutdown，再 onModuleDestroy，最后 onApplicationShutdown */
+  async close(signal?: string): Promise<void> {
+    if (this.closed) return;
+    this.closed = true;
+    await this.callShutdownHooks(signal);
+    this.log('info', 'Application closed');
+  }
