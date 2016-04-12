@@ -80,3 +80,15 @@ export class NofaultApplicationContext {
     this.initialized = true;
     return this;
   }
+
+  /**
+   * 从根模块（或全容器）获取实例。
+   *
+   * @param contextId 请求上下文标识；REQUEST 作用域的 Provider 需要它。
+   *                  传了它，返回的实例在该上下文内共享同一份。
+   */
+  async get<T>(token: InjectionToken<T>, contextId?: ContextId): Promise<T> {
+    const wrapper = this.container.lookupWrapper(token, this.rootRef) ?? this.container.lookupGlobal(token);
+    if (!wrapper) {
+      throw new Error(`No provider found for ${tokenToString(token)}`);
+    }
