@@ -186,3 +186,13 @@ export class NofaultApplicationContext {
    *
    * 供上层（如 `@nofault/rest` 的路由扫描器）读取模块自带的元数据，
    * 内核本身不理解"控制器"这类 Web 概念。
+   */
+  getModuleRefs(): ModuleRef[] {
+    return this.container.getAllModules();
+  }
+
+  /** 调试：打印模块树 */
+  describe(): string {
+    return ModuleScanner.printTree(this.rootRef);
+  }
+}
