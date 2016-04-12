@@ -28,3 +28,12 @@ export class NofaultApplication extends NofaultApplicationContext {
 
   constructor(private readonly appOptions: NofaultApplicationOptions = {}) {
     super(appOptions);
+    this.adapter = appOptions.httpAdapter;
+  }
+
+  /**
+   * 获取 HTTP 适配器。
+   *
+   * 内核刻意不内置任何具体实现：需要 HTTP 能力时从平台包获取工厂，
+   * 例如 `@nofault/http` 的 `createHttpApplication()`，或手动传入 `httpAdapter`。
+   */
