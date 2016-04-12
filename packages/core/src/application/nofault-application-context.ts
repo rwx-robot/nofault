@@ -127,3 +127,15 @@ export class NofaultApplicationContext {
     await this.callShutdownHooks(signal);
     this.log('info', 'Application closed');
   }
+
+  get isInitialized(): boolean {
+    return this.initialized;
+  }
+
+  protected async callInitHooks(): Promise<void> {
+    for (const wrapper of this.allWrappers()) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnModuleInit>(instance, 'onModuleInit')) {
+        await instance.onModuleInit();
+      }
+    }
