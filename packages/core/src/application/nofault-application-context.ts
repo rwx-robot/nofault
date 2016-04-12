@@ -139,3 +139,15 @@ export class NofaultApplicationContext {
         await instance.onModuleInit();
       }
     }
+  }
+
+  protected async callBootstrapHooks(): Promise<void> {
+    for (const wrapper of this.allWrappers()) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnApplicationBootstrap>(instance, 'onApplicationBootstrap')) {
+        await instance.onApplicationBootstrap();
+      }
+    }
+  }
+
+  private async callShutdownHooks(signal?: string): Promise<void> {
