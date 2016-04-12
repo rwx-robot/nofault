@@ -37,3 +37,12 @@ export class NofaultApplication extends NofaultApplicationContext {
    * 内核刻意不内置任何具体实现：需要 HTTP 能力时从平台包获取工厂，
    * 例如 `@nofault/http` 的 `createHttpApplication()`，或手动传入 `httpAdapter`。
    */
+  async getAdapter(): Promise<HttpAdapter> {
+    if (!this.adapter) {
+      throw new Error(
+        'No HTTP adapter configured. Use `createHttpApplication()` from `@nofault/http`, ' +
+          'or pass an `httpAdapter` to `NofaultFactory.create()`.',
+      );
+    }
+    return this.adapter;
+  }
