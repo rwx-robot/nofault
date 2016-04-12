@@ -162,3 +162,15 @@ export class NofaultApplicationContext {
       const instance = wrapper.peek();
       if (instance && hasHook<OnModuleDestroy>(instance, 'onModuleDestroy')) {
         await instance.onModuleDestroy();
+      }
+    }
+    for (const wrapper of wrappers) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnApplicationShutdown>(instance, 'onApplicationShutdown')) {
+        await instance.onApplicationShutdown(signal);
+      }
+    }
+  }
+
+  protected allWrappers() {
+    return this.container.getAllModules().flatMap((m) => [...m.providers.values()]);
