@@ -154,3 +154,11 @@ export class NofaultApplication extends NofaultApplicationContext {
 }
 
 /** 工厂：创建并初始化应用 */
+export async function createApplication(
+  root: Type<unknown> | DynamicModule,
+  options: NofaultApplicationOptions = {},
+): Promise<NofaultApplication> {
+  const app = new NofaultApplication(options);
+  await app.init(root);
+  return app;
+}
