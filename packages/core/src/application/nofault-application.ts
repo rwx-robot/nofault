@@ -105,3 +105,13 @@ export class NofaultApplication extends NofaultApplicationContext {
         process.stderr.write(
           `[nofault] graceful shutdown timed out after ${timeout}ms, forcing exit\n`,
         );
+        resolve();
+      }, timeout);
+      timer.unref?.();
+    });
+
+    await Promise.race([work, guard]);
+    if (timer) clearTimeout(timer);
+  }
+
+  get isListening(): boolean {
