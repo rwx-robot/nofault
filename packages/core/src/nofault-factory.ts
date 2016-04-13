@@ -20,3 +20,5 @@ export class NofaultFactory {
   static create(root: Type<unknown> | DynamicModule, options: NofaultApplicationOptions = {}): Promise<NofaultApplication> {
     return createApplication(root, options);
   }
+
+  /** 创建纯应用上下文（无 HTTP，适合定时任务、消费者、脚本） */
