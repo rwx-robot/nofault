@@ -10,3 +10,5 @@ import type { ApplicationContextOptions } from './application/nofault-applicatio
  * 应用工厂入口。
  *
  * @example
+ * ```ts
+ * const app = await NofaultFactory.create(AppModule);
