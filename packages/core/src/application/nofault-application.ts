@@ -115,3 +115,13 @@ export class NofaultApplication extends NofaultApplicationContext {
   }
 
   get isListening(): boolean {
+    return this.listening;
+  }
+
+  getHttpAdapter(): HttpAdapter | undefined {
+    return this.adapter;
+  }
+
+  getHttpServer<T = unknown>(): T | undefined {
+    return this.adapter?.getHttpServer() as T | undefined;
+  }
