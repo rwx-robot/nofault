@@ -86,3 +86,13 @@ export class NofaultApplication extends NofaultApplicationContext {
    */
   override async close(signal?: string): Promise<void> {
     const timeout = this.appOptions.shutdownTimeout ?? 5000;
+    const work = (async () => {
+      if (this.listening && this.adapter) {
+        await this.adapter.close();
+        this.listening = false;
+      }
+      await super.close(signal);
+    })();
+
+    if (timeout <= 0) {
+      await work;
