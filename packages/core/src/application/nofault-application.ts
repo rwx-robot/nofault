@@ -144,3 +144,13 @@ export class NofaultApplication extends NofaultApplicationContext {
     for (const handler of handlers) {
       if (res.writableEnded) return;
       const result = await handler(req, res);
+      if (result === true) return;
+    }
+    if (!res.writableEnded) {
+      res.statusCode = 404;
+      res.end('404 Not Found');
+    }
+  }
+}
+
+/** 工厂：创建并初始化应用 */
