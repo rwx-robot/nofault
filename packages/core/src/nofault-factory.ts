@@ -14,3 +14,5 @@ import type { ApplicationContextOptions } from './application/nofault-applicatio
  * const app = await NofaultFactory.create(AppModule);
  * await app.listen(3000);
  * ```
+ */
+export class NofaultFactory {
