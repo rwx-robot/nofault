@@ -125,3 +125,12 @@ export class NofaultApplication extends NofaultApplicationContext {
   getHttpServer<T = unknown>(): T | undefined {
     return this.adapter?.getHttpServer() as T | undefined;
   }
+
+  override async get<T>(token: InjectionToken<T>, contextId?: object): Promise<T> {
+    return super.get<T>(token, contextId);
+  }
+
+  /** 应用配置选项（供适配器与中间件读取） */
+  getOptions(): NofaultApplicationOptions {
+    return this.appOptions;
+  }
