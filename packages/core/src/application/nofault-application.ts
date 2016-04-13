@@ -96,3 +96,12 @@ export class NofaultApplication extends NofaultApplicationContext {
 
     if (timeout <= 0) {
       await work;
+      return;
+    }
+
+    let timer: NodeJS.Timeout | undefined;
+    const guard = new Promise<void>((resolve) => {
+      timer = setTimeout(() => {
+        process.stderr.write(
+          `[nofault] graceful shutdown timed out after ${timeout}ms, forcing exit\n`,
+        );
