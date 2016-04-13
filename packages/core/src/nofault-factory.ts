@@ -15,3 +15,4 @@ import type { ApplicationContextOptions } from './application/nofault-applicatio
  * await app.listen(3000);
  * ```
  */
+export class NofaultFactory {
