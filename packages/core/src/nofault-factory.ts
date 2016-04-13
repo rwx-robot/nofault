@@ -18,3 +18,5 @@ import type { ApplicationContextOptions } from './application/nofault-applicatio
 export class NofaultFactory {
   /** 创建完整应用（含 HTTP 能力） */
   static create(root: Type<unknown> | DynamicModule, options: NofaultApplicationOptions = {}): Promise<NofaultApplication> {
+    return createApplication(root, options);
+  }
