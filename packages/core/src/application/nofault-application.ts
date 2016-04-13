@@ -76,3 +76,13 @@ export class NofaultApplication extends NofaultApplicationContext {
   }
 
   /**
+   * 优雅退出，带超时保护。
+   *
+   * 编排顺序：停止监听 → 排在途请求 → beforeApplicationShutdown
+   *          → onModuleDestroy → onApplicationShutdown
+   *
+   * 超时存在的意义：某个 Provider 的 destroy 卡死时，
+   * 进程也必须能退出——否则 K8s 只能 SIGKILL，那是真丢数据。
+   */
+  override async close(signal?: string): Promise<void> {
+    const timeout = this.appOptions.shutdownTimeout ?? 5000;
