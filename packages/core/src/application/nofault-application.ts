@@ -134,3 +134,13 @@ export class NofaultApplication extends NofaultApplicationContext {
   getOptions(): NofaultApplicationOptions {
     return this.appOptions;
   }
+
+  /** 顺序执行 handler 链，任一 handler 处理（返回 true 或已写响应）即终止 */
+  private async runHandlers(
+    handlers: Array<Parameters<HttpAdapter['useHandler']>[0]>,
+    req: import('node:http').IncomingMessage,
+    res: import('node:http').ServerResponse,
+  ): Promise<void> {
+    for (const handler of handlers) {
+      if (res.writableEnded) return;
+      const result = await handler(req, res);
