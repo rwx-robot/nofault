@@ -26,3 +26,4 @@ export class NofaultFactory {
     root: Type<unknown> | DynamicModule,
     options: ApplicationContextOptions = {},
   ): Promise<NofaultApplicationContext> {
+    const ctx = new NofaultApplicationContext(options);
