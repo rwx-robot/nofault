@@ -29,3 +29,4 @@ export class NofaultFactory {
     const ctx = new NofaultApplicationContext(options);
     return ctx.init(root);
   }
+}
