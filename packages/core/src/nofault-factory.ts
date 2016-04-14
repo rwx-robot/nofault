@@ -27,3 +27,4 @@ export class NofaultFactory {
     options: ApplicationContextOptions = {},
   ): Promise<NofaultApplicationContext> {
     const ctx = new NofaultApplicationContext(options);
+    return ctx.init(root);
