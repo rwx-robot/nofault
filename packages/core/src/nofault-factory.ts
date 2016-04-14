@@ -24,3 +24,5 @@ export class NofaultFactory {
   /** 创建纯应用上下文（无 HTTP，适合定时任务、消费者、脚本） */
   static createApplicationContext(
     root: Type<unknown> | DynamicModule,
+    options: ApplicationContextOptions = {},
+  ): Promise<NofaultApplicationContext> {
