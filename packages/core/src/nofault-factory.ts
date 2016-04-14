@@ -25,3 +25,4 @@ export class NofaultFactory {
   static createApplicationContext(
     root: Type<unknown> | DynamicModule,
     options: ApplicationContextOptions = {},
+  ): Promise<NofaultApplicationContext> {
