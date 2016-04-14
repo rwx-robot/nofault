@@ -28,3 +28,4 @@ export class NofaultFactory {
   ): Promise<NofaultApplicationContext> {
     const ctx = new NofaultApplicationContext(options);
     return ctx.init(root);
+  }
