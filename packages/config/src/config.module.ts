@@ -37,3 +37,16 @@ export class ConfigModule {
    * ```ts
    * @Module({ imports: [ConfigModule.forRoot({ path: 'config.yaml' })] })
    * export class AppModule {}
+   * ```
+   */
+  static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
+    const values = ConfigModule.loadValues(options);
+    const service = createConfigService(values);
+
+    const providers: ValueProvider[] = [
+      { provide: CONFIG_VALUES, useValue: values },
+      { provide: ConfigService, useValue: service },
+    ];
+
+    return {
+      module: ConfigModule,
