@@ -62,3 +62,16 @@ export class ConfigModule {
    * 内核的模块扫描器会 `await` 动态模块，所以直接放进 `imports` 即可。
    *
    * @example
+   * ```ts
+   * @Module({ imports: [ConfigModule.forRootAsync({ path: 'config.yaml', watch: true })] })
+   * export class AppModule {}
+   * ```
+   */
+  static async forRootAsync(options: ConfigModuleOptions = {}): Promise<DynamicModule> {
+    const registry = buildRegistry({ ...options, watch: options.watch ?? true });
+    await registry.start();
+    const service = createConfigService(registry);
+
+    const providers: ValueProvider[] = [
+      { provide: CONFIG_REGISTRY, useValue: registry },
+      { provide: CONFIG_VALUES, useValue: registry.values() },
