@@ -55,3 +55,18 @@ export class ConfigModule {
       exports: [ConfigService, CONFIG_VALUES],
     };
   }
+
+  /**
+   * 异步注册：完成首次加载后再返回模块定义，**支持热更新**。
+   *
+   * 内核的模块扫描器会 `await` 动态模块，所以直接放进 `imports` 即可。
+   *
+   * @example
+   * ```ts
+   * @Module({ imports: [ConfigModule.forRootAsync({ path: 'config.yaml', watch: true })] })
+   * export class AppModule {}
+   * ```
+   */
+  static async forRootAsync(options: ConfigModuleOptions = {}): Promise<DynamicModule> {
+    const registry = buildRegistry({ ...options, watch: options.watch ?? true });
+    await registry.start();
