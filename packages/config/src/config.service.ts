@@ -38,3 +38,16 @@ function toProvider(store: PlainObject | ConfigValuesProvider): ConfigValuesProv
  * ```ts
  * const port = config.get<number>('server.port', 3000);
  * config.subscribe((next) => log.info('config changed'));
+ * ```
+ */
+export class ConfigService {
+  private readonly provider: ConfigValuesProvider;
+
+  constructor(store: PlainObject | ConfigValuesProvider) {
+    this.provider = toProvider(store);
+  }
+
+  /** 取值（无默认值时可能为 undefined） */
+  get<T>(path: string): T | undefined;
+  /** 取值，缺失则使用默认值 */
+  get<T>(path: string, defaultValue: T): T;
