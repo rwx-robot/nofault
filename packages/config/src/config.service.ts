@@ -22,3 +22,14 @@ class StaticProvider implements ConfigValuesProvider {
 }
 
 function toProvider(store: PlainObject | ConfigValuesProvider): ConfigValuesProvider {
+  if (typeof (store as ConfigValuesProvider).values === 'function') {
+    return store as ConfigValuesProvider;
+  }
+  return new StaticProvider(store as PlainObject);
+}
+
+/**
+ * 配置服务：按键路径读取配置。
+ *
+ * 构造参数可以是**静态对象**，也可以是 `ConfigRegistry`（热更新）。
+ * 读取时总是取当前快照，因此热更新对业务代码是透明的。
