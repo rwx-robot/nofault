@@ -33,3 +33,15 @@ function toProvider(store: PlainObject | ConfigValuesProvider): ConfigValuesProv
  *
  * 构造参数可以是**静态对象**，也可以是 `ConfigRegistry`（热更新）。
  * 读取时总是取当前快照，因此热更新对业务代码是透明的。
+ *
+ * @example
+ * ```ts
+ * const port = config.get<number>('server.port', 3000);
+ * config.subscribe((next) => log.info('config changed'));
+ * ```
+ */
+export class ConfigService {
+  private readonly provider: ConfigValuesProvider;
+
+  constructor(store: PlainObject | ConfigValuesProvider) {
+    this.provider = toProvider(store);
