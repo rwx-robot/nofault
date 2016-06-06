@@ -70,3 +70,18 @@ export class ConfigModule {
   static async forRootAsync(options: ConfigModuleOptions = {}): Promise<DynamicModule> {
     const registry = buildRegistry({ ...options, watch: options.watch ?? true });
     await registry.start();
+    const service = createConfigService(registry);
+
+    const providers: ValueProvider[] = [
+      { provide: CONFIG_REGISTRY, useValue: registry },
+      { provide: CONFIG_VALUES, useValue: registry.values() },
+      { provide: ConfigService, useValue: service },
+    ];
+
+    return {
+      module: ConfigModule,
+      global: options.isGlobal ?? true,
+      providers,
+      exports: [ConfigService, CONFIG_REGISTRY, CONFIG_VALUES],
+    };
+  }
