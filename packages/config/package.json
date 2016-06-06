@@ -1,3 +1,6 @@
 {
   "name": "@nofault/config",
   "version": "0.1.0",
+  "description": "nofault configuration: file loading, env override, typed access",
+  "license": "MIT",
+  "main": "dist/index.js",
