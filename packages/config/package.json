@@ -18,3 +18,5 @@
   "dependencies": {
     "@nofault/core": "workspace:*",
     "yaml": "^2.5.4"
+  }
+}
