@@ -26,3 +26,19 @@ export interface ConfigModuleOptions {
 export const CONFIG_VALUES = Symbol('NOFAULT_CONFIG_VALUES');
 /** 配置注册表的注入令牌（需要热更新能力时注入它） */
 export const CONFIG_REGISTRY = Symbol('NOFAULT_CONFIG_REGISTRY');
+
+@Global()
+@Module({})
+export class ConfigModule {
+  /**
+   * 同步注册配置模块（不支持热更新）。
+   *
+   * @example
+   * ```ts
+   * @Module({ imports: [ConfigModule.forRoot({ path: 'config.yaml' })] })
+   * export class AppModule {}
+   * ```
+   */
+  static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
+    const values = ConfigModule.loadValues(options);
+    const service = createConfigService(values);
