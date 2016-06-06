@@ -4,3 +4,5 @@
   "description": "nofault configuration: file loading, env override, typed access",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
