@@ -42,3 +42,16 @@ export class ConfigModule {
   static forRoot(options: ConfigModuleOptions = {}): DynamicModule {
     const values = ConfigModule.loadValues(options);
     const service = createConfigService(values);
+
+    const providers: ValueProvider[] = [
+      { provide: CONFIG_VALUES, useValue: values },
+      { provide: ConfigService, useValue: service },
+    ];
+
+    return {
+      module: ConfigModule,
+      global: options.isGlobal ?? true,
+      providers,
+      exports: [ConfigService, CONFIG_VALUES],
+    };
+  }
