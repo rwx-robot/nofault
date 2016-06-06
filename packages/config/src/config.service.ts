@@ -64,3 +64,15 @@ export class ConfigService {
   }
 
   has(path: string): boolean {
+    return this.read(path) !== undefined;
+  }
+
+  /** 返回全量配置（只读副本，防止误改） */
+  snapshot<T extends PlainObject = PlainObject>(): T {
+    return structuredClone(this.provider.values()) as T;
+  }
+
+  /** 主动触发一次重新加载（静态配置是 no-op） */
+  async reload(): Promise<void> {
+    await this.provider.reload?.();
+  }
