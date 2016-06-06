@@ -88,3 +88,16 @@ export class ConfigModule {
 
   /** 只加载、不注册，供脚本与测试使用 */
   static loadValues(options: ConfigModuleOptions = {}): PlainObject {
+    let values: PlainObject = { ...(options.values ?? {}) };
+    if (options.path) {
+      values = { ...values, ...loadConfigFile(options.path) };
+    }
+    if (!options.ignoreEnv) {
+      const prefix = options.envPrefix ?? 'NOFAULT_';
+      values = applyEnvOverrides(values, prefix);
+    }
+    return values;
+  }
+}
+
+/**
