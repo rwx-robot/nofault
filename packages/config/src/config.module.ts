@@ -13,3 +13,16 @@ export interface ConfigModuleOptions {
   /** 额外配置源（远程配置中心等）；合并时后者覆盖前者 */
   sources?: ConfigSource[];
   /** 环境变量前缀，默认 `NOFAULT_` */
+  envPrefix?: string;
+  /** 是否禁用环境变量覆盖，默认 false */
+  ignoreEnv?: boolean;
+  /** 是否注册为全局模块，默认 true */
+  isGlobal?: boolean;
+  /** 是否监听配置变化（仅 `forRootAsync` 生效） */
+  watch?: boolean;
+}
+
+/** 配置对象本身的注入令牌（未包装） */
+export const CONFIG_VALUES = Symbol('NOFAULT_CONFIG_VALUES');
+/** 配置注册表的注入令牌（需要热更新能力时注入它） */
+export const CONFIG_REGISTRY = Symbol('NOFAULT_CONFIG_REGISTRY');
