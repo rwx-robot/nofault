@@ -12,3 +12,16 @@ export interface ConfigValuesProvider {
   values(): PlainObject;
   reload?(): Promise<PlainObject>;
   subscribe?(listener: (values: PlainObject, previous: PlainObject) => void): () => void;
+}
+
+class StaticProvider implements ConfigValuesProvider {
+  constructor(private readonly store: PlainObject) {}
+  values(): PlainObject {
+    return this.store;
+  }
+}
+
+function toProvider(store: PlainObject | ConfigValuesProvider): ConfigValuesProvider {
+  if (typeof (store as ConfigValuesProvider).values === 'function') {
+    return store as ConfigValuesProvider;
+  }
