@@ -51,3 +51,16 @@ export class ConfigService {
   get<T>(path: string): T | undefined;
   /** 取值，缺失则使用默认值 */
   get<T>(path: string, defaultValue: T): T;
+  get<T>(path: string, defaultValue?: T): T | undefined {
+    const value = this.read(path);
+    return (value === undefined ? defaultValue : value) as T | undefined;
+  }
+
+  /** 取值，缺失即抛错（用于必填项） */
+  getOrThrow<T>(path: string): T {
+    const value = this.read(path);
+    if (value === undefined || value === null) throw new ConfigError(path);
+    return value as T;
+  }
+
+  has(path: string): boolean {
