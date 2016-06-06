@@ -75,3 +75,16 @@ export class ConfigModule {
     const providers: ValueProvider[] = [
       { provide: CONFIG_REGISTRY, useValue: registry },
       { provide: CONFIG_VALUES, useValue: registry.values() },
+      { provide: ConfigService, useValue: service },
+    ];
+
+    return {
+      module: ConfigModule,
+      global: options.isGlobal ?? true,
+      providers,
+      exports: [ConfigService, CONFIG_REGISTRY, CONFIG_VALUES],
+    };
+  }
+
+  /** 只加载、不注册，供脚本与测试使用 */
+  static loadValues(options: ConfigModuleOptions = {}): PlainObject {
