@@ -101,3 +101,14 @@ export class ConfigModule {
 }
 
 /**
+ * 命名空间配置：`registerAs('database', () => ({ host: 'localhost' }))`
+ *
+ * 返回的令牌可直接 `@Inject(DATABASE_CONFIG)` 注入。
+ */
+export function registerAs<T>(namespace: string, factory: () => T): { token: symbol; provider: ValueProvider<T> } {
+  const token = Symbol(`NOFAULT_CONFIG_${namespace.toUpperCase()}`);
+  return {
+    token,
+    provider: { provide: token, useValue: factory() },
+  };
+}
