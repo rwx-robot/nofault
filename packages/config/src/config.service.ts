@@ -80,3 +80,15 @@ export class ConfigService {
   /** 订阅配置变更（静态配置下永不触发） */
   subscribe(listener: (values: PlainObject, previous: PlainObject) => void): () => void {
     if (!this.provider.subscribe) return () => undefined;
+    return this.provider.subscribe(listener);
+  }
+
+  /** 是否支持热更新 */
+  get isReloadable(): boolean {
+    return typeof this.provider.reload === 'function';
+  }
+
+  private read(path: string): unknown {
+    let cursor: unknown = this.provider.values();
+    for (const seg of path.split('.')) {
+      if (cursor === null || typeof cursor !== 'object') return undefined;
