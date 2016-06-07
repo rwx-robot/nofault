@@ -9,3 +9,5 @@ export type { ConfigValuesProvider } from './config.service';
 
 export { ConfigRegistry, buildRegistry } from './registry';
 export type { ConfigChangeListener, ConfigRegistryOptions } from './registry';
+
+export {
