@@ -47,3 +47,19 @@ export function createFileSource(options: FileSourceOptions): ConfigSource {
     const ext = extname(path).toLowerCase();
     if (ext === '.json') return JSON.parse(raw) as PlainObject;
     if (ext === '.env') return parseDotEnv(raw);
+    if (ext === '.yaml' || ext === '.yml') return (parseYamlDocument(raw) ?? {}) as PlainObject;
+    return raw.trimStart().startsWith('{')
+      ? (JSON.parse(raw) as PlainObject)
+      : ((parseYamlDocument(raw) ?? {}) as PlainObject);
+  };
+
+  return {
+    name: `file:${resolve(path)}`,
+    load: read,
+    watch(onChange) {
+      if (!doWatch) return;
+      watcher = watch(path, () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => onChange(), debounceMs);
+      });
+      return () => {
