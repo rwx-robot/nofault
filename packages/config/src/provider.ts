@@ -15,3 +15,19 @@ export interface ConfigSource {
   /** 拉取一次配置 */
   load(): Promise<PlainObject> | PlainObject;
   /** 可选：订阅变更，返回取消订阅函数 */
+  watch?(onChange: () => void): (() => void) | void;
+  /** 释放资源（关闭 watcher / 定时器） */
+  dispose?(): void;
+}
+
+// ------------------------------------------------------------------ 内置源
+
+/** 内联值：测试与默认值 */
+export function createInlineSource(values: PlainObject, name = 'inline'): ConfigSource {
+  return { name, load: () => values };
+}
+
+export interface FileSourceOptions {
+  path: string;
+  /** 是否监听文件变化，默认 false */
+  watch?: boolean;
