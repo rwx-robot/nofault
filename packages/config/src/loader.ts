@@ -21,3 +21,14 @@ export function loadConfigFile(filePath: string): PlainObject {
     case '.json':
       return JSON.parse(raw) as PlainObject;
     case '.yaml':
+    case '.yml':
+      return (parseYamlDocument(raw) ?? {}) as PlainObject;
+    case '.env':
+      return parseDotEnv(raw);
+    default:
+      // 无扩展名时按内容嗅探
+      return raw.trimStart().startsWith('{') ? (JSON.parse(raw) as PlainObject) : ((parseYamlDocument(raw) ?? {}) as PlainObject);
+  }
+}
+
+/** 解析 .env 文件 */
