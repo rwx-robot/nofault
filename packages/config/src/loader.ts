@@ -38,3 +38,13 @@ export function parseDotEnv(raw: string): PlainObject {
     const t = line.trim();
     if (t === '' || t.startsWith('#')) continue;
     const idx = t.indexOf('=');
+    if (idx === -1) continue;
+    out[t.slice(0, idx).trim()] = t.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+  }
+  return out;
+}
+
+/**
+ * 用环境变量覆盖配置。
+ *
+ * 映射规则：`NOFAULT_SERVER__PORT=8080` → `server.port = 8080`
