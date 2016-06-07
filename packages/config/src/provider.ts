@@ -31,3 +31,19 @@ export interface FileSourceOptions {
   path: string;
   /** 是否监听文件变化，默认 false */
   watch?: boolean;
+  /** 防抖毫秒，默认 100（编辑器保存会触发多次 change） */
+  debounceMs?: number;
+}
+
+/** 文件源：YAML / JSON / .env，可选热更新 */
+export function createFileSource(options: FileSourceOptions): ConfigSource {
+  const { path, watch: doWatch = false, debounceMs = 100 } = options;
+  let watcher: FSWatcher | undefined;
+  let timer: NodeJS.Timeout | undefined;
+
+  const read = (): PlainObject => {
+    if (!existsSync(path)) throw new Error(`Config file not found: ${path}`);
+    const raw = readFileSync(path, 'utf8');
+    const ext = extname(path).toLowerCase();
+    if (ext === '.json') return JSON.parse(raw) as PlainObject;
+    if (ext === '.env') return parseDotEnv(raw);
