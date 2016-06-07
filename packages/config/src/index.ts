@@ -3,3 +3,6 @@
  */
 export { ConfigModule, registerAs, CONFIG_VALUES, CONFIG_REGISTRY } from './config.module';
 export type { ConfigModuleOptions } from './config.module';
+
+export { ConfigService, createConfigService, ConfigError } from './config.service';
+export type { ConfigValuesProvider } from './config.service';
