@@ -57,3 +57,14 @@ export class ConfigService {
   }
 
   /** 取值，缺失即抛错（用于必填项） */
+  getOrThrow<T>(path: string): T {
+    const value = this.read(path);
+    if (value === undefined || value === null) throw new ConfigError(path);
+    return value as T;
+  }
+
+  has(path: string): boolean {
+    return this.read(path) !== undefined;
+  }
+
+  /** 返回全量配置（只读副本，防止误改） */
