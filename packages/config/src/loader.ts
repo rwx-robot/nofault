@@ -43,3 +43,15 @@ export function parseDotEnv(raw: string): PlainObject {
   }
   return out;
 }
+
+/**
+ * 用环境变量覆盖配置。
+ *
+ * 映射规则：`NOFAULT_SERVER__PORT=8080` → `server.port = 8080`
+ * （双下划线表示层级，单下划线表示键内下划线）
+ */
+export function applyEnvOverrides(config: PlainObject, prefix: string, source: NodeJS.ProcessEnv = process.env): PlainObject {
+  const normalizedPrefix = prefix.toUpperCase();
+  for (const [key, value] of Object.entries(source)) {
+    if (value === undefined) continue;
+    if (normalizedPrefix && !key.toUpperCase().startsWith(normalizedPrefix)) continue;
