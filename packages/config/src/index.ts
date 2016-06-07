@@ -14,3 +14,5 @@ export {
   createInlineSource,
   createFileSource,
   createPollingSource,
+  createEnvSource,
+} from './provider';
