@@ -68,3 +68,15 @@ export class ConfigService {
   }
 
   /** 返回全量配置（只读副本，防止误改） */
+  snapshot<T extends PlainObject = PlainObject>(): T {
+    return structuredClone(this.provider.values()) as T;
+  }
+
+  /** 主动触发一次重新加载（静态配置是 no-op） */
+  async reload(): Promise<void> {
+    await this.provider.reload?.();
+  }
+
+  /** 订阅配置变更（静态配置下永不触发） */
+  subscribe(listener: (values: PlainObject, previous: PlainObject) => void): () => void {
+    if (!this.provider.subscribe) return () => undefined;
