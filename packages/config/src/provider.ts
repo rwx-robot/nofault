@@ -63,3 +63,19 @@ export function createFileSource(options: FileSourceOptions): ConfigSource {
         timer = setTimeout(() => onChange(), debounceMs);
       });
       return () => {
+        watcher?.close();
+        watcher = undefined;
+      };
+    },
+    dispose() {
+      if (timer) clearTimeout(timer);
+      watcher?.close();
+    },
+  };
+}
+
+export interface PollingSourceOptions {
+  name: string;
+  /** 拉取远程配置；抛错时保留上一次的值（远程抖动不能打挂应用） */
+  fetch: () => Promise<PlainObject> | PlainObject;
+  /** 轮询间隔，默认 30s */
