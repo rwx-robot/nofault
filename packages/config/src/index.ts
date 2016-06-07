@@ -8,3 +8,7 @@ export { ConfigService, createConfigService, ConfigError } from './config.servic
 export type { ConfigValuesProvider } from './config.service';
 
 export { ConfigRegistry, buildRegistry } from './registry';
+export type { ConfigChangeListener, ConfigRegistryOptions } from './registry';
+
+export {
+  createInlineSource,
