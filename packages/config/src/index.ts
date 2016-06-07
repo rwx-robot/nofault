@@ -11,3 +11,6 @@ export { ConfigRegistry, buildRegistry } from './registry';
 export type { ConfigChangeListener, ConfigRegistryOptions } from './registry';
 
 export {
+  createInlineSource,
+  createFileSource,
+  createPollingSource,
