@@ -77,3 +77,13 @@ function setDeep(target: PlainObject, segments: string[], value: unknown): void 
       cursor[seg] = {};
     }
     cursor = cursor[seg] as PlainObject;
+  }
+  cursor[segments[segments.length - 1]!] = value;
+}
+
+function coerce(v: string): unknown {
+  if (v === 'true') return true;
+  if (v === 'false') return false;
+  if (v !== '' && !Number.isNaN(Number(v))) return Number(v);
+  return v;
+}
