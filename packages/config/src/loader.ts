@@ -32,3 +32,14 @@ export function loadConfigFile(filePath: string): PlainObject {
 }
 
 /** 解析 .env 文件 */
+export function parseDotEnv(raw: string): PlainObject {
+  const out: PlainObject = {};
+  for (const line of raw.split(/\r?\n/)) {
+    const t = line.trim();
+    if (t === '' || t.startsWith('#')) continue;
+    const idx = t.indexOf('=');
+    if (idx === -1) continue;
+    out[t.slice(0, idx).trim()] = t.slice(idx + 1).trim().replace(/^["']|["']$/g, '');
+  }
+  return out;
+}
