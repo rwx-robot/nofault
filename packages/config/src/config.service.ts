@@ -45,3 +45,15 @@ export class ConfigService {
 
   constructor(store: PlainObject | ConfigValuesProvider) {
     this.provider = toProvider(store);
+  }
+
+  /** 取值（无默认值时可能为 undefined） */
+  get<T>(path: string): T | undefined;
+  /** 取值，缺失则使用默认值 */
+  get<T>(path: string, defaultValue: T): T;
+  get<T>(path: string, defaultValue?: T): T | undefined {
+    const value = this.read(path);
+    return (value === undefined ? defaultValue : value) as T | undefined;
+  }
+
+  /** 取值，缺失即抛错（用于必填项） */
