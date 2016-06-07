@@ -55,3 +55,14 @@ export function applyEnvOverrides(config: PlainObject, prefix: string, source: N
   for (const [key, value] of Object.entries(source)) {
     if (value === undefined) continue;
     if (normalizedPrefix && !key.toUpperCase().startsWith(normalizedPrefix)) continue;
+    const pathKey = normalizedPrefix ? key.slice(normalizedPrefix.length) : key;
+    /**
+     * 映射规则（与注释一致）：
+     * - 双下划线 `__` 表示层级分隔：`SERVER__PORT` → `server.port`
+     * - 单下划线是键名的一部分：`MAX_IDLE` → `max_idle`
+     */
+    const segments = pathKey.toLowerCase().split('__').filter(Boolean);
+    if (segments.length === 0) continue;
+    setDeep(config, segments, coerce(value));
+  }
+  return config;
