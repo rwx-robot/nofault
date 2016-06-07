@@ -67,3 +67,14 @@ export function applyEnvOverrides(config: PlainObject, prefix: string, source: N
   }
   return config;
 }
+
+function setDeep(target: PlainObject, segments: string[], value: unknown): void {
+  let cursor: PlainObject = target;
+  for (let i = 0; i < segments.length - 1; i++) {
+    const seg = segments[i]!;
+    const next = cursor[seg];
+    if (typeof next !== 'object' || next === null || Array.isArray(next)) {
+      cursor[seg] = {};
+    }
+    cursor = cursor[seg] as PlainObject;
+  }
