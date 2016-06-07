@@ -1,3 +1,5 @@
 /**
  * @nofault/config —— 配置：文件加载、环境变量覆盖、命名空间、热更新。
  */
+export { ConfigModule, registerAs, CONFIG_VALUES, CONFIG_REGISTRY } from './config.module';
+export type { ConfigModuleOptions } from './config.module';
