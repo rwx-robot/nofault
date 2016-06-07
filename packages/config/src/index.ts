@@ -17,3 +17,6 @@ export {
   createEnvSource,
 } from './provider';
 export type { ConfigSource, FileSourceOptions, PollingSourceOptions } from './provider';
+
+export { loadConfigFile, applyEnvOverrides, parseDotEnv } from './loader';
+export type { PlainObject } from './loader';
