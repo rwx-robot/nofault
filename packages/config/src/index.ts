@@ -15,3 +15,5 @@ export {
   createFileSource,
   createPollingSource,
   createEnvSource,
+} from './provider';
+export type { ConfigSource, FileSourceOptions, PollingSourceOptions } from './provider';
