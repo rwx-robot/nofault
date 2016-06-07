@@ -6,3 +6,6 @@ export type { ConfigModuleOptions } from './config.module';
 
 export { ConfigService, createConfigService, ConfigError } from './config.service';
 export type { ConfigValuesProvider } from './config.service';
+
+export { ConfigRegistry, buildRegistry } from './registry';
+export type { ConfigChangeListener, ConfigRegistryOptions } from './registry';
