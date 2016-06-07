@@ -92,3 +92,13 @@ export class ConfigService {
     let cursor: unknown = this.provider.values();
     for (const seg of path.split('.')) {
       if (cursor === null || typeof cursor !== 'object') return undefined;
+      cursor = (cursor as PlainObject)[seg];
+    }
+    return cursor;
+  }
+}
+
+/** 便捷工厂（Node 生态惯用命名） */
+export function createConfigService(store: PlainObject | ConfigValuesProvider): ConfigService {
+  return new ConfigService(store);
+}
