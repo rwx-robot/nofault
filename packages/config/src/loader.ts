@@ -58,3 +58,12 @@ export function applyEnvOverrides(config: PlainObject, prefix: string, source: N
     const pathKey = normalizedPrefix ? key.slice(normalizedPrefix.length) : key;
     const segments = pathKey
       .toLowerCase()
+      .replace(/__/g, '.')
+      .replace(/_/g, '.')
+      .split('.')
+      .filter(Boolean);
+    if (segments.length === 0) continue;
+    setDeep(config, segments, coerce(value));
+  }
+  return config;
+}
