@@ -67,3 +67,27 @@ describe('ConfigRegistry', () => {
     expect(before.v).toBe(1);
     expect(registry.values().v).toBe(2);
   });
+
+  it('notifies subscribers only when something actually changed', async () => {
+    const registry = new ConfigRegistry({ sources: [createInlineSource({ v: 1 })], envPrefix: '' });
+    await registry.start();
+    const listener = vi.fn();
+    const off = registry.subscribe(listener);
+
+    await registry.reload();
+    expect(listener).not.toHaveBeenCalled();
+
+    // 换一个会变的源
+    const mutable = createInlineSource({ v: 1 });
+    let counter = 1;
+    const live = { name: 'live', load: () => ({ v: ++counter }) };
+    const registry2 = new ConfigRegistry({ sources: [mutable, live], envPrefix: '' });
+    await registry2.start();
+    const listener2 = vi.fn();
+    registry2.subscribe(listener2);
+    await registry2.reload();
+    expect(listener2).toHaveBeenCalledTimes(1);
+
+    off();
+    expect(registry.listenerCount).toBe(0);
+    await registry.close();
