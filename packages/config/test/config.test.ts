@@ -56,3 +56,17 @@ describe('loader', () => {
     // 否则 `NOFAULT_MAX_IDLE` 会被错误地劈成 max.idle，和 yaml 里的 `max_idle` 对不上
     const cfg = applyEnvOverrides({ pool: { max_idle: 4 } }, 'NOFAULT_', {
       NOFAULT_POOL__MAX_IDLE: '8',
+    });
+    expect(cfg).toEqual({ pool: { max_idle: 8 } });
+  });
+
+  it('loads yaml files', () => {
+    const file = writeTemp('config.yaml', 'server:\n  port: 4000\n  host: 127.0.0.1\n');
+    const mod = ConfigModule.loadValues({ path: file, ignoreEnv: true });
+    expect(mod).toEqual({ server: { port: 4000, host: '127.0.0.1' } });
+  });
+
+  it('loads json files', () => {
+    const file = writeTemp('config.json', JSON.stringify({ db: { pool: 10 } }));
+    expect(ConfigModule.loadValues({ path: file, ignoreEnv: true })).toEqual({ db: { pool: 10 } });
+  });
