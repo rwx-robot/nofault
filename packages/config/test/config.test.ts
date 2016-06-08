@@ -99,3 +99,16 @@ describe('ConfigModule integration', () => {
     const ns = registerAs('database', () => ({ host: '127.0.0.1', port: 5432 }));
 
     @Injectable()
+    class Repo {
+      constructor(@Inject(ns.token) readonly cfg: { host: string; port: number }) {}
+    }
+
+    @Module({ providers: [ns.provider, Repo] })
+    class AppModule {}
+
+    const app = await NofaultFactory.createApplicationContext(AppModule, { quiet: true });
+    const repo = await app.get(Repo);
+    expect(repo.cfg.host).toBe('127.0.0.1');
+    expect(repo.cfg.port).toBe(5432);
+  });
+});
