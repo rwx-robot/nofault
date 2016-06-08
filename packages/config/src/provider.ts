@@ -56,3 +56,17 @@ export function createFileSource(options: FileSourceOptions): ConfigSource {
   return {
     name: `file:${resolve(path)}`,
     load: read,
+    watch(onChange) {
+      if (!doWatch) return;
+      watcher = watch(path, () => {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => onChange(), debounceMs);
+      });
+      return () => {
+        watcher?.close();
+        watcher = undefined;
+      };
+    },
+    dispose() {
+      if (timer) clearTimeout(timer);
+      watcher?.close();
