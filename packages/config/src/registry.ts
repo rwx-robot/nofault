@@ -53,3 +53,17 @@ export class ConfigRegistry {
     if (this.envPrefix) {
       merged = applyEnvOverrides(merged, this.envPrefix);
     }
+    const previous = this.current;
+    const changed = JSON.stringify(previous) !== JSON.stringify(merged);
+    this.current = merged;
+    if (changed) {
+      for (const listener of this.listeners) {
+        try {
+          listener(merged, previous);
+        } catch (err) {
+          process.stderr.write(`[config] listener threw: ${String(err)}\n`);
+        }
+      }
+    }
+    return merged;
+  }
