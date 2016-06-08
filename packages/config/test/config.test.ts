@@ -85,3 +85,17 @@ describe('ConfigModule integration', () => {
       constructor(readonly config: ConfigService) {}
       hello() {
         return this.config.get<string>('greeting', 'default');
+      }
+    }
+
+    @Module({ imports: [ConfigModule.forRoot({ path: file, ignoreEnv: true })], providers: [Greeter] })
+    class AppModule {}
+
+    const app = await NofaultFactory.createApplicationContext(AppModule, { quiet: true });
+    expect((await app.get(Greeter)).hello()).toBe('hi');
+  });
+
+  it('supports registerAs namespace tokens', async () => {
+    const ns = registerAs('database', () => ({ host: '127.0.0.1', port: 5432 }));
+
+    @Injectable()
