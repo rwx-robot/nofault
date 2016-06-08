@@ -39,3 +39,17 @@ export class ConfigRegistry {
         void this.reload();
       });
       if (typeof unwatch === 'function') this.unwatchers.push(unwatch);
+    }
+    return this.current;
+  }
+
+  /** 重新聚合并（如有变化）通知订阅者 */
+  async reload(): Promise<PlainObject> {
+    let merged: PlainObject = {};
+    for (const source of this.sources) {
+      const part = await source.load();
+      merged = { ...merged, ...part };
+    }
+    if (this.envPrefix) {
+      merged = applyEnvOverrides(merged, this.envPrefix);
+    }
