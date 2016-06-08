@@ -40,3 +40,19 @@ export function createFileSource(options: FileSourceOptions): ConfigSource {
   const { path, watch: doWatch = false, debounceMs = 100 } = options;
   let watcher: FSWatcher | undefined;
   let timer: NodeJS.Timeout | undefined;
+
+  const read = (): PlainObject => {
+    if (!existsSync(path)) throw new Error(`Config file not found: ${path}`);
+    const raw = readFileSync(path, 'utf8');
+    const ext = extname(path).toLowerCase();
+    if (ext === '.json') return JSON.parse(raw) as PlainObject;
+    if (ext === '.env') return parseDotEnv(raw);
+    if (ext === '.yaml' || ext === '.yml') return (parseYamlDocument(raw) ?? {}) as PlainObject;
+    return raw.trimStart().startsWith('{')
+      ? (JSON.parse(raw) as PlainObject)
+      : ((parseYamlDocument(raw) ?? {}) as PlainObject);
+  };
+
+  return {
+    name: `file:${resolve(path)}`,
+    load: read,
