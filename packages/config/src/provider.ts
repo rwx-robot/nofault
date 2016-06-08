@@ -99,3 +99,17 @@ export function createPollingSource(options: PollingSourceOptions): ConfigSource
       try {
         last = await fetch();
       } catch {
+        // 远程失败：静默沿用上一次的值，并在 stderr 提示
+        process.stderr.write(`[config] source "${name}" fetch failed, keeping last known value\n`);
+      }
+      return last;
+    },
+    watch(onChange) {
+      timer = setInterval(() => void onChange(), intervalMs);
+      // 不要让轮询定时器阻止进程退出
+      timer.unref?.();
+      return () => {
+        if (timer) clearInterval(timer);
+        timer = undefined;
+      };
+    },
