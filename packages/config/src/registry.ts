@@ -80,3 +80,17 @@ export class ConfigRegistry {
   values(): PlainObject {
     return this.current;
   }
+
+  /** 订阅变更（`@OnConfigUpdate()` 与日志/连接池等需要感知变化的组件用） */
+  subscribe(listener: ConfigChangeListener): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
+
+  get listenerCount(): number {
+    return this.listeners.size;
+  }
+
+  /** 关闭：停止所有 watcher 与定时器 */
+  async close(): Promise<void> {
+    for (const off of this.unwatchers) off();
