@@ -70,3 +70,18 @@ describe('loader', () => {
     const file = writeTemp('config.json', JSON.stringify({ db: { pool: 10 } }));
     expect(ConfigModule.loadValues({ path: file, ignoreEnv: true })).toEqual({ db: { pool: 10 } });
   });
+
+  it('throws a clear error when the file does not exist', () => {
+    expect(() => ConfigModule.loadValues({ path: '/definitely/not/here.yaml' })).toThrow(/Config file not found/);
+  });
+});
+
+describe('ConfigModule integration', () => {
+  it('makes ConfigService injectable as a global module', async () => {
+    const file = writeTemp('app.yaml', 'greeting: hi\n');
+
+    @Injectable()
+    class Greeter {
+      constructor(readonly config: ConfigService) {}
+      hello() {
+        return this.config.get<string>('greeting', 'default');
