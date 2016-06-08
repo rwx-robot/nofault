@@ -69,3 +69,20 @@ export class ConfigRegistry {
   }
 
   /**
+   * 当前配置。
+   *
+   * **不做克隆**——这个函数在 `ConfigService.get()` 里是**每次调用都走**的热路径，
+   * 每次 structuredClone 全量配置会把读配置变成 O(配置大小) 的操作（实测是 v0.3.0 最大的一处开销）。
+   *
+   * 安全性由"整体替换"保证：`reload()` 每次生成全新对象，从不在原地修改，
+   * 所以持有旧引用不会看到撕裂状态。需要副本时请用 `ConfigService.snapshot()`。
+   */
+  values(): PlainObject {
+    return this.current;
+  }
+
+  /** 订阅变更（`@OnConfigUpdate()` 与日志/连接池等需要感知变化的组件用） */
+  subscribe(listener: ConfigChangeListener): () => void {
+    this.listeners.add(listener);
+    return () => this.listeners.delete(listener);
+  }
