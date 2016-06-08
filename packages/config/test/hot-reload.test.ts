@@ -114,3 +114,26 @@ describe('ConfigService over a registry', () => {
 
   it('static config is not reloadable', () => {
     const config = createConfigService({ a: 1 });
+    expect(config.isReloadable).toBe(false);
+    expect(config.subscribe(() => undefined)).toBeTypeOf('function');
+  });
+});
+
+describe('createPollingSource', () => {
+  it('keeps the last known value when fetch fails', async () => {
+    let shouldFail = false;
+    const source = createPollingSource({
+      name: 'remote',
+      fetch: () => {
+        if (shouldFail) throw new Error('network down');
+        return { feature: { enabled: true } };
+      },
+      intervalMs: 10,
+    });
+    const registry = new ConfigRegistry({ sources: [source], envPrefix: '' });
+    await registry.start();
+    expect(registry.values().feature).toEqual({ enabled: true });
+
+    shouldFail = true;
+    await registry.reload();
+    // 远程抖动不能把配置清空
