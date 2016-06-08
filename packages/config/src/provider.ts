@@ -70,3 +70,17 @@ export function createFileSource(options: FileSourceOptions): ConfigSource {
     dispose() {
       if (timer) clearTimeout(timer);
       watcher?.close();
+    },
+  };
+}
+
+export interface PollingSourceOptions {
+  name: string;
+  /** 拉取远程配置；抛错时保留上一次的值（远程抖动不能打挂应用） */
+  fetch: () => Promise<PlainObject> | PlainObject;
+  /** 轮询间隔，默认 30s */
+  intervalMs?: number;
+}
+
+/**
+ * 轮询源：远程配置中心（etcd / consul / nacos / 自研）的统一入口。
