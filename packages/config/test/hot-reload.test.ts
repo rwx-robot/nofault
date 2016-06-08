@@ -137,3 +137,26 @@ describe('createPollingSource', () => {
     shouldFail = true;
     await registry.reload();
     // 远程抖动不能把配置清空
+    expect(registry.values().feature).toEqual({ enabled: true });
+    await registry.close();
+  });
+});
+
+describe('createFileSource with watch', () => {
+  it('reloads when the file changes', async () => {
+    const file = tempFile('live.yaml', 'greeting: hello\n');
+    const registry = buildRegistry({ path: file, watch: true, ignoreEnv: true });
+    await registry.start();
+    expect(registry.values().greeting).toBe('hello');
+
+    let notified = false;
+    const off = registry.subscribe(() => {
+      notified = true;
+    });
+
+    // 等 watcher 真正挂上再改文件，避免和 start() 抢时间
+    await sleep(80);
+    writeFileSync(file, 'greeting: world\n', 'utf8');
+
+    // 轮询等待，比固定 sleep 稳
+    const deadline = Date.now() + 3000;
