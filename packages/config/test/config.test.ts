@@ -41,3 +41,18 @@ describe('loader', () => {
   it('parses .env files', () => {
     expect(parseDotEnv('A=1\n# comment\nB=hello\n')).toEqual({ A: '1', B: 'hello' });
   });
+
+  it('applies env overrides with double-underscore nesting', () => {
+    const cfg = applyEnvOverrides({ server: { port: 3000 } }, 'NOFAULT_', {
+      NOFAULT_SERVER__PORT: '8080',
+      NOFAULT_NAME: 'demo',
+      UNRELATED: 'x',
+    });
+    expect(cfg).toEqual({ server: { port: 8080 }, name: 'demo' });
+  });
+
+  it('keeps single underscores as part of the key', () => {
+    // 与注释一致的语义：单下划线属于键名本身，不做层级分隔——
+    // 否则 `NOFAULT_MAX_IDLE` 会被错误地劈成 max.idle，和 yaml 里的 `max_idle` 对不上
+    const cfg = applyEnvOverrides({ pool: { max_idle: 4 } }, 'NOFAULT_', {
+      NOFAULT_POOL__MAX_IDLE: '8',
