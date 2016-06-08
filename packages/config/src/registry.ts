@@ -16,3 +16,21 @@ export interface ConfigRegistryOptions {
  *
  * 合并顺序：**后面的源覆盖前面的**，环境变量永远最后且优先级最高（12-factor）。
  */
+export class ConfigRegistry {
+  private readonly sources: ConfigSource[];
+  private readonly envPrefix: string;
+  private readonly listeners = new Set<ConfigChangeListener>();
+  private current: PlainObject = {};
+  private unwatchers: Array<() => void> = [];
+  private started = false;
+
+  constructor(options: ConfigRegistryOptions = {}) {
+    this.sources = options.sources ?? [];
+    this.envPrefix = options.envPrefix ?? 'NOFAULT_';
+  }
+
+  /** 首次加载 + 启动变更订阅 */
+  async start(): Promise<PlainObject> {
+    await this.reload();
+    if (this.started) return this.current;
+    this.started = true;
