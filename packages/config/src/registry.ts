@@ -86,3 +86,21 @@ export class ConfigRegistry {
     this.listeners.add(listener);
     return () => this.listeners.delete(listener);
   }
+
+  get listenerCount(): number {
+    return this.listeners.size;
+  }
+
+  /** 关闭：停止所有 watcher 与定时器 */
+  async close(): Promise<void> {
+    for (const off of this.unwatchers) off();
+    this.unwatchers = [];
+    for (const source of this.sources) source.dispose?.();
+    this.started = false;
+  }
+}
+
+export interface BuildRegistryOptions {
+  path?: string;
+  values?: PlainObject;
+  sources?: ConfigSource[];
