@@ -91,3 +91,26 @@ describe('ConfigRegistry', () => {
     off();
     expect(registry.listenerCount).toBe(0);
     await registry.close();
+  });
+});
+
+describe('ConfigService over a registry', () => {
+  it('reads the live snapshot and reports reloadability', async () => {
+    let value = 'first';
+    const registry = new ConfigRegistry({
+      sources: [{ name: 'live', load: () => ({ greeting: value }) }],
+      envPrefix: '',
+    });
+    await registry.start();
+    const config = createConfigService(registry);
+
+    expect(config.get('greeting')).toBe('first');
+    expect(config.isReloadable).toBe(true);
+
+    value = 'second';
+    await config.reload();
+    expect(config.get('greeting')).toBe('second');
+  });
+
+  it('static config is not reloadable', () => {
+    const config = createConfigService({ a: 1 });
