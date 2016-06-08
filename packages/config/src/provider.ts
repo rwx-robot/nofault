@@ -113,3 +113,16 @@ export function createPollingSource(options: PollingSourceOptions): ConfigSource
         timer = undefined;
       };
     },
+    dispose() {
+      if (timer) clearInterval(timer);
+    },
+  };
+}
+
+/** 环境变量源（无前缀过滤，交给 applyEnvOverrides 统一处理） */
+export function createEnvSource(prefix: string, source: NodeJS.ProcessEnv = process.env): ConfigSource {
+  return {
+    name: `env:${prefix}`,
+    load: () => applyEnvOverrides({}, prefix, source),
+  };
+}
