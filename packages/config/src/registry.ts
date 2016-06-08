@@ -108,3 +108,15 @@ export interface BuildRegistryOptions {
   ignoreEnv?: boolean;
   watch?: boolean;
 }
+
+/** 按传统 options 组装 registry（保持 `forRoot` 的向后兼容） */
+export function buildRegistry(options: BuildRegistryOptions): ConfigRegistry {
+  const sources: ConfigSource[] = [...(options.sources ?? [])];
+  if (options.values) sources.push(createInlineSource(options.values));
+  if (options.path) sources.push(createFileSource({ path: options.path, watch: options.watch ?? false }));
+
+  return new ConfigRegistry({
+    sources,
+    envPrefix: options.ignoreEnv ? '' : (options.envPrefix ?? 'NOFAULT_'),
+  });
+}
