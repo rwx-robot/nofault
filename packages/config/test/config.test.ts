@@ -27,3 +27,17 @@ describe('ConfigService', () => {
     expect(cfg.get('server.missing', 'fallback')).toBe('fallback');
     expect(cfg.has('server.host')).toBe(true);
     expect(() => cfg.getOrThrow('nope')).toThrow();
+  });
+
+  it('returns a deep copy from snapshot()', () => {
+    const cfg = createConfigService({ a: { b: 1 } });
+    const snap = cfg.snapshot<{ a: { b: number } }>();
+    snap.a.b = 2;
+    expect(cfg.get<number>('a.b')).toBe(1);
+  });
+});
+
+describe('loader', () => {
+  it('parses .env files', () => {
+    expect(parseDotEnv('A=1\n# comment\nB=hello\n')).toEqual({ A: '1', B: 'hello' });
+  });
