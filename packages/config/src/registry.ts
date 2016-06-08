@@ -26,3 +26,16 @@ export class ConfigRegistry {
 
   constructor(options: ConfigRegistryOptions = {}) {
     this.sources = options.sources ?? [];
+    this.envPrefix = options.envPrefix ?? 'NOFAULT_';
+  }
+
+  /** 首次加载 + 启动变更订阅 */
+  async start(): Promise<PlainObject> {
+    await this.reload();
+    if (this.started) return this.current;
+    this.started = true;
+    for (const source of this.sources) {
+      const unwatch = source.watch?.(() => {
+        void this.reload();
+      });
+      if (typeof unwatch === 'function') this.unwatchers.push(unwatch);
