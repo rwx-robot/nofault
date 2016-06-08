@@ -84,3 +84,18 @@ export interface PollingSourceOptions {
 
 /**
  * 轮询源：远程配置中心（etcd / consul / nacos / 自研）的统一入口。
+ *
+ * 之所以做成"给一个 fetch 函数"而不是内置 etcd 客户端：
+ * 远程源**不该**成为框架的强依赖，接入方式交给使用者决定。
+ */
+export function createPollingSource(options: PollingSourceOptions): ConfigSource {
+  const { name, fetch, intervalMs = 30_000 } = options;
+  let timer: NodeJS.Timeout | undefined;
+  let last: PlainObject = {};
+
+  return {
+    name,
+    async load() {
+      try {
+        last = await fetch();
+      } catch {
