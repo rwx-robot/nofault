@@ -160,3 +160,25 @@ describe('createFileSource with watch', () => {
 
     // 轮询等待，比固定 sleep 稳
     const deadline = Date.now() + 3000;
+    while (registry.values().greeting !== 'world' && Date.now() < deadline) {
+      await sleep(50);
+    }
+
+    expect(registry.values().greeting).toBe('world');
+    expect(notified).toBe(true);
+    off();
+    await registry.close();
+  });
+
+  it('does not watch when watch is false', async () => {
+    const file = tempFile('static.yaml', 'v: 1\n');
+    const source = createFileSource({ path: file });
+    expect(source.watch).toBeTypeOf('function');
+    const registry = buildRegistry({ path: file, watch: false, ignoreEnv: true });
+    await registry.start();
+    writeFileSync(file, 'v: 2\n', 'utf8');
+    await sleep(150);
+    expect(registry.values().v).toBe(1);
+    await registry.close();
+  });
+});
