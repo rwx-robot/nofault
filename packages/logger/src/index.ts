@@ -9,3 +9,5 @@ export {
   MemoryTransport,
   createJsonFormatter,
   createPrettyFormatter,
+} from './logger';
+export type { LoggerOptions, LogTransport, LogFormatter, LogRecord } from './logger';
