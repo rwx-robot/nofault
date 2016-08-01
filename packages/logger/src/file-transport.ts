@@ -26,3 +26,16 @@ export interface FileTransportOptions {
  * - `flushSync()` 保留为兜底：进程退出前、以及测试需要"立刻在磁盘上"时用；
  * - 轮转仍用同步 rename（低频，且必须先于下一次写完成）。
  *
+ * 写失败不在 fire-and-forget 路径里上抛（日志是尽力而为的旁路，
+ * 不能因为磁盘满把业务线程炸掉）；`await flush()` 会如实拒绝，供关停路径感知。
+ */
+export class FileTransport implements LogTransport {
+  private readonly options: Required<Pick<FileTransportOptions, 'maxFiles'>> & FileTransportOptions;
+  private buffer: string[] = [];
+  private currentPath: string;
+  private currentDay: string;
+  private queue: Promise<void> = Promise.resolve();
+
+  constructor(options: FileTransportOptions) {
+    this.options = { maxFiles: 5, ...options };
+    this.currentDay = today();
