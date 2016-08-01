@@ -54,3 +54,21 @@ export class FileTransport implements LogTransport {
   private ensureFile(): void {
     const dir = dirname(this.currentPath);
     if (!existsSync(dir)) mkdirSync(dir, { recursive: true });
+    if (!existsSync(this.currentPath)) {
+      closeSync(openSync(this.currentPath, 'a'));
+    }
+  }
+
+  write(line: string, _record: LogRecord): void {
+    // 跨天：旧一天的尾巴先排进队列（此刻仍指向旧路径），再切新文件
+    if (this.options.daily && today() !== this.currentDay) {
+      void this.flush().catch(() => undefined);
+      this.currentDay = today();
+      this.currentPath = this.resolvePath();
+      this.ensureFile();
+      this.rotateIfNeeded();
+    }
+
+    this.buffer.push(line);
+    if (this.buffer.length >= (this.options.flushEvery ?? 1)) {
+      void this.flush().catch(() => undefined);
