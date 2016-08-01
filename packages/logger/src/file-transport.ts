@@ -127,3 +127,20 @@ export class FileTransport implements LogTransport {
     for (const entry of readdirSync(dir)) {
       if (entry.startsWith(prefix)) unlinkSync(join(dir, entry));
     }
+  }
+}
+
+/**
+ * 当前日期（**本地**时区）。
+ *
+ * 这里不能用 `toISOString()` —— 那是 UTC 日期。东八区在 00:00~08:00 之间
+ * UTC 仍属前一天，于是"按天轮转"会出现两个后果：
+ * 文件名里的日期落后一天，且轮转发生在本地早上 8 点而不是午夜。
+ * 按天切割日志是给人看的，必须跟着本地日历走。
+ */
+function today(at: Date = new Date()): string {
+  const year = at.getFullYear();
+  const month = String(at.getMonth() + 1).padStart(2, '0');
+  const day = String(at.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
