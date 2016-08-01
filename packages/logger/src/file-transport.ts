@@ -121,3 +121,15 @@ export class FileTransport implements LogTransport {
 
   /** 清理所有历史文件（测试用） */
   cleanup(): void {
+    const dir = dirname(this.currentPath);
+    if (!existsSync(dir)) return;
+    const prefix = basename(this.currentPath);
+    for (const entry of readdirSync(dir)) {
+      if (entry.startsWith(prefix)) unlinkSync(join(dir, entry));
+    }
+  }
+}
+
+function today(): string {
+  return new Date().toISOString().slice(0, 10);
+}
