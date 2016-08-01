@@ -66,3 +66,17 @@ export class FileTransport implements LogTransport {
       this.currentDay = today();
       this.currentPath = this.resolvePath();
       this.ensureFile();
+      this.rotateIfNeeded();
+    }
+
+    this.buffer.push(line);
+    if (this.buffer.length >= (this.options.flushEvery ?? 1)) {
+      void this.flush().catch(() => undefined);
+    }
+  }
+
+  /** 把当前缓冲排进异步写队列；await 返回值即"这一批已落盘"（失败会拒绝） */
+  async flush(): Promise<void> {
+    if (this.buffer.length === 0) return this.queue;
+    const chunk = this.buffer.join('\n') + '\n';
+    this.buffer = [];
