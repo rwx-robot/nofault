@@ -1,3 +1,5 @@
 {
   "name": "@nofault/logger",
   "version": "0.1.0",
+  "description": "nofault structured logger with pluggable transports",
+  "license": "MIT",
