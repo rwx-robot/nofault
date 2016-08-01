@@ -39,3 +39,17 @@ export class FileTransport implements LogTransport {
   constructor(options: FileTransportOptions) {
     this.options = { maxFiles: 5, ...options };
     this.currentDay = today();
+    this.currentPath = this.resolvePath();
+    this.ensureFile();
+  }
+
+  private resolvePath(): string {
+    const { filePath, daily } = this.options;
+    if (!daily) return filePath;
+    const ext = extname(filePath);
+    const base = basename(filePath, ext);
+    return join(dirname(filePath), `${base}.${this.currentDay}${ext || '.log'}`);
+  }
+
+  private ensureFile(): void {
+    const dir = dirname(this.currentPath);
