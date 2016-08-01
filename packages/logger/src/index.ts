@@ -7,3 +7,5 @@ export {
   createLogger,
   ConsoleTransport,
   MemoryTransport,
+  createJsonFormatter,
+  createPrettyFormatter,
