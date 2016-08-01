@@ -109,3 +109,21 @@ export class FileTransport implements LogTransport {
     }
     // 超过保留数量的直接删（循环里最老那份已被顶掉）
     const oldest = this.rotatedPath(this.options.maxFiles);
+    if (existsSync(oldest) && this.rotatedPath(this.options.maxFiles) !== this.currentPath) {
+      // 由下一次轮转覆盖，这里不动
+    }
+    this.ensureFile();
+  }
+
+  private rotatedPath(index: number): string {
+    return `${this.currentPath}.${index}`;
+  }
+
+  /** 清理所有历史文件（测试用） */
+  cleanup(): void {
+    const dir = dirname(this.currentPath);
+    if (!existsSync(dir)) return;
+    const prefix = basename(this.currentPath);
+    for (const entry of readdirSync(dir)) {
+      if (entry.startsWith(prefix)) unlinkSync(join(dir, entry));
+    }
