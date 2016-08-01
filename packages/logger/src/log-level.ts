@@ -1,0 +1,40 @@
+/** 日志级别（数值越大越严重） */
+export enum LogLevel {
+  TRACE = 10,
+  DEBUG = 20,
+  INFO = 30,
+  WARN = 40,
+  ERROR = 50,
+  FATAL = 60,
+}
+
+const LEVEL_NAMES: Record<number, string> = {
+  [LogLevel.TRACE]: 'trace',
+  [LogLevel.DEBUG]: 'debug',
+  [LogLevel.INFO]: 'info',
+  [LogLevel.WARN]: 'warn',
+  [LogLevel.ERROR]: 'error',
+  [LogLevel.FATAL]: 'fatal',
+};
+
+const NAME_TO_LEVEL: Record<string, LogLevel> = {
+  trace: LogLevel.TRACE,
+  debug: LogLevel.DEBUG,
+  info: LogLevel.INFO,
+  warn: LogLevel.WARN,
+  error: LogLevel.ERROR,
+  fatal: LogLevel.FATAL,
+};
+
+export function levelName(level: LogLevel): string {
+  return LEVEL_NAMES[level] ?? 'info';
+}
+
+export function parseLevel(value: string | number | undefined, fallback = LogLevel.INFO): LogLevel {
+  if (typeof value === 'number') return value as LogLevel;
+  if (typeof value === 'string') {
+    const key = value.toLowerCase();
+    if (key in NAME_TO_LEVEL) return NAME_TO_LEVEL[key]!;
+  }
+  return fallback;
+}
