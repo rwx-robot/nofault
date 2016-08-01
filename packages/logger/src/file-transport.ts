@@ -90,3 +90,22 @@ export class FileTransport implements LogTransport {
   flushSync(): void {
     if (this.buffer.length === 0) return;
     const chunk = this.buffer.join('\n') + '\n';
+    this.buffer = [];
+    this.rotateIfNeeded();
+    appendFileSync(this.currentPath, chunk, 'utf8');
+  }
+
+  private rotateIfNeeded(): void {
+    const maxSize = this.options.maxSize ?? 0;
+    if (maxSize <= 0) return;
+    if (!existsSync(this.currentPath)) return;
+    if (statSync(this.currentPath).size < maxSize) return;
+
+    // name.log → name.1.log → name.2.log ...
+    for (let i = this.options.maxFiles - 1; i >= 1; i--) {
+      const from = i === 1 ? this.currentPath : this.rotatedPath(i - 1);
+      const to = this.rotatedPath(i);
+      if (existsSync(from)) renameSync(from, to);
+    }
+    // 超过保留数量的直接删（循环里最老那份已被顶掉）
+    const oldest = this.rotatedPath(this.options.maxFiles);
