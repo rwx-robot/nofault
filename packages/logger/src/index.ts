@@ -5,3 +5,5 @@ export { LogLevel, levelName, parseLevel } from './log-level';
 export {
   Logger,
   createLogger,
+  ConsoleTransport,
+  MemoryTransport,
