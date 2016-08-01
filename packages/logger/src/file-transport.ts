@@ -80,3 +80,17 @@ export class FileTransport implements LogTransport {
     if (this.buffer.length === 0) return this.queue;
     const chunk = this.buffer.join('\n') + '\n';
     this.buffer = [];
+    this.rotateIfNeeded();
+    const target = this.currentPath;
+    this.queue = this.queue.then(() => appendFile(target, chunk, 'utf8'));
+    return this.queue;
+  }
+
+  /** 同步兜底：进程退出前保证缓冲内容落盘（不走队列，直接写） */
+  flushSync(): void {
+    if (this.buffer.length === 0) return;
+    const chunk = this.buffer.join('\n') + '\n';
+    this.buffer = [];
+    this.rotateIfNeeded();
+    appendFileSync(this.currentPath, chunk, 'utf8');
+  }
