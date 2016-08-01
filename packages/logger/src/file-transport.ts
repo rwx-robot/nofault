@@ -72,3 +72,21 @@ export class FileTransport implements LogTransport {
     this.buffer.push(line);
     if (this.buffer.length >= (this.options.flushEvery ?? 1)) {
       void this.flush().catch(() => undefined);
+    }
+  }
+
+  /** 把当前缓冲排进异步写队列；await 返回值即"这一批已落盘"（失败会拒绝） */
+  async flush(): Promise<void> {
+    if (this.buffer.length === 0) return this.queue;
+    const chunk = this.buffer.join('\n') + '\n';
+    this.buffer = [];
+    this.rotateIfNeeded();
+    const target = this.currentPath;
+    this.queue = this.queue.then(() => appendFile(target, chunk, 'utf8'));
+    return this.queue;
+  }
+
+  /** 同步兜底：进程退出前保证缓冲内容落盘（不走队列，直接写） */
+  flushSync(): void {
+    if (this.buffer.length === 0) return;
+    const chunk = this.buffer.join('\n') + '\n';
