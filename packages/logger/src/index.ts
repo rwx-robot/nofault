@@ -12,3 +12,5 @@ export {
 } from './logger';
 export type { LoggerOptions, LogTransport, LogFormatter, LogRecord } from './logger';
 export { FileTransport } from './file-transport';
+export type { FileTransportOptions } from './file-transport';
+export { createRecord, serializeError } from './log-record';
