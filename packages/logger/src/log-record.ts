@@ -30,3 +30,10 @@ export function createRecord(
   fields?: Record<string, unknown>,
   error?: unknown,
 ): LogRecord {
+  const record: LogRecord = {
+    timestamp: new Date().toISOString(),
+    level,
+    levelName: levelName(level),
+    message,
+  };
+  if (context) record.context = context;
