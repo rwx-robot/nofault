@@ -56,3 +56,14 @@ function safeStringify(v: unknown): string {
     return String(v);
   }
 }
+
+/** 格式化器：把记录渲染成一行文本 */
+export type LogFormatter = (record: LogRecord) => string;
+
+export function createJsonFormatter(): LogFormatter {
+  return (record) => JSON.stringify(record);
+}
+
+export function createPrettyFormatter(useColor = true): LogFormatter {
+  return (record) => {
+    const lvl = record.levelName.toUpperCase().padEnd(5);
