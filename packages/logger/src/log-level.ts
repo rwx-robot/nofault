@@ -29,3 +29,9 @@ const NAME_TO_LEVEL: Record<string, LogLevel> = {
 export function levelName(level: LogLevel): string {
   return LEVEL_NAMES[level] ?? 'info';
 }
+
+export function parseLevel(value: string | number | undefined, fallback = LogLevel.INFO): LogLevel {
+  if (typeof value === 'number') return value as LogLevel;
+  if (typeof value === 'string') {
+    const key = value.toLowerCase();
+    if (key in NAME_TO_LEVEL) return NAME_TO_LEVEL[key]!;
