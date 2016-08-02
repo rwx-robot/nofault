@@ -22,3 +22,11 @@ const COLORS: Record<string, string> = {
   fatal: '\x1b[35m',
 };
 const RESET = '\x1b[0m';
+
+export function createRecord(
+  level: LogLevel,
+  message: string,
+  context?: string,
+  fields?: Record<string, unknown>,
+  error?: unknown,
+): LogRecord {
