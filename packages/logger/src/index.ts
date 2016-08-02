@@ -11,3 +11,5 @@ export {
   createPrettyFormatter,
 } from './logger';
 export type { LoggerOptions, LogTransport, LogFormatter, LogRecord } from './logger';
+export { FileTransport } from './file-transport';
+export type { FileTransportOptions } from './file-transport';
