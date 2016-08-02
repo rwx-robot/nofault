@@ -7,3 +7,7 @@ export enum LogLevel {
   ERROR = 50,
   FATAL = 60,
 }
+
+const LEVEL_NAMES: Record<number, string> = {
+  [LogLevel.TRACE]: 'trace',
+  [LogLevel.DEBUG]: 'debug',
