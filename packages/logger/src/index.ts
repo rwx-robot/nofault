@@ -9,3 +9,4 @@ export {
   MemoryTransport,
   createJsonFormatter,
   createPrettyFormatter,
+} from './logger';
