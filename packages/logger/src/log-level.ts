@@ -25,3 +25,7 @@ const NAME_TO_LEVEL: Record<string, LogLevel> = {
   error: LogLevel.ERROR,
   fatal: LogLevel.FATAL,
 };
+
+export function levelName(level: LogLevel): string {
+  return LEVEL_NAMES[level] ?? 'info';
+}
