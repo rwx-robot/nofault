@@ -50,3 +50,29 @@ export class ConsoleTransport implements LogTransport {
 }
 
 /** 内存传输：测试与断言场景 */
+export class MemoryTransport implements LogTransport {
+  public readonly records: LogRecord[] = [];
+  public readonly lines: string[] = [];
+
+  write(line: string, record: LogRecord): void {
+    this.lines.push(line);
+    this.records.push(record);
+  }
+
+  clear(): void {
+    this.records.length = 0;
+    this.lines.length = 0;
+  }
+}
+
+/**
+ * nofault 日志器。
+ *
+ * 设计要点：
+ * - 结构化优先：message 供人读，fields 供机器读
+ * - 级别过滤在入口完成，避免无谓的字符串拼接
+ * - 传输目标可插拔
+ */
+export class Logger {
+  private level: LogLevel;
+  private readonly context?: string;
