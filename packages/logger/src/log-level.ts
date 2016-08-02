@@ -11,3 +11,7 @@ export enum LogLevel {
 const LEVEL_NAMES: Record<number, string> = {
   [LogLevel.TRACE]: 'trace',
   [LogLevel.DEBUG]: 'debug',
+  [LogLevel.INFO]: 'info',
+  [LogLevel.WARN]: 'warn',
+  [LogLevel.ERROR]: 'error',
+  [LogLevel.FATAL]: 'fatal',
