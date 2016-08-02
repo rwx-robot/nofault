@@ -19,3 +19,7 @@ const LEVEL_NAMES: Record<number, string> = {
 
 const NAME_TO_LEVEL: Record<string, LogLevel> = {
   trace: LogLevel.TRACE,
+  debug: LogLevel.DEBUG,
+  info: LogLevel.INFO,
+  warn: LogLevel.WARN,
+  error: LogLevel.ERROR,
