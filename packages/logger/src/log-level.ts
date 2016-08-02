@@ -35,3 +35,6 @@ export function parseLevel(value: string | number | undefined, fallback = LogLev
   if (typeof value === 'string') {
     const key = value.toLowerCase();
     if (key in NAME_TO_LEVEL) return NAME_TO_LEVEL[key]!;
+  }
+  return fallback;
+}
