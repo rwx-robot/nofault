@@ -24,3 +24,29 @@ export interface LoggerOptions {
    * ```
    * 放在这里而不是让 logger 依赖 `@nofault/context`，是为了保持 logger 零依赖。
    */
+  contextProvider?: () => Record<string, unknown> | undefined | null;
+  /**
+   * 采样：只对**低于** `sampleBelow` 的级别生效（默认 INFO，即只采样 debug/trace）。
+   *
+   * 高频调试日志用它降本；`sampleBelow` 及以上永远不打折扣——
+   * 问题排查最需要的就是 warn/error，那些不能丢。
+   */
+  sampling?: { rate: number; sampleBelow?: LogLevel };
+}
+
+/** 标准输出传输 */
+export class ConsoleTransport implements LogTransport {
+  constructor(
+    private readonly stream: NodeJS.WriteStream = process.stdout,
+    /** error/fatal 的去处；默认 stderr 便于容器日志分流，测试里可注入内存流避免漏写真 stderr */
+    private readonly errorStream: NodeJS.WriteStream = process.stderr,
+  ) {}
+
+  write(line: string, record: LogRecord): void {
+    // error/fatal 走 error 流，便于容器日志分流
+    const target = record.level >= LogLevel.ERROR ? this.errorStream : this.stream;
+    target.write(line + '\n');
+  }
+}
+
+/** 内存传输：测试与断言场景 */
