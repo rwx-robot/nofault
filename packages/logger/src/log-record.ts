@@ -47,3 +47,12 @@ export function serializeError(err: unknown): { name: string; message: string; s
     return { name: err.name, message: err.message, stack: err.stack };
   }
   return { name: 'NonError', message: safeStringify(err) };
+}
+
+function safeStringify(v: unknown): string {
+  try {
+    return typeof v === 'string' ? v : JSON.stringify(v);
+  } catch {
+    return String(v);
+  }
+}
