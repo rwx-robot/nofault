@@ -76,3 +76,29 @@ export class MemoryTransport implements LogTransport {
 export class Logger {
   private level: LogLevel;
   private readonly context?: string;
+  private readonly formatter: LogFormatter;
+  private readonly transports: LogTransport[];
+  private readonly baseFields: Record<string, unknown>;
+  private readonly contextProvider?: () => Record<string, unknown> | undefined | null;
+  private readonly sampling?: { rate: number; sampleBelow: LogLevel };
+
+  constructor(options: LoggerOptions = {}) {
+    this.level = parseLevel(options.level, LogLevel.INFO);
+    this.context = options.context;
+    this.formatter = options.formatter ?? createPrettyFormatter();
+    this.transports = options.transports ?? [new ConsoleTransport()];
+    this.baseFields = options.baseFields ?? {};
+    this.contextProvider = options.contextProvider;
+    if (options.sampling) {
+      this.sampling = { rate: options.sampling.rate, sampleBelow: options.sampling.sampleBelow ?? LogLevel.INFO };
+    }
+  }
+
+  /** 派生子日志器：继承配置，附加 context */
+  child(context: string, fields?: Record<string, unknown>): Logger {
+    return new Logger({
+      level: this.level,
+      context: this.context ? `${this.context}:${context}` : context,
+      formatter: this.formatter,
+      transports: this.transports,
+      baseFields: { ...this.baseFields, ...(fields ?? {}) },
