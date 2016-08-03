@@ -154,3 +154,29 @@ export class Logger {
   private log(level: LogLevel, message: string, fields?: Record<string, unknown>, err?: unknown): void {
     if (!this.isLevelEnabled(level)) return;
     if (!this.shouldSample(level)) return;
+
+    let merged: Record<string, unknown> | undefined = fields;
+    if (Object.keys(this.baseFields).length > 0) {
+      merged = { ...this.baseFields, ...(fields ?? {}) };
+    }
+    const ctxFields = this.contextProvider?.();
+    if (ctxFields) {
+      merged = { ...(merged ?? {}), ...ctxFields };
+    }
+    const record = createRecord(level, message, this.context, merged, err);
+    const line = this.formatter(record);
+    for (const t of this.transports) {
+      try {
+        void t.write(line, record);
+      } catch (err) {
+        // 日志失败绝不能把业务请求打挂：退到 stderr，且只提示一次要点
+        this.reportTransportFailure(t, err);
+      }
+    }
+  }
+
+  private reportedFailures = 0;
+
+  private reportTransportFailure(t: LogTransport, err: unknown): void {
+    // 磁盘满时每条都报会把 stderr 打爆，做个简单限流
+    if (this.reportedFailures < 5) {
