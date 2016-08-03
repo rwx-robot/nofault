@@ -180,3 +180,27 @@ export class Logger {
   private reportTransportFailure(t: LogTransport, err: unknown): void {
     // 磁盘满时每条都报会把 stderr 打爆，做个简单限流
     if (this.reportedFailures < 5) {
+      this.reportedFailures++;
+      const name = t.constructor?.name ?? 'transport';
+      process.stderr.write(`[logger] transport "${name}" failed: ${String(err)}\n`);
+    }
+  }
+
+  async flush(): Promise<void> {
+    for (const t of this.transports) {
+      try {
+        await t.flush?.();
+      } catch (err) {
+        this.reportTransportFailure(t, err);
+      }
+    }
+  }
+}
+
+/** 便捷工厂 */
+export function createLogger(options: LoggerOptions = {}): Logger {
+  return new Logger(options);
+}
+
+export { createJsonFormatter, createPrettyFormatter };
+export type { LogFormatter, LogRecord };
