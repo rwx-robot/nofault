@@ -178,3 +178,27 @@ describe('Logger contextProvider', () => {
     expect(t.records.map((r) => r.fields?.n)).toEqual([1, 2]);
   });
 });
+
+describe('file logging end to end', () => {
+  it('writes formatted json lines through a Logger', async () => {
+    const dir = tmpdir_();
+    const file = join(dir, 'e2e.log');
+    writeFileSync(file, '');
+    const transport = new FileTransport({ filePath: file });
+    const log = createLogger({
+      transports: [transport],
+      contextProvider: () => ({ traceId: 'tid' }),
+    });
+    log.info('user created', { id: 7 });
+    await transport.flush();
+    const line = readFileSync(file, 'utf8').trim();
+    expect(line).toContain('user created');
+    expect(line).toContain('tid');
+  });
+
+  it('does not throw when the transport throws', () => {
+    const bad = { write: vi.fn(() => { throw new Error('disk full'); }) };
+    const log = createLogger({ transports: [bad] });
+    expect(() => log.info('x')).not.toThrow();
+  });
+});
