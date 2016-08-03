@@ -37,3 +37,11 @@ export function createRecord(
     message,
   };
   if (context) record.context = context;
+  if (fields && Object.keys(fields).length > 0) record.fields = fields;
+  if (error !== undefined) record.error = serializeError(error);
+  return record;
+}
+
+export function serializeError(err: unknown): { name: string; message: string; stack?: string } {
+  if (err instanceof Error) {
+    return { name: err.name, message: err.message, stack: err.stack };
