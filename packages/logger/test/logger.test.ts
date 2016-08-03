@@ -23,3 +23,15 @@ describe('ConsoleTransport', () => {
     const out = fakeStream();
     const err = fakeStream();
     const t = new ConsoleTransport(out.stream, err.stream);
+    t.write('info-line', recordAt(LogLevel.INFO));
+    t.write('error-line', recordAt(LogLevel.ERROR));
+    t.write('fatal-line', recordAt(LogLevel.FATAL));
+    expect(out.write).toHaveBeenCalledTimes(1);
+    expect(out.write.mock.calls[0]![0]).toBe('info-line\n');
+    expect(err.write).toHaveBeenCalledTimes(2);
+  });
+
+  it('does not leak error lines into the real stderr when a custom stream is given', () => {
+    const out = fakeStream();
+    const err = fakeStream();
+    const t = new ConsoleTransport(out.stream, err.stream);
