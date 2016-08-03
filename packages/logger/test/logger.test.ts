@@ -97,3 +97,14 @@ describe('Logger', () => {
   });
 
   it('exposes level predicates', () => {
+    const log = new Logger({ level: LogLevel.WARN, transports: [] });
+    expect(log.isLevelEnabled(LogLevel.ERROR)).toBe(true);
+    expect(log.isLevelEnabled(LogLevel.DEBUG)).toBe(false);
+    log.setLevel('debug');
+    expect(log.isLevelEnabled(LogLevel.DEBUG)).toBe(true);
+  });
+
+  it('has a console transport that is constructible', () => {
+    expect(new ConsoleTransport()).toBeInstanceOf(ConsoleTransport);
+  });
+});
