@@ -48,3 +48,15 @@ describe('LogLevel', () => {
   it('parses level names case-insensitively', () => {
     expect(parseLevel('debug')).toBe(LogLevel.DEBUG);
     expect(parseLevel('WARN')).toBe(LogLevel.WARN);
+    expect(parseLevel(LogLevel.FATAL)).toBe(LogLevel.FATAL);
+    expect(parseLevel('nonsense')).toBe(LogLevel.INFO);
+  });
+});
+
+describe('Logger', () => {
+  it('filters messages below the configured level', () => {
+    const t = memory();
+    const log = new Logger({ level: LogLevel.WARN, transports: [t] });
+    log.debug('nope');
+    log.info('nope');
+    log.warn('yes');
