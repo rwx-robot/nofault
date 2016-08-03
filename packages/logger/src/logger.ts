@@ -142,3 +142,23 @@ export class Logger {
    * 注意 `rate <= 0` 表示全丢弃、`rate >= 1` 表示全保留，边界要写死。
    */
   private shouldSample(level: LogLevel): boolean {
+    if (!this.sampling) return true;
+    if (level >= this.sampling.sampleBelow) return true;
+    if (this.sampling.rate <= 0) return false;
+    if (this.sampling.rate >= 1) return true;
+    return Math.random() < this.sampling.rate;
+  }
+
+  private log(level: LogLevel, message: string, fields?: Record<string, unknown>, err?: unknown): void {
+    if (!this.isLevelEnabled(level)) return;
+    if (!this.shouldSample(level)) return;
+
+    let merged: Record<string, unknown> | undefined = fields;
+    if (Object.keys(this.baseFields).length > 0) {
+      merged = { ...this.baseFields, ...(fields ?? {}) };
+    }
+    const ctxFields = this.contextProvider?.();
+    if (ctxFields) {
+      merged = { ...(merged ?? {}), ...ctxFields };
+    }
+    const record = createRecord(level, message, this.context, merged, err);
