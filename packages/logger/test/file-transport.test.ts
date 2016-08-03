@@ -101,3 +101,29 @@ describe('FileTransport', () => {
     expect(readdirSync(dir)).toHaveLength(0);
   });
 });
+
+describe('Logger sampling', () => {
+  it('drops debug/trace when rate is 0 but keeps info and above', () => {
+    const t = new MemoryTransport();
+    const log = new Logger({ level: LogLevel.TRACE, transports: [t], sampling: { rate: 0 } });
+    log.trace('dropped');
+    log.debug('dropped');
+    log.info('kept');
+    log.warn('kept');
+    log.error('kept');
+    expect(t.records.map((r) => r.levelName)).toEqual(['info', 'warn', 'error']);
+  });
+
+  it('keeps everything when rate is 1', () => {
+    const t = new MemoryTransport();
+    const log = new Logger({ level: LogLevel.TRACE, transports: [t], sampling: { rate: 1 } });
+    log.debug('a');
+    log.debug('b');
+    expect(t.records).toHaveLength(2);
+  });
+
+  it('samples probabilistically around the given rate', () => {
+    const t = new MemoryTransport();
+    const log = new Logger({ level: LogLevel.TRACE, transports: [t], sampling: { rate: 0.5 } });
+    const N = 4000;
+    for (let i = 0; i < N; i++) log.debug('x');
