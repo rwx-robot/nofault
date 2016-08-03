@@ -53,3 +53,11 @@ function safeStringify(v: unknown): string {
   try {
     return typeof v === 'string' ? v : JSON.stringify(v);
   } catch {
+    return String(v);
+  }
+}
+
+/** 格式化器：把记录渲染成一行文本 */
+export type LogFormatter = (record: LogRecord) => string;
+
+export function createJsonFormatter(): LogFormatter {
