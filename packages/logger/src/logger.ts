@@ -102,3 +102,29 @@ export class Logger {
       formatter: this.formatter,
       transports: this.transports,
       baseFields: { ...this.baseFields, ...(fields ?? {}) },
+      contextProvider: this.contextProvider,
+      sampling: this.sampling,
+    });
+  }
+
+  setLevel(level: LogLevel | string): void {
+    this.level = parseLevel(level, this.level);
+  }
+
+  getLevel(): LogLevel {
+    return this.level;
+  }
+
+  isLevelEnabled(level: LogLevel): boolean {
+    return level >= this.level;
+  }
+
+  trace(message: string, fields?: Record<string, unknown>): void {
+    this.log(LogLevel.TRACE, message, fields);
+  }
+  debug(message: string, fields?: Record<string, unknown>): void {
+    this.log(LogLevel.DEBUG, message, fields);
+  }
+  info(message: string, fields?: Record<string, unknown>): void {
+    this.log(LogLevel.INFO, message, fields);
+  }
