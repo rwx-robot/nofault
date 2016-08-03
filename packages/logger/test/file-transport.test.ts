@@ -24,3 +24,29 @@ describe('FileTransport', () => {
     const file = join(dir, 'nested', 'deep', 'app.log');
     new FileTransport({ filePath: file });
     expect(existsSync(file)).toBe(true);
+  });
+
+  it('names daily files after the local calendar date', async () => {
+    vi.useFakeTimers();
+    const dir = tmpdir_();
+    try {
+      // 本地 00:30：东八区此刻 UTC 仍属前一天，正是"UTC 还是本地"暴露差异的时刻
+      vi.setSystemTime(new Date(2026, 8, 20, 0, 30, 0));
+      const t = new FileTransport({ filePath: join(dir, 'app.log'), daily: true });
+      t.write('x', { timestamp: '', level: LogLevel.INFO, levelName: 'info', message: 'x' });
+      await t.flush();
+      // 期望值按本地日历拼，而不是 toISOString() 的 UTC 日历
+      expect(readdirSync(dir)).toEqual(['app.2026-09-20.log']);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('switches daily files at local midnight', async () => {
+    vi.useFakeTimers();
+    const dir = tmpdir_();
+    try {
+      const record = { timestamp: '', level: LogLevel.INFO, levelName: 'info', message: 'x' };
+      vi.setSystemTime(new Date(2026, 8, 20, 23, 59, 30));
+      const t = new FileTransport({ filePath: join(dir, 'app.log'), daily: true });
+      t.write('before', record);
