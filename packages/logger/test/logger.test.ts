@@ -85,3 +85,15 @@ describe('Logger', () => {
     const root = createLogger({ level: LogLevel.INFO, context: 'app', transports: [t] });
     root.child('db').info('connected');
     expect(t.records[0]!.context).toBe('app:db');
+  });
+
+  it('emits JSON when using the JSON formatter', () => {
+    const t = memory();
+    const log = new Logger({ level: LogLevel.INFO, transports: [t], formatter: createJsonFormatter() });
+    log.info('hello', { a: 1 });
+    const parsed = JSON.parse(t.lines[0]!) as Record<string, unknown>;
+    expect(parsed.message).toBe('hello');
+    expect(parsed.levelName).toBe('info');
+  });
+
+  it('exposes level predicates', () => {
