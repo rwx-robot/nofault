@@ -71,3 +71,17 @@ describe('Logger', () => {
     expect(t.records[0]!.message).toBe('user login');
     expect(t.records[0]!.fields).toEqual({ userId: 42, ok: true });
   });
+
+  it('attaches serialized errors', () => {
+    const t = memory();
+    const log = new Logger({ level: LogLevel.ERROR, transports: [t] });
+    log.error('boom', undefined, new TypeError('bad type'));
+    expect(t.records[0]!.error).toMatchObject({ name: 'TypeError', message: 'bad type' });
+    expect(t.records[0]!.error!.stack).toBeDefined();
+  });
+
+  it('derives child loggers that keep the parent context', () => {
+    const t = memory();
+    const root = createLogger({ level: LogLevel.INFO, context: 'app', transports: [t] });
+    root.child('db').info('connected');
+    expect(t.records[0]!.context).toBe('app:db');
