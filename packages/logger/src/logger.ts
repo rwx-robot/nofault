@@ -183,3 +183,22 @@ export class Logger {
       process.stderr.write(`[logger] transport "${name}" failed: ${String(err)}\n`);
     }
   }
+
+  async flush(): Promise<void> {
+    for (const t of this.transports) {
+      try {
+        await t.flush?.();
+      } catch (err) {
+        this.reportTransportFailure(t, err);
+      }
+    }
+  }
+}
+
+/** 便捷工厂 */
+export function createLogger(options: LoggerOptions = {}): Logger {
+  return new Logger(options);
+}
+
+export { createJsonFormatter, createPrettyFormatter };
+export type { LogFormatter, LogRecord };
