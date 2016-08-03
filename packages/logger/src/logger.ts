@@ -39,3 +39,24 @@ export class ConsoleTransport implements LogTransport {
   constructor(
     private readonly stream: NodeJS.WriteStream = process.stdout,
   ) {}
+
+  write(line: string, record: LogRecord): void {
+    // error/fatal 走 stderr，便于容器日志分流
+    const target = record.level >= LogLevel.ERROR ? process.stderr : this.stream;
+    target.write(line + '\n');
+  }
+}
+
+/** 内存传输：测试与断言场景 */
+export class MemoryTransport implements LogTransport {
+  public readonly records: LogRecord[] = [];
+  public readonly lines: string[] = [];
+
+  write(line: string, record: LogRecord): void {
+    this.lines.push(line);
+    this.records.push(record);
+  }
+
+  clear(): void {
+    this.records.length = 0;
+    this.lines.length = 0;
