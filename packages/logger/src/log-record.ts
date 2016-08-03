@@ -61,3 +61,11 @@ function safeStringify(v: unknown): string {
 export type LogFormatter = (record: LogRecord) => string;
 
 export function createJsonFormatter(): LogFormatter {
+  return (record) => JSON.stringify(record);
+}
+
+export function createPrettyFormatter(useColor = true): LogFormatter {
+  return (record) => {
+    const lvl = record.levelName.toUpperCase().padEnd(5);
+    const color = useColor ? (COLORS[record.levelName] ?? '') : '';
+    const reset = useColor ? RESET : '';
