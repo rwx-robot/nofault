@@ -128,3 +128,29 @@ export class Logger {
   info(message: string, fields?: Record<string, unknown>): void {
     this.log(LogLevel.INFO, message, fields);
   }
+  warn(message: string, fields?: Record<string, unknown>): void {
+    this.log(LogLevel.WARN, message, fields);
+  }
+  error(message: string, fields?: Record<string, unknown>, err?: unknown): void {
+    this.log(LogLevel.ERROR, message, fields, err);
+  }
+  fatal(message: string, fields?: Record<string, unknown>, err?: unknown): void {
+    this.log(LogLevel.FATAL, message, fields, err);
+  }
+
+  /**
+   * 采样判定：只对低于 minLevel 的级别生效。
+   *
+   * 注意 `rate <= 0` 表示全丢弃、`rate >= 1` 表示全保留，边界要写死。
+   */
+  private shouldSample(level: LogLevel): boolean {
+    if (!this.sampling) return true;
+    if (level >= this.sampling.sampleBelow) return true;
+    if (this.sampling.rate <= 0) return false;
+    if (this.sampling.rate >= 1) return true;
+    return Math.random() < this.sampling.rate;
+  }
+
+  private log(level: LogLevel, message: string, fields?: Record<string, unknown>, err?: unknown): void {
+    if (!this.isLevelEnabled(level)) return;
+    if (!this.shouldSample(level)) return;
