@@ -127,3 +127,28 @@ describe('Logger sampling', () => {
     const log = new Logger({ level: LogLevel.TRACE, transports: [t], sampling: { rate: 0.5 } });
     const N = 4000;
     for (let i = 0; i < N; i++) log.debug('x');
+    const ratio = t.records.length / N;
+    // 0.5 ± 0.1 —— 用 Math.random 的正态近似，给足余量避免偶发失败
+    expect(ratio).toBeGreaterThan(0.4);
+    expect(ratio).toBeLessThan(0.6);
+  });
+
+  it('honours sampleBelow so info can be sampled too', () => {
+    const t = new MemoryTransport();
+    const log = new Logger({ level: LogLevel.TRACE, transports: [t], sampling: { rate: 0, sampleBelow: LogLevel.WARN } });
+    log.debug('dropped');
+    log.info('dropped');
+    log.warn('kept');
+    expect(t.records.map((r) => r.levelName)).toEqual(['warn']);
+  });
+});
+
+describe('Logger contextProvider', () => {
+  it('merges provider fields into every record', () => {
+    const t = new MemoryTransport();
+    const log = createLogger({
+      transports: [t],
+      contextProvider: () => ({ traceId: 'abc123', requestId: 'req_1' }),
+    });
+    log.info('hello', { userId: 1 });
+    expect(t.records[0]!.fields).toEqual({ userId: 1, traceId: 'abc123', requestId: 'req_1' });
