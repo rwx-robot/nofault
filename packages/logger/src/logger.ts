@@ -60,3 +60,22 @@ export class MemoryTransport implements LogTransport {
   clear(): void {
     this.records.length = 0;
     this.lines.length = 0;
+  }
+}
+
+/**
+ * nofault 日志器。
+ *
+ * 设计要点：
+ * - 结构化优先：message 供人读，fields 供机器读
+ * - 级别过滤在入口完成，避免无谓的字符串拼接
+ * - 传输目标可插拔
+ */
+export class Logger {
+  private level: LogLevel;
+  private readonly context?: string;
+  private readonly formatter: LogFormatter;
+  private readonly transports: LogTransport[];
+  private readonly baseFields: Record<string, unknown>;
+  private readonly contextProvider?: () => Record<string, unknown> | undefined | null;
+  private readonly sampling?: { rate: number; sampleBelow: LogLevel };
