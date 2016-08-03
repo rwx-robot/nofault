@@ -60,3 +60,14 @@ describe('Logger', () => {
     log.debug('nope');
     log.info('nope');
     log.warn('yes');
+    log.error('yes');
+    expect(t.records.map((r) => r.levelName)).toEqual(['warn', 'error']);
+  });
+
+  it('writes structured fields separately from the message', () => {
+    const t = memory();
+    const log = new Logger({ level: LogLevel.TRACE, transports: [t] });
+    log.info('user login', { userId: 42, ok: true });
+    expect(t.records[0]!.message).toBe('user login');
+    expect(t.records[0]!.fields).toEqual({ userId: 42, ok: true });
+  });
