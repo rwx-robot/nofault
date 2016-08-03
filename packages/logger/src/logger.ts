@@ -162,3 +162,24 @@ export class Logger {
       merged = { ...(merged ?? {}), ...ctxFields };
     }
     const record = createRecord(level, message, this.context, merged, err);
+    const line = this.formatter(record);
+    for (const t of this.transports) {
+      try {
+        void t.write(line, record);
+      } catch (err) {
+        // 日志失败绝不能把业务请求打挂：退到 stderr，且只提示一次要点
+        this.reportTransportFailure(t, err);
+      }
+    }
+  }
+
+  private reportedFailures = 0;
+
+  private reportTransportFailure(t: LogTransport, err: unknown): void {
+    // 磁盘满时每条都报会把 stderr 打爆，做个简单限流
+    if (this.reportedFailures < 5) {
+      this.reportedFailures++;
+      const name = t.constructor?.name ?? 'transport';
+      process.stderr.write(`[logger] transport "${name}" failed: ${String(err)}\n`);
+    }
+  }
