@@ -35,3 +35,16 @@ describe('ConsoleTransport', () => {
     const out = fakeStream();
     const err = fakeStream();
     const t = new ConsoleTransport(out.stream, err.stream);
+    t.write('error-line', recordAt(LogLevel.ERROR));
+    // 修复前：error/fatal 无视构造传入的流，永远写 process.stderr——
+    // 测试里注入内存流时错误行会悄悄漏到真 stderr，测试进程输出被污染
+    expect(err.write).toHaveBeenCalledWith('error-line\n');
+  });
+});
+
+const memory = () => new MemoryTransport();
+
+describe('LogLevel', () => {
+  it('parses level names case-insensitively', () => {
+    expect(parseLevel('debug')).toBe(LogLevel.DEBUG);
+    expect(parseLevel('WARN')).toBe(LogLevel.WARN);
