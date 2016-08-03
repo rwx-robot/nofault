@@ -75,3 +75,29 @@ describe('FileTransport', () => {
     }
     await t.flush();
     const files = readdirSync(dir).sort();
+    expect(files.length).toBeLessThanOrEqual(4); // rot.log + 最多 3 份历史
+    expect(files).toContain('rot.log');
+  });
+
+  it('buffers when flushEvery > 1 and flushes on demand', async () => {
+    const dir = tmpdir_();
+    const file = join(dir, 'buf.log');
+    const t = new FileTransport({ filePath: file, flushEvery: 3 });
+    const record = { timestamp: '', level: LogLevel.INFO, levelName: 'info', message: 'x' };
+    t.write('a', record);
+    t.write('b', record);
+    expect(readFileSync(file, 'utf8')).toBe('');
+    await t.flush();
+    expect(readFileSync(file, 'utf8')).toBe('a\nb\n');
+  });
+
+  it('cleanup removes the log files', async () => {
+    const dir = tmpdir_();
+    const file = join(dir, 'clean.log');
+    const t = new FileTransport({ filePath: file });
+    t.write('x', { timestamp: '', level: LogLevel.INFO, levelName: 'info', message: 'x' });
+    await t.flush().catch(() => undefined);
+    t.cleanup();
+    expect(readdirSync(dir)).toHaveLength(0);
+  });
+});
