@@ -69,3 +69,9 @@ export function createPrettyFormatter(useColor = true): LogFormatter {
     const lvl = record.levelName.toUpperCase().padEnd(5);
     const color = useColor ? (COLORS[record.levelName] ?? '') : '';
     const reset = useColor ? RESET : '';
+    const ctx = record.context ? ` [${record.context}]` : '';
+    const fields = record.fields ? ` ${JSON.stringify(record.fields)}` : '';
+    const err = record.error ? `\n  ${record.error.name}: ${record.error.message}` : '';
+    return `${color}${record.timestamp} ${lvl}${reset}${ctx} ${record.message}${fields}${err}`;
+  };
+}
