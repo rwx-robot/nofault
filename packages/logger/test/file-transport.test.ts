@@ -152,3 +152,29 @@ describe('Logger contextProvider', () => {
     });
     log.info('hello', { userId: 1 });
     expect(t.records[0]!.fields).toEqual({ userId: 1, traceId: 'abc123', requestId: 'req_1' });
+  });
+
+  it('is inherited by child loggers', () => {
+    const t = new MemoryTransport();
+    const parent = createLogger({ transports: [t], contextProvider: () => ({ traceId: 'abc' }) });
+    parent.child('db').info('x');
+    expect(t.records[0]!.fields).toEqual({ traceId: 'abc' });
+    expect(t.records[0]!.context).toBe('db');
+  });
+
+  it('tolerates a provider that returns nothing', () => {
+    const t = new MemoryTransport();
+    const log = createLogger({ transports: [t], contextProvider: () => undefined });
+    log.info('x');
+    expect(t.records[0]!.fields).toBeUndefined();
+  });
+
+  it('is called once per log call (not cached)', () => {
+    const t = new MemoryTransport();
+    let n = 0;
+    const log = createLogger({ transports: [t], contextProvider: () => ({ n: ++n }) });
+    log.info('a');
+    log.info('b');
+    expect(t.records.map((r) => r.fields?.n)).toEqual([1, 2]);
+  });
+});
