@@ -6,3 +6,6 @@
     "baseUrl": ".",
     "paths": {},
     "types": [
+      "node"
+    ]
+  },
