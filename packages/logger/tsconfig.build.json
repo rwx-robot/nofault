@@ -9,3 +9,6 @@
       "node"
     ]
   },
+  "include": [
+    "src/**/*.ts"
+  ],
