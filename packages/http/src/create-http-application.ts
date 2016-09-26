@@ -19,3 +19,6 @@ export interface HttpApplicationOptions {
  * ```ts
  * const app = await createHttpApplication(AppModule);
  * await app.listen(3000);
+ * ```
+ */
+export function createHttpApplication(
