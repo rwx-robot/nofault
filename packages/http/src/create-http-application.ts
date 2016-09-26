@@ -25,3 +25,6 @@ export function createHttpApplication(
   root: Type<unknown> | DynamicModule,
   options: HttpApplicationOptions = {},
 ): Promise<NofaultApplication> {
+  return createApplication(root, {
+    ...options,
+    httpAdapter: options.httpAdapter ?? new NodeHttpAdapter(),
