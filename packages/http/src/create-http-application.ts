@@ -16,3 +16,6 @@ export interface HttpApplicationOptions {
  * 这是 v0.1.0 的推荐入口，对应 NestJS 里 `NestFactory.create(AppModule)` 的角色。
  *
  * @example
+ * ```ts
+ * const app = await createHttpApplication(AppModule);
+ * await app.listen(3000);
