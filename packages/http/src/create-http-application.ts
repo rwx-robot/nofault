@@ -22,3 +22,6 @@ export interface HttpApplicationOptions {
  * ```
  */
 export function createHttpApplication(
+  root: Type<unknown> | DynamicModule,
+  options: HttpApplicationOptions = {},
+): Promise<NofaultApplication> {
