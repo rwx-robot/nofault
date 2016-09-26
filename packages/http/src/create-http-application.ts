@@ -12,3 +12,6 @@ export interface HttpApplicationOptions {
 
 /**
  * 创建一个带 `node:http` 适配器的 nofault 应用。
+ *
+ * 这是 v0.1.0 的推荐入口，对应 NestJS 里 `NestFactory.create(AppModule)` 的角色。
+ *
