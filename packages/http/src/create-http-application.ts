@@ -7,3 +7,5 @@ export interface HttpApplicationOptions {
   quiet?: boolean;
   shutdownTimeout?: number;
   /** 复用外部传入的适配器（测试常用） */
+  httpAdapter?: import('@nofault/core').HttpAdapter;
+}
