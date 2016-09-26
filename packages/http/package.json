@@ -2,3 +2,5 @@
   "name": "@nofault/http",
   "version": "0.1.0",
   "description": "nofault minimal HTTP adapter based on node:http",
+  "license": "MIT",
+  "main": "dist/index.js",
