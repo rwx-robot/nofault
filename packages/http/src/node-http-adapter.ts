@@ -53,3 +53,14 @@ export class NodeHttpAdapter implements HttpAdapter {
           console.error('[nofault/http] unhandled error:', err);
         });
     });
+
+    await new Promise<void>((resolve, reject) => {
+      this.server!.once('error', reject);
+      this.server!.listen(port, hostname, () => resolve());
+    });
+
+    this.listening = true;
+    const addr = this.server.address();
+    const actualPort = typeof addr === 'object' && addr ? addr.port : port;
+    return { port: actualPort, hostname };
+  }
