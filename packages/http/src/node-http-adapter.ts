@@ -8,3 +8,12 @@ import type { HttpAdapter, HttpHandler } from '@nofault/core';
  * 路由、中间件、校验等能力在 v0.2.0 的 `@nofault/rest` 中提供。
  */
 export class NodeHttpAdapter implements HttpAdapter {
+  private server?: Server;
+  private handler: HttpHandler = (_req, res) => {
+    res.statusCode = 404;
+    res.end('404 Not Found');
+  };
+  private listening = false;
+  /** 在途请求计数，用于优雅退出时等待排空 */
+  private inflight = 0;
+  private readonly drainWaiters: Array<() => void> = [];
