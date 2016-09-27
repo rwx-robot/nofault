@@ -43,3 +43,13 @@ export class NodeHttpAdapter implements HttpAdapter {
       };
       res.on('finish', settle);
       res.on('close', settle);
+      Promise.resolve()
+        .then(() => this.handler(req, res))
+        .catch((err: unknown) => {
+          if (!res.writableEnded) {
+            res.statusCode = 500;
+            res.end('500 Internal Server Error');
+          }
+          console.error('[nofault/http] unhandled error:', err);
+        });
+    });
