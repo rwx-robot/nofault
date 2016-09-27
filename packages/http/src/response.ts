@@ -9,3 +9,9 @@ import type { ServerResponse } from 'node:http';
 
 export function sendJson(res: ServerResponse, statusCode: number, body: unknown): void {
   const payload = JSON.stringify(body);
+  if (!res.headersSent) {
+    res.statusCode = statusCode;
+    res.setHeader('content-type', 'application/json; charset=utf-8');
+    res.setHeader('content-length', Buffer.byteLength(payload));
+  }
+  res.end(payload);
