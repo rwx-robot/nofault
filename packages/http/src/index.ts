@@ -5,3 +5,4 @@ export { NodeHttpAdapter, createNodeAdapter } from './node-http-adapter';
 export type { IncomingMessage, ServerResponse } from './node-http-adapter';
 export * from './response';
 export { createHttpApplication } from './create-http-application';
+export type { HttpApplicationOptions } from './create-http-application';
