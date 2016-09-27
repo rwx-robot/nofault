@@ -72,3 +72,12 @@ export class NodeHttpAdapter implements HttpAdapter {
     if (this.inflight > 0) {
       await new Promise<void>((resolve) => {
         this.drainWaiters.push(resolve);
+        setTimeout(resolve, 5000).unref();
+      });
+    }
+    this.server = undefined;
+  }
+
+  getHttpServer(): Server | undefined {
+    return this.server;
+  }
