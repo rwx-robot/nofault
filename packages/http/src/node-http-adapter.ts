@@ -98,3 +98,13 @@ export class NodeHttpAdapter implements HttpAdapter {
 
   /** 当前在途请求数（压测与测试用） */
   getInflightCount(): number {
+    return this.inflight;
+  }
+}
+
+/** 工厂函数（Node 生态惯用命名，不用 `NewNodeHttpAdapter`） */
+export function createNodeAdapter(): NodeHttpAdapter {
+  return new NodeHttpAdapter();
+}
+
+export type { IncomingMessage, ServerResponse };
