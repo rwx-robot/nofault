@@ -64,3 +64,15 @@ export class NodeHttpAdapter implements HttpAdapter {
     const actualPort = typeof addr === 'object' && addr ? addr.port : port;
     return { port: actualPort, hostname };
   }
+
+  private onRequestFinished(): void {
+    this.inflight = Math.max(0, this.inflight - 1);
+    if (this.inflight === 0) {
+      while (this.drainWaiters.length) this.drainWaiters.pop()!();
+    }
+  }
+
+  /** 关闭：先停止接收新连接，再等待在途请求排空 */
+  async close(): Promise<void> {
+    if (!this.server || !this.listening) return;
+    this.listening = false;
