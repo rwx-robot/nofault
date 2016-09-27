@@ -10,3 +10,14 @@ import type { HttpAdapter, HttpHandler } from '@nofault/core';
 export class NodeHttpAdapter implements HttpAdapter {
   private server?: Server;
   private handler: HttpHandler = (_req, res) => {
+    res.statusCode = 404;
+    res.end('404 Not Found');
+  };
+  private listening = false;
+  /** 在途请求计数，用于优雅退出时等待排空 */
+  private inflight = 0;
+  private readonly drainWaiters: Array<() => void> = [];
+
+  useHandler(handler: HttpHandler): void {
+    this.handler = handler;
+  }
