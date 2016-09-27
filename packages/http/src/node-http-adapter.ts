@@ -26,3 +26,12 @@ export class NodeHttpAdapter implements HttpAdapter {
     if (this.listening) {
       const addr = this.server?.address();
       const p = typeof addr === 'object' && addr ? addr.port : port;
+      return { port: p, hostname };
+    }
+
+    this.server = createServer((req, res) => {
+      this.inflight++;
+      res.on('finish', () => this.onRequestFinished());
+      res.on('close', () => this.onRequestFinished());
+      Promise.resolve()
+        .then(() => this.handler(req, res))
