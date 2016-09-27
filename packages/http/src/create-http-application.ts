@@ -28,3 +28,5 @@ export function createHttpApplication(
   return createApplication(root, {
     ...options,
     httpAdapter: options.httpAdapter ?? new NodeHttpAdapter(),
+  });
+}
