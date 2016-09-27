@@ -32,3 +32,14 @@ export class NodeHttpAdapter implements HttpAdapter {
     this.server = createServer((req, res) => {
       this.inflight++;
       // 一次请求只能把 inflight 减一次。
+      // finish（响应写完）与 close（连接关闭）在正常请求里**都会**触发，
+      // 两个事件各减一次会让计数偏低，进而让优雅关闭在请求尚未真正排空时就 resolve。
+      // 取先到者即可：正常走 finish，被中断的请求靠 close 兜住。
+      let settled = false;
+      const settle = (): void => {
+        if (settled) return;
+        settled = true;
+        this.onRequestFinished();
+      };
+      res.on('finish', settle);
+      res.on('close', settle);
