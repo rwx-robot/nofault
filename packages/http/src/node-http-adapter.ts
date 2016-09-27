@@ -17,3 +17,12 @@ export class NodeHttpAdapter implements HttpAdapter {
   /** 在途请求计数，用于优雅退出时等待排空 */
   private inflight = 0;
   private readonly drainWaiters: Array<() => void> = [];
+
+  useHandler(handler: HttpHandler): void {
+    this.handler = handler;
+  }
+
+  async listen(port: number, hostname = '0.0.0.0'): Promise<{ port: number; hostname: string }> {
+    if (this.listening) {
+      const addr = this.server?.address();
+      const p = typeof addr === 'object' && addr ? addr.port : port;
