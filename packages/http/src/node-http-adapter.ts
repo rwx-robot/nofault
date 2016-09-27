@@ -87,3 +87,14 @@ export class NodeHttpAdapter implements HttpAdapter {
     }
     this.server = undefined;
   }
+
+  getHttpServer(): Server | undefined {
+    return this.server;
+  }
+
+  isListening(): boolean {
+    return this.listening;
+  }
+
+  /** 当前在途请求数（压测与测试用） */
+  getInflightCount(): number {
