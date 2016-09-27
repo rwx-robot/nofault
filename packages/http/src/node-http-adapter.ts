@@ -63,3 +63,12 @@ export class NodeHttpAdapter implements HttpAdapter {
   }
 
   /** 关闭：先停止接收新连接，再等待在途请求排空 */
+  async close(): Promise<void> {
+    if (!this.server || !this.listening) return;
+    this.listening = false;
+    await new Promise<void>((resolve) => {
+      this.server!.close(() => resolve());
+    });
+    if (this.inflight > 0) {
+      await new Promise<void>((resolve) => {
+        this.drainWaiters.push(resolve);
