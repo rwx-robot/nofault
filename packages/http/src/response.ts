@@ -15,3 +15,8 @@ export function sendJson(res: ServerResponse, statusCode: number, body: unknown)
     res.setHeader('content-length', Buffer.byteLength(payload));
   }
   res.end(payload);
+}
+
+export function sendText(res: ServerResponse, statusCode: number, text: string): void {
+  if (!res.headersSent) {
+    res.statusCode = statusCode;
