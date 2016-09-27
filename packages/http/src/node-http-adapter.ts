@@ -76,3 +76,14 @@ export class NodeHttpAdapter implements HttpAdapter {
   async close(): Promise<void> {
     if (!this.server || !this.listening) return;
     this.listening = false;
+    await new Promise<void>((resolve) => {
+      this.server!.close(() => resolve());
+    });
+    if (this.inflight > 0) {
+      await new Promise<void>((resolve) => {
+        this.drainWaiters.push(resolve);
+        setTimeout(resolve, 5000).unref();
+      });
+    }
+    this.server = undefined;
+  }
