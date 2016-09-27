@@ -21,3 +21,14 @@ export class NodeHttpAdapter implements HttpAdapter {
   useHandler(handler: HttpHandler): void {
     this.handler = handler;
   }
+
+  async listen(port: number, hostname = '0.0.0.0'): Promise<{ port: number; hostname: string }> {
+    if (this.listening) {
+      const addr = this.server?.address();
+      const p = typeof addr === 'object' && addr ? addr.port : port;
+      return { port: p, hostname };
+    }
+
+    this.server = createServer((req, res) => {
+      this.inflight++;
+      // 一次请求只能把 inflight 减一次。
