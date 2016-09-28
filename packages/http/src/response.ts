@@ -25,3 +25,9 @@ export function sendText(res: ServerResponse, statusCode: number, text: string):
   }
   res.end(text);
 }
+
+export function redirect(res: ServerResponse, statusCode: number, location: string): void {
+  res.statusCode = statusCode;
+  res.setHeader('location', location);
+  res.end();
+}
