@@ -87,3 +87,11 @@ describe('NodeHttpAdapter 在途请求计数', () => {
       const { port } = await adapter.listen(0, '127.0.0.1');
       for (let i = 0; i < 5; i++) await get(port);
       await until(() => adapter.getInflightCount() === 0, '请求处理后应回到 0');
+      expect(adapter.getInflightCount()).toBe(0);
+      expect(adapter.isListening()).toBe(true);
+    } finally {
+      adapter.getHttpServer()?.closeAllConnections?.();
+      await adapter.close();
+    }
+  }, 10_000);
+});
