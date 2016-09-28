@@ -8,3 +8,12 @@ function get(port: number, path = '/'): Promise<string> {
     const req = httpRequest({ port, host: '127.0.0.1', path, agent: false, headers: { connection: 'close' } }, (res) => {
       let body = '';
       res.setEncoding('utf8');
+      res.on('data', (c) => {
+        body += c;
+      });
+      res.on('end', () => resolve(body));
+    });
+    req.on('error', reject);
+    req.end();
+  });
+}
