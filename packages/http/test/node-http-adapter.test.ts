@@ -77,3 +77,13 @@ describe('NodeHttpAdapter 在途请求计数', () => {
   }, 10_000);
 
   it('连续请求后 inflight 能回到 0，且不会为负', async () => {
+    const adapter = new NodeHttpAdapter();
+    adapter.useHandler((_req, res) => {
+      res.statusCode = 200;
+      res.end('ok');
+    });
+
+    try {
+      const { port } = await adapter.listen(0, '127.0.0.1');
+      for (let i = 0; i < 5; i++) await get(port);
+      await until(() => adapter.getInflightCount() === 0, '请求处理后应回到 0');
