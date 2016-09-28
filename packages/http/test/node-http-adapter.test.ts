@@ -57,3 +57,13 @@ describe('NodeHttpAdapter 在途请求计数', () => {
 
       // 放行前两个：它们各自会触发 finish 与 close，但只能把计数减一次
       gates[0]!();
+      gates[1]!();
+      await Promise.all(pending.slice(0, 2));
+      await until(() => adapter.getInflightCount() < 3, '完成的请求应使 inflight 下降');
+      // 留一点时间让 close 事件（若存在双减 bug 就会再减一次）也走完
+      await delay(80);
+      expect(adapter.getInflightCount()).toBe(1);
+
+      gates[2]!();
+      await pending[2]!;
+      await until(() => adapter.getInflightCount() === 0, '全部完成后 inflight 归零');
