@@ -48,3 +48,7 @@ export async function readJsonBody(req: import('node:http').IncomingMessage, lim
   const raw = Buffer.concat(chunks).toString('utf8');
   try {
     return JSON.parse(raw) as unknown;
+  } catch {
+    throw new Error('Invalid JSON body');
+  }
+}
