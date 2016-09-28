@@ -28,3 +28,8 @@ export function sendText(res: ServerResponse, statusCode: number, text: string):
 
 export function redirect(res: ServerResponse, statusCode: number, location: string): void {
   res.statusCode = statusCode;
+  res.setHeader('location', location);
+  res.end();
+}
+
+/** 读取请求体（JSON），带大小上限，防止被超大 body 打爆 */
