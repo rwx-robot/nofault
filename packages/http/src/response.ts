@@ -38,3 +38,8 @@ export async function readJsonBody(req: import('node:http').IncomingMessage, lim
   let size = 0;
   for await (const chunk of req) {
     const buf = chunk as Buffer;
+    size += buf.length;
+    if (size > limitBytes) {
+      throw new Error(`Request body too large (limit ${limitBytes} bytes)`);
+    }
+    chunks.push(buf);
