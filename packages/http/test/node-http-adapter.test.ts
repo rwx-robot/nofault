@@ -17,3 +17,14 @@ function get(port: number, path = '/'): Promise<string> {
     req.end();
   });
 }
+
+function delay(ms: number): Promise<void> {
+  return new Promise((r) => setTimeout(r, ms));
+}
+
+async function until(predicate: () => boolean, message: string, timeoutMs = 3000): Promise<void> {
+  const deadline = Date.now() + timeoutMs;
+  while (!predicate()) {
+    if (Date.now() > deadline) throw new Error(`timeout waiting: ${message}`);
+    await delay(10);
+  }
