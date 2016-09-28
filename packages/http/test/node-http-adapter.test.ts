@@ -47,3 +47,13 @@ describe('NodeHttpAdapter 在途请求计数', () => {
       res.statusCode = 200;
       res.end('ok');
     });
+
+    try {
+      const { port } = await adapter.listen(0, '127.0.0.1');
+      const pending = [get(port), get(port), get(port)];
+
+      await until(() => gates.length === 3, '三个请求都进入 handler');
+      expect(adapter.getInflightCount()).toBe(3);
+
+      // 放行前两个：它们各自会触发 finish 与 close，但只能把计数减一次
+      gates[0]!();
