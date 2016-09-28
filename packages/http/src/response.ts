@@ -31,3 +31,9 @@ export function redirect(res: ServerResponse, statusCode: number, location: stri
   res.setHeader('location', location);
   res.end();
 }
+
+/** 读取请求体（JSON），带大小上限，防止被超大 body 打爆 */
+export async function readJsonBody(req: import('node:http').IncomingMessage, limitBytes = 1024 * 1024): Promise<unknown> {
+  const chunks: Buffer[] = [];
+  let size = 0;
+  for await (const chunk of req) {
