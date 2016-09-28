@@ -38,3 +38,12 @@ describe('NodeHttpAdapter 在途请求计数', () => {
    * 正确行为：一次请求只减一次，取先到者。
    */
   it('一次请求只把 inflight 减一次：并发 3 个、完成 2 个后应仍剩 1 个在途', async () => {
+    const gates: Array<() => void> = [];
+    const adapter = createNodeAdapter();
+    adapter.useHandler(async (_req, res) => {
+      await new Promise<void>((resolve) => {
+        gates.push(resolve);
+      });
+      res.statusCode = 200;
+      res.end('ok');
+    });
