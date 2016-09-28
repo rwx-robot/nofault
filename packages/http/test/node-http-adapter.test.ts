@@ -67,3 +67,13 @@ describe('NodeHttpAdapter 在途请求计数', () => {
       gates[2]!();
       await pending[2]!;
       await until(() => adapter.getInflightCount() === 0, '全部完成后 inflight 归零');
+    } finally {
+      // 无论断言是否失败，都要保证测试能收尾：
+      // ① 放行所有还在等的请求 ② 强关剩余连接，避免优雅 close 无限期挂住
+      for (const open of gates.splice(0)) open();
+      adapter.getHttpServer()?.closeAllConnections?.();
+      await adapter.close();
+    }
+  }, 10_000);
+
+  it('连续请求后 inflight 能回到 0，且不会为负', async () => {
