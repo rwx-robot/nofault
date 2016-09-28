@@ -23,3 +23,8 @@ export function sendText(res: ServerResponse, statusCode: number, text: string):
     res.setHeader('content-type', 'text/plain; charset=utf-8');
     res.setHeader('content-length', Buffer.byteLength(text));
   }
+  res.end(text);
+}
+
+export function redirect(res: ServerResponse, statusCode: number, location: string): void {
+  res.statusCode = statusCode;
