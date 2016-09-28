@@ -42,3 +42,9 @@ export async function readJsonBody(req: import('node:http').IncomingMessage, lim
     if (size > limitBytes) {
       throw new Error(`Request body too large (limit ${limitBytes} bytes)`);
     }
+    chunks.push(buf);
+  }
+  if (size === 0) return undefined;
+  const raw = Buffer.concat(chunks).toString('utf8');
+  try {
+    return JSON.parse(raw) as unknown;
