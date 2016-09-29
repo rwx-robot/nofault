@@ -7,3 +7,4 @@
     "src/**/*.ts",
     "test/**/*.ts"
   ],
+  "exclude": [
