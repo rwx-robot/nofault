@@ -4,3 +4,4 @@
     "noEmit": true
   },
   "include": [
+    "src/**/*.ts",
