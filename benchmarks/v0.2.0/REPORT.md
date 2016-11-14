@@ -35,3 +35,38 @@
 ### A. 路由匹配（进程内，纯 CPU）
 
 | 指标 | 值 |
+| --- | --- |
+| 吞吐 | **1,743,832 ops/sec** |
+| 样本 | 1,000,000 次匹配 / 573 ms |
+| 路由表 | 10 条（静态 + 参数 + 双层参数 + 深层路径） |
+
+### B. HTTP 端到端
+
+| 场景 | 基线 rps | nofault rps | 开销 | nofault p50 | nofault p95 | nofault p99 |
+| --- | --- | --- | --- | --- | --- | --- |
+| GET /api/users/1 | 12,927.0 | 12,165.8 | **5.9%** | 2.389 ms | 4.403 ms | 4.800 ms |
+| POST /api/users/echo | 12,487.5 | 9,816.3 | **21.4%** | 3.074 ms | 5.415 ms | 6.097 ms |
+
+## 优化过程（真实记录）
+
+初版测出来 GET 开销 15.8%、POST 开销 46%，明显偏高。逐步定位并修复：
+
+| # | 发现 | 措施 | 收益 |
+| --- | --- | --- | --- |
+| 1 | 每请求 `logger.info()` 写 stdout，而 stdout 被管道读走 | 访问日志降为 `debug`（默认级别下不输出） | GET 15.8% → 5.9%（**−9.9pp**） |
+| 2 | `resolveHandlerArgs` 每请求执行 `Reflect.getMetadata` + `sort()` | `WeakMap` 记忆化参数元数据与 DTO | POST 27% → 21.4%（**−5.6pp**） |
+| 3 | POST 场景实际跑在 409 抛异常路径上 | 新增 echo 端点测量成功路径 | 数据才具备可比性 |
+
+**结论**：框架的**结构性开销**（路由 + 中间件 + 包装）只有 ~6%；
+剩下的主要来自 `for await` 逐块读 body 与校验器本身的 CPU 成本，属于能力换来的合理代价。
+
+## 复现
+
+```bash
+cd nofault-all/nofault
+pnpm build
+cd examples/v0.2.0-rest-user-api && npx tsc -p tsconfig.json && cd -
+node scripts/run-bench.mjs v0.2.0 --duration=10 --connections=64 --rounds=5 --report
+```
+
+原始数据在 `results.json`。
