@@ -116,3 +116,60 @@ const cacheHit = await bench('cache get (hit)', async (i) => {
 const cacheMiss = await bench('loader only (no cache)', async (i) => {
   await nullCache.getOrSet(`k:${i % 100}`, () => load(i));
 });
+
+// 并发击穿：同一 key 打 50 次
+const stampedeKey = 'stampede';
+let stampedeLoads = 0;
+const t0 = process.hrtime.bigint();
+await Promise.all(
+  Array.from({ length: 50 }, () =>
+    cache.getOrSet(stampedeKey, async () => {
+      stampedeLoads++;
+      return { v: 1 };
+    }),
+  ),
+);
+const stampedeMs = Number(process.hrtime.bigint() - t0) / 1e6;
+
+const migrationSource = new MemoryDataSource();
+const migrator = new Migrator(
+  migrationSource,
+  Array.from({ length: 20 }, (_, i) => ({
+    version: `v${String(i).padStart(3, '0')}`,
+    up: async (ctx) => {
+      await ctx.execute(`CREATE TABLE IF NOT EXISTS t_${i} (id INTEGER)`);
+    },
+    down: async (ctx) => {
+      await ctx.execute(`DROP TABLE IF EXISTS t_${i}`);
+    },
+  })),
+);
+const t1 = process.hrtime.bigint();
+await migrator.up();
+const migrationMs = Number(process.hrtime.bigint() - t1) / 1e6;
+
+const orm = { insert, findById, findWithQuery, paginate, transaction };
+const cacheBench = {
+  cacheHit,
+  cacheMiss,
+  speedup: round(cacheMiss.meanMs / Math.max(cacheHit.meanMs, 0.0001)),
+  stampede: { concurrent: 50, loads: stampedeLoads, totalMs: round(stampedeMs) },
+};
+const migrations = { count: 20, totalMs: round(migrationMs), perMigrationMs: round(migrationMs / 20) };
+
+console.log(`\n[v0.5.0] data access benchmark — ${opts.iterations} iterations\n`);
+console.log('A. ORM（内存数据源）');
+for (const r of Object.values(orm)) {
+  console.log(`   ${r.name.padEnd(30)} ${r.meanMs} ms  (${r.opsPerSec} ops/sec, p95 ${r.p95Ms} ms)`);
+}
+console.log('B. 缓存');
+console.log(`   命中                           ${cacheHit.meanMs} ms  (${cacheHit.opsPerSec} ops/sec)`);
+console.log(`   纯回源（NullCache）            ${cacheMiss.meanMs} ms`);
+console.log(`   加速比                         ${cacheBench.speedup}x`);
+console.log(`   并发 ${cacheBench.stampede.concurrent} 次同 key：回源 ${cacheBench.stampede.loads} 次，总耗时 ${cacheBench.stampede.totalMs} ms`);
+console.log(`C. 迁移：${migrations.count} 条共 ${migrations.totalMs} ms（单条 ${migrations.perMigrationMs} ms）\n`);
+
+if (opts.report) {
+  writeFileSync(join(here, 'results.json'), JSON.stringify({ generatedAt: new Date().toISOString(), orm, cache: cacheBench, migrations }, null, 2));
+  console.log('结果已写入 benchmarks/v0.5.0/results.json');
+}
