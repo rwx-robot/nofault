@@ -58,3 +58,65 @@ service svc${i}-api {
 
   @handler greet${i}
   post /greet${i} (Req${i}) returns (Resp${i})
+
+  @handler get${i}
+  get /item${i}/:id (Get${i}Req) returns (Resp${i})
+}
+`).join('\n');
+
+const TS_CONTRACT = Array.from({ length: 12 }, (_, i) => `
+export class Req${i} {
+  @Body('name') @IsString() @MinLength(2)
+  name!: string;
+
+  @Body('count') @IsInt() @Optional()
+  count?: number;
+}
+export class Resp${i} {
+  @Body('ok') @IsInt()
+  ok!: number;
+}
+export class Get${i}Req {
+  @Path('id') @IsInt()
+  id!: number;
+}
+
+@Api('svc${i}')
+@Prefix('/api')
+export class Svc${i}Service {
+  @Get('/ping${i}')
+  ping${i}(): Resp${i} { throw new Error('x'); }
+
+  @Post('/greet${i}')
+  greet${i}(_r: Req${i}): Resp${i} { throw new Error('x'); }
+
+  @Get('/item${i}/:id')
+  get${i}(_r: Get${i}Req): Resp${i} { throw new Error('x'); }
+}
+`).join('\n');
+
+// ---------------------------------------------------------------- 测量工具
+
+function measure(name, fn, iterations) {
+  // 先热身，避免把 JIT 编译时间算进去
+  for (let i = 0; i < Math.min(20, iterations); i++) fn();
+  const samples = [];
+  for (let i = 0; i < iterations; i++) {
+    const t = process.hrtime.bigint();
+    fn();
+    samples.push(Number(process.hrtime.bigint() - t) / 1e6);
+  }
+  samples.sort((a, b) => a - b);
+  const mean = samples.reduce((a, b) => a + b, 0) / samples.length;
+  const p95 = samples[Math.floor(samples.length * 0.95)];
+  return {
+    name,
+    iterations,
+    meanMs: round(mean),
+    p95Ms: round(p95),
+    opsPerSec: round(1000 / mean),
+  };
+}
+
+function round(n) {
+  return Math.round(n * 100) / 100;
