@@ -99,3 +99,102 @@ function once(port, path, agents) {
     req.end();
   });
 }
+
+async function run(port, path, { duration, connections, warmup }) {
+  const agents = Array.from(
+    { length: Math.max(1, Math.ceil(connections / 16)) },
+    () => new Agent({ keepAlive: true, maxSockets: 16, maxFreeSockets: 16 }),
+  );
+  const warmEnd = Date.now() + warmup * 1000;
+  while (Date.now() < warmEnd) await once(port, path, agents);
+
+  const latencies = [];
+  const end = Date.now() + duration * 1000;
+  const started = Date.now();
+  await Promise.all(
+    Array.from({ length: connections }, () => (async () => {
+      while (Date.now() < end) {
+        const l = await once(port, path, agents);
+        if (l >= 0) latencies.push(l);
+      }
+    })()),
+  );
+  const elapsed = (Date.now() - started) / 1000;
+  for (const a of agents) a.destroy();
+  return summarize(latencies, elapsed);
+}
+
+function summarize(latencies, elapsedSec) {
+  const sorted = [...latencies].sort((a, b) => a - b);
+  const q = (p) => (sorted.length ? sorted[Math.min(sorted.length - 1, Math.floor(sorted.length * p))] : 0);
+  const total = sorted.reduce((s, v) => s + v, 0);
+  return {
+    requests: sorted.length,
+    rps: Number((sorted.length / elapsedSec).toFixed(1)),
+    meanMs: Number((total / Math.max(1, sorted.length)).toFixed(3)),
+    p50Ms: Number(q(0.5).toFixed(3)),
+    p95Ms: Number(q(0.95).toFixed(3)),
+    p99Ms: Number(q(0.99).toFixed(3)),
+  };
+}
+
+const median = (rounds) => [...rounds].sort((a, b) => a.rps - b.rps)[Math.floor(rounds.length / 2)];
+
+const SCENARIOS = [
+  { name: 'GET config (路由+上下文)', path: '/api/runtime/config' },
+  { name: 'GET context (上下文+REQUEST作用域)', path: '/api/runtime/context' },
+];
+
+async function main() {
+  console.log(
+    `[bench] duration=${opts.duration}s connections=${opts.connections} warmup=${opts.warmup}s rounds=${opts.rounds} node=${process.version} platform=${process.platform}/${process.arch}`,
+  );
+
+  const micro = await contextMicroBench();
+
+  const baseline = startServer('baseline', 'baseline-server.mjs', here);
+  const nofault = startServer('nofault', 'dist/main.js', join(repoRoot, 'examples/v0.3.0-runtime-basics'));
+
+  const results = {};
+  try {
+    const [basePort, nfPort] = await Promise.all([baseline.port, nofault.port]);
+    // 等就绪探针通过再压，避免把启动过程算进去
+    for (let i = 0; i < 50; i++) {
+      const r = await fetch(`http://127.0.0.1:${nfPort}/readyz`).catch(() => null);
+      if (r && r.ok) break;
+      await sleep(100);
+    }
+
+    for (const sc of SCENARIOS) {
+      const baseRuns = [];
+      const nfRuns = [];
+      for (let r = 1; r <= opts.rounds; r++) {
+        process.stdout.write(`[bench] ${sc.name} round ${r}/${opts.rounds} ... `);
+        const b = await run(basePort, sc.path, opts);
+        const n = await run(nfPort, sc.path, opts);
+        baseRuns.push(b);
+        nfRuns.push(n);
+        console.log(`baseline=${b.rps} rps, nofault=${n.rps} rps`);
+      }
+      const base = median(baseRuns);
+      const nf = median(nfRuns);
+      const gap = (((base.rps - nf.rps) / base.rps) * 100).toFixed(1);
+      results[sc.name] = { baseline: base, nofault: nf, gapPercent: Number(gap) };
+      console.table({
+        [`baseline · ${sc.name}`]: { rps: base.rps, mean: base.meanMs, p50: base.p50Ms, p95: base.p95Ms, p99: base.p99Ms },
+        [`nofault · ${sc.name}`]: { rps: nf.rps, mean: nf.meanMs, p50: nf.p50Ms, p95: nf.p95Ms, p99: nf.p99Ms },
+      });
+      console.log(`[bench] gap for "${sc.name}": ${gap}% (正数表示 nofault 更慢)`);
+    }
+  } finally {
+    nofault.child.kill('SIGTERM');
+    baseline.child.kill('SIGTERM');
+  }
+
+  if (opts.report) {
+    writeFileSync(join(here, 'results.json'), JSON.stringify({ opts, micro, results }, null, 2));
+    console.log('[bench] wrote results.json');
+  }
+}
+
+await main();
