@@ -1,0 +1,133 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <marker id="ar" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#dc2626"/>
+    </marker>
+  </defs>
+
+  <rect x="0" y="0" width="1200" height="900" fill="#ffffff"/>
+  <text x="40" y="44" font-size="24" font-weight="700" fill="#0f172a">nofault v0.2.0 架构图 · HTTP 全栈</text>
+  <text x="40" y="68" font-size="13" fill="#64748b">Radix 路由树 + 装饰器控制器 + 洋葱中间件 + 参数绑定校验 + 统一异常过滤（延迟提交响应）</text>
+
+  <!-- 引导期 -->
+  <rect x="40" y="90" width="1120" height="118" rx="10" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="56" y="112" font-size="12" font-weight="600" fill="#1d4ed8">引导期（启动时执行一次）</text>
+  <rect x="64" y="124" width="240" height="46" rx="8" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="184" y="145" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">RouteExplorer</text>
+  <text x="184" y="162" font-size="11" fill="#64748b" text-anchor="middle">遍历模块 controllers</text>
+  <rect x="320" y="124" width="240" height="46" rx="8" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="440" y="145" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">读装饰器元数据</text>
+  <text x="440" y="162" font-size="11" fill="#64748b" text-anchor="middle">@Controller / @Get / @Param</text>
+  <rect x="576" y="124" width="240" height="46" rx="8" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="696" y="145" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">RouteTable</text>
+  <text x="696" y="162" font-size="11" fill="#64748b" text-anchor="middle">每 method 一棵 Radix 树</text>
+  <rect x="832" y="124" width="304" height="46" rx="8" fill="#ffffff" stroke="#60a5fa" stroke-width="1.5"/>
+  <text x="984" y="145" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">控制器实例（依赖已注入）</text>
+  <text x="984" y="162" font-size="11" fill="#64748b" text-anchor="middle">IoC 容器负责创建</text>
+  <path d="M 304 147 L 318 147" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 560 147 L 574 147" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 816 147 L 830 147" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+
+  <!-- 请求链路 -->
+  <rect x="40" y="228" width="1120" height="230" rx="10" fill="#f0fdfa" stroke="#14b8a6" stroke-width="1.5"/>
+  <text x="56" y="250" font-size="12" font-weight="600" fill="#0f766e">请求处理链路（每请求）</text>
+
+  <rect x="64" y="262" width="150" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="139" y="284" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">node:http</text>
+  <text x="139" y="301" font-size="11" fill="#64748b" text-anchor="middle">IncomingMessage</text>
+
+  <rect x="230" y="262" width="150" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="305" y="284" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">RestContext</text>
+  <text x="305" y="301" font-size="11" fill="#64748b" text-anchor="middle">Request + Response</text>
+
+  <rect x="396" y="262" width="150" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="471" y="284" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">RouteTable.match</text>
+  <text x="471" y="301" font-size="11" fill="#64748b" text-anchor="middle">静态 &gt; 参数 &gt; 通配</text>
+
+  <rect x="562" y="262" width="150" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="637" y="284" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">中间件洋葱</text>
+  <text x="637" y="301" font-size="11" fill="#64748b" text-anchor="middle">全局→控制器→路由</text>
+
+  <rect x="728" y="262" width="150" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="803" y="284" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">参数绑定 + DTO 校验</text>
+  <text x="803" y="301" font-size="11" fill="#64748b" text-anchor="middle">记忆化，非每请求反射</text>
+
+  <rect x="894" y="262" width="242" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="1015" y="284" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">Controller 方法</text>
+  <text x="1015" y="301" font-size="11" fill="#64748b" text-anchor="middle">业务代码，注入 Service</text>
+
+  <path d="M 214 288 L 228 288" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 380 288 L 394 288" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 546 288 L 560 288" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 712 288 L 726 288" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 878 288 L 892 288" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+
+  <!-- 回程 -->
+  <rect x="894" y="336" width="242" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="1015" y="358" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">包装 { code, data, message }</text>
+  <text x="1015" y="375" font-size="11" fill="#64748b" text-anchor="middle">wrapResponse 可关闭</text>
+
+  <rect x="64" y="336" width="316" height="52" rx="8" fill="#fff7ed" stroke="#fb923c" stroke-width="1.5"/>
+  <text x="222" y="358" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">RestResponse.commit()（延迟提交）</text>
+  <text x="222" y="375" font-size="11" fill="#64748b" text-anchor="middle">管道回到最外层才真正 write，故中间件可在 next() 后改响应头</text>
+
+  <rect x="396" y="336" width="482" height="52" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="637" y="358" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">中间件回程（after next()）</text>
+  <text x="637" y="375" font-size="11" fill="#64748b" text-anchor="middle">x-response-time、访问日志、压缩等后置逻辑在此生效</text>
+
+  <path d="M 1015 314 L 1015 334" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 892 362 L 880 362" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+  <path d="M 394 362 L 382 362" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#a)"/>
+
+  <!-- 异常 -->
+  <rect x="64" y="404" width="1072" height="42" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.5"/>
+  <text x="80" y="424" font-size="12" font-weight="600" fill="#b91c1c">异常过滤：任意环节 throw → normalizeError() → HttpException(status, code) → { code, data, message }</text>
+  <text x="80" y="440" font-size="11" fill="#991b1b">404 未匹配 · 405 方法不允许（带 Allow 头）· 400 参数转换失败 · 422 校验失败 · 500 未知异常（自动兜底）</text>
+
+  <!-- 支撑组件 -->
+  <rect x="40" y="470" width="1120" height="150" rx="10" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+  <text x="56" y="492" font-size="12" font-weight="600" fill="#a16207">支撑组件</text>
+
+  <rect x="64" y="504" width="250" height="52" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="189" y="526" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">RouteTree（Radix）</text>
+  <text x="189" y="543" font-size="11" fill="#64748b" text-anchor="middle">前缀压缩 · 静态/参数/通配分槽</text>
+
+  <rect x="330" y="504" width="250" height="52" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="455" y="526" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">composeMiddleware</text>
+  <text x="455" y="543" font-size="11" fill="#64748b" text-anchor="middle">洋葱折叠 · 重复 next() 检测</text>
+
+  <rect x="596" y="504" width="250" height="52" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="721" y="526" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">轻量校验器</text>
+  <text x="721" y="543" font-size="11" fill="#64748b" text-anchor="middle">装饰器规则 · 零第三方依赖</text>
+
+  <rect x="862" y="504" width="274" height="52" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="999" y="526" font-size="12.5" font-weight="600" fill="#0f172a" text-anchor="middle">内置中间件</text>
+  <text x="999" y="543" font-size="11" fill="#64748b" text-anchor="middle">cors / bodyParser / 安全头 / 静态 / 限流 / 日志</text>
+
+  <rect x="64" y="566" width="1072" height="42" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="80" y="586" font-size="12" font-weight="600" fill="#0f172a">参数来源：@Param @Query @Body @Headers @Req @Res @Ctx @RawRequest @RawResponse（按 design:paramtypes 自动类型转换）</text>
+  <text x="80" y="602" font-size="11" fill="#64748b">@Param('id') id: number —— 字符串自动转数字；转换失败返回 400，而不是把 NaN 传进业务层</text>
+
+  <!-- 底层 -->
+  <rect x="40" y="644" width="1120" height="80" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="56" y="666" font-size="12" font-weight="600" fill="#334155">底层依赖（v0.1.0 已交付）</text>
+  <rect x="64" y="678" width="330" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="229" y="700" font-size="12.5" fill="#0f172a" text-anchor="middle">@nofault/core（IoC / 模块 / 生命周期）</text>
+  <rect x="410" y="678" width="330" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="575" y="700" font-size="12.5" fill="#0f172a" text-anchor="middle">@nofault/http（node:http 适配器）</text>
+  <rect x="756" y="678" width="380" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="946" y="700" font-size="12.5" fill="#0f172a" text-anchor="middle">@nofault/logger / reflect-metadata</text>
+
+  <!-- 性能 -->
+  <rect x="40" y="748" width="1120" height="110" rx="10" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="56" y="770" font-size="12" font-weight="600" fill="#334155">v0.2.0 实测（32 并发，5s/轮，3 轮取中位数；Node v22.22.2 darwin/x64）</text>
+  <text x="64" y="794" font-size="12.5" fill="#0f172a">路由匹配：1,743,832 ops/sec（100 万次匹配 573 ms）</text>
+  <text x="64" y="814" font-size="12.5" fill="#0f172a">GET /api/users/1（路由 + 参数 + 中间件链）：12,165.8 rps vs 裸 node:http 12,927 rps → 开销 5.9%</text>
+  <text x="64" y="834" font-size="12.5" fill="#0f172a">POST /api/users/echo（body 解析 + 校验）：9,816.3 rps vs 12,487.5 rps → 开销 21.4%</text>
+  <text x="64" y="852" font-size="11" fill="#64748b">优化记录：把每请求的 access log 从 info 降到 debug（−10pp），参数元数据记忆化（−6pp）</text>
+
+  <text x="40" y="886" font-size="11.5" fill="#94a3b8">注：v0.2.0 刻意不做 ORM / RPC / 服务治理 —— 它们分别属于 v0.5.0 / v0.6.0 / v0.7.0。</text>
+</svg>

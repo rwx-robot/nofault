@@ -1,0 +1,97 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 620" width="920" height="620" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif">
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+      <path d="M0,0 L7,3.2 L0,6.4 z" fill="#6b7280"/>
+    </marker>
+    <marker id="arrowRed" markerWidth="9" markerHeight="9" refX="7" refY="3.2" orient="auto">
+      <path d="M0,0 L7,3.2 L0,6.4 z" fill="#b91c1c"/>
+    </marker>
+  </defs>
+
+  <rect width="920" height="620" fill="#ffffff"/>
+  <text x="32" y="40" font-size="21" font-weight="700" fill="#111827">nofault v0.4.0 · 代码生成流水线</text>
+  <text x="32" y="62" font-size="12.5" fill="#6b7280">契约（两种写法）→ 同一个 Spec → 校验 → 生成 → 落盘；生成物是普通 TypeScript，不进请求链路</text>
+
+  <!-- 输入 -->
+  <rect x="32" y="96" width="188" height="62" rx="9" fill="#eef2ff" stroke="#6366f1" stroke-width="1.6"/>
+  <text x="126" y="122" font-size="13.5" font-weight="600" fill="#3730a3" text-anchor="middle">.api.ts（主推）</text>
+  <text x="126" y="142" font-size="11.5" fill="#4b5563" text-anchor="middle">TS 类 + 装饰器，IDE 原生支持</text>
+
+  <rect x="32" y="170" width="188" height="62" rx="9" fill="#eef2ff" stroke="#6366f1" stroke-width="1.6"/>
+  <text x="126" y="196" font-size="13.5" font-weight="600" fill="#3730a3" text-anchor="middle">.api（文本 DSL）</text>
+  <text x="126" y="216" font-size="11.5" fill="#4b5563" text-anchor="middle">手写扫描器，不用 ANTLR</text>
+
+  <!-- parser -->
+  <rect x="286" y="118" width="150" height="92" rx="9" fill="#f0fdfa" stroke="#0d9488" stroke-width="1.6"/>
+  <text x="361" y="146" font-size="14" font-weight="700" fill="#0f766e" text-anchor="middle">@nofault/parser</text>
+  <text x="361" y="168" font-size="11.5" fill="#4b5563" text-anchor="middle">Scanner（词法）</text>
+  <text x="361" y="185" font-size="11.5" fill="#4b5563" text-anchor="middle">递归下降（语法）</text>
+  <text x="361" y="202" font-size="11.5" fill="#4b5563" text-anchor="middle">错误带行列号</text>
+
+  <line x1="222" y1="127" x2="282" y2="150" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="222" y1="201" x2="282" y2="180" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- spec -->
+  <rect x="504" y="118" width="150" height="92" rx="9" fill="#fffbeb" stroke="#d97706" stroke-width="1.6"/>
+  <text x="579" y="146" font-size="14" font-weight="700" fill="#92400e" text-anchor="middle">ApiSpec</text>
+  <text x="579" y="168" font-size="11.5" fill="#4b5563" text-anchor="middle">types / services</text>
+  <text x="579" y="185" font-size="11.5" fill="#4b5563" text-anchor="middle">routes / fields</text>
+  <text x="579" y="202" font-size="11.5" fill="#4b5563" text-anchor="middle">唯一枢纽</text>
+
+  <line x1="438" y1="164" x2="500" y2="164" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- validate -->
+  <rect x="722" y="118" width="166" height="92" rx="9" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
+  <text x="805" y="146" font-size="14" font-weight="700" fill="#b91c1c" text-anchor="middle">validateSpec</text>
+  <text x="805" y="168" font-size="11.5" fill="#4b5563" text-anchor="middle">重复路由 / 未知类型</text>
+  <text x="805" y="185" font-size="11.5" fill="#4b5563" text-anchor="middle">路径缺斜杠 / 属性重名</text>
+  <text x="805" y="202" font-size="11.5" fill="#4b5563" text-anchor="middle">一次报完，先拦后生成</text>
+
+  <line x1="656" y1="164" x2="718" y2="164" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- generate -->
+  <rect x="504" y="264" width="150" height="80" rx="9" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/>
+  <text x="579" y="292" font-size="14" font-weight="700" fill="#047857" text-anchor="middle">generate()（纯函数）</text>
+  <text x="579" y="314" font-size="11.5" fill="#4b5563" text-anchor="middle">模板引擎（可被覆盖）</text>
+  <text x="579" y="331" font-size="11.5" fill="#4b5563" text-anchor="middle">body / query / path 分派</text>
+
+  <line x1="579" y1="212" x2="579" y2="260" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- outputs -->
+  <rect x="286" y="264" width="188" height="80" rx="9" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/>
+  <text x="380" y="290" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">dto/&lt;type&gt;.dto.ts</text>
+  <text x="380" y="309" font-size="11" fill="#64748b" text-anchor="middle">属性名取传输键（json/path tag）</text>
+  <text x="380" y="326" font-size="11" fill="#64748b" text-anchor="middle">@IsString / @MinLength / @IsOptional</text>
+
+  <rect x="722" y="264" width="166" height="80" rx="9" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/>
+  <text x="805" y="290" font-size="12.5" font-weight="600" fill="#334155" text-anchor="middle">&lt;group&gt;/ 三件套</text>
+  <text x="805" y="309" font-size="11" fill="#64748b" text-anchor="middle">controller / service / module</text>
+  <text x="805" y="326" font-size="11" fill="#64748b" text-anchor="middle">GET→Query，path→@Param</text>
+
+  <line x1="500" y1="300" x2="478" y2="300" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="658" y1="300" x2="718" y2="300" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- writer -->
+  <rect x="286" y="392" width="602" height="72" rx="9" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+  <text x="587" y="418" font-size="14" font-weight="700" fill="#1d4ed8" text-anchor="middle">writeFiles() —— 覆盖策略：只覆盖"自己也认领过"的文件</text>
+  <text x="587" y="439" font-size="11.5" fill="#4b5563" text-anchor="middle">首行生成标记 = 认领凭证；删掉标记即"这个文件我接管了"，此后生成不再覆盖它</text>
+  <text x="587" y="456" font-size="11.5" fill="#4b5563" text-anchor="middle">内容相同不写盘 → 幂等，二次执行 0 文件变更</text>
+
+  <line x1="380" y1="346" x2="420" y2="388" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+  <line x1="805" y1="346" x2="770" y2="388" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- runtime -->
+  <rect x="32" y="510" width="856" height="76" rx="9" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+  <text x="460" y="536" font-size="14" font-weight="700" fill="#5b21b6" text-anchor="middle">运行期：生成物就是普通 TS，直接进入 v0.3.0 的容器与路由</text>
+  <text x="460" y="557" font-size="11.5" fill="#4b5563" text-anchor="middle">@Controller / @Get / @Validate(dto) / @Param —— 不含任何生成期逻辑，开销与手写一致</text>
+  <text x="460" y="574" font-size="11.5" fill="#4b5563" text-anchor="middle">契约里的中间件名字在启动期由 middlewareRegistry 兑现；漏登记直接启动失败，而不是静默跳过</text>
+
+  <line x1="587" y1="466" x2="500" y2="506" stroke="#6b7280" stroke-width="1.6" marker-end="url(#arrow)"/>
+
+  <!-- CLI -->
+  <rect x="32" y="392" width="188" height="72" rx="9" fill="#fdf4ff" stroke="#c026d3" stroke-width="1.6"/>
+  <text x="126" y="418" font-size="14" font-weight="700" fill="#a21caf" text-anchor="middle">nofaultctl</text>
+  <text x="126" y="438" font-size="11.5" fill="#4b5563" text-anchor="middle">new / generate api</text>
+  <text x="126" y="455" font-size="11.5" fill="#4b5563" text-anchor="middle">validate / routes</text>
+  <line x1="126" y1="390" x2="200" y2="330" stroke="#c026d3" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#arrowRed)"/>
+</svg>
