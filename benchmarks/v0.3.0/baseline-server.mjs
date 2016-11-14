@@ -28,34 +28,3 @@ const server = createServer((req, res) => {
       message: 'ok',
     });
   }
-
-  // 与 nofault 的 /api/runtime/context 对齐：也生成 id 与 traceId
-  if (p === '/api/runtime/context') {
-    const hex = (n) => Buffer.from(cryptoRandom(n)).toString('hex');
-    return send(res, 200, {
-      code: 0,
-      data: {
-        requestId: `req_${hex(4)}`,
-        traceId: hex(16),
-        spanId: hex(8),
-        scopeInstanceNo: ++counter,
-        scopeRequestId: `req_${hex(4)}`,
-        configReloadable: false,
-      },
-      message: 'ok',
-    });
-  }
-
-  send(res, 404, { code: 404, data: null, message: `Cannot GET ${p}` });
-});
-
-let counter = 0;
-function cryptoRandom(n) {
-  const b = new Uint8Array(n);
-  globalThis.crypto.getRandomValues(b);
-  return b;
-}
-
-server.listen(0, '127.0.0.1', () => {
-  process.stdout.write(JSON.stringify({ port: server.address().port }) + '\n');
-});
