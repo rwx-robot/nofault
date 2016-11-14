@@ -12,16 +12,3 @@ const server = createServer((req, res) => {
   if (url.pathname === '/hello') {
     const name = url.searchParams.get('name');
     const body = JSON.stringify({
-      message: name ? `Hello from nofault, ${name}!` : 'Hello from nofault!',
-      app: 'hello-kernel',
-    });
-    res.writeHead(200, { 'content-type': 'application/json', 'content-length': Buffer.byteLength(body) });
-    res.end(body);
-    return;
-  }
-  res.writeHead(404).end('404');
-});
-
-server.listen(0, '127.0.0.1', () => {
-  process.stdout.write(JSON.stringify({ port: server.address().port }) + '\n');
-});
