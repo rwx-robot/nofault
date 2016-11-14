@@ -37,3 +37,40 @@ const server = createServer(async (req, res) => {
     let body;
     try {
       body = JSON.parse(raw);
+    } catch {
+      return send(res, 400, { code: 400, data: null, message: 'Invalid JSON body' });
+    }
+    if (typeof body?.name !== 'string' || body.name.length < 2) {
+      return send(res, 422, { code: 422, data: [{ property: 'name' }], message: 'Validation failed' });
+    }
+    if (typeof body?.email !== 'string' || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(body.email)) {
+      return send(res, 422, { code: 422, data: [{ property: 'email' }], message: 'Validation failed' });
+    }
+    if (typeof body?.age !== 'number' || body.age < 0 || body.age > 150) {
+      return send(res, 422, { code: 422, data: [{ property: 'age' }], message: 'Validation failed' });
+    }
+    return send(res, 200, { code: 0, data: { received: body }, message: 'ok' });
+  }
+
+  // POST /api/users
+  if (method === 'POST' && p === '/api/users') {
+    let raw = '';
+    for await (const chunk of req) raw += chunk;
+    let body;
+    try {
+      body = JSON.parse(raw);
+    } catch {
+      return send(res, 400, { code: 400, data: null, message: 'Invalid JSON body' });
+    }
+    if (typeof body?.name !== 'string' || body.name.length < 2) {
+      return send(res, 422, { code: 422, data: [{ property: 'name' }], message: 'Validation failed' });
+    }
+    return send(res, 200, { code: 0, data: { id: 999, ...body }, message: 'ok' });
+  }
+
+  send(res, 404, { code: 404, data: null, message: `Cannot ${method} ${p}` });
+});
+
+server.listen(0, '127.0.0.1', () => {
+  process.stdout.write(JSON.stringify({ port: server.address().port }) + '\n');
+});
