@@ -56,3 +56,59 @@ async function bench(name, fn, iterations = args.iterations) {
 }
 
 // A. 串行调用（连接已建立）
+const client = new RpcClient({ registry, service: 'bench', timeoutMs: 5000, poolSize: 4 });
+const serial = await bench('serial call (warm connection)', async (i) => {
+  await client.call('bench', 'add', { a: i, b: 1 });
+});
+
+// B. 池化收益：每次新建客户端（含建连）vs 复用
+const cold = await bench(
+  'call with fresh client (incl. connect)',
+  async () => {
+    const fresh = new RpcClient({ registry, service: 'bench', timeoutMs: 5000 });
+    await fresh.call('bench', 'echo', { v: 1 });
+    await fresh.close();
+  },
+  Math.min(300, args.iterations),
+);
+
+// C. 并发
+const concurrencyStart = process.hrtime.bigint();
+const batches = args.concurrency;
+await Promise.all(
+  Array.from({ length: batches }, async () => {
+    const perBatch = Math.max(1, Math.floor(args.iterations / batches));
+    for (let i = 0; i < perBatch; i++) await client.call('bench', 'add', { a: i, b: i });
+  }),
+);
+const concurrentMs = Number(process.hrtime.bigint() - concurrencyStart) / 1e6;
+const concurrentTotal = Math.floor(args.iterations / batches) * batches;
+const concurrent = {
+  concurrency: batches,
+  calls: concurrentTotal,
+  totalMs: round(concurrentMs),
+  opsPerSec: round((concurrentTotal / concurrentMs) * 1000),
+};
+
+const pooled = { size: client.poolStats.size };
+
+console.log(`\n[v0.6.0] rpc benchmark — ${args.iterations} iterations\n`);
+console.log('A. 串行调用（连接已就绪）');
+console.log(`   ${serial.meanMs} ms  (${serial.opsPerSec} ops/sec, p95 ${serial.p95Ms} ms)`);
+console.log('B. 建连成本');
+console.log(`   每次新建客户端 ${cold.meanMs} ms  vs  复用连接 ${serial.meanMs} ms`);
+console.log(`   池化省下 ${round(cold.meanMs - serial.meanMs)} ms/次（${round(cold.meanMs / Math.max(serial.meanMs, 0.001))}x）`);
+console.log('C. 并发');
+console.log(`   ${concurrent.concurrency} 并发 / ${concurrent.calls} 次调用：${concurrent.totalMs} ms，${concurrent.opsPerSec} ops/sec`);
+console.log(`   连接池实际大小：${pooled.size}\n`);
+
+if (args.report) {
+  writeFileSync(
+    join(here, 'results.json'),
+    JSON.stringify({ generatedAt: new Date().toISOString(), serial, cold, concurrent, pooled }, null, 2),
+  );
+  console.log('结果已写入 benchmarks/v0.6.0/results.json');
+}
+
+await client.close();
+await server.close();
