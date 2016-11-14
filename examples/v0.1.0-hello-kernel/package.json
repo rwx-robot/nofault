@@ -1,0 +1,18 @@
+{
+  "name": "@nofault/example-v010-hello-kernel",
+  "version": "0.1.0",
+  "private": true,
+  "description": "v0.1.0 示例：IoC + 配置 + 日志 + 最小 HTTP 服务",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nofault/config": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/http": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
+}
