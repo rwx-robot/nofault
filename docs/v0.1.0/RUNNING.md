@@ -32,3 +32,36 @@ pnpm vitest run packages/core/test/container.test.ts   # 只跑某个文件
 > 而 nofault 的构造函数按类型注入依赖 `design:paramtypes`。详见 `vitest.config.ts`。
 
 ## 跑示例
+
+```bash
+pnpm example v0.1.0-hello-kernel
+# 自定义端口
+pnpm example v0.1.0-hello-kernel PORT=3111
+```
+
+脚本会依次执行：构建 workspace 包 → `tsc` 编译示例 → `node dist/main.js`。
+
+服务起来后：
+
+```bash
+curl http://127.0.0.1:3000/
+# nofault v0.1.0 hello-kernel. Try GET /hello?name=world or GET /health
+
+curl "http://127.0.0.1:3000/hello?name=world"
+# {"message":"Hello from nofault, world!","app":"hello-kernel"}
+
+curl http://127.0.0.1:3000/health
+# {"status":"ok","app":"hello-kernel","uptime":3}
+
+curl -i http://127.0.0.1:3000/nope
+# HTTP/1.1 404 Not Found
+```
+
+环境变量覆盖配置（12-factor）：
+
+```bash
+NOFAULT_APP__GREETING="Hi there" pnpm example v0.1.0-hello-kernel
+# curl /hello → {"message":"Hi there!","app":"hello-kernel"}
+```
+
+停止：`Ctrl-C`（会走优雅退出，先停止监听再排在途请求）。
