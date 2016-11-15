@@ -56,3 +56,31 @@ for (let i = 0; i < hashIterations; i++) {
   const t = process.hrtime.bigint();
   await hashPassword('correct horse battery staple');
   hashSamples.push(Number(process.hrtime.bigint() - t) / 1e6);
+}
+hashSamples.sort((a, b) => a - b);
+const hashMean = hashSamples.reduce((a, b) => a + b, 0) / hashSamples.length;
+const stored = await hashPassword('correct horse battery staple');
+const verifySamples = [];
+for (let i = 0; i < hashIterations; i++) {
+  const t = process.hrtime.bigint();
+  await verifyPassword('correct horse battery staple', stored);
+  verifySamples.push(Number(process.hrtime.bigint() - t) / 1e6);
+}
+verifySamples.sort((a, b) => a - b);
+const verifyMean = verifySamples.reduce((a, b) => a + b, 0) / verifySamples.length;
+
+const hashing = { name: 'scrypt hash (N=2048)', meanMs: round(hashMean), opsPerSec: round(1000 / hashMean), p95Ms: round(hashSamples[Math.floor(hashSamples.length * 0.95)]) };
+const verifying = { name: 'scrypt verify', meanMs: round(verifyMean), opsPerSec: round(1000 / verifyMean), p95Ms: round(verifySamples[Math.floor(verifySamples.length * 0.95)]) };
+
+const results = [sign, verify, hashing, verifying];
+
+console.log(`\n[v1.0.0] security benchmark — ${args.iterations} iterations\n`);
+for (const r of results) {
+  console.log(`   ${r.name.padEnd(24)} ${r.meanMs} ms  (${r.opsPerSec} ops/sec, p95 ${r.p95Ms} ms)`);
+}
+console.log('');
+
+if (args.report) {
+  writeFileSync(join(here, 'results.json'), JSON.stringify({ generatedAt: new Date().toISOString(), primitives: results }, null, 2));
+  console.log('结果已写入 benchmarks/v1.0.0/results.json');
+}
