@@ -61,3 +61,65 @@
 
   <rect x="64" y="452" width="596" height="54" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
   <text x="362" y="474" font-size="13" font-weight="600" fill="#0f172a" text-anchor="middle">InstanceWrapper</text>
+  <text x="362" y="492" font-size="11" fill="#64748b" text-anchor="middle">作用域 SINGLETON / TRANSIENT / REQUEST · 单例缓存 · 循环依赖检测</text>
+
+  <rect x="64" y="522" width="290" height="54" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="209" y="544" font-size="13" font-weight="600" fill="#0f172a" text-anchor="middle">ModuleRef</text>
+  <text x="209" y="562" font-size="11" fill="#64748b" text-anchor="middle">providers / imports / exports 可见性</text>
+
+  <rect x="370" y="522" width="290" height="54" rx="8" fill="#ffffff" stroke="#5eead4" stroke-width="1.5"/>
+  <text x="515" y="544" font-size="13" font-weight="600" fill="#0f172a" text-anchor="middle">生命周期编排</text>
+  <text x="515" y="562" font-size="11" fill="#64748b" text-anchor="middle">init → bootstrap → shutdown 有序调用</text>
+
+  <text x="64" y="608" font-size="11.5" fill="#0f766e">可见性规则：本模块 → 导入模块的 exports → 全局模块 → 抛 UnknownDependencyError</text>
+
+  <!-- 平台与配套 -->
+  <rect x="700" y="344" width="460" height="292" rx="10" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+  <text x="716" y="366" font-size="12" font-weight="600" fill="#a16207">平台与配套包</text>
+
+  <rect x="724" y="382" width="412" height="60" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="930" y="406" font-size="13" font-weight="600" fill="#0f172a" text-anchor="middle">@nofault/config</text>
+  <text x="930" y="425" font-size="11" fill="#64748b" text-anchor="middle">ConfigModule.forRoot() · ConfigService.get('a.b') · 环境变量覆盖</text>
+
+  <rect x="724" y="456" width="412" height="60" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="930" y="480" font-size="13" font-weight="600" fill="#0f172a" text-anchor="middle">@nofault/logger</text>
+  <text x="930" y="499" font-size="11" fill="#64748b" text-anchor="middle">分级 · 结构化字段 · JSON/Pretty · 可插拔 Transport</text>
+
+  <rect x="724" y="530" width="412" height="60" rx="8" fill="#ffffff" stroke="#fcd34d" stroke-width="1.5"/>
+  <text x="930" y="554" font-size="13" font-weight="600" fill="#0f172a" text-anchor="middle">@nofault/http</text>
+  <text x="930" y="573" font-size="11" fill="#64748b" text-anchor="middle">NodeHttpAdapter · 在途请求排空 · sendJson / sendText</text>
+
+  <!-- 运行时 -->
+  <rect x="40" y="664" width="1120" height="80" rx="10" fill="#f1f5f9" stroke="#94a3b8" stroke-width="1.5"/>
+  <text x="56" y="686" font-size="12" font-weight="600" fill="#334155">运行时 · Node.js ≥ 20</text>
+  <rect x="64" y="698" width="330" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="229" y="720" font-size="12.5" fill="#0f172a" text-anchor="middle">node:http createServer</text>
+  <rect x="410" y="698" width="330" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="575" y="720" font-size="12.5" fill="#0f172a" text-anchor="middle">reflect-metadata（design:paramtypes）</text>
+  <rect x="756" y="698" width="380" height="34" rx="8" fill="#ffffff" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="946" y="720" font-size="12.5" fill="#0f172a" text-anchor="middle">SIGTERM / SIGINT 信号处理</text>
+
+  <!-- 箭头 -->
+  <path d="M 188 200 L 188 226" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 452 200 L 452 226" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 300 316 L 300 342" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 900 316 L 900 342" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 700 636 L 700 662" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+  <path d="M 360 636 L 360 662" stroke="#64748b" stroke-width="1.6" fill="none" marker-end="url(#arrow)"/>
+
+  <!-- 依赖注入回注（虚线） -->
+  <path d="M 672 470 C 1180 470 1180 196 1010 196" stroke="#2563eb" stroke-width="1.6" fill="none" stroke-dasharray="6 4" marker-end="url(#arrowBlue)"/>
+  <text x="1050" y="330" font-size="11.5" fill="#2563eb">依赖注入：容器把 ConfigService / GreeterService 注入回用户类</text>
+
+  <!-- 图例 -->
+  <text x="40" y="792" font-size="11.5" fill="#64748b">图例：</text>
+  <rect x="86" y="781" width="14" height="14" rx="3" fill="#f0fdfa" stroke="#14b8a6" stroke-width="1.5"/>
+  <text x="108" y="792" font-size="11.5" fill="#475569">内核（core）</text>
+  <rect x="196" y="781" width="14" height="14" rx="3" fill="#fefce8" stroke="#eab308" stroke-width="1.5"/>
+  <text x="218" y="792" font-size="11.5" fill="#475569">配套包</text>
+  <rect x="286" y="781" width="14" height="14" rx="3" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="308" y="792" font-size="11.5" fill="#475569">引导层</text>
+  <rect x="374" y="781" width="14" height="14" rx="3" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+  <text x="396" y="792" font-size="11.5" fill="#475569">用户代码 / 运行时</text>
+  <text x="40" y="822" font-size="11.5" fill="#94a3b8">实线 = 调用与构建方向；蓝色虚线 = 依赖注入方向。v0.1.0 刻意不含路由树、中间件、校验——它们属于 v0.2.0。</text>
+</svg>
