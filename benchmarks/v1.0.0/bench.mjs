@@ -27,3 +27,32 @@ const { Jwt, hashPassword, verifyPassword } = await import(
 );
 
 function round(n) {
+  return Math.round(n * 100) / 100;
+}
+
+function bench(name, fn, iterations = args.iterations) {
+  for (let i = 0; i < Math.min(200, iterations); i++) fn(i);
+  const samples = [];
+  for (let i = 0; i < iterations; i++) {
+    const t = process.hrtime.bigint();
+    fn(i);
+    samples.push(Number(process.hrtime.bigint() - t) / 1e6);
+  }
+  samples.sort((a, b) => a - b);
+  const mean = samples.reduce((a, b) => a + b, 0) / samples.length;
+  return { name, meanMs: round(mean), opsPerSec: round(1000 / mean), p95Ms: round(samples[Math.floor(samples.length * 0.95)]) };
+}
+
+const jwt = new Jwt('benchmark-secret-value-1234', { issuer: 'bench', audience: 'api' });
+const token = jwt.sign({ sub: 'u1', roles: ['admin'] }, 3600);
+
+const sign = bench('jwt sign', () => jwt.sign({ sub: 'u1', roles: ['admin'] }, 3600));
+const verify = bench('jwt verify', () => jwt.verify(token));
+
+// 密码哈希很慢，只跑少量
+const hashIterations = Math.min(args.iterations, 30);
+const hashSamples = [];
+for (let i = 0; i < hashIterations; i++) {
+  const t = process.hrtime.bigint();
+  await hashPassword('correct horse battery staple');
+  hashSamples.push(Number(process.hrtime.bigint() - t) / 1e6);
