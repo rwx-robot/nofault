@@ -47,3 +47,28 @@ OpenAPI 生成、开发热重载、环境自检。
 - Node 版本太低
 - **装饰器元数据没开**（本项目最常见）
 - `reflect-metadata` 没装
+
+这些检查全是**静态**的（读文件、读配置），不联网、不执行用户代码，
+所以可以随便跑，放进 pre-commit 和 CI 都安全（0.38ms）。
+
+### 必须解析 tsconfig 的 extends
+
+不解析会大面积**误报**：绝大多数工程的 tsconfig 都是
+`extends: "../../tsconfig.base.json"`，装饰器元数据写在基配置里。
+只检查子文件就会把"配置正确"报成"未开启"。
+
+**假阴性比漏检更糟**——它会让人直接不信任这个工具。
+
+## 四、检查项的名字必须稳定
+
+第一版把 `emitDecoratorMetadata` 和 `experimentalDecorators`
+塞在同一个检查里，结果"两项都开"时检查项的名字会变，
+调用方按名字就找不到它了。
+
+**检查项的名字是 API 的一部分**，不能随状态变化。
+
+## 五、已知限制
+
+- `dev` 不编译，只重启（编译交给 `tsc --watch` 或你的构建脚本）
+- doctor 不检查运行时问题（端口占用、数据库连接）
+- OpenAPI 只支持 3.0，未生成 examples / securitySchemes
