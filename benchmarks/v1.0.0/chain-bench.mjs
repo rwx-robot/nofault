@@ -62,3 +62,67 @@ const app = await RestApplication.create(GatewayModule, {
 app.addRoute('GET', '/users/:id', (ctx) => rpc.call('users', 'get', { id: ctx.request.params.id }));
 app.addRoute('POST', '/users', (ctx) => rpc.call('users', 'create', ctx.request.body));
 const gateway = await app.listen(0, '127.0.0.1');
+
+// ---------- 压测 ----------
+const base = `http://127.0.0.1:${gateway.port}`;
+
+function pct(sorted, p) {
+  return sorted[Math.min(sorted.length - 1, Math.floor((sorted.length * p) / 100))];
+}
+
+async function run(name, fn, n = args.n, conc = args.conc) {
+  for (let i = 0; i < Math.min(50, n); i++) await fn(i); // 预热
+  const lat = [];
+  let failures = 0;
+  let next = 0;
+  const worker = async () => {
+    while (next < n) {
+      const i = next++;
+      const t = process.hrtime.bigint();
+      let ok = false;
+      let detail = '';
+      try {
+        ok = await fn(i);
+      } catch (err) {
+        detail = ` threw ${err instanceof Error ? err.message : String(err)}`;
+      }
+      const ms = Number(process.hrtime.bigint() - t) / 1e6;
+      if (ok) lat.push(ms);
+      else if (failures++ < 3) console.error(`[fail] ${name} #${i}${detail}`);
+    }
+  };
+  const started = process.hrtime.bigint();
+  await Promise.all(Array.from({ length: conc }, worker));
+  const seconds = Number(process.hrtime.bigint() - started) / 1e9;
+  lat.sort((a, b) => a - b);
+  const mean = lat.reduce((a, b) => a + b, 0) / lat.length;
+  const rps = lat.length / seconds;
+  console.log(
+    `${name.padEnd(10)} ${Math.round(rps).toLocaleString('en-US').padStart(10)} ops/s | mean ${mean.toFixed(2)}ms | p50 ${pct(lat, 50).toFixed(2)}ms | p95 ${pct(lat, 95).toFixed(2)}ms | p99 ${pct(lat, 99).toFixed(2)}ms | n=${lat.length}`,
+  );
+  return { name, rps: Math.round(rps), mean: +mean.toFixed(2), p50: +pct(lat, 50).toFixed(2), p95: +pct(lat, 95).toFixed(2), p99: +pct(lat, 99).toFixed(2), n: lat.length, conc };
+}
+
+const results = [];
+results.push(await run('hot-read', async () => {
+  const res = await fetch(`${base}/users/7`);
+  return res.status === 200;
+}));
+results.push(await run('cold-read', async (i) => {
+  const res = await fetch(`${base}/users/${1000 + i}`);
+  // miss → 业务层返回 undefined → 框架语义是 204 No Content（防穿透：undefined 不进缓存）
+  return res.status === 200 || res.status === 204;
+}));
+results.push(await run('write', async (i) => {
+  const res = await fetch(`${base}/users`, {
+    method: 'POST',
+    headers: { 'content-type': 'application/json' },
+    body: JSON.stringify({ name: `bench-${i}` }),
+  });
+  return res.status === 200 || res.status === 201;
+}));
+
+console.log('\nJSON:', JSON.stringify(results));
+await app.close();
+await rpc.close();
+await backend.close();
