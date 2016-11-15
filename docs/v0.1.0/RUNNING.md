@@ -65,3 +65,36 @@ NOFAULT_APP__GREETING="Hi there" pnpm example v0.1.0-hello-kernel
 ```
 
 停止：`Ctrl-C`（会走优雅退出，先停止监听再排在途请求）。
+
+## 跑基准测试
+
+```bash
+pnpm bench v0.1.0
+# 自定义参数
+pnpm bench v0.1.0 --duration=10 --connections=64 --warmup=2 --rounds=3 --report
+```
+
+- 被测服务与压测器**分进程**运行，避免互相抢 CPU 导致数据失真
+- 多轮交替测量，取 RPS 中位数轮次
+- `--report` 会把结果写入 `benchmarks/v0.1.0/results.json`
+
+## Lint / 格式化
+
+```bash
+pnpm lint
+pnpm lint:fix
+pnpm format
+```
+
+## 目录导航
+
+```
+packages/core       内核：IoC / 模块 / 生命周期
+packages/config     配置
+packages/logger     日志
+packages/http       node:http 适配器
+examples/v0.1.0-hello-kernel   可运行示例
+tests/integration/v0.1.0       集成测试
+benchmarks/v0.1.0              压测与报告
+docs/v0.1.0                    文档
+```
