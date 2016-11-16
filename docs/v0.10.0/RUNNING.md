@@ -25,3 +25,30 @@ ok    emitDecoratorMetadata  已开启
 ok    experimentalDecorators 已开启
 ok    reflect-metadata       已安装
 ok    source directory       src, api
+
+0 failure(s), 1 warning(s)
+```
+
+有 fail 时退出码为 1，可以直接放进 CI。
+
+## 跑测试
+
+```bash
+pnpm test
+pnpm vitest run packages/cli          # 含 OpenAPI 生成与 doctor 检查
+```
+
+## 跑基准测试
+
+```bash
+pnpm bench v0.10.0 --iterations=200 --report
+```
+
+## 目录导航
+
+```
+packages/codegen/src/openapi.ts    契约 → OpenAPI 3.0（纯函数）
+packages/cli/src/commands/dev.ts   热重载（防抖 / 等退出 / 不丢变更）
+packages/cli/src/commands/doctor.ts 环境自检（解析 tsconfig extends）
+packages/cli/src/cli.ts            openapi / dev / doctor 三个新命令
+```
