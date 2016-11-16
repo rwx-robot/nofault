@@ -85,3 +85,90 @@ const logger = createLogger({ contextProvider: () => currentContext()?.toJSON() 
 @Injectable({ scope: Scope.REQUEST })
 class RequestScopeService {}
 ```
+
+内核在启动期**沿依赖图传播** REQUEST 作用域：若 A 依赖 B，而 B 是 REQUEST（或已被污染），则 A 也被标记 `contextDependent`，按上下文缓存。
+
+这是必须的。否则单例 Controller 会缓存住第一个请求的对象，
+**所有请求共用同一份**——跨请求数据串号，且只在并发下偶发，极难排查。
+
+| 情况 | 行为 |
+| --- | --- |
+| 纯单例依赖链 | 全局一份（不变） |
+| REQUEST 作用域 | 每 contextId 一份 |
+| 单例 → REQUEST（captive） | 自动按上下文缓存 |
+| TRANSIENT | 每次解析都新建 |
+
+请求结束时 `clearRequestContext(contextId)` 释放，否则 `Map` 会无限增长。
+
+### 3.3 配置热更新：可插拔 Source
+
+```ts
+ConfigModule.forRootAsync({ path: 'config.yaml', watch: true })
+```
+
+`ConfigSource` 统一抽象，内置四种：
+
+| Source | 说明 |
+| --- | --- |
+| `createFileSource({ path, watch })` | 文件 + fs.watch（100ms 防抖） |
+| `createPollingSource({ fetch, intervalMs })` | 轮询；etcd / consul / nacos 都走它 |
+| `createInlineSource(values)` | 内联值、默认值 |
+| `createEnvSource(prefix)` | 环境变量，优先级最高 |
+
+合并顺序：**后面的覆盖前面的，环境变量永远最后**。
+
+远程拉取失败时**保留上一次的值**——配置中心的抖动不能把应用打挂。
+
+> **性能坑**：`values()` 曾经每次 `structuredClone`，导致读一个配置项 = 克隆整份配置。
+> 现在 `values()` 直接返回内部对象（安全由"整体替换"保证），
+> 需要副本时用 `ConfigService.snapshot()`。
+
+### 3.4 健康探针
+
+严格区分两个语义（K8s 约定）：
+
+- **`/healthz` liveness**：进程活着吗？只做最廉价的检查，挂了就重启
+- **`/readyz` readiness**：能接流量吗？没就绪就摘掉
+
+注册过 readiness 检查后默认**未就绪**，必须显式 `app.markReady()`——
+这是有意的，避免半初始化的实例接流量。
+
+### 3.5 优雅退出
+
+```
+markNotReady() → 摘流量
+  → 停止监听 → 排在途请求
+  → beforeApplicationShutdown → onModuleDestroy → onApplicationShutdown
+```
+
+带**超时保护**（默认 5s）：某个 Provider 的 destroy 卡死时进程也必须能退出，
+否则 K8s 只能 SIGKILL，那是真丢数据。
+
+---
+
+## 4. 性能
+
+| 指标 | 数值 |
+| --- | --- |
+| 上下文创建 | 153,130 ops/sec |
+| ALS run + current | 142,643 ops/sec（7.01 µs/次） |
+| GET config | 7,768.5 rps，开销 35.1% |
+| GET context | 8,221.3 rps，开销 30.3% |
+
+基准测试反过来挖出并修掉了两个热路径问题（详见 `benchmarks/v0.3.0/REPORT.md`）：
+
+1. 每次 `config.get()` 全量 `structuredClone` → 开销 −15pp
+2. 每请求 3 次 `crypto.getRandomValues` → 上下文快 2.5×
+
+> 相比 v0.2.0 的 5.9%，30~35% **不是回归**：这一版多做了上下文、每请求 DI、探针与热配置。
+
+---
+
+## 5. 已知限制
+
+1. 中间件链未做编译期折叠（框架通行做法），是当前主要开销 → 后续优化
+2. 未实现真正的链路追踪（span 上报），只有 traceId 传播 → v0.8.0
+3. 无指标采集（Prometheus）→ v0.8.0
+4. 无 ORM / 缓存 → v0.5.0
+5. 无 RPC → v0.6.0
+6. 无熔断 / 限流 → v0.7.0
