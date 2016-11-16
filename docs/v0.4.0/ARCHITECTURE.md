@@ -35,3 +35,41 @@
 - **错误定位**是我们最看重的能力：每个 token 带行列号，
   报"`service user > route login`: unknown request type"而不是"解析失败"。
   自动生成器的报错质量很难做到这一点
+
+实测解析 312 行契约 0.43ms（2,304 ops/sec），不是瓶颈。
+
+## 三、ApiSpec：枢纽
+
+```ts
+interface ApiSpec { name; types: TypeSpec[]; services: ServiceSpec[] }
+interface ServiceSpec { name; group; prefix?; jwt?; middleware[]; routes: RouteSpec[] }
+interface RouteSpec { handler; method; path; requestType?; responseType?; middleware? }
+interface FieldSpec  { name; key; type; source; optional; rules[] }
+```
+
+几个刻意的设计：
+
+- **`key` 与 `name` 分开**：`key` 是传输键（json tag），`name` 是源字段名
+- **`source` 决定绑定方式**：body / query / path / header / form
+- **`rules` 是字符串数组**（`['isString','minLength:3']`），让校验规则保持开放
+
+## 四、生成器的三条硬规则
+
+1. **属性名取传输键**（`key`），不取源字段名。
+   Go 的 `Name string \`json:"name"\`` 会生成 `name!: string`。
+   照抄字段名的话，代码能编译、服务能启动，但**永远绑定不上数据**——这是本次最难查的一类 bug。
+
+2. **GET/HEAD/DELETE/OPTIONS 一律走 Query**。
+   GET 带 body 在多数网关和 CDN 上会被直接丢弃。
+
+3. **带 `@Path` 字段的请求类型不做整体校验**。
+   它的字段是逐个 `@Param()` 接的，没有完整的"请求对象"，
+   整体校验会把每个请求都判成缺字段。
+
+## 五、写盘策略：生成器最重要的一个决定
+
+默认策略 `generated`：**只覆盖首行带生成标记的文件**。
+
+- 生成器自己写的 → 有标记 → 可以被覆盖（契约变了就该变）
+- 被人工接管的文件（删掉标记）→ 跳过
+- 内容没变 → 不写盘（幂等）
