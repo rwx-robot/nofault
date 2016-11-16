@@ -73,3 +73,40 @@ interface FieldSpec  { name; key; type; source; optional; rules[] }
 - 生成器自己写的 → 有标记 → 可以被覆盖（契约变了就该变）
 - 被人工接管的文件（删掉标记）→ 跳过
 - 内容没变 → 不写盘（幂等）
+
+为什么这是最重要的决定：
+代码生成器最恶劣的行为是**静默覆盖用户的代码**。
+一次覆盖就能让开发者永远不敢再跑生成器，整个能力随之作废。
+
+## 六、契约里的中间件名字
+
+contract 只能写名字（`@Middleware('RequestLogger')`），实现不在契约里。
+于是框架加了 `middlewareRegistry`：
+
+```ts
+RestApplication.create(AppModule, {
+  middlewareRegistry: { RequestLogger: requestLogger },
+})
+```
+
+**漏登记直接启动失败**，并提示缺哪个名字。
+静默跳过比启动失败危险得多——会让人以为审计/鉴权已经生效。
+
+## 七、v0.4.0 顺带修掉的框架问题
+
+生成器一产出 `@Query() dto`，立刻暴露了运行时的两个洞：
+
+1. **query DTO 完全不校验**（`validateBodyIfDeclared` 只看 body）
+   → 改为按 DTO 实际绑定来源取值
+2. **query 里的值永远是字符串，`number` 字段拿到的是 `"1"`**
+   → 新增 `coerceDtoFields()`，按 `design:type` 强制转换
+
+这两个洞在手写 `@Query('page') page: number` 时不会暴露（逐个绑定时会强制），
+一旦整对象绑定就没人负责了。
+
+## 八、边界
+
+- 生成期与运行期**完全解耦**：生成物是普通 TS，不含任何生成期逻辑
+- 生成器是**纯函数**（`generate()` 不碰 IO），写盘单独在 `writeFiles()`
+- 唯一的注入面是校验规则的参数（`@MinLength(3)`），
+  用白名单把参数限制成数字字面量，否则拒绝生成
