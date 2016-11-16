@@ -108,3 +108,112 @@ export class CreateUserDto {
   @IsEmail() email!: string;
   @IsInt() @Min(0) @Max(150) age!: number;
 }
+
+@Post('/')
+@ValidateBody(CreateUserDto)
+create(@Body() dto: CreateUserDto) {}
+```
+
+失败返回 **422**：
+
+```json
+{
+  "code": 422,
+  "data": [{ "property": "email", "constraints": { "isEmail": "must be an email" } }],
+  "message": "Validation failed"
+}
+```
+
+## 6. 中间件
+
+```ts
+import type { Middleware } from '@nofault/rest';
+
+const timing: Middleware = async (ctx, next) => {
+  const t = process.hrtime.bigint();
+  await next();
+  ctx.response.header('x-response-time', `${(Number(process.hrtime.bigint() - t) / 1e6).toFixed(2)}ms`);
+};
+```
+
+三种作用域：
+
+```ts
+// 1. 全局
+RestApplication.create(AppModule, { middleware: [timing] })
+
+// 2. 控制器级
+@Controller({ path: '/users', middleware: [timing] })
+@UseMiddleware(timing)                    // 等价写法
+
+// 3. 路由级
+@Get('/:id')
+@UseMiddleware(timing)
+detail() {}
+```
+
+内置中间件：
+
+```ts
+cors({ origin: true, credentials: true })
+bodyParser({ limit: 512 * 1024 })         // JSON / urlencoded / text
+securityHeaders({ hsts: true })
+requestLogger((msg, fields) => log.debug(msg, fields))
+serveStatic({ root: './public', prefix: '/static' })
+rateLimit({ windowMs: 60_000, max: 100 }) // 单机内存版
+```
+
+## 7. 异常
+
+```ts
+import { NotFoundException, ConflictException, BadRequestException } from '@nofault/rest';
+
+@Get('/:id')
+detail(@Param('id') id: number) {
+  const user = find(id);
+  if (!user) throw new NotFoundException(`User ${id} not found`);
+  return user;
+}
+```
+
+自定义异常：
+
+```ts
+class PaymentRequiredException extends HttpException {
+  constructor() { super(402, 'Payment required', 402); }
+}
+```
+
+统一响应体：`{ code, data, message }`（`code: 0` 表示成功）。
+
+## 8. 直接操作响应
+
+```ts
+@Get('/download')
+download(@Ctx() ctx: RestContext) {
+  ctx.response.header('content-disposition', 'attachment; filename="a.txt"');
+  ctx.response.text('...');      // 不走 { code, data, message } 包装
+}
+
+@Delete('/:id')
+remove(@Param('id') id: number, @Res() res: RestResponse) {
+  res.status(204).end();         // 204 无 body
+}
+```
+
+> 只要 handler 返回 `undefined` 或已自行写响应，框架就不再包装。
+
+## 9. 元数据记忆化
+
+参数的反射元数据（`design:paramtypes`）与 DTO 声明在**首次请求**时解析并缓存进 `WeakMap`，
+后续请求零反射。这是 v0.2.0 的一项性能优化（实测把 POST 开销从 27% 降到 21%）。
+
+## 10. 常见报错
+
+| 报错 | 原因 | 处理 |
+| --- | --- | --- |
+| `Route conflict: cannot register "X"` | 重复注册，或同层参数名不同（`:id` vs `:name`） | 统一参数名或调整路径 |
+| `Cannot convert "abc" to number` | 路径参数转换失败 | 前端传数字，或声明为 `string` |
+| `Missing required parameter: param "id"` | 必填参数缺失 | 加 `{ required: false }` 或给默认值 |
+| `Middleware must be a function or a class with a use() method` | `@UseMiddleware()` 传错类型 | 传函数或实现 `use()` 的类 |
+| 路由没注册 | 控制器没写进 `controllers` | 补 `@Module({ controllers: [...] })` |
