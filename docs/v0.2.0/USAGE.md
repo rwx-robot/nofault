@@ -71,3 +71,77 @@ console.log(app.getRoutes());     // [{ method: 'GET', path: '/api/users' }, ...
 | `/users` | 静态段 |
 | `/users/:id` | 参数段 |
 | `/static/*` | 通配段（吃掉剩余全部） |
+
+**匹配优先级：静态 > 参数 > 通配**。`/users/me` 会命中静态路由而不是 `/users/:id`。
+
+## 4. 参数装饰器
+
+| 装饰器 | 取值 |
+| --- | --- |
+| `@Param(key?)` | 路径参数 |
+| `@Query(key?)` | query string |
+| `@Body(key?)` | 请求体（可指定字段） |
+| `@Headers(key?)` | 请求头 |
+| `@Req()` | `RestRequest` |
+| `@Res()` | `RestResponse` |
+| `@Ctx()` | `RestContext`（含 `ok()` / `fail()` 快捷方法） |
+| `@RawRequest()` / `@RawResponse()` | 原生 node 对象 |
+
+```ts
+@Get('/search')
+search(
+  @Query('q') q: string,
+  @Query('page', { default: 1 }) page: number,   // 默认值
+  @Query('kw', { required: false }) kw?: string, // 可选
+) {}
+```
+
+按声明类型自动转换；转换失败返回 **400**。
+
+## 5. 校验
+
+```ts
+import { IsEmail, IsInt, IsNotEmpty, Max, Min, MinLength, ValidateBody } from '@nofault/rest';
+
+export class CreateUserDto {
+  @IsNotEmpty() @MinLength(2) name!: string;
+  @IsEmail() email!: string;
+  @IsInt() @Min(0) @Max(150) age!: number;
+}
+
+@Post('/')
+@ValidateBody(CreateUserDto)
+create(@Body() dto: CreateUserDto) {}
+```
+
+失败返回 **422**：
+
+```json
+{
+  "code": 422,
+  "data": [{ "property": "email", "constraints": { "isEmail": "must be an email" } }],
+  "message": "Validation failed"
+}
+```
+
+## 6. 中间件
+
+```ts
+import type { Middleware } from '@nofault/rest';
+
+const timing: Middleware = async (ctx, next) => {
+  const t = process.hrtime.bigint();
+  await next();
+  ctx.response.header('x-response-time', `${(Number(process.hrtime.bigint() - t) / 1e6).toFixed(2)}ms`);
+};
+```
+
+三种作用域：
+
+```ts
+// 1. 全局
+RestApplication.create(AppModule, { middleware: [timing] })
+
+// 2. 控制器级
+@Controller({ path: '/users', middleware: [timing] })
+@UseMiddleware(timing)                    // 等价写法
