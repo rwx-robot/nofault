@@ -28,31 +28,3 @@
   <line x1="468" y1="127" x2="516" y2="127" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
 
   <rect x="734" y="92" width="134" height="70" rx="9" fill="#f8fafc" stroke="#94a3b8" stroke-width="1.4"/>
-  <text x="801" y="118" font-size="13" font-weight="600" fill="#334155" text-anchor="middle">SQL 字符串 + 参数</text>
-  <text x="801" y="138" font-size="11" fill="#64748b" text-anchor="middle">交给任何驱动执行</text>
-  <line x1="682" y1="127" x2="730" y2="127" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
-
-  <rect x="286" y="212" width="180" height="66" rx="9" fill="#ecfdf5" stroke="#059669" stroke-width="1.6"/>
-  <text x="376" y="237" font-size="13.5" font-weight="700" fill="#047857" text-anchor="middle">DataSource（唯一 IO 边界）</text>
-  <text x="376" y="257" font-size="11.5" fill="#4b5563" text-anchor="middle">MemoryDataSource：事务用快照回滚</text>
-  <text x="376" y="271" font-size="11.5" fill="#4b5563" text-anchor="middle">SqlDataSource：executor 回调，不绑驱动</text>
-  <line x1="376" y1="164" x2="376" y2="208" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
-
-  <rect x="520" y="212" width="348" height="66" rx="9" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-  <text x="694" y="237" font-size="13.5" font-weight="700" fill="#1d4ed8" text-anchor="middle">事务：抛错即回滚（含 raw 写入的迁移表）</text>
-  <text x="694" y="257" font-size="11.5" fill="#4b5563" text-anchor="middle">每个迁移各自一个事务：已提交的不回退，失败的也不记版本号</text>
-  <text x="694" y="271" font-size="11.5" fill="#4b5563" text-anchor="middle">→ 修好后可以直接重跑，不会"以为已经跑过"</text>
-  <line x1="468" y1="245" x2="516" y2="245" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
-
-  <rect x="32" y="330" width="836" height="88" rx="9" fill="#fef2f2" stroke="#dc2626" stroke-width="1.6"/>
-  <text x="450" y="356" font-size="14" font-weight="700" fill="#b91c1c" text-anchor="middle">缓存三件事：getOrSet 是唯一推荐用法</text>
-  <text x="450" y="378" font-size="11.5" fill="#4b5563" text-anchor="middle">击穿 —— 同 key 并发只回源一次（实测 50 并发 → 1 次回源）　|　穿透 —— 空值可选缓存，默认不固化"查不到"</text>
-  <text x="450" y="396" font-size="11.5" fill="#4b5563" text-anchor="middle">雪崩 —— TTL 加 ±10% 抖动，避免同批 key 集体过期　|　LRU —— max 上限自动淘汰最久未用</text>
-  <text x="450" y="412" font-size="11.5" fill="#4b5563" text-anchor="middle">命中 ~0.001ms vs 回源 1.23ms：差的不是百分比，是数量级</text>
-  <line x1="376" y1="280" x2="330" y2="326" stroke="#6b7280" stroke-width="1.6" marker-end="url(#ar)"/>
-
-  <rect x="32" y="452" width="836" height="76" rx="9" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
-  <text x="450" y="478" font-size="14" font-weight="700" fill="#5b21b6" text-anchor="middle">生成器：契约 → entity + repository 骨架</text>
-  <text x="450" y="499" font-size="11.5" fill="#4b5563" text-anchor="middle">只为"被当作响应类型用过"的类型建表 —— 请求 DTO 是传输对象，不该有表</text>
-  <text x="450" y="516" font-size="11.5" fill="#4b5563" text-anchor="middle">骨架给三件套（findById / paginate / create），业务查询由人接管（删掉生成标记即接管）</text>
-</svg>
