@@ -18,22 +18,3 @@ export class GreeterService implements OnApplicationBootstrap, OnModuleDestroy {
 
   constructor(private readonly config: ConfigService) {
     this.greeting = this.config.get<string>('app.greeting', 'Hello');
-    this.appName = this.config.get<string>('app.name', 'nofault');
-  }
-
-  onApplicationBootstrap(): void {
-    this.logger.info('greeter ready', { greeting: this.greeting });
-  }
-
-  onModuleDestroy(): void {
-    this.logger.info('greeter destroyed');
-  }
-
-  greet(name?: string): string {
-    return name ? `${this.greeting}, ${name}!` : `${this.greeting}!`;
-  }
-
-  getAppName(): string {
-    return this.appName;
-  }
-}
