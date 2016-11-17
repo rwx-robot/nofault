@@ -43,3 +43,24 @@ curl -s -X POST http://127.0.0.1:3000/orders \
 ```
 [order-service] migrations applied: 001-create-orders
 [order-service] http listening on 3390
+[order-service] warmed up, generating ids like 887740540580401152
+[order-service] ready in 38ms
+```
+
+## 跑基准测试
+
+```bash
+pnpm bench v0.9.0 --iterations=20000 --report
+```
+
+## 目录导航
+
+```
+packages/micro/src/id.ts          Snowflake（时钟回拨 / 序列号耗尽）
+packages/micro/src/lock.ts        分布式锁（token 校验 / watchdog）
+packages/micro/src/scheduler.ts   cron 解析 + 三种周期
+packages/micro/src/event-bus.ts   发布订阅（错误隔离 / 退订）
+packages/micro/src/microservice.ts 一键装配与生命周期顺序
+examples/v0.9.0-microservice-kit/ 九个版本能力装在一起的示例
+tests/integration/v0.9.0/         端到端
+```
