@@ -16,3 +16,23 @@ pnpm vitest run tests/integration/v0.7.0         # 治理能力接在 HTTP 链�
 pnpm example v0.7.0-resilient-api
 pnpm example v0.7.0-resilient-api PORT=3370
 ```
+
+### 限流（20 桶 / 5 每秒）
+
+```bash
+for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://127.0.0.1:3000/faulty/state; done
+# 前 20 个 200，之后 429
+curl -s -D - -o /dev/null http://127.0.0.1:3000/faulty/state | grep -i retry-after
+```
+
+### 熔断（阈值 3，冷却 3s）
+
+```bash
+curl -s "http://127.0.0.1:3000/faulty/break?mode=down"   # 人为打挂下游
+for i in 1 2 3 4; do curl -s -o /dev/null -w "%{http_code} " http://127.0.0.1:3000/faulty/call; done
+curl -s http://127.0.0.1:3000/faulty/state               # -> open，且 dependencyCalls 不再增长
+
+curl -s "http://127.0.0.1:3000/faulty/break?mode=ok"     # 恢复
+sleep 3.2
+curl -s http://127.0.0.1:3000/faulty/call                # 半开探针成功 -> 200
+curl -s http://127.0.0.1:3000/faulty/state               # -> closed
