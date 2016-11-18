@@ -16,3 +16,20 @@ export function createRouter(greeter: GreeterService): HttpHandler {
 
     if (req.method === 'GET' && path === '/') {
       sendText(res, 200, 'nofault v0.1.0 hello-kernel. Try GET /hello?name=world or GET /health\n');
+      return true;
+    }
+
+    if (req.method === 'GET' && path === '/health') {
+      sendJson(res, 200, { status: 'ok', app: greeter.getAppName(), uptime: Math.round(process.uptime()) });
+      return true;
+    }
+
+    if (req.method === 'GET' && path === '/hello') {
+      const name = url.searchParams.get('name') ?? undefined;
+      sendJson(res, 200, { message: greeter.greet(name), app: greeter.getAppName() });
+      return true;
+    }
+
+    return false;
+  };
+}
