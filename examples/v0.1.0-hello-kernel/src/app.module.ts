@@ -9,3 +9,13 @@ import { GreeterService } from './greeter.service';
  * `ConfigModule.forRoot()` 返回动态模块并注册为全局模块，
  * 因此 `GreeterService` 无需再 import 就能注入 `ConfigService`。
  */
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      path: process.env.NOFAULT_CONFIG_PATH ?? resolve(__dirname, '../config/app.yaml'),
+    }),
+  ],
+  providers: [GreeterService],
+  exports: [GreeterService],
+})
+export class AppModule {}
