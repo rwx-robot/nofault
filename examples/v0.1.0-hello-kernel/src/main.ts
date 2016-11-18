@@ -12,15 +12,3 @@ async function bootstrap(): Promise<void> {
   const greeter = await app.get(GreeterService);
 
   app.use(createRouter(greeter));
-  app.enableShutdownHooks();
-
-  const port = Number(process.env.PORT ?? 3000);
-  const { port: actualPort } = await app.listen(port);
-
-  logger.info('server started', { port: actualPort, pid: process.pid });
-}
-
-void bootstrap().catch((err: unknown) => {
-  logger.error('bootstrap failed', undefined, err);
-  process.exit(1);
-});
