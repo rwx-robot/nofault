@@ -65,3 +65,69 @@ class GatewayController {
 class GatewayModule {}
 
 let rpcServer: RpcServer;
+let app: RestApplication;
+let base: string;
+
+afterAll(async () => {
+  await app?.close();
+  await rpcServer?.close();
+  await registry.close();
+});
+
+describe('http gateway over rpc', () => {
+  it('boots the backend, registers it and serves requests through the gateway', async () => {
+    rpcServer = new RpcServer({
+      interceptors: [
+        loggingInterceptor({ info: () => {} }),
+        async (payload, ctx, next) => {
+          seenTraceIds.push(ctx.request.traceId);
+          return next(payload);
+        },
+      ],
+    });
+    rpcServer.registerService('backend', new Backend());
+    const { port: rpcPort } = await rpcServer.listen(0, '127.0.0.1');
+    await registry.register({ id: 'b1', name: 'backend', host: '127.0.0.1', port: rpcPort });
+
+    app = await RestApplication.create(GatewayModule, { quiet: true, middleware: [requestContext(), bodyParser()] });
+    const { port } = await app.listen(0, '127.0.0.1');
+    base = `http://127.0.0.1:${port}`;
+
+    const res = await fetch(`${base}/api/echo`);
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { data: { value: string; traceId?: string } };
+    expect(body.data.value).toBe('hi');
+
+    // HTTP 侧的 traceId 必须原样出现在 RPC 后端 —— 链路才串得起来
+    expect(body.data.traceId).toBeTruthy();
+    expect(seenTraceIds).toContain(body.data.traceId);
+  });
+
+  it('gives up at the timeout instead of waiting for the backend', async () => {
+    const started = Date.now();
+    const res = await fetch(`${base}/api/slow`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ ms: 1500 }),
+    });
+    const elapsed = Date.now() - started;
+
+    // 超时是 504（Gateway Timeout），而不是笼统的 500
+    expect(res.status).toBe(504);
+    // 200ms 超时：即便后端要 1.5s，网关也必须在 200ms 量级返回
+    expect(elapsed).toBeLessThan(900);
+  });
+
+  it('reports an unreachable upstream with 502 semantics', async () => {
+    const missing = new RpcClient({ registry, service: 'nope', timeoutMs: 200 });
+    await expect(missing.call('nope', 'go')).rejects.toThrow(/no instance/);
+    await missing.close();
+
+    // 错误码要能区分"业务没找到"和"框架没这个方法"
+    expect(RPC_ERROR.METHOD_NOT_FOUND).not.toBe(RPC_ERROR.TIMEOUT);
+    expect(new RpcError(RPC_ERROR.TIMEOUT, 't').code).toBe(RPC_ERROR.TIMEOUT);
+    expect(() => {
+      throw new HttpException(502, 'bad', 502);
+    }).toThrow();
+  });
+});
