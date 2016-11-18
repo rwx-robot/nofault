@@ -86,3 +86,89 @@ describe('v0.3.0 runtime-basics (integration)', () => {
 
   it('binds the current request context into the REQUEST-scoped provider', async () => {
     const c = await get<ContextPayload>(`${base}/api/runtime/context`);
+    // v0.3.0 最容易出错的地方：请求级 Provider 与 handler 必须是同一个上下文
+    expect(c.scopeRequestId).toBe(c.requestId);
+  });
+
+  it('shares the REQUEST-scoped instance within one request and not across requests', async () => {
+    const first = await get<{ instanceNo: number; notes: string[] }>(`${base}/api/runtime/notes`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ note: 'first' }),
+    });
+    expect(first.notes).toEqual(['first']);
+
+    const second = await get<{ instanceNo: number; notes: string[] }>(`${base}/api/runtime/notes`, {
+      method: 'POST',
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify({ note: 'second' }),
+    });
+    expect(second.notes).toEqual(['second']);
+    expect(second.instanceNo).toBeGreaterThan(first.instanceNo);
+  });
+
+  it('generates a fresh trace when no traceparent is sent', async () => {
+    const t = await get<{ traceId: string; parentSpanId: string | null }>(`${base}/api/runtime/trace`);
+    expect(t.traceId).toMatch(/^[0-9a-f]{32}$/);
+    expect(t.parentSpanId).toBeNull();
+  });
+
+  it('inherits traceId from an upstream traceparent header', async () => {
+    const res = await fetch(`${base}/api/runtime/trace`, {
+      headers: { traceparent: '00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01' },
+    });
+    const body = (await res.json()) as {
+      data: { traceId: string; parentSpanId: string | null; sampled: boolean };
+    };
+    expect(body.data.traceId).toBe('4bf92f3577b34da6a3ce929d0e0e4736');
+    expect(body.data.parentSpanId).toBe('00f067aa0ba902b7');
+    expect(body.data.sampled).toBe(true);
+  });
+
+  it('exposes x-request-id on the response', async () => {
+    const res = await fetch(`${base}/api/runtime/context`);
+    expect(res.headers.get('x-request-id')).toMatch(/^req_/);
+  });
+
+  it('serves liveness and readiness probes', async () => {
+    const live = await fetch(`${base}/healthz`);
+    expect(live.status).toBe(200);
+    const liveBody = (await live.json()) as { status: string; checks: Array<{ name: string }> };
+    expect(liveBody.status).toBe('ok');
+
+    const ready = await fetch(`${base}/readyz`);
+    expect(ready.status).toBe(200);
+    const readyBody = (await ready.json()) as { status: string; uptimeSec: number };
+    expect(readyBody.status).toBe('ok');
+    expect(readyBody.uptimeSec).toBeGreaterThanOrEqual(0);
+  });
+
+  it('returns 503 from readiness when the app is not ready', async () => {
+    app.markNotReady();
+    const ready = await fetch(`${base}/readyz`);
+    expect(ready.status).toBe(503);
+    app.markReady();
+    expect((await fetch(`${base}/readyz`)).status).toBe(200);
+  });
+
+  it('hot-reloads configuration when the file changes', async () => {
+    const before = await get<{ betaEnabled: boolean; greeting: string }>(`${base}/api/runtime/config`);
+    expect(before.betaEnabled).toBe(false);
+
+    writeFileSync(
+      configFile,
+      'app:\n  name: runtime-basics\n  tenant: acme\nfeature:\n  betaEnabled: true\n  greeting: Hot reloaded!\n',
+      'utf8',
+    );
+
+    const deadline = Date.now() + 3000;
+    let after = before;
+    while (Date.now() < deadline) {
+      after = await get<{ betaEnabled: boolean; greeting: string }>(`${base}/api/runtime/config`);
+      if (after.betaEnabled) break;
+      await sleep(50);
+    }
+    expect(after.betaEnabled).toBe(true);
+    expect(after.greeting).toBe('Hot reloaded!');
+  });
+});
