@@ -1,0 +1,28 @@
+{
+  "name": "@nofault/resilience",
+  "version": "0.7.0",
+  "description": "nofault resilience: token bucket rate limiter, circuit breaker, bulkhead and exponential backoff with jitter",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@nofault/core": "workspace:*",
+    "@nofault/rest": "workspace:*"
+  }
+}

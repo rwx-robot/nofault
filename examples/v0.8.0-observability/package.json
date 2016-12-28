@@ -1,0 +1,19 @@
+{
+  "name": "@nofault/example-v080-observability",
+  "version": "0.8.0",
+  "private": true,
+  "description": "v0.8.0 示例：每个请求一个 Span（含子调用）+ Prometheus 指标导出",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nofault/context": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "@nofault/telemetry": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
+}

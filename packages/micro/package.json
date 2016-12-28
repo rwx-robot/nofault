@@ -1,0 +1,26 @@
+{
+  "name": "@nofault/micro",
+  "version": "0.9.0",
+  "description": "nofault microservice kit: snowflake ids, distributed locks, scheduling, event bus and one-call bootstrap",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@nofault/context": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*"
+  }
+}

@@ -1,0 +1,91 @@
+/**
+ * v0.8.0 端到端：每个请求一个 Span，子调用挂在同一条 trace 上，指标落到 Prometheus 文本。
+ *
+ * 重点验证"数据真的记对了"：
+ * 1. 父子 Span 共享 traceId（能拼出调用树）
+ * 2. 失败请求被记为 500（而不是默认的 200）
+ * 3. Prometheus 输出能被解析（桶是累积的）
+ */
+import { afterAll, describe, expect, it } from 'vitest';
+import 'reflect-metadata';
+import { Module } from '@nofault/core';
+import { Controller, Get, RestApplication } from '@nofault/rest';
+import { InMemoryExporter, MetricRegistry, Tracer, observability } from '@nofault/telemetry';
+
+const exporter = new InMemoryExporter();
+const tracer = new Tracer(exporter, () => true, 1);
+const registry = new MetricRegistry();
+
+@Controller('/api')
+class ApiController {
+  @Get('/work')
+  async work(): Promise<{ ok: true }> {
+    await tracer.trace('child-work', async () => {
+      await new Promise((resolve) => setTimeout(resolve, 20));
+    });
+    return { ok: true };
+  }
+
+  @Get('/boom')
+  async boom(): Promise<never> {
+    throw new Error('nope');
+  }
+}
+
+@Module({ controllers: [ApiController] })
+class AppModule {}
+
+let app: RestApplication;
+let base: string;
+
+afterAll(async () => {
+  await app?.close();
+});
+
+describe('observability over http', () => {
+  it('creates a server span with a nested child on the same trace', async () => {
+    app = await RestApplication.create(AppModule, {
+      quiet: true,
+      middleware: [observability({ tracer, metrics: registry }).use],
+    });
+    const { port } = await app.listen(0, '127.0.0.1');
+    base = `http://127.0.0.1:${port}`;
+
+    const res = await fetch(`${base}/api/work`);
+    expect(res.status).toBe(200);
+    // traceId 回给客户端，便于把用户投诉和日志对上
+    expect(res.headers.get('x-trace-id')).toBeTruthy();
+
+    await tracer.flush();
+    const server = exporter.byName('GET /api/work')[0]!;
+    const child = exporter.byName('child-work')[0]!;
+    expect(child.traceId).toBe(server.traceId);
+    expect(child.parentSpanId).toBe(server.spanId);
+  });
+
+  it('records failures as 500, not the default 200', async () => {
+    const res = await fetch(`${base}/api/boom`);
+    expect(res.status).toBe(500);
+    await tracer.flush();
+
+    const failed = exporter.byName('GET /api/boom')[0]!;
+    expect(failed.status).toBe('error');
+  });
+
+  it('exposes metrics in prometheus text format', async () => {
+    const text = registry.toPrometheus();
+    expect(text).toContain('http_requests_total{route="/api/work",status="200"}');
+    expect(text).toContain('http_requests_total{route="/api/boom",status="500"}');
+    expect(text).toContain('http_request_errors_total{route="/api/boom",status="500"}');
+    expect(text).toContain('http_request_duration_ms_count');
+
+    // 桶必须是**累积**的：le 越大，计数只能增加
+    const buckets = [...text.matchAll(/http_request_duration_ms_bucket\{le="(\d+)",route="\/api\/work",status="200"\} (\d+)/g)].map(
+      (m) => Number(m[2]),
+    );
+    expect(buckets.length).toBeGreaterThan(1);
+    for (let i = 1; i < buckets.length; i++) {
+      expect(buckets[i]!).toBeGreaterThanOrEqual(buckets[i - 1]!);
+    }
+  });
+});

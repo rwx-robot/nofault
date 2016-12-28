@@ -1,0 +1,21 @@
+{
+  "name": "@nofault/parser",
+  "version": "0.4.0",
+  "description": "nofault API contract parsers: .api (text DSL syntax) and TypeScript contract files, both producing the same ApiSpec",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "dependencies": {
+    "@nofault/dsl": "workspace:*"
+  }
+}

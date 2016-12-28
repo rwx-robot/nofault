@@ -1,0 +1,19 @@
+{
+  "name": "@nofault/example-v030-runtime-basics",
+  "version": "0.3.0",
+  "private": true,
+  "description": "v0.3.0 示例：请求上下文 + REQUEST 作用域 + 配置热更新 + traceId 日志 + 健康探针",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nofault/config": "workspace:*",
+    "@nofault/context": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
+}

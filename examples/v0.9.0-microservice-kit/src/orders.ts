@@ -1,0 +1,168 @@
+/**
+ * 用 @nofault/micro 提供的原语写业务：Snowflake ID、分布式锁、事件总线。
+ *
+ * 这些能力在前面的版本里都没有，以前要么自己写、要么直接省掉
+ * （省掉的后果通常是"上线三个月后才在某个偶发场景炸掉"）。
+ */
+import { Injectable, Module } from '@nofault/core';
+import {
+  Column,
+  Entity,
+  InjectRepository,
+  MemoryDataSource,
+  OrmModule,
+  PrimaryGeneratedColumn,
+  Repository,
+} from '@nofault/orm';
+import { MemoryCache } from '@nofault/cache';
+import { EventBus, Snowflake, DistributedLock, MemoryLockBackend } from '@nofault/micro';
+import { Body, Controller, Get, Param, Post, HttpException, Ctx, RestContext } from '@nofault/rest';
+
+export const TOPIC_ORDER_CREATED = 'order.created';
+
+@Entity({ table: 'orders' })
+export class Order {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  /** 业务主键走 Snowflake：对外暴露的 ID 不能是自增数字 */
+  @Column({ name: 'public_id' })
+  publicId!: string;
+
+  @Column({ name: 'amount', type: 'int' })
+  amount!: number;
+
+  @Column({ name: 'status' })
+  status!: string;
+}
+
+export interface OrderView {
+  id: string;
+  amount: number;
+  status: string;
+}
+
+@Injectable()
+export class OrderService {
+  constructor(
+    @InjectRepository(Order) private readonly repo: Repository<Order>,
+    private readonly cache: MemoryCache,
+    private readonly events: EventBus,
+    private readonly snowflake: Snowflake,
+    private readonly lock: DistributedLock,
+  ) {}
+
+  async create(amount: number): Promise<OrderView> {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      // 参数错误要在最外层就挡住：它不是依赖故障，不该触发熔断
+      throw new HttpException(400, 'amount must be a positive number', 400);
+    }
+
+    const order = new Order();
+    order.publicId = this.snowflake.nextIdString();
+    order.amount = amount;
+    order.status = 'created';
+
+    await this.repo.save(order);
+    await this.events.publish(TOPIC_ORDER_CREATED, { id: order.publicId, amount });
+
+    const view = { id: order.publicId, amount, status: 'created' };
+    await this.cache.set(`order:${order.publicId}`, view, { ttl: 60_000 });
+    return view;
+  }
+
+  async find(publicId: string): Promise<OrderView> {
+    const cached = await this.cache.get<OrderView>(`order:${publicId}`);
+    if (cached !== undefined) return cached;
+
+    // findOne 按**实体属性**过滤，不是按列名
+    const found = await this.repo.findOne({ publicId });
+    if (!found) throw new HttpException(404, `order ${publicId} not found`, 404);
+
+    const view = { id: found.publicId, amount: found.amount, status: found.status };
+    await this.cache.set(`order:${publicId}`, view, { ttl: 60_000 });
+    return view;
+  }
+
+  /**
+   * 结算：用分布式锁保证同一笔订单只会被结算一次。
+   *
+   * 没有这把锁时，用户连点两次就会结算两遍——而且两次几乎同时发生，
+   * "先查再改"的写法根本挡不住，因为两次查到的都是"未结算"。
+   */
+  async settle(publicId: string): Promise<OrderView> {
+    return this.lock.run(async () => {
+      // 读-判-改必须整体在锁里：分段加锁等于没加
+      const current = await this.find(publicId);
+      if (current.status !== 'created') {
+        throw new HttpException(409, 'order is already settled', 409);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 20));
+
+      const order = await this.repo.findOne({ publicId });
+      await this.repo.update(order!, { status: 'settled' });
+      await this.cache.delete(`order:${publicId}`);
+      return { ...current, status: 'settled' };
+    });
+  }
+}
+
+@Controller('/orders')
+export class OrderController {
+  constructor(
+    private readonly service: OrderService,
+    private readonly events: EventBus,
+  ) {}
+
+  @Post('/')
+  async create(@Body() body: { amount: number }): Promise<OrderView> {
+    return this.service.create(body.amount);
+  }
+
+  @Get('/:id')
+  async get(@Param('id') id: string): Promise<OrderView> {
+    return this.service.find(id);
+  }
+
+  @Post('/:id/settle')
+  async settle(@Param('id') id: string): Promise<OrderView> {
+    return this.service.settle(id);
+  }
+
+  /** 事件总线的订阅者数量也能查）——用来验证解耦确实生效 */
+  @Get('/_events')
+  async eventStats(@Ctx() ctx: RestContext): Promise<void> {
+    ctx.response.status(200).json({ code: 0, data: this.events.stats(), message: 'ok' });
+  }
+}
+
+/** 共享单例：这些实例在 main.ts 里也要用到，所以绝不能在 Module 里另建一份 */
+export const source = new MemoryDataSource();
+export const cache = new MemoryCache({ max: 1000 });
+export const events = new EventBus({
+  onError: (err, meta) => console.error(`[event ${meta.name}] ${String(err)}`),
+});
+export const snowflake = new Snowflake({ workerId: 1, datacenterId: 1 });
+export const settleLock = new DistributedLock('order-settle', new MemoryLockBackend(), {
+  ttlMs: 5000,
+});
+
+@Module({
+  imports: [
+    // 数据源 + Repository Provider：
+    // 少了 forRoot，容器会在启动阶段就报 UnknownDependencyError，
+    // 而不是拖到第一次请求才炸
+    OrmModule.forRoot({ dataSource: source }),
+    OrmModule.forFeature([Order]),
+  ],
+  controllers: [OrderController],
+  providers: [
+    OrderService,
+    { provide: MemoryDataSource, useValue: source },
+    { provide: MemoryCache, useValue: cache },
+    { provide: EventBus, useValue: events },
+    { provide: Snowflake, useValue: snowflake },
+    { provide: DistributedLock, useValue: settleLock },
+  ],
+})
+export class OrderModule {}

@@ -1,0 +1,47 @@
+import 'reflect-metadata';
+import { Module } from '@nofault/core';
+import { createLogger, LogLevel } from '@nofault/logger';
+import { RestApplication, bodyParser, requestContext } from '@nofault/rest';
+import { rateLimit, bulkhead } from '@nofault/resilience';
+import { FaultyController, dependency } from './faulty.controller';
+
+const logger = createLogger({ context: 'resilient-api', level: LogLevel.INFO });
+
+@Module({ controllers: [FaultyController] })
+class AppModule {}
+
+async function bootstrap(): Promise<void> {
+  const app = await RestApplication.create(AppModule, {
+    name: 'resilient-api',
+    logger,
+    middleware: [
+      requestContext(),
+      bodyParser(),
+      // 顺序很重要：限流在最外层，舱壁在内层
+      // 反过来的话，被限流的请求也会占着并发配额
+      rateLimit({ capacity: 20, refillPerSecond: 5 }),
+      bulkhead({ concurrency: 5, queueLimit: 10, waitTimeoutMs: 200 }).use,
+    ],
+  });
+
+  app.enableShutdownHooks();
+  const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
+  app.markReady();
+
+  logger.info('resilient api ready', { port, hint: 'curl /faulty/call, /faulty/state' });
+  for (const route of app.getRoutes()) {
+    logger.info(`  ${route.method.padEnd(6)} ${route.path}`);
+  }
+
+  // 演示：让下游在前 8 秒处于故障状态，之后恢复
+  setTimeout(() => {
+    logger.info('dependency is now healthy again');
+    dependency.setMode('ok');
+  }, 8000);
+}
+
+void bootstrap().catch((err: unknown) => {
+  logger.error('bootstrap failed', undefined, err);
+  if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+  process.exit(1);
+});

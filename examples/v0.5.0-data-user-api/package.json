@@ -1,0 +1,24 @@
+{
+  "name": "@nofault/example-v050-data-user-api",
+  "version": "0.5.0",
+  "private": true,
+  "description": "v0.5.0 示例：契约生成数据层 + Repository + 事务 + 迁移 + 缓存",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "generate": "nofaultctl generate api api/user.api.ts --out src --root-module --with-orm"
+  },
+  "dependencies": {
+    "@nofault/cache": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/orm": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@nofault/cli": "workspace:*",
+    "@nofault/dsl": "workspace:*"
+  }
+}
