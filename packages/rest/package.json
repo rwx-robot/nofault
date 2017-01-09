@@ -1,2 +1,4 @@
 {
   "name": "@nofault/rest",
+  "version": "0.2.0",
+  "description": "nofault HTTP layer: radix routing, decorator controllers, middleware pipeline, validation, exception filters",
