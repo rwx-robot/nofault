@@ -2,7 +2,7 @@
 
 > 严格遵循 **Node.js / NestJS 生态规范**的 Node.js 微服务框架，参考行业最佳实践设计。
 
-**当前版本：v0.1.0（内核雏形）**
+**当前版本：v0.2.0（HTTP 全栈）**
 
 ---
 
@@ -10,13 +10,11 @@
 
 nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约定优于配置、内置服务治理。
 
-| 能力 | nofault |
-| --- | --- |
-| 结构化日志 | `@nofault/logger`（v0.1.0） |
-| 配置加载与热更新 | `@nofault/config`（v0.1.0） |
-| 代码生成 | `nofaultctl`（v0.4.0 计划） |
-| Web 全栈 | `@nofault/rest`（v0.2.0 计划） |
-| RPC | `@nofault/rpc`（v0.6.0 计划） |
+补齐 Web 层：Radix 路由、装饰器、中间件链、DTO 校验、统一错误响应。
+
+## 架构概览
+
+_见下方架构文档_
 
 ## 快速开始
 
@@ -24,41 +22,14 @@ nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约�
 pnpm install
 pnpm build
 pnpm test
-pnpm example v0.1.0-hello-kernel
+pnpm example v0.2.0-rest-user-api
 ```
 
-- 运行/使用说明 → [`docs/v0.1.0/RUNNING.md`](./docs/v0.1.0/RUNNING.md) · [`docs/v0.1.0/USAGE.md`](./docs/v0.1.0/USAGE.md)
-- 架构图 → [`docs/v0.1.0/ARCHITECTURE.md`](./docs/v0.1.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.1.0/CHANGELOG.md`](./docs/v0.1.0/CHANGELOG.md)
-- 压测报告 → [`benchmarks/v0.1.0/REPORT.md`](./benchmarks/v0.1.0/REPORT.md)
+- 运行/使用说明 → [`docs/v0.2.0/RUNNING.md`](./docs/v0.2.0/RUNNING.md)
+- 架构说明 → [`docs/v0.2.0/ARCHITECTURE.md`](./docs/v0.2.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.2.0/CHANGELOG.md`](./docs/v0.2.0/CHANGELOG.md)
+- 压测报告 → [`benchmarks/v0.2.0/REPORT.md`](./benchmarks/v0.2.0/REPORT.md)
 
-## 最小的例子
-
-```ts
-import 'reflect-metadata';
-import { Injectable, Module } from '@nofault/core';
-import { createHttpApplication } from '@nofault/http';
-
-@Injectable()
-class GreeterService {
-  greet(name = 'world') {
-    return `Hello, ${name}!`;
-  }
-}
-
-@Module({ providers: [GreeterService] })
-class AppModule {}
-
-const app = await createHttpApplication(AppModule);
-const greeter = await app.get(GreeterService);
-
-app.use((req, res) => {
-  res.end(greeter.greet());
-  return true;
-});
-
-await app.listen(3000);
-```
 
 ## 已发布的包
 
@@ -68,22 +39,23 @@ await app.listen(3000);
 | `@nofault/config` | v0.1.0 | 配置加载与热更新 |
 | `@nofault/logger` | v0.1.0 | 分级结构化日志 |
 | `@nofault/http` | v0.1.0 | 底层 HTTP 适配 |
+| `@nofault/rest` | v0.2.0 | 路由、装饰器、中间件、DTO 校验 |
 
 ## 版本路线
 
-| Tag | 年 | 主题 |
-| --- | --- | --- |
-| v0.1.0 | 2016 | 内核雏形 |
-| v0.2.0 | 2017 | HTTP 全栈 |
-| v0.3.0 | 2018 | 运行时基座 |
-| v0.4.0 | 2019 | 代码生成 v1 |
-| v0.5.0 | 2020 | 数据访问层 |
-| v0.6.0 | 2021 | RPC 框架 |
-| v0.7.0 | 2022 | 服务治理 |
-| v0.8.0 | 2023 | 可观测性 |
-| v0.9.0 | 2024 | 微服务全家桶 |
-| v0.10.0 | 2025 | 工程化工具链 |
-| v1.0.0 | 2026 | 全量对齐 + 生产增强 |
+| Tag | 年 | 主题 | 状态 |
+| --- | --- | --- | --- |
+| v0.1.0 | 2016 | 内核雏形 | ✅ |
+| v0.2.0 | 2017 | HTTP 全栈 | ✅ |
+| v0.10.0 | 2025 | 工程化工具链 | ✅ |
+| v0.3.0 | 2018 | 运行时基座 | 计划 |
+| v0.4.0 | 2019 | 代码生成 v1 | 计划 |
+| v0.5.0 | 2020 | 数据访问层 | 计划 |
+| v0.6.0 | 2021 | RPC 框架 | 计划 |
+| v0.7.0 | 2022 | 服务治理 | 计划 |
+| v0.8.0 | 2023 | 可观测性 | 计划 |
+| v0.9.0 | 2024 | 微服务全家桶 | 计划 |
+| v1.0.0 | 2026 | 全量对齐 + 生产增强 | 计划 |
 
 ## 规范红线
 
