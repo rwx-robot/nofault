@@ -17,3 +17,21 @@ export enum SegmentType {
 
 export interface RouteMatch<T> {
   handler: T;
+  /** 路径参数，如 `{ id: '42' }` */
+  params: Record<string, string>;
+  /** 注册时的原始路径模板，如 `/users/:id` */
+  pattern: string;
+}
+
+interface RouteNode<T> {
+  /** 本节点代表的一段路径文本（静态节点不含 `/`；参数节点为参数名） */
+  edge: string;
+  type: SegmentType;
+  /** 静态子节点，按 edge 首字符索引 */
+  children: Map<string, RouteNode<T>>;
+  /** 参数子节点（同名参数只允许一个） */
+  paramChild?: RouteNode<T>;
+  /** 通配子节点 */
+  wildcardChild?: RouteNode<T>;
+  handler?: T;
+  /** 完整路径模板，仅终结节点有值 */
