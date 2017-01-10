@@ -21,3 +21,5 @@
   "dependencies": {
     "@nofault/context": "workspace:*",
     "@nofault/core": "workspace:*",
+    "@nofault/http": "workspace:*",
+    "@nofault/logger": "workspace:*",
