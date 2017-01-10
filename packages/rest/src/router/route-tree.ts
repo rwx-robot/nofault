@@ -90,3 +90,22 @@ export class RouteTree<T> {
     const normalized = '/' + segments.join('/');
     const existing = this.patterns.get(normalized);
     if (existing !== undefined) {
+      throw new RouteConflictError(pattern, existing);
+    }
+    this.patterns.set(normalized, pattern);
+
+    let cur = this.root;
+    for (let i = 0; i < segments.length; i++) {
+      const seg = segments[i]!;
+
+      // 通配段：`*` 用默认参数名 wildcard，`*name` 可自定义（如 `/static/*rest`）
+      if (seg.startsWith('*')) {
+        const name = seg.length > 1 ? seg.slice(1) : WILDCARD_PARAM;
+        if (!isIdentifier(name)) {
+          throw new RouteConflictError(pattern, `<invalid wildcard name "${name}">`);
+        }
+        if (i !== segments.length - 1) {
+          /**
+           * 通配段会吃掉剩余全部路径，它后面的任何子路由**永远不可能命中**。
+           *
+           * 这类"注册成功但永远 404"是最难排查的一类问题：路由表里看得到，
