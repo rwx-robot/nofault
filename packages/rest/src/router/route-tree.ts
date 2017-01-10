@@ -109,3 +109,21 @@ export class RouteTree<T> {
            * 通配段会吃掉剩余全部路径，它后面的任何子路由**永远不可能命中**。
            *
            * 这类"注册成功但永远 404"是最难排查的一类问题：路由表里看得到，
+           * 请求却打不到。宁可在注册期就报错，也不要留一个静默失效的路由。
+           */
+          throw new RouteConflictError(pattern, '<unreachable: segments after wildcard>');
+        }
+        if (cur.wildcardChild && cur.wildcardChild.paramName !== name) {
+          throw new RouteConflictError(pattern, `<*${cur.wildcardChild.paramName}>`);
+        }
+        cur.wildcardChild ??= {
+          edge: seg,
+          type: SegmentType.WILDCARD,
+          children: new Map(),
+          paramName: name,
+        };
+        cur = cur.wildcardChild;
+        continue;
+      }
+
+      if (seg.startsWith(':')) {
