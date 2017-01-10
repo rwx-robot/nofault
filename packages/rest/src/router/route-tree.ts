@@ -54,3 +54,21 @@ export class RouteConflictError extends Error {
 const WILDCARD_PARAM = 'wildcard';
 
 const IDENTIFIER = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
+
+function isIdentifier(name: string): boolean {
+  return IDENTIFIER.test(name);
+}
+
+function splitPath(path: string): string[] {
+  return path.split('/').filter((s) => s.length > 0);
+}
+
+function commonPrefixLength(a: string, b: string): number {
+  const n = Math.min(a.length, b.length);
+  let i = 0;
+  while (i < n && a[i] === b[i]) i++;
+  return i;
+}
+
+/**
+ * 单棵路由树（一个 HTTP method 对应一棵）。
