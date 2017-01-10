@@ -35,3 +35,22 @@ interface RouteNode<T> {
   wildcardChild?: RouteNode<T>;
   handler?: T;
   /** 完整路径模板，仅终结节点有值 */
+  pattern?: string;
+  /** 参数名（仅参数节点） */
+  paramName?: string;
+}
+
+export class RouteConflictError extends Error {
+  constructor(pattern: string, existing: string) {
+    super(
+      `Route conflict: cannot register "${pattern}", ` +
+        `it collides with the already registered "${existing}".`,
+    );
+    this.name = 'RouteConflictError';
+  }
+}
+
+/** 未命名的通配段 `*` 默认落在这个参数名下（保持既有行为） */
+const WILDCARD_PARAM = 'wildcard';
+
+const IDENTIFIER = /^[A-Za-z_$][A-Za-z0-9_$]*$/;
