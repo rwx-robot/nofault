@@ -19,3 +19,5 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "@nofault/context": "workspace:*",
+    "@nofault/core": "workspace:*",
