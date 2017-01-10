@@ -72,3 +72,21 @@ function commonPrefixLength(a: string, b: string): number {
 
 /**
  * 单棵路由树（一个 HTTP method 对应一棵）。
+ */
+export class RouteTree<T> {
+  private readonly root: RouteNode<T> = {
+    edge: '',
+    type: SegmentType.STATIC,
+    children: new Map(),
+  };
+
+  private readonly patterns = new Map<string, string>();
+
+  /** 注册路由 */
+  add(pattern: string, handler: T): void {
+    const segments = splitPath(pattern);
+
+    // 归一化后的模板，用于冲突检测与去重
+    const normalized = '/' + segments.join('/');
+    const existing = this.patterns.get(normalized);
+    if (existing !== undefined) {
