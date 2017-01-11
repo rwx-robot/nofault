@@ -256,3 +256,21 @@ export class RouteTree<T> {
 function withReplacedSegment(segments: string[], index: number, value: string): string[] {
   const copy = segments.slice();
   copy[index] = value;
+  return copy;
+}
+
+function restoreParam(params: Record<string, string>, key: string, prev: string | undefined): void {
+  if (prev === undefined) delete params[key];
+  else params[key] = prev;
+}
+
+/**
+ * 多方法路由表：`RouteTable` = method → RouteTree。
+ *
+ * 与通行实现一致：**按 method 分树**，而不是在一棵树上再判断 method。
+ */
+export class RouteTable<T> {
+  private readonly trees = new Map<string, RouteTree<T>>();
+  private readonly allowed = new Map<string, Set<string>>();
+
+  add(method: string, pattern: string, handler: T): void {
