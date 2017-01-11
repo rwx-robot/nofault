@@ -219,3 +219,22 @@ export class RouteTree<T> {
       const nextSegments = rest === '' ? segments : withReplacedSegment(segments, index, rest);
       const nextIndex = rest === '' ? index + 1 : index;
       const res = this.walk(child, nextSegments, nextIndex, params);
+      if (res) return res;
+    }
+
+    // 2) 参数段
+    if (node.paramChild) {
+      const prev = params[node.paramChild.paramName!];
+      params[node.paramChild.paramName!] = decodeURIComponent(seg);
+      const res = this.walk(node.paramChild, segments, index + 1, params);
+      if (res) return res;
+      restoreParam(params, node.paramChild.paramName!, prev);
+    }
+
+    // 3) 通配段：吃掉剩余全部
+    if (node.wildcardChild) {
+      const wc = node.wildcardChild;
+      if (wc.handler !== undefined) {
+        params[wc.paramName ?? WILDCARD_PARAM] = segments.slice(index).map(decodeURIComponent).join('/');
+        return wc;
+      }
