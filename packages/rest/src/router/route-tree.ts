@@ -311,3 +311,20 @@ export class RouteTable<T> {
     for (const [method, tree] of this.trees) {
       if (tree.match(path)) out.add(method);
     }
+    if (out.has('GET')) out.add('HEAD');
+    return [...out].sort();
+  }
+
+  listRoutes(): Array<{ method: string; pattern: string }> {
+    const out: Array<{ method: string; pattern: string }> = [];
+    for (const [method, tree] of this.trees) {
+      for (const pattern of tree.listPatterns()) out.push({ method, pattern });
+    }
+    return out.sort((a, b) => a.pattern.localeCompare(b.pattern) || a.method.localeCompare(b.method));
+  }
+
+  get size(): number {
+    return [...this.trees.values()].reduce((s, t) => s + t.size, 0);
+  }
+}
+
