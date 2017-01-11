@@ -182,3 +182,22 @@ export class RouteTree<T> {
       type: SegmentType.STATIC,
       children: new Map(),
     };
+    child.edge = child.edge.slice(common);
+    mid.children.set(child.edge[0]!, child);
+    node.children.set(key, mid);
+
+    const rest = segment.slice(common);
+    if (rest === '') return mid;
+    return this.insertStatic(mid, rest);
+  }
+
+  /** 匹配路径；未命中返回 undefined */
+  match(path: string): RouteMatch<T> | undefined {
+    const segments = splitPath(path);
+    const params: Record<string, string> = {};
+    const found = this.walk(this.root, segments, 0, params);
+    if (!found) return undefined;
+    return { handler: found.handler!, params, pattern: found.pattern ?? path };
+  }
+
+  private walk(
