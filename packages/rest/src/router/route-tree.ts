@@ -127,3 +127,22 @@ export class RouteTree<T> {
       }
 
       if (seg.startsWith(':')) {
+        const name = seg.slice(1);
+        if (cur.paramChild && cur.paramChild.paramName !== name) {
+          throw new RouteConflictError(pattern, `<:${cur.paramChild.paramName}>`);
+        }
+        cur.paramChild ??= {
+          edge: seg,
+          type: SegmentType.PARAM,
+          children: new Map(),
+          paramName: name,
+        };
+        cur = cur.paramChild;
+        continue;
+      }
+      cur = this.insertStatic(cur, seg);
+    }
+
+    if (cur.handler !== undefined) {
+      throw new RouteConflictError(pattern, cur.pattern ?? normalized);
+    }
