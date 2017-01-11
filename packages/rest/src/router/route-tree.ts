@@ -238,3 +238,21 @@ export class RouteTree<T> {
         params[wc.paramName ?? WILDCARD_PARAM] = segments.slice(index).map(decodeURIComponent).join('/');
         return wc;
       }
+    }
+
+    return undefined;
+  }
+
+  /** 已注册的路由模式（调试与文档生成用） */
+  listPatterns(): string[] {
+    return [...this.patterns.values()];
+  }
+
+  get size(): number {
+    return this.patterns.size;
+  }
+}
+
+function withReplacedSegment(segments: string[], index: number, value: string): string[] {
+  const copy = segments.slice();
+  copy[index] = value;
