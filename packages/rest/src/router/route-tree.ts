@@ -274,3 +274,22 @@ export class RouteTable<T> {
   private readonly allowed = new Map<string, Set<string>>();
 
   add(method: string, pattern: string, handler: T): void {
+    const m = method.toUpperCase();
+    let tree = this.trees.get(m);
+    if (!tree) {
+      tree = new RouteTree<T>();
+      this.trees.set(m, tree);
+    }
+    tree.add(pattern, handler);
+
+    const set = this.allowed.get(pattern) ?? new Set<string>();
+    set.add(m);
+    this.allowed.set(pattern, set);
+
+    // HEAD 请求回落到 GET
+    if (m === 'GET') {
+      const headSet = this.allowed.get(pattern) ?? new Set<string>();
+      headSet.add('HEAD');
+      this.allowed.set(pattern, headSet);
+    }
+  }
