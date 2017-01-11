@@ -293,3 +293,21 @@ export class RouteTable<T> {
       this.allowed.set(pattern, headSet);
     }
   }
+
+  match(method: string, path: string): RouteMatch<T> | undefined {
+    const m = method.toUpperCase();
+    const tree = this.trees.get(m) ?? (m === 'HEAD' ? this.trees.get('GET') : undefined);
+    return tree?.match(path);
+  }
+
+  /**
+   * 路径存在、但当前方法未注册时，返回允许的方法列表（用于 405 + Allow 头）。
+   *
+   * 用**真实匹配**而不是"形状匹配"：否则 `/users/count` 会被 `/users/:id`
+   * 误判为命中，导致 Allow 里出现一堆其实并不存在的方法。
+   */
+  allowedMethods(path: string): string[] {
+    const out = new Set<string>();
+    for (const [method, tree] of this.trees) {
+      if (tree.match(path)) out.add(method);
+    }
