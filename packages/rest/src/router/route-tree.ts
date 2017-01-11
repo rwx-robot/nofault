@@ -164,3 +164,21 @@ export class RouteTree<T> {
 
     if (common === child.edge.length) {
       // child.edge 是 segment 的前缀：继续向下
+      const rest = segment.slice(common);
+      if (rest === '') return child;
+      return this.insertStatic(child, rest);
+    }
+
+    if (common === 0) {
+      // 首字符相同但没有公共前缀 —— 理论上不会发生（首字符即公共前缀 ≥1）
+      const created: RouteNode<T> = { edge: segment, type: SegmentType.STATIC, children: new Map() };
+      node.children.set(key, created);
+      return created;
+    }
+
+    // 需要分裂：把 child 压到新的中间节点下面
+    const mid: RouteNode<T> = {
+      edge: child.edge.slice(0, common),
+      type: SegmentType.STATIC,
+      children: new Map(),
+    };
