@@ -201,3 +201,21 @@ export class RouteTree<T> {
   }
 
   private walk(
+    node: RouteNode<T>,
+    segments: string[],
+    index: number,
+    params: Record<string, string>,
+  ): RouteNode<T> | undefined {
+    if (index === segments.length) {
+      return node.handler !== undefined ? node : undefined;
+    }
+
+    const seg = segments[index]!;
+
+    // 1) 静态优先
+    const child = node.children.get(seg[0]!);
+    if (child && seg.startsWith(child.edge)) {
+      const rest = seg.slice(child.edge.length);
+      const nextSegments = rest === '' ? segments : withReplacedSegment(segments, index, rest);
+      const nextIndex = rest === '' ? index + 1 : index;
+      const res = this.walk(child, nextSegments, nextIndex, params);
