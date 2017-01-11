@@ -146,3 +146,21 @@ export class RouteTree<T> {
     if (cur.handler !== undefined) {
       throw new RouteConflictError(pattern, cur.pattern ?? normalized);
     }
+    cur.handler = handler;
+    cur.pattern = pattern;
+  }
+
+  private insertStatic(node: RouteNode<T>, segment: string): RouteNode<T> {
+    const key = segment[0]!;
+    const child = node.children.get(key);
+
+    if (!child) {
+      const created: RouteNode<T> = { edge: segment, type: SegmentType.STATIC, children: new Map() };
+      node.children.set(key, created);
+      return created;
+    }
+
+    const common = commonPrefixLength(child.edge, segment);
+
+    if (common === child.edge.length) {
+      // child.edge 是 segment 的前缀：继续向下
