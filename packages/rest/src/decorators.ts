@@ -42,3 +42,10 @@ function methodDecorator(method: string) {
       });
     };
 }
+
+export const Get = methodDecorator('GET');
+export const Post = methodDecorator('POST');
+export const Put = methodDecorator('PUT');
+export const Delete = methodDecorator('DELETE');
+export const Patch = methodDecorator('PATCH');
+export const Head = methodDecorator('HEAD');
