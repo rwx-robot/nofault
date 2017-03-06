@@ -49,3 +49,9 @@ export const Put = methodDecorator('PUT');
 export const Delete = methodDecorator('DELETE');
 export const Patch = methodDecorator('PATCH');
 export const Head = methodDecorator('HEAD');
+export const Options = methodDecorator('OPTIONS');
+export const All = methodDecorator('ALL');
+
+/** 自定义响应状态码 */
+export function HttpCode(code: number): MethodDecorator {
+  return (target, propertyKey) => {
