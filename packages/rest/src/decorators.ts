@@ -99,3 +99,10 @@ export const Req = paramDecorator(ParamSource.REQUEST);
 export const Res = paramDecorator(ParamSource.RESPONSE);
 /** 完整上下文（含 request + response + ok/fail 快捷方法） */
 export const Ctx = paramDecorator(ParamSource.CONTEXT);
+
+// ------------------------------------------------------------------ 中间件 / 拦截器 / 过滤器
+
+export function UseMiddleware(...middleware: Array<unknown>): MethodDecorator & ClassDecorator {
+  return ((target: object, propertyKey?: string | symbol) => {
+    if (propertyKey === undefined) {
+      Reflect.defineMetadata(REST_METADATA.CONTROLLER_MIDDLEWARE, middleware, target as Function);
