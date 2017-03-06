@@ -36,3 +36,9 @@ function methodDecorator(method: string) {
       pushRoute(target.constructor, {
         method,
         path,
+        propertyKey,
+        middleware: [],
+        interceptors: [],
+      });
+    };
+}
