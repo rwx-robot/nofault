@@ -106,3 +106,9 @@ export function UseMiddleware(...middleware: Array<unknown>): MethodDecorator & 
   return ((target: object, propertyKey?: string | symbol) => {
     if (propertyKey === undefined) {
       Reflect.defineMetadata(REST_METADATA.CONTROLLER_MIDDLEWARE, middleware, target as Function);
+      return;
+    }
+    const routes = getRoutes(target.constructor);
+    const route = [...routes].reverse().find((r) => r.propertyKey === propertyKey);
+    if (route) route.middleware.push(...middleware);
+  }) as MethodDecorator & ClassDecorator;
