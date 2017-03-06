@@ -24,3 +24,8 @@ export function Controller(options: string | ControllerOptions = '/'): ClassDeco
     Reflect.defineMetadata(REST_METADATA.CONTROLLER_PATH, opts.path ?? '/', target);
     if (opts.middleware?.length) {
       Reflect.defineMetadata(REST_METADATA.CONTROLLER_MIDDLEWARE, opts.middleware, target);
+    }
+  };
+}
+
+// ------------------------------------------------------------------ HTTP 方法
