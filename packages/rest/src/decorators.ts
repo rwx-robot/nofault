@@ -68,3 +68,9 @@ function paramDecorator(source: ParamSource) {
     (target, propertyKey, index) => {
       if (propertyKey === undefined) return;
       const types = (Reflect.getMetadata('design:paramtypes', target, propertyKey) ?? []) as unknown[];
+      const meta: ParamMetadata = {
+        source,
+        key,
+        index: index as number,
+        required: options.required ?? source === ParamSource.PARAM,
+        defaultValue: options.default,
