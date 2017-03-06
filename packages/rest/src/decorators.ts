@@ -92,3 +92,10 @@ export const Headers = paramDecorator(ParamSource.HEADERS);
 export const RawRequest = paramDecorator(ParamSource.RAW_REQUEST);
 /** 原始 node 响应对象 */
 export const RawResponse = paramDecorator(ParamSource.RAW_RESPONSE);
+
+/** 完整的 `RestRequest` 包装 */
+export const Req = paramDecorator(ParamSource.REQUEST);
+/** 完整的 `RestResponse` 包装 */
+export const Res = paramDecorator(ParamSource.RESPONSE);
+/** 完整上下文（含 request + response + ok/fail 快捷方法） */
+export const Ctx = paramDecorator(ParamSource.CONTEXT);
