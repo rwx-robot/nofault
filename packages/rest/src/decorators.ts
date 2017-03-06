@@ -55,3 +55,10 @@ export const All = methodDecorator('ALL');
 /** 自定义响应状态码 */
 export function HttpCode(code: number): MethodDecorator {
   return (target, propertyKey) => {
+    const routes = getRoutes(target.constructor);
+    const route = [...routes].reverse().find((r) => r.propertyKey === propertyKey);
+    if (route) route.statusCode = code;
+  };
+}
+
+// ------------------------------------------------------------------ 参数
