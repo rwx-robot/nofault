@@ -62,3 +62,9 @@ export function HttpCode(code: number): MethodDecorator {
 }
 
 // ------------------------------------------------------------------ 参数
+
+function paramDecorator(source: ParamSource) {
+  return (key?: string, options: { required?: boolean; default?: unknown } = {}): ParameterDecorator =>
+    (target, propertyKey, index) => {
+      if (propertyKey === undefined) return;
+      const types = (Reflect.getMetadata('design:paramtypes', target, propertyKey) ?? []) as unknown[];
