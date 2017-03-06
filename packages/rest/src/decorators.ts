@@ -74,3 +74,8 @@ function paramDecorator(source: ParamSource) {
         index: index as number,
         required: options.required ?? source === ParamSource.PARAM,
         defaultValue: options.default,
+        type: types[index as number],
+      };
+      pushParam(target, propertyKey, meta);
+    };
+}
