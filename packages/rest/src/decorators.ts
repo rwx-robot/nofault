@@ -79,3 +79,11 @@ function paramDecorator(source: ParamSource) {
       pushParam(target, propertyKey, meta);
     };
 }
+
+/** 路径参数 */
+export const Param = paramDecorator(ParamSource.PARAM);
+/** query 参数 */
+export const Query = paramDecorator(ParamSource.QUERY);
+/** 请求体（可指定字段名） */
+export const Body = paramDecorator(ParamSource.BODY);
+/** 请求头 */
