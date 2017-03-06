@@ -118,3 +118,10 @@ export function UseInterceptors(...interceptors: Array<unknown>): MethodDecorato
   return (target, propertyKey) => {
     const routes = getRoutes(target.constructor);
     const route = [...routes].reverse().find((r) => r.propertyKey === propertyKey);
+    if (route) route.interceptors.push(...interceptors);
+  };
+}
+
+export function Catch(...exceptionTypes: Array<new (...args: never[]) => Error>): ClassDecorator {
+  return (target) => {
+    Reflect.defineMetadata(REST_METADATA.CONTROLLER_FILTERS, exceptionTypes, target);
