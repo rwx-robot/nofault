@@ -5,3 +5,8 @@ import {
   joinPath,
   pushParam,
   pushRoute,
+  getRoutes,
+  type ParamMetadata,
+} from './metadata';
+
+// ------------------------------------------------------------------ 控制器
