@@ -112,3 +112,9 @@ export function UseMiddleware(...middleware: Array<unknown>): MethodDecorator & 
     const route = [...routes].reverse().find((r) => r.propertyKey === propertyKey);
     if (route) route.middleware.push(...middleware);
   }) as MethodDecorator & ClassDecorator;
+}
+
+export function UseInterceptors(...interceptors: Array<unknown>): MethodDecorator {
+  return (target, propertyKey) => {
+    const routes = getRoutes(target.constructor);
+    const route = [...routes].reverse().find((r) => r.propertyKey === propertyKey);
