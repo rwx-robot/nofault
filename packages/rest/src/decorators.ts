@@ -87,3 +87,8 @@ export const Query = paramDecorator(ParamSource.QUERY);
 /** 请求体（可指定字段名） */
 export const Body = paramDecorator(ParamSource.BODY);
 /** 请求头 */
+export const Headers = paramDecorator(ParamSource.HEADERS);
+/** 原始 node 请求对象 */
+export const RawRequest = paramDecorator(ParamSource.RAW_REQUEST);
+/** 原始 node 响应对象 */
+export const RawResponse = paramDecorator(ParamSource.RAW_RESPONSE);
