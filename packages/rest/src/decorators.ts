@@ -29,3 +29,10 @@ export function Controller(options: string | ControllerOptions = '/'): ClassDeco
 }
 
 // ------------------------------------------------------------------ HTTP 方法
+
+function methodDecorator(method: string) {
+  return (path = '/'): MethodDecorator =>
+    (target, propertyKey) => {
+      pushRoute(target.constructor, {
+        method,
+        path,
