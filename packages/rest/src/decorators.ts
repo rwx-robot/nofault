@@ -144,3 +144,8 @@ export function UseFilters(..._exceptionTypes: Array<new (...args: never[]) => E
  * GET 的 DTO 通常绑 query。元数据是同一份，具体取哪儿由 pipeline 判断。
  */
 export function Validate(dto: new (...args: never[]) => object): MethodDecorator {
+  return (target, propertyKey) => {
+    const key = `${REST_METADATA.ROUTE_DTO}:${String(propertyKey)}`;
+    Reflect.defineMetadata(key, dto, target.constructor);
+  };
+}
