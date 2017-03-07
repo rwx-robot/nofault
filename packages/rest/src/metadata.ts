@@ -22,3 +22,7 @@ export interface ParamMetadata {
   required: boolean;
   /** 默认值 */
   defaultValue?: unknown;
+  /** 目标类型（来自 design:paramtypes） */
+  type?: unknown;
+  /** 校验规则（由 @Validate 或 DTO 提供） */
+  validator?: (value: unknown) => string | undefined;
