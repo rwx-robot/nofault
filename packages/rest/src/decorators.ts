@@ -137,3 +137,10 @@ export function UseFilters(..._exceptionTypes: Array<new (...args: never[]) => E
 }
 
 /** 声明该方法的 body 对应的 DTO 类，用于自动校验 */
+/**
+ * 声明这条路由的请求 DTO，交由框架校验。
+ *
+ * 名字不叫 `ValidateBody` 是因为它**不一定来自 body**：
+ * GET 的 DTO 通常绑 query。元数据是同一份，具体取哪儿由 pipeline 判断。
+ */
+export function Validate(dto: new (...args: never[]) => object): MethodDecorator {
