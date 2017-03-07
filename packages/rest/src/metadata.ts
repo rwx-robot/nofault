@@ -9,3 +9,6 @@ export enum ParamSource {
   REQUEST = 'request',
   RESPONSE = 'response',
   CONTEXT = 'context',
+  RAW_REQUEST = 'rawRequest',
+  RAW_RESPONSE = 'rawResponse',
+}
