@@ -39,3 +39,7 @@ export interface RouteMetadata {
   /** 自定义状态码 */
   statusCode?: number;
 }
+
+export const REST_METADATA = {
+  CONTROLLER_PATH: 'nofault:rest:controller:path',
+  ROUTES: 'nofault:rest:routes',
