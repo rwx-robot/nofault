@@ -149,3 +149,10 @@ export function Validate(dto: new (...args: never[]) => object): MethodDecorator
     Reflect.defineMetadata(key, dto, target.constructor);
   };
 }
+
+/** 兼容旧名 */
+export function ValidateBody(dto: new (...args: never[]) => object): MethodDecorator {
+  return Validate(dto);
+}
+
+export function getRouteDto(target: Function, propertyKey: string | symbol): (new () => object) | undefined {
