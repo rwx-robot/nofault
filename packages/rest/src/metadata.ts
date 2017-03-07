@@ -5,3 +5,7 @@ export enum ParamSource {
   PARAM = 'param',
   QUERY = 'query',
   BODY = 'body',
+  HEADERS = 'headers',
+  REQUEST = 'request',
+  RESPONSE = 'response',
+  CONTEXT = 'context',
