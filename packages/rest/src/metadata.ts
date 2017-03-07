@@ -26,3 +26,6 @@ export interface ParamMetadata {
   type?: unknown;
   /** 校验规则（由 @Validate 或 DTO 提供） */
   validator?: (value: unknown) => string | undefined;
+}
+
+export interface RouteMetadata {
