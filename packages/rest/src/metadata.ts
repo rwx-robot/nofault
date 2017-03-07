@@ -33,3 +33,6 @@ export interface RouteMetadata {
   path: string;
   propertyKey: string | symbol;
   /** 该方法上声明的中间件 */
+  middleware: Array<unknown>;
+  /** 该方法上声明的拦截器 */
+  interceptors: Array<unknown>;
