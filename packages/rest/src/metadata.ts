@@ -43,3 +43,6 @@ export interface RouteMetadata {
 export const REST_METADATA = {
   CONTROLLER_PATH: 'nofault:rest:controller:path',
   ROUTES: 'nofault:rest:routes',
+  PARAMS: 'nofault:rest:params',
+  CONTROLLER_MIDDLEWARE: 'nofault:rest:controller:middleware',
+  CONTROLLER_FILTERS: 'nofault:rest:controller:filters',
