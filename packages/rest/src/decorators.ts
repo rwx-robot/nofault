@@ -156,3 +156,8 @@ export function ValidateBody(dto: new (...args: never[]) => object): MethodDecor
 }
 
 export function getRouteDto(target: Function, propertyKey: string | symbol): (new () => object) | undefined {
+  const key = `${REST_METADATA.ROUTE_DTO}:${String(propertyKey)}`;
+  return Reflect.getMetadata(key, target) as (new () => object) | undefined;
+}
+
+export { joinPath };
