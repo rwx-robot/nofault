@@ -125,3 +125,9 @@ export function UseInterceptors(...interceptors: Array<unknown>): MethodDecorato
 export function Catch(...exceptionTypes: Array<new (...args: never[]) => Error>): ClassDecorator {
   return (target) => {
     Reflect.defineMetadata(REST_METADATA.CONTROLLER_FILTERS, exceptionTypes, target);
+  };
+}
+
+/** v0.4.0 还不支持方法级过滤器，签名先留着，参数用 `_` 标记暂不使用 */
+export function UseFilters(..._exceptionTypes: Array<new (...args: never[]) => Error>): MethodDecorator {
+  return (target, propertyKey) => {
