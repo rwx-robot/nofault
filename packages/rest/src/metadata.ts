@@ -29,3 +29,7 @@ export interface ParamMetadata {
 }
 
 export interface RouteMetadata {
+  method: string;
+  path: string;
+  propertyKey: string | symbol;
+  /** 该方法上声明的中间件 */
