@@ -19,3 +19,6 @@ export interface ParamMetadata {
   key?: string;
   index: number;
   /** 是否必填 */
+  required: boolean;
+  /** 默认值 */
+  defaultValue?: unknown;
