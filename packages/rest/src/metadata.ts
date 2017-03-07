@@ -36,3 +36,6 @@ export interface RouteMetadata {
   middleware: Array<unknown>;
   /** 该方法上声明的拦截器 */
   interceptors: Array<unknown>;
+  /** 自定义状态码 */
+  statusCode?: number;
+}
