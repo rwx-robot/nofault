@@ -46,3 +46,6 @@ export const REST_METADATA = {
   PARAMS: 'nofault:rest:params',
   CONTROLLER_MIDDLEWARE: 'nofault:rest:controller:middleware',
   CONTROLLER_FILTERS: 'nofault:rest:controller:filters',
+  ROUTE_FILTERS: 'nofault:rest:route:filters',
+  ROUTE_DTO: 'nofault:rest:route:dto',
+} as const;
