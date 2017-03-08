@@ -84,3 +84,5 @@ export function joinPath(prefix: string, path: string): string {
   if (p === '/' && c === '/') return '/';
   if (p === '/') return c;
   if (c === '/') return p;
+  return p + c;
+}
