@@ -53,3 +53,7 @@ export const REST_METADATA = {
 export function getControllerPath(target: Function): string {
   return (Reflect.getMetadata(REST_METADATA.CONTROLLER_PATH, target) as string | undefined) ?? '/';
 }
+
+export function getRoutes(target: Function): RouteMetadata[] {
+  return (Reflect.getMetadata(REST_METADATA.ROUTES, target) as RouteMetadata[] | undefined) ?? [];
+}
