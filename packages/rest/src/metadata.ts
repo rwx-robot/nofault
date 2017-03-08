@@ -49,3 +49,7 @@ export const REST_METADATA = {
   ROUTE_FILTERS: 'nofault:rest:route:filters',
   ROUTE_DTO: 'nofault:rest:route:dto',
 } as const;
+
+export function getControllerPath(target: Function): string {
+  return (Reflect.getMetadata(REST_METADATA.CONTROLLER_PATH, target) as string | undefined) ?? '/';
+}
