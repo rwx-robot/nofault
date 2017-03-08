@@ -9,3 +9,8 @@ import type { NofaultApplicationContext } from '@nofault/core';
 export type MiddlewareRegistry = Record<string, Middleware>;
 
 export interface ResolvedRoute {
+  method: string;
+  path: string;
+  /** 控制器类 */
+  controller: Type<unknown>;
+  /**
