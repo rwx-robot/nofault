@@ -81,3 +81,6 @@ export function joinPath(prefix: string, path: string): string {
   const clean = (s: string) => s.replace(/\/+$/, '').replace(/^\/*/, '/');
   const p = clean(prefix);
   const c = clean(path);
+  if (p === '/' && c === '/') return '/';
+  if (p === '/') return c;
+  if (c === '/') return p;
