@@ -67,3 +67,6 @@ export function pushRoute(target: Function, route: RouteMetadata): void {
 export function getParams(target: object, propertyKey: string | symbol): ParamMetadata[] {
   const key = `${REST_METADATA.PARAMS}:${String(propertyKey)}`;
   return (Reflect.getMetadata(key, target.constructor) as ParamMetadata[] | undefined) ?? [];
+}
+
+export function pushParam(target: object, propertyKey: string | symbol, meta: ParamMetadata): void {
