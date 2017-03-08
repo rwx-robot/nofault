@@ -70,3 +70,7 @@ export function getParams(target: object, propertyKey: string | symbol): ParamMe
 }
 
 export function pushParam(target: object, propertyKey: string | symbol, meta: ParamMetadata): void {
+  const key = `${REST_METADATA.PARAMS}:${String(propertyKey)}`;
+  const list = getParams(target, propertyKey);
+  list.push(meta);
+  Reflect.defineMetadata(key, list, target.constructor);
