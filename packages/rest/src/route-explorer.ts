@@ -29,3 +29,8 @@ export interface ResolvedRoute {
 }
 
 /**
+ * 路由探测器：把 `@Controller()` / `@Get()` 等装饰器声明翻译成路由表。
+ *
+ * 流程：遍历所有模块 → 取 `controllers` → 读装饰器元数据 → 解析实例 → 注册进 RouteTable。
+ */
+export class RouteExplorer {
