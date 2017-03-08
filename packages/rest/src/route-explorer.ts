@@ -44,3 +44,8 @@ export class RouteExplorer {
     app: NofaultApplicationContext,
     globalPrefix = '/',
     middlewareRegistry: MiddlewareRegistry = {},
+  ): Promise<RouteTable<ResolvedRoute>> {
+    const table = new RouteTable<ResolvedRoute>();
+    const resolved = new Map<Type<unknown>, Record<string | symbol, unknown> | null>();
+
+    for (const moduleRef of app.getModuleRefs()) {
