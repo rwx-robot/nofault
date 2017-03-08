@@ -57,3 +57,6 @@ export function getControllerPath(target: Function): string {
 export function getRoutes(target: Function): RouteMetadata[] {
   return (Reflect.getMetadata(REST_METADATA.ROUTES, target) as RouteMetadata[] | undefined) ?? [];
 }
+
+export function pushRoute(target: Function, route: RouteMetadata): void {
+  const routes = getRoutes(target);
