@@ -19,3 +19,8 @@ export interface ResolvedRoute {
    * 若控制器依赖了 REQUEST 作用域的 Provider，启动期解析会失败，
    * 此时为 `null`，改由**每请求**在上下文内解析。
    */
+  instance: Record<string | symbol, unknown> | null;
+  propertyKey: string | symbol;
+  /** 该路由上的中间件（控制器级 + 方法级） */
+  middleware: Middleware[];
+  statusCode?: number;
