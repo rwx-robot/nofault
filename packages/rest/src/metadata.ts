@@ -60,3 +60,6 @@ export function getRoutes(target: Function): RouteMetadata[] {
 
 export function pushRoute(target: Function, route: RouteMetadata): void {
   const routes = getRoutes(target);
+  routes.push(route);
+  Reflect.defineMetadata(REST_METADATA.ROUTES, routes, target);
+}
