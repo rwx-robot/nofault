@@ -24,3 +24,8 @@ export interface ResolvedRoute {
   /** 该路由上的中间件（控制器级 + 方法级） */
   middleware: Middleware[];
   statusCode?: number;
+  /** 合成路由（如内建健康端点）：实例是现成的，不要再去容器解析 */
+  synthetic?: boolean;
+}
+
+/**
