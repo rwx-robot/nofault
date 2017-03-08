@@ -77,3 +77,7 @@ export function pushParam(target: object, propertyKey: string | symbol, meta: Pa
 }
 
 /** 拼接 controller 前缀与方法路径 */
+export function joinPath(prefix: string, path: string): string {
+  const clean = (s: string) => s.replace(/\/+$/, '').replace(/^\/*/, '/');
+  const p = clean(prefix);
+  const c = clean(path);
