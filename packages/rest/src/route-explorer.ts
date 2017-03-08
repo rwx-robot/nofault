@@ -34,3 +34,8 @@ export interface ResolvedRoute {
  * 流程：遍历所有模块 → 取 `controllers` → 读装饰器元数据 → 解析实例 → 注册进 RouteTable。
  */
 export class RouteExplorer {
+  /**
+   * @param middlewareRegistry 命名中间件表。
+   *   契约里写的中间件（如 `@Middleware('RequestLogger')`）落到代码里是**字符串**，
+   *   没有这张表就无法从名字找回实现——要么支持名字，要么生成器就不能按名字引用。
+   *   我们选择前者，并在找不到时立刻报错，而不是静默忽略。
