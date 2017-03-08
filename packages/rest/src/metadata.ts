@@ -74,3 +74,6 @@ export function pushParam(target: object, propertyKey: string | symbol, meta: Pa
   const list = getParams(target, propertyKey);
   list.push(meta);
   Reflect.defineMetadata(key, list, target.constructor);
+}
+
+/** 拼接 controller 前缀与方法路径 */
