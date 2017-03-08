@@ -39,3 +39,8 @@ export class RouteExplorer {
    *   契约里写的中间件（如 `@Middleware('RequestLogger')`）落到代码里是**字符串**，
    *   没有这张表就无法从名字找回实现——要么支持名字，要么生成器就不能按名字引用。
    *   我们选择前者，并在找不到时立刻报错，而不是静默忽略。
+   */
+  static async explore(
+    app: NofaultApplicationContext,
+    globalPrefix = '/',
+    middlewareRegistry: MiddlewareRegistry = {},
