@@ -75,3 +75,8 @@ export class RouteExplorer {
             instance,
             propertyKey: route.propertyKey,
             middleware,
+            statusCode: route.statusCode,
+          });
+        }
+      }
+    }
