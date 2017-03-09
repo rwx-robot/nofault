@@ -64,3 +64,9 @@ export class RouteExplorer {
         const fullPath = joinPath(prefix, route.path);
         const methods = route.method === 'ALL' ? HTTP_METHODS : [route.method];
         const middleware = [...controllerMiddleware, ...route.middleware].map((m) =>
+          RouteExplorer.toMiddleware(m, middlewareRegistry),
+        );
+
+        for (const method of methods) {
+          table.add(method, fullPath, {
+            method,
