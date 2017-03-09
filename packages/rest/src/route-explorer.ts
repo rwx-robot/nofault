@@ -110,3 +110,8 @@ export class RouteExplorer {
       if (typeof found !== 'function') {
         throw new Error(
           `middleware "${m}" is not registered; pass it in RestApplication options as ` +
+            `{ middlewareRegistry: { ${m}: yourMiddleware } }`,
+        );
+      }
+      return found;
+    }
