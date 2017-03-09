@@ -70,3 +70,8 @@ export class RouteExplorer {
         for (const method of methods) {
           table.add(method, fullPath, {
             method,
+            path: fullPath,
+            controller,
+            instance,
+            propertyKey: route.propertyKey,
+            middleware,
