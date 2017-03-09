@@ -54,3 +54,8 @@ export class RouteExplorer {
         resolved.set(controller, await RouteExplorer.tryResolve(app, moduleRef.token, controller));
       }
     }
+
+    for (const [controller, instance] of resolved) {
+      const prefix = joinPath(globalPrefix, getControllerPath(controller));
+      const controllerMiddleware =
+        (Reflect.getMetadata(REST_METADATA.CONTROLLER_MIDDLEWARE, controller) as Array<unknown> | undefined) ?? [];
