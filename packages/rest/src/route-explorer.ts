@@ -90,3 +90,8 @@ export class RouteExplorer {
    * 依赖 REQUEST 作用域 Provider 的控制器此时**必然**失败（没有 contextId），
    * 这是预期行为而不是错误——返回 null，交给每请求解析。
    */
+  private static async tryResolve(
+    app: NofaultApplicationContext,
+    moduleToken: Type<unknown>,
+    controller: Type<unknown>,
+  ): Promise<Record<string | symbol, unknown> | null> {
