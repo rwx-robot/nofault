@@ -85,3 +85,8 @@ export class RouteExplorer {
   }
 
   /**
+   * 尝试在启动期解析控制器实例。
+   *
+   * 依赖 REQUEST 作用域 Provider 的控制器此时**必然**失败（没有 contextId），
+   * 这是预期行为而不是错误——返回 null，交给每请求解析。
+   */
