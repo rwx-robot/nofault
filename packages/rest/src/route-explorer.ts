@@ -115,3 +115,8 @@ export class RouteExplorer {
       }
       return found;
     }
+    if (typeof m === 'function' && !isClass(m)) return m as Middleware;
+    const instance = m as { use?: (...args: never[]) => unknown };
+    if (typeof instance?.use === 'function') {
+      return (ctx, next) => Promise.resolve(instance.use!(ctx as never, next as never)) as Promise<void>;
+    }
