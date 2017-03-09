@@ -49,3 +49,8 @@ export class RouteExplorer {
     const resolved = new Map<Type<unknown>, Record<string | symbol, unknown> | null>();
 
     for (const moduleRef of app.getModuleRefs()) {
+      for (const controller of moduleRef.controllers) {
+        if (resolved.has(controller)) continue;
+        resolved.set(controller, await RouteExplorer.tryResolve(app, moduleRef.token, controller));
+      }
+    }
