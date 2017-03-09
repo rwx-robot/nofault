@@ -100,3 +100,8 @@ export class RouteExplorer {
     } catch (err) {
       if (err instanceof MissingContextIdError) return null;
       throw err;
+    }
+  }
+
+  /** 中间件可以是函数、带 `use()` 的类实例，或者**注册表里的名字** */
+  private static toMiddleware(m: unknown, registry: MiddlewareRegistry): Middleware {
