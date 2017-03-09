@@ -125,3 +125,7 @@ export class RouteExplorer {
 }
 
 const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
+
+function isClass(fn: Function): boolean {
+  return /^\s*class\s+/.test(Function.prototype.toString.call(fn));
+}
