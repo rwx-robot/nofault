@@ -95,3 +95,8 @@ export class RouteExplorer {
     moduleToken: Type<unknown>,
     controller: Type<unknown>,
   ): Promise<Record<string | symbol, unknown> | null> {
+    try {
+      return (await app.select(moduleToken).get(controller)) as Record<string | symbol, unknown>;
+    } catch (err) {
+      if (err instanceof MissingContextIdError) return null;
+      throw err;
