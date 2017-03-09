@@ -105,3 +105,8 @@ export class RouteExplorer {
 
   /** 中间件可以是函数、带 `use()` 的类实例，或者**注册表里的名字** */
   private static toMiddleware(m: unknown, registry: MiddlewareRegistry): Middleware {
+    if (typeof m === 'string') {
+      const found = registry[m];
+      if (typeof found !== 'function') {
+        throw new Error(
+          `middleware "${m}" is not registered; pass it in RestApplication options as ` +
