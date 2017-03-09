@@ -59,3 +59,8 @@ export class RouteExplorer {
       const prefix = joinPath(globalPrefix, getControllerPath(controller));
       const controllerMiddleware =
         (Reflect.getMetadata(REST_METADATA.CONTROLLER_MIDDLEWARE, controller) as Array<unknown> | undefined) ?? [];
+
+      for (const route of getRoutes(controller)) {
+        const fullPath = joinPath(prefix, route.path);
+        const methods = route.method === 'ALL' ? HTTP_METHODS : [route.method];
+        const middleware = [...controllerMiddleware, ...route.middleware].map((m) =>
