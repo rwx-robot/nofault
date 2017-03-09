@@ -120,3 +120,8 @@ export class RouteExplorer {
     if (typeof instance?.use === 'function') {
       return (ctx, next) => Promise.resolve(instance.use!(ctx as never, next as never)) as Promise<void>;
     }
+    throw new Error('Middleware must be a function, a class with use(), or a registered name');
+  }
+}
+
+const HTTP_METHODS = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS'];
