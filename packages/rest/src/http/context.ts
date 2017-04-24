@@ -26,3 +26,7 @@ export class RestRequest {
   get url(): string {
     return this.raw.url ?? '/';
   }
+
+  /** 不含 query 的路径部分 */
+  get path(): string {
+    const q = this.url.indexOf('?');
