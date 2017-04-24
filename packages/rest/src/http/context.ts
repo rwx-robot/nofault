@@ -36,3 +36,5 @@ export class RestRequest {
   get headers(): Record<string, string | string[] | undefined> {
     return this.raw.headers as Record<string, string | string[] | undefined>;
   }
+
+  header(name: string): string | undefined {
