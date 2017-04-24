@@ -13,3 +13,6 @@ export class RestRequest {
   /** 已解析的路径参数（来自路由模板） */
   public params: Record<string, string> = {};
   /** 已解析的 body（由 BodyParser 中间件填充） */
+  public body: unknown;
+  /** 中间件之间传递数据的临时袋 */
+  public readonly state = new Map<string, unknown>();
