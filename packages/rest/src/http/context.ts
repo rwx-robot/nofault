@@ -24,3 +24,5 @@ export class RestRequest {
   }
 
   get url(): string {
+    return this.raw.url ?? '/';
+  }
