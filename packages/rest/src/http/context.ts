@@ -21,3 +21,6 @@ export class RestRequest {
 
   get method(): string {
     return (this.raw.method ?? 'GET').toUpperCase();
+  }
+
+  get url(): string {
