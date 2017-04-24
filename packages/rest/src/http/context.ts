@@ -38,3 +38,6 @@ export class RestRequest {
   }
 
   header(name: string): string | undefined {
+    const v = this.raw.headers[name.toLowerCase()];
+    return Array.isArray(v) ? v[0] : v;
+  }
