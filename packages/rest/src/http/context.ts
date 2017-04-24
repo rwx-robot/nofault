@@ -16,3 +16,5 @@ export class RestRequest {
   public body: unknown;
   /** 中间件之间传递数据的临时袋 */
   public readonly state = new Map<string, unknown>();
+
+  constructor(public readonly raw: IncomingMessage) {}
