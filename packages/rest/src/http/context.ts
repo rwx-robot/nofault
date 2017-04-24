@@ -41,3 +41,6 @@ export class RestRequest {
     const v = this.raw.headers[name.toLowerCase()];
     return Array.isArray(v) ? v[0] : v;
   }
+
+  get query(): URLSearchParams {
+    return new URL(this.url, `http://${this.raw.headers.host ?? 'localhost'}`).searchParams;
