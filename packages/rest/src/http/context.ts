@@ -53,3 +53,4 @@ export class RestRequest {
   get contentType(): string {
     return this.header('content-type') ?? '';
   }
+}
