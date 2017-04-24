@@ -44,3 +44,6 @@ export class RestRequest {
 
   get query(): URLSearchParams {
     return new URL(this.url, `http://${this.raw.headers.host ?? 'localhost'}`).searchParams;
+  }
+
+  get ip(): string {
