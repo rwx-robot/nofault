@@ -10,3 +10,6 @@ import type { Readable } from 'node:stream';
  * 2. 路由参数、已解析的 query/body 需要有个统一的挂点
  */
 export class RestRequest {
+  /** 已解析的路径参数（来自路由模板） */
+  public params: Record<string, string> = {};
+  /** 已解析的 body（由 BodyParser 中间件填充） */
