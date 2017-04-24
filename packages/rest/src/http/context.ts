@@ -7,3 +7,6 @@ import type { Readable } from 'node:stream';
  *
  * 为什么不直接暴露 `IncomingMessage`：
  * 1. 业务代码不该关心 Node 原生细节（可测试性 + 未来换适配器）
+ * 2. 路由参数、已解析的 query/body 需要有个统一的挂点
+ */
+export class RestRequest {
