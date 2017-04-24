@@ -30,3 +30,5 @@ export class RestRequest {
   /** 不含 query 的路径部分 */
   get path(): string {
     const q = this.url.indexOf('?');
+    return q === -1 ? this.url : this.url.slice(0, q);
+  }
