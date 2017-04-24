@@ -47,3 +47,5 @@ export class RestRequest {
   }
 
   get ip(): string {
+    return (this.header('x-forwarded-for') ?? this.raw.socket.remoteAddress ?? '').split(',')[0]!.trim();
+  }
