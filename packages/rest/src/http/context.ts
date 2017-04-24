@@ -18,3 +18,6 @@ export class RestRequest {
   public readonly state = new Map<string, unknown>();
 
   constructor(public readonly raw: IncomingMessage) {}
+
+  get method(): string {
+    return (this.raw.method ?? 'GET').toUpperCase();
