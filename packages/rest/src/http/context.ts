@@ -32,3 +32,7 @@ export class RestRequest {
     const q = this.url.indexOf('?');
     return q === -1 ? this.url : this.url.slice(0, q);
   }
+
+  get headers(): Record<string, string | string[] | undefined> {
+    return this.raw.headers as Record<string, string | string[] | undefined>;
+  }
