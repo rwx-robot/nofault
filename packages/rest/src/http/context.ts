@@ -90,3 +90,5 @@ export class RestResponse {
 
   header(name: string, value: string): this {
     if (!this.committed) this._headers.set(name.toLowerCase(), value);
+    return this;
+  }
