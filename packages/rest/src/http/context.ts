@@ -92,3 +92,6 @@ export class RestResponse {
     if (!this.committed) this._headers.set(name.toLowerCase(), value);
     return this;
   }
+
+  removeHeader(name: string): this {
+    this._headers.delete(name.toLowerCase());
