@@ -75,3 +75,6 @@ export class RestResponse {
   constructor(public readonly raw: ServerResponse) {}
 
   /** 响应是否已不可再修改 */
+  get headersSent(): boolean {
+    return this.committed || this.raw.headersSent;
+  }
