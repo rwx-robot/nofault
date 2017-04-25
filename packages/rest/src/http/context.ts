@@ -107,3 +107,6 @@ export class RestResponse {
     if (this.committed) return;
     this._body = payload;
     if (contentType) this._headers.set('content-type', contentType);
+  }
+
+  /**
