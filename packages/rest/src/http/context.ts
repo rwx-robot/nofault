@@ -95,3 +95,5 @@ export class RestResponse {
 
   removeHeader(name: string): this {
     this._headers.delete(name.toLowerCase());
+    return this;
+  }
