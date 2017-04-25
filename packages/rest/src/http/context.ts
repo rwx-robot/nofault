@@ -84,3 +84,6 @@ export class RestResponse {
   }
 
   status(code: number): this {
+    this._status = code;
+    return this;
+  }
