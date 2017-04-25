@@ -104,3 +104,6 @@ export class RestResponse {
 
   /** 写入缓冲区（真正发出要等 commit） */
   buffer(payload: string | Buffer, contentType?: string): void {
+    if (this.committed) return;
+    this._body = payload;
+    if (contentType) this._headers.set('content-type', contentType);
