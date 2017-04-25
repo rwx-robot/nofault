@@ -73,3 +73,5 @@ export class RestResponse {
   private committed = false;
 
   constructor(public readonly raw: ServerResponse) {}
+
+  /** 响应是否已不可再修改 */
