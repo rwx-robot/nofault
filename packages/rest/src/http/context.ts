@@ -54,3 +54,7 @@ export class RestRequest {
     return this.header('content-type') ?? '';
   }
 }
+
+/**
+ * 响应包装：**延迟提交**（deferred commit）。
+ *
