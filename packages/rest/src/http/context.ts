@@ -78,3 +78,6 @@ export class RestResponse {
   get headersSent(): boolean {
     return this.committed || this.raw.headersSent;
   }
+
+  get statusCodeValue(): number {
+    return this._status;
