@@ -58,3 +58,6 @@ export class RestRequest {
 /**
  * 响应包装：**延迟提交**（deferred commit）。
  *
+ * 整个中间件管道期间只往缓冲区写状态码/头/体，
+ * 等管道回到最外层时由框架统一 `commit()`。
+ *
