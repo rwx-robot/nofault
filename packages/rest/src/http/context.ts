@@ -64,3 +64,6 @@ export class RestRequest {
  * 这样中间件才能在 `await next()` **之后**再改响应头
  * ——否则业务 handler 一 `end()`，后面的中间件就什么都改不了了。
  * 这是 Koa 的经典做法，也是 `@UseMiddleware(timing)` 这类后置逻辑能生效的前提。
+ */
+export class RestResponse {
+  private _status = 200;
