@@ -110,3 +110,5 @@ export class RestResponse {
   }
 
   /**
+   * 以流的方式发送 body（真正接线要等 commit，遵守延迟提交语义）。
+   *
