@@ -101,3 +101,6 @@ export class RestResponse {
   getHeader(name: string): string | undefined {
     return this._headers.get(name.toLowerCase());
   }
+
+  /** 写入缓冲区（真正发出要等 commit） */
+  buffer(payload: string | Buffer, contentType?: string): void {
