@@ -67,3 +67,6 @@ export class RestRequest {
  */
 export class RestResponse {
   private _status = 200;
+  private readonly _headers = new Map<string, string>();
+  private _body: string | Buffer | undefined;
+  private _stream: Readable | undefined;
