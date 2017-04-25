@@ -97,3 +97,7 @@ export class RestResponse {
     this._headers.delete(name.toLowerCase());
     return this;
   }
+
+  getHeader(name: string): string | undefined {
+    return this._headers.get(name.toLowerCase());
+  }
