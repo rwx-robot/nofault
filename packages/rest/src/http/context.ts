@@ -147,3 +147,6 @@ export class RestResponse {
   end(): void {
     if (this.committed) return;
     this._body = this._body ?? Buffer.alloc(0);
+  }
+
+  redirect(location: string, code = 302): void {
