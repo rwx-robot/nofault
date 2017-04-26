@@ -124,3 +124,6 @@ export class RestResponse {
     this._body = undefined;
     if (contentType) this._headers.set('content-type', contentType);
     if (contentLength !== undefined) this._headers.set('content-length', String(contentLength));
+  }
+
+  json(payload: unknown): void {
