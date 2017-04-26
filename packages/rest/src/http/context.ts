@@ -158,3 +158,6 @@ export class RestResponse {
     if (this.committed) return;
     this.committed = true;
     const raw = this.raw;
+    if (raw.headersSent || raw.writableEnded) return;
+
+    raw.statusCode = this._status;
