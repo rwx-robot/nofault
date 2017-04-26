@@ -137,3 +137,7 @@ export class RestResponse {
   html(payload: string): void {
     this.buffer(payload, 'text/html; charset=utf-8');
   }
+
+  /** 缓冲区里是否已经有 body（用于判断"handler 已经自己写过响应了"） */
+  get hasBody(): boolean {
+    return this._body !== undefined || this._stream !== undefined;
