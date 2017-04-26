@@ -152,3 +152,6 @@ export class RestResponse {
   redirect(location: string, code = 302): void {
     this.status(code).header('location', location).end();
   }
+
+  /** 把缓冲区一次性写到原生响应上；幂等 */
+  commit(): void {
