@@ -164,3 +164,6 @@ export class RestResponse {
     for (const [k, v] of this._headers) raw.setHeader(k, v);
 
     const body = this._body ?? Buffer.alloc(0);
+    // 204 / 304 不能带 content-length 与 body
+    const noBody = this._status === 204 || this._status === 304;
+    if (noBody) {
