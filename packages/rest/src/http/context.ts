@@ -129,3 +129,6 @@ export class RestResponse {
   json(payload: unknown): void {
     this.buffer(JSON.stringify(payload), 'application/json; charset=utf-8');
   }
+
+  text(payload: string): void {
+    this.buffer(payload, 'text/plain; charset=utf-8');
