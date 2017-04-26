@@ -115,3 +115,6 @@ export class RestResponse {
    * 大文件走这里：不把整个文件读进内存，背压交给 `pipeline`；
    * `contentLength` 已知时写进 content-length，客户端能提前显示进度。
    */
+  stream(src: Readable, contentType?: string, contentLength?: number): void {
+    if (this.committed) {
+      src.destroy();
