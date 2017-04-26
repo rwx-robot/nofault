@@ -144,3 +144,6 @@ export class RestResponse {
   }
 
   /** 空响应（204 / 304 用） */
+  end(): void {
+    if (this.committed) return;
+    this._body = this._body ?? Buffer.alloc(0);
