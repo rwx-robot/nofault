@@ -155,3 +155,6 @@ export class RestResponse {
 
   /** 把缓冲区一次性写到原生响应上；幂等 */
   commit(): void {
+    if (this.committed) return;
+    this.committed = true;
+    const raw = this.raw;
