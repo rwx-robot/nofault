@@ -161,3 +161,6 @@ export class RestResponse {
     if (raw.headersSent || raw.writableEnded) return;
 
     raw.statusCode = this._status;
+    for (const [k, v] of this._headers) raw.setHeader(k, v);
+
+    const body = this._body ?? Buffer.alloc(0);
