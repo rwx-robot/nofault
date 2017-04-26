@@ -150,3 +150,5 @@ export class RestResponse {
   }
 
   redirect(location: string, code = 302): void {
+    this.status(code).header('location', location).end();
+  }
