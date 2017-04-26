@@ -118,3 +118,6 @@ export class RestResponse {
   stream(src: Readable, contentType?: string, contentLength?: number): void {
     if (this.committed) {
       src.destroy();
+      return;
+    }
+    this._stream = src;
