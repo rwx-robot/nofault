@@ -167,3 +167,5 @@ export class RestResponse {
     // 204 / 304 不能带 content-length 与 body
     const noBody = this._status === 204 || this._status === 304;
     if (noBody) {
+      this._stream?.destroy();
+      raw.end();
