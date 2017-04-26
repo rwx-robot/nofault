@@ -112,3 +112,6 @@ export class RestResponse {
   /**
    * 以流的方式发送 body（真正接线要等 commit，遵守延迟提交语义）。
    *
+   * 大文件走这里：不把整个文件读进内存，背压交给 `pipeline`；
+   * `contentLength` 已知时写进 content-length，客户端能提前显示进度。
+   */
