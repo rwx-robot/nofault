@@ -141,3 +141,6 @@ export class RestResponse {
   /** 缓冲区里是否已经有 body（用于判断"handler 已经自己写过响应了"） */
   get hasBody(): boolean {
     return this._body !== undefined || this._stream !== undefined;
+  }
+
+  /** 空响应（204 / 304 用） */
