@@ -135,3 +135,5 @@ export class RestResponse {
   }
 
   html(payload: string): void {
+    this.buffer(payload, 'text/html; charset=utf-8');
+  }
