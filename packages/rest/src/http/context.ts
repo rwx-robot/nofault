@@ -192,3 +192,6 @@ export interface RouteRef {
 }
 
 /** 一次请求的完整上下文 */
+export class RestContext {
+  /**
+   * 当前匹配到的路由。
