@@ -198,3 +198,5 @@ export class RestContext {
    *
    * 之前没暴露它，鉴权中间件就拿不到"现在调的是哪个 handler"，
    * 只能靠调用方自己维护一份 path -> handler 的映射——必然漂移。
+   */
+  route?: RouteRef;
