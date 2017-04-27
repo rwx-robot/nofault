@@ -212,3 +212,6 @@ export class RestContext {
   }
 
   /** 当前请求的上下文（需要接入 @nofault/context 的上下文中间件） */
+  requestContext<T = unknown>(): T | undefined {
+    return this.request.state.get('requestContext') as T | undefined;
+  }
