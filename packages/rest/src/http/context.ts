@@ -184,3 +184,6 @@ export class RestResponse {
 }
 
 /** 当前匹配到的路由（供鉴权中间件等按 handler 判断） */
+export interface RouteRef {
+  readonly controller: object;
+  readonly propertyKey: string | symbol;
