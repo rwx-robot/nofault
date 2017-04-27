@@ -178,3 +178,6 @@ export class RestResponse {
       });
       return;
     }
+    if (body.length > 0) raw.setHeader('content-length', String(Buffer.byteLength(body)));
+    raw.end(body.length > 0 ? body : undefined);
+  }
