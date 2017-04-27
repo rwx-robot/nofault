@@ -169,3 +169,6 @@ export class RestResponse {
     if (noBody) {
       this._stream?.destroy();
       raw.end();
+      return;
+    }
+    if (this._stream) {
