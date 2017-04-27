@@ -220,3 +220,7 @@ export class RestContext {
   ok<T>(data: T, message = 'ok', code = 0): void {
     this.response.json({ code, data, message });
   }
+
+  fail(message: string, code = -1, data: unknown = null): void {
+    this.response.json({ code, data, message });
+  }
