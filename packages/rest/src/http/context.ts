@@ -215,3 +215,6 @@ export class RestContext {
   requestContext<T = unknown>(): T | undefined {
     return this.request.state.get('requestContext') as T | undefined;
   }
+
+  /** 统一成功响应：{ code, data, message } */
+  ok<T>(data: T, message = 'ok', code = 0): void {
