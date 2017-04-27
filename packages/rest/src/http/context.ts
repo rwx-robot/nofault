@@ -200,3 +200,7 @@ export class RestContext {
    * 只能靠调用方自己维护一份 path -> handler 的映射——必然漂移。
    */
   route?: RouteRef;
+
+  constructor(
+    public readonly request: RestRequest,
+    public readonly response: RestResponse,
