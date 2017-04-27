@@ -187,3 +187,5 @@ export class RestResponse {
 export interface RouteRef {
   readonly controller: object;
   readonly propertyKey: string | symbol;
+  readonly method: string;
+  readonly path: string;
