@@ -189,3 +189,6 @@ export interface RouteRef {
   readonly propertyKey: string | symbol;
   readonly method: string;
   readonly path: string;
+}
+
+/** 一次请求的完整上下文 */
