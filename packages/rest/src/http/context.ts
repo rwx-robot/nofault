@@ -172,3 +172,6 @@ export class RestResponse {
       return;
     }
     if (this._stream) {
+      // 流式 body：管线接管背压；中途出错已无法改状态码，只能掐断连接
+      void pipeline(this._stream, raw).catch((err: unknown) => {
+        if (err && !raw.writableEnded) raw.destroy(err instanceof Error ? err : undefined);
