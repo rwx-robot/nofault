@@ -204,3 +204,6 @@ export class RestContext {
   constructor(
     public readonly request: RestRequest,
     public readonly response: RestResponse,
+  ) {}
+
+  /** 中间件之间传递数据的临时袋（等价于 `request.state`） */
