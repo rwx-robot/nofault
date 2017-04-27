@@ -181,3 +181,6 @@ export class RestResponse {
     if (body.length > 0) raw.setHeader('content-length', String(Buffer.byteLength(body)));
     raw.end(body.length > 0 ? body : undefined);
   }
+}
+
+/** 当前匹配到的路由（供鉴权中间件等按 handler 判断） */
