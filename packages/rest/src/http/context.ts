@@ -224,3 +224,4 @@ export class RestContext {
   fail(message: string, code = -1, data: unknown = null): void {
     this.response.json({ code, data, message });
   }
+}
