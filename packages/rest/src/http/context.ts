@@ -207,3 +207,5 @@ export class RestContext {
   ) {}
 
   /** 中间件之间传递数据的临时袋（等价于 `request.state`） */
+  get state(): Map<string, unknown> {
+    return this.request.state;
