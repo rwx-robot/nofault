@@ -218,3 +218,5 @@ export class RestContext {
 
   /** 统一成功响应：{ code, data, message } */
   ok<T>(data: T, message = 'ok', code = 0): void {
+    this.response.json({ code, data, message });
+  }
