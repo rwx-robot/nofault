@@ -25,3 +25,10 @@ export function cors(options: CorsOptions = {}): Middleware {
   const allowMethods = (options.methods ?? ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']).join(',');
   const allowHeaders = (options.headers ?? ['content-type', 'authorization']).join(',');
   const maxAge = String(options.maxAge ?? 86400);
+
+  return async (ctx, next) => {
+    const reqOrigin = ctx.request.header('origin');
+    const originValue: string =
+      allowOrigin === true
+        ? (reqOrigin ?? '*')
+        : Array.isArray(allowOrigin)
