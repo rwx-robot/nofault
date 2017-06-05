@@ -53,3 +53,10 @@ export function cors(options: CorsOptions = {}): Middleware {
 
 export interface BodyParserOptions {
   /** 大小上限（字节），默认 1MB */
+  limit?: number;
+  /** 允许的 content-type 前缀 */
+  types?: string[];
+}
+
+/** Body 解析：JSON / urlencoded / text */
+export function bodyParser(options: BodyParserOptions = {}): Middleware {
