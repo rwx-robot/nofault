@@ -60,3 +60,9 @@ export interface BodyParserOptions {
 
 /** Body 解析：JSON / urlencoded / text */
 export function bodyParser(options: BodyParserOptions = {}): Middleware {
+  const limit = options.limit ?? 1024 * 1024;
+  const types = options.types ?? ['application/json', 'application/x-www-form-urlencoded', 'text/plain'];
+
+  return async (ctx, next) => {
+    const method = ctx.request.method;
+    if (method === 'GET' || method === 'HEAD' || method === 'DELETE') {
