@@ -18,3 +18,10 @@ export interface CorsOptions {
   credentials?: boolean;
   maxAge?: number;
 }
+
+/** CORS：预检请求直接返回，不再进入后续管道 */
+export function cors(options: CorsOptions = {}): Middleware {
+  const allowOrigin = options.origin ?? '*';
+  const allowMethods = (options.methods ?? ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS']).join(',');
+  const allowHeaders = (options.headers ?? ['content-type', 'authorization']).join(',');
+  const maxAge = String(options.maxAge ?? 86400);
