@@ -128,3 +128,9 @@ export function securityHeaders(options: SecurityHeadersOptions = {}): Middlewar
     }
     if (hsts) {
       res.header('strict-transport-security', 'max-age=15552000; includeSubDomains');
+    }
+    await next();
+  };
+}
+
+/** 请求耗时与访问日志 */
