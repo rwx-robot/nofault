@@ -66,3 +66,10 @@ export function bodyParser(options: BodyParserOptions = {}): Middleware {
   return async (ctx, next) => {
     const method = ctx.request.method;
     if (method === 'GET' || method === 'HEAD' || method === 'DELETE') {
+      await next();
+      return;
+    }
+    const ct = ctx.request.contentType.split(';')[0]!.trim();
+    if (!types.includes(ct)) {
+      await next();
+      return;
