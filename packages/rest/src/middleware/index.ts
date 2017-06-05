@@ -73,3 +73,10 @@ export function bodyParser(options: BodyParserOptions = {}): Middleware {
     if (!types.includes(ct)) {
       await next();
       return;
+    }
+
+    const chunks: Buffer[] = [];
+    let size = 0;
+    for await (const chunk of ctx.request.raw) {
+      const buf = chunk as Buffer;
+      size += buf.length;
