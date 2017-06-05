@@ -80,3 +80,10 @@ export function bodyParser(options: BodyParserOptions = {}): Middleware {
     for await (const chunk of ctx.request.raw) {
       const buf = chunk as Buffer;
       size += buf.length;
+      if (size > limit) throw new BadRequestException(`Request body too large (limit ${limit} bytes)`);
+      chunks.push(buf);
+    }
+    const raw = Buffer.concat(chunks).toString('utf8');
+
+    if (raw.length === 0) {
+      ctx.request.body = undefined;
