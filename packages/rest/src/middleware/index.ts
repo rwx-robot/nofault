@@ -39,3 +39,10 @@ export function cors(options: CorsOptions = {}): Middleware {
 
     ctx.response.header('access-control-allow-origin', originValue);
     if (options.credentials) ctx.response.header('access-control-allow-credentials', 'true');
+    ctx.response.header('access-control-allow-methods', allowMethods);
+    ctx.response.header('access-control-allow-headers', allowHeaders);
+    ctx.response.header('access-control-max-age', maxAge);
+
+    if (ctx.request.method === 'OPTIONS') {
+      ctx.response.status(204).end();
+      return;
