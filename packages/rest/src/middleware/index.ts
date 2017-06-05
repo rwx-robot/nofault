@@ -94,3 +94,9 @@ export function bodyParser(options: BodyParserOptions = {}): Middleware {
         throw new BadRequestException('Invalid JSON body');
       }
     } else if (ct === 'application/x-www-form-urlencoded') {
+      ctx.request.body = Object.fromEntries(new URLSearchParams(raw).entries());
+    } else {
+      ctx.request.body = raw;
+    }
+
+    await next();
