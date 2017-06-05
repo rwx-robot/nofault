@@ -100,3 +100,10 @@ export function bodyParser(options: BodyParserOptions = {}): Middleware {
     }
 
     await next();
+  };
+}
+
+export interface SecurityHeadersOptions {
+  /** 关闭CSP（默认给出安全但不影响开发的策略） */
+  contentSecurityPolicy?: string | false;
+  hsts?: boolean;
