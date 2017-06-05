@@ -46,3 +46,10 @@ export function cors(options: CorsOptions = {}): Middleware {
     if (ctx.request.method === 'OPTIONS') {
       ctx.response.status(204).end();
       return;
+    }
+    await next();
+  };
+}
+
+export interface BodyParserOptions {
+  /** 大小上限（字节），默认 1MB */
