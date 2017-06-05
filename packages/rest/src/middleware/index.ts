@@ -32,3 +32,10 @@ export function cors(options: CorsOptions = {}): Middleware {
       allowOrigin === true
         ? (reqOrigin ?? '*')
         : Array.isArray(allowOrigin)
+          ? (reqOrigin && allowOrigin.includes(reqOrigin) ? reqOrigin : 'null')
+          : allowOrigin === false
+            ? 'null'
+            : allowOrigin;
+
+    ctx.response.header('access-control-allow-origin', originValue);
+    if (options.credentials) ctx.response.header('access-control-allow-credentials', 'true');
