@@ -107,3 +107,10 @@ export interface SecurityHeadersOptions {
   /** 关闭CSP（默认给出安全但不影响开发的策略） */
   contentSecurityPolicy?: string | false;
   hsts?: boolean;
+  frameOptions?: string;
+}
+
+/** 安全响应头（Helmet 的最小子集） */
+export function securityHeaders(options: SecurityHeadersOptions = {}): Middleware {
+  // 在闭包外先收窄，闭包内 TS 无法保持对对象属性的类型收窄
+  const csp = options.contentSecurityPolicy === undefined ? "default-src 'self'" : options.contentSecurityPolicy;
