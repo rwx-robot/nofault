@@ -12,3 +12,9 @@ import { BadRequestException, NotFoundException } from '../errors/http-exception
  */
 
 export interface CorsOptions {
+  origin?: string | string[] | boolean;
+  methods?: string[];
+  headers?: string[];
+  credentials?: boolean;
+  maxAge?: number;
+}
