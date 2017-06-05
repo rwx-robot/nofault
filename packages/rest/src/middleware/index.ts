@@ -121,3 +121,10 @@ export function securityHeaders(options: SecurityHeadersOptions = {}): Middlewar
     const res = ctx.response;
     res.header('x-content-type-options', 'nosniff');
     res.header('x-frame-options', frameOptions);
+    res.header('referrer-policy', 'no-referrer');
+    res.header('x-xss-protection', '0');
+    if (csp !== false) {
+      res.header('content-security-policy', csp);
+    }
+    if (hsts) {
+      res.header('strict-transport-security', 'max-age=15552000; includeSubDomains');
