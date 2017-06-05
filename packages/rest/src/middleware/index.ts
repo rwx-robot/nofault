@@ -5,3 +5,10 @@ import { RestContext } from '../http/context';
 import { BadRequestException, NotFoundException } from '../errors/http-exception';
 
 /**
+ * 内置中间件集合。
+ *
+ * 每个都是**纯函数**，符合 `(ctx, next) => Promise<void>` 签名，
+ * 与用户自定义中间件完全同构——没有特权代码路径。
+ */
+
+export interface CorsOptions {
