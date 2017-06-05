@@ -87,3 +87,10 @@ export function bodyParser(options: BodyParserOptions = {}): Middleware {
 
     if (raw.length === 0) {
       ctx.request.body = undefined;
+    } else if (ct === 'application/json') {
+      try {
+        ctx.request.body = JSON.parse(raw) as unknown;
+      } catch {
+        throw new BadRequestException('Invalid JSON body');
+      }
+    } else if (ct === 'application/x-www-form-urlencoded') {
