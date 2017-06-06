@@ -209,3 +209,10 @@ export function serveStatic(options: StaticOptions): Middleware {
 export function rateLimit(options: { windowMs: number; max: number }): Middleware {
   const hits = new Map<string, { count: number; resetAt: number }>();
   return async (ctx, next) => {
+    const now = Date.now();
+    const key = ctx.request.ip || 'unknown';
+    const entry = hits.get(key);
+    if (!entry || entry.resetAt <= now) {
+      hits.set(key, { count: 1, resetAt: now + options.windowMs });
+    } else if (entry.count >= options.max) {
+      ctx.response.header('retry-after', String(Math.ceil((entry.resetAt - now) / 1000)));
