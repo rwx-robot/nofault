@@ -141,3 +141,10 @@ export function requestLogger(log: (msg: string, fields?: Record<string, unknown
     try {
       await next();
     } finally {
+      const ms = Number(process.hrtime.bigint() - start) / 1e6;
+      status = ctx.response.statusCodeValue;
+      log(`${ctx.request.method} ${ctx.request.path}`, {
+        status,
+        ms: Number(ms.toFixed(2)),
+        ip: ctx.request.ip,
+      });
