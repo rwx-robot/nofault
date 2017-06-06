@@ -155,3 +155,10 @@ export function requestLogger(log: (msg: string, fields?: Record<string, unknown
 export interface StaticOptions {
   /** 磁盘根目录 */
   root: string;
+  /** URL 前缀，默认 `/` */
+  prefix?: string;
+  /** 是否允许路径穿越（默认禁止） */
+  allowTraversal?: boolean;
+}
+
+const MIME: Record<string, string> = {
