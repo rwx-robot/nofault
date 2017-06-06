@@ -182,3 +182,10 @@ export function serveStatic(options: StaticOptions): Middleware {
     const p = ctx.request.path;
     if (!p.startsWith(prefix)) {
       await next();
+      return;
+    }
+    const rel = p.slice(prefix.length).replace(/^\/+/, '');
+    if (!options.allowTraversal && rel.includes('..')) {
+      throw new BadRequestException('Invalid path');
+    }
+    const file = join(root, normalize(rel));
