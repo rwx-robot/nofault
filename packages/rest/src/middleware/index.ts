@@ -175,3 +175,10 @@ const MIME: Record<string, string> = {
 
 /** 静态资源：命中则直接返回，未命中继续走路由 */
 export function serveStatic(options: StaticOptions): Middleware {
+  const root = options.root;
+  const prefix = options.prefix ?? '/';
+
+  return async (ctx, next) => {
+    const p = ctx.request.path;
+    if (!p.startsWith(prefix)) {
+      await next();
