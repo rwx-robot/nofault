@@ -223,3 +223,8 @@ export function rateLimit(options: { windowMs: number; max: number }): Middlewar
     await next();
   };
 }
+
+export { requestContext } from './request-context';
+export type { RequestContextOptions } from './request-context';
+
+export type { Middleware, RestContext };
