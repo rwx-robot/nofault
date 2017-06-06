@@ -202,3 +202,10 @@ export function serveStatic(options: StaticOptions): Middleware {
       stat.size,
     );
     ctx.response.status(200);
+  };
+}
+
+/** 简单的内存限流（单机版；分布式限流在 v0.7.0 提供） */
+export function rateLimit(options: { windowMs: number; max: number }): Middleware {
+  const hits = new Map<string, { count: number; resetAt: number }>();
+  return async (ctx, next) => {
