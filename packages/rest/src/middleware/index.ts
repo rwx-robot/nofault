@@ -216,3 +216,10 @@ export function rateLimit(options: { windowMs: number; max: number }): Middlewar
       hits.set(key, { count: 1, resetAt: now + options.windowMs });
     } else if (entry.count >= options.max) {
       ctx.response.header('retry-after', String(Math.ceil((entry.resetAt - now) / 1000)));
+      throw new BadRequestException('Too many requests');
+    } else {
+      entry.count++;
+    }
+    await next();
+  };
+}
