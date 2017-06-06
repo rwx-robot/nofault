@@ -189,3 +189,10 @@ export function serveStatic(options: StaticOptions): Middleware {
       throw new BadRequestException('Invalid path');
     }
     const file = join(root, normalize(rel));
+    const stat = existsSync(file) ? statSync(file) : undefined;
+    if (!file.startsWith(root) || !stat?.isFile()) {
+      if (p.endsWith('/')) throw new NotFoundException(`Static file not found: ${p}`);
+      await next();
+      return;
+    }
+    // 流式发送：不把整个文件读进内存，背压交给 pipeline（`ctx.response.stream` 在 commit 时接线）
