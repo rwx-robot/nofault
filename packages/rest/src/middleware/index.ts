@@ -134,3 +134,10 @@ export function securityHeaders(options: SecurityHeadersOptions = {}): Middlewar
 }
 
 /** 请求耗时与访问日志 */
+export function requestLogger(log: (msg: string, fields?: Record<string, unknown>) => void): Middleware {
+  return async (ctx, next) => {
+    const start = process.hrtime.bigint();
+    let status = 200;
+    try {
+      await next();
+    } finally {
