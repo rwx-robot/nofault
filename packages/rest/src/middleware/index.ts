@@ -148,3 +148,10 @@ export function requestLogger(log: (msg: string, fields?: Record<string, unknown
         ms: Number(ms.toFixed(2)),
         ip: ctx.request.ip,
       });
+    }
+  };
+}
+
+export interface StaticOptions {
+  /** 磁盘根目录 */
+  root: string;
