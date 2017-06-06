@@ -196,3 +196,9 @@ export function serveStatic(options: StaticOptions): Middleware {
       return;
     }
     // 流式发送：不把整个文件读进内存，背压交给 pipeline（`ctx.response.stream` 在 commit 时接线）
+    ctx.response.stream(
+      createReadStream(file),
+      MIME[extname(file).toLowerCase()] ?? 'application/octet-stream',
+      stat.size,
+    );
+    ctx.response.status(200);
