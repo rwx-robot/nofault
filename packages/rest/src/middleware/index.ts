@@ -168,3 +168,10 @@ const MIME: Record<string, string> = {
   '.json': 'application/json; charset=utf-8',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.svg': 'image/svg+xml',
+  '.ico': 'image/x-icon',
+  '.txt': 'text/plain; charset=utf-8',
+};
+
+/** 静态资源：命中则直接返回，未命中继续走路由 */
+export function serveStatic(options: StaticOptions): Middleware {
