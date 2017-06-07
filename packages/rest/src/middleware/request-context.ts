@@ -32,3 +32,4 @@ export function requestContext(options: RequestContextOptions = {}): Middleware 
   return (ctx, next) => {
     // 复用框架在请求入口建好的上下文（如果存在）。
     // 否则会出现**两层嵌套上下文**：handler 里读到的 requestId 和
+    // 请求级 Provider 拿到的 requestId 是两个不同的值——非常难查。
