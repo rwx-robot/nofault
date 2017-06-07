@@ -8,3 +8,4 @@ export interface RequestContextOptions {
   store?: RequestContextStore;
   /** 是否把 requestId 写进响应头，默认 true */
   exposeRequestId?: boolean;
+}
