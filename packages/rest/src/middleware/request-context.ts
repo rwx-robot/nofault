@@ -14,3 +14,5 @@ export interface RequestContextOptions {
  * 请求上下文中间件。
  *
  * 职责（v0.3.0）：
+ * 1. 为每个请求建立 `RequestContext`（继承上游 `traceparent`，没有就新开一条 trace）
+ * 2. 挂到 `AsyncLocalStorage` 上，让业务代码无需层层传参就能拿到
