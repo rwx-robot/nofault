@@ -18,3 +18,5 @@ export interface RequestContextOptions {
  * 2. 挂到 `AsyncLocalStorage` 上，让业务代码无需层层传参就能拿到
  * 3. 给内核提供 `contextId`，从而启用 `Scope.REQUEST`
  *
+ * **必须放在中间件链最前面**，否则后置中间件拿不到上下文。
+ *
