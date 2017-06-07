@@ -9,3 +9,6 @@ export interface RequestContextOptions {
   /** 是否把 requestId 写进响应头，默认 true */
   exposeRequestId?: boolean;
 }
+
+/**
+ * 请求上下文中间件。
