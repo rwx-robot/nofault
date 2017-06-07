@@ -20,3 +20,4 @@ export interface RequestContextOptions {
  *
  * **必须放在中间件链最前面**，否则后置中间件拿不到上下文。
  *
+ * @example
