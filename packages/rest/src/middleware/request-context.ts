@@ -28,3 +28,5 @@ export interface RequestContextOptions {
 export function requestContext(options: RequestContextOptions = {}): Middleware {
   const store = options.store ?? requestContextStore;
   const expose = options.exposeRequestId ?? true;
+
+  return (ctx, next) => {
