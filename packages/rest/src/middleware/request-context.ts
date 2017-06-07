@@ -25,3 +25,4 @@ export interface RequestContextOptions {
  * RestApplication.create(AppModule, { middleware: [requestContext(), cors(), bodyParser()] })
  * ```
  */
+export function requestContext(options: RequestContextOptions = {}): Middleware {
