@@ -24,3 +24,4 @@ export interface RequestContextOptions {
  * ```ts
  * RestApplication.create(AppModule, { middleware: [requestContext(), cors(), bodyParser()] })
  * ```
+ */
