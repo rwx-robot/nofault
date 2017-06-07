@@ -13,3 +13,4 @@ export interface RequestContextOptions {
 /**
  * 请求上下文中间件。
  *
+ * 职责（v0.3.0）：
