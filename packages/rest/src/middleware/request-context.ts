@@ -16,3 +16,4 @@ export interface RequestContextOptions {
  * 职责（v0.3.0）：
  * 1. 为每个请求建立 `RequestContext`（继承上游 `traceparent`，没有就新开一条 trace）
  * 2. 挂到 `AsyncLocalStorage` 上，让业务代码无需层层传参就能拿到
+ * 3. 给内核提供 `contextId`，从而启用 `Scope.REQUEST`
