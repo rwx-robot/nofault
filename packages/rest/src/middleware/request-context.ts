@@ -37,3 +37,6 @@ export function requestContext(options: RequestContextOptions = {}): Middleware 
     const requestCtx = existing ?? new RequestContext({ traceparent: parseTraceparent(ctx.request.header('traceparent')) });
     ctx.state.set('requestContext', requestCtx);
     if (expose) ctx.response.header('x-request-id', requestCtx.id);
+
+    // 在上下文中执行后续整条链；next() 返回的 Promise 会被正确透传
+    return store.run(requestCtx, () => Promise.resolve(next()));
