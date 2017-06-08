@@ -36,3 +36,4 @@ export function requestContext(options: RequestContextOptions = {}): Middleware 
     const existing = ctx.requestContext<RequestContext>();
     const requestCtx = existing ?? new RequestContext({ traceparent: parseTraceparent(ctx.request.header('traceparent')) });
     ctx.state.set('requestContext', requestCtx);
+    if (expose) ctx.response.header('x-request-id', requestCtx.id);
