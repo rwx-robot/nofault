@@ -34,3 +34,5 @@ export function requestContext(options: RequestContextOptions = {}): Middleware 
     // 否则会出现**两层嵌套上下文**：handler 里读到的 requestId 和
     // 请求级 Provider 拿到的 requestId 是两个不同的值——非常难查。
     const existing = ctx.requestContext<RequestContext>();
+    const requestCtx = existing ?? new RequestContext({ traceparent: parseTraceparent(ctx.request.header('traceparent')) });
+    ctx.state.set('requestContext', requestCtx);
