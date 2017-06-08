@@ -41,3 +41,4 @@ export function requestContext(options: RequestContextOptions = {}): Middleware 
     // 在上下文中执行后续整条链；next() 返回的 Promise 会被正确透传
     return store.run(requestCtx, () => Promise.resolve(next()));
   };
+}
