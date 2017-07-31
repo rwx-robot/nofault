@@ -16,3 +16,6 @@ import { validateDto, coerceDtoFields, type ValidationError } from './validation
  * ```
  */
 export type Middleware = (ctx: RestContext, next: () => Promise<void>) => Promise<void> | void;
+
+/** 把中间件数组折叠成单个执行函数（经典的 compose） */
+export function composeMiddleware(middleware: Middleware[]): (ctx: RestContext, final: () => Promise<void>) => Promise<void> {
