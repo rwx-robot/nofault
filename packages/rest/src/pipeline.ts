@@ -6,3 +6,6 @@ import { validateDto, coerceDtoFields, type ValidationError } from './validation
 
 /**
  * 中间件签名：洋葱模型。
+ *
+ * ```ts
+ * const timing: Middleware = async (ctx, next) => {
