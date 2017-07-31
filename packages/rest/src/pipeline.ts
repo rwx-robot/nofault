@@ -14,3 +14,5 @@ import { validateDto, coerceDtoFields, type ValidationError } from './validation
  *   ctx.response.header('x-response-time', String(Date.now() - t));
  * };
  * ```
+ */
+export type Middleware = (ctx: RestContext, next: () => Promise<void>) => Promise<void> | void;
