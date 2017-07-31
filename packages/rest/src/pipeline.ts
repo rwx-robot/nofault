@@ -47,3 +47,6 @@ function coerce(value: string, type: unknown): unknown {
   }
   if (type === Boolean) return value === 'true' || value === '1';
   return value;
+}
+
+function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
