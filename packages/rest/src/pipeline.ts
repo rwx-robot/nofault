@@ -42,3 +42,6 @@ export interface Interceptor {
 function coerce(value: string, type: unknown): unknown {
   if (type === Number) {
     const n = Number(value);
+    if (Number.isNaN(n)) throw new BadRequestException(`Cannot convert "${value}" to number`);
+    return n;
+  }
