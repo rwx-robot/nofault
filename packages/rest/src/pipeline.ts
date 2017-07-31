@@ -27,3 +27,5 @@ export function composeMiddleware(middleware: Middleware[]): (ctx: RestContext, 
       const fn = i === middleware.length ? final : middleware[i];
       if (!fn) return;
       await fn(ctx, () => dispatch(i + 1));
+    };
+    await dispatch(0);
