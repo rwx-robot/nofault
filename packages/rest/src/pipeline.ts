@@ -11,3 +11,6 @@ import { validateDto, coerceDtoFields, type ValidationError } from './validation
  * const timing: Middleware = async (ctx, next) => {
  *   const t = Date.now();
  *   await next();
+ *   ctx.response.header('x-response-time', String(Date.now() - t));
+ * };
+ * ```
