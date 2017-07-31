@@ -24,3 +24,6 @@ export function composeMiddleware(middleware: Middleware[]): (ctx: RestContext, 
     const dispatch = async (i: number): Promise<void> => {
       if (i <= index) throw new Error('next() called multiple times');
       index = i;
+      const fn = i === middleware.length ? final : middleware[i];
+      if (!fn) return;
+      await fn(ctx, () => dispatch(i + 1));
