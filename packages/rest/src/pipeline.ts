@@ -9,3 +9,5 @@ import { validateDto, coerceDtoFields, type ValidationError } from './validation
  *
  * ```ts
  * const timing: Middleware = async (ctx, next) => {
+ *   const t = Date.now();
+ *   await next();
