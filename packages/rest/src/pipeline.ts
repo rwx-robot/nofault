@@ -45,3 +45,5 @@ function coerce(value: string, type: unknown): unknown {
     if (Number.isNaN(n)) throw new BadRequestException(`Cannot convert "${value}" to number`);
     return n;
   }
+  if (type === Boolean) return value === 'true' || value === '1';
+  return value;
