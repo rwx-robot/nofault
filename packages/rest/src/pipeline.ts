@@ -36,3 +36,7 @@ export function composeMiddleware(middleware: Middleware[]): (ctx: RestContext, 
 export interface Interceptor {
   intercept(ctx: RestContext, next: () => Promise<unknown>): Promise<unknown>;
 }
+
+// ------------------------------------------------------------------ 参数绑定
+
+function coerce(value: string, type: unknown): unknown {
