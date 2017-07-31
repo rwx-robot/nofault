@@ -19,3 +19,6 @@ export type Middleware = (ctx: RestContext, next: () => Promise<void>) => Promis
 
 /** 把中间件数组折叠成单个执行函数（经典的 compose） */
 export function composeMiddleware(middleware: Middleware[]): (ctx: RestContext, final: () => Promise<void>) => Promise<void> {
+  return async (ctx, final) => {
+    let index = -1;
+    const dispatch = async (i: number): Promise<void> => {
