@@ -40,3 +40,5 @@ export interface Interceptor {
 // ------------------------------------------------------------------ 参数绑定
 
 function coerce(value: string, type: unknown): unknown {
+  if (type === Number) {
+    const n = Number(value);
