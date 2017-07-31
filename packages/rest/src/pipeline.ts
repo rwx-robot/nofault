@@ -31,3 +31,7 @@ export function composeMiddleware(middleware: Middleware[]): (ctx: RestContext, 
     await dispatch(0);
   };
 }
+
+/** 拦截器：在 handler 前后插入逻辑，可改写结果 */
+export interface Interceptor {
+  intercept(ctx: RestContext, next: () => Promise<unknown>): Promise<unknown>;
