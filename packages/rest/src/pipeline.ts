@@ -55,3 +55,6 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
     case ParamSource.PARAM:
       return key ? req.params[key] : { ...req.params };
     case ParamSource.QUERY:
+      return key ? (req.query.get(key) ?? undefined) : Object.fromEntries(req.query.entries());
+    case ParamSource.BODY:
+      if (!key) return req.body;
