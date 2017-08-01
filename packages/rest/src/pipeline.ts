@@ -53,3 +53,5 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
   const req = ctx.request;
   switch (source) {
     case ParamSource.PARAM:
+      return key ? req.params[key] : { ...req.params };
+    case ParamSource.QUERY:
