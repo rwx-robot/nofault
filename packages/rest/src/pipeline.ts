@@ -65,3 +65,6 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
       return req;
     case ParamSource.RESPONSE:
       return ctx.response;
+    case ParamSource.CONTEXT:
+      return ctx;
+    case ParamSource.RAW_REQUEST:
