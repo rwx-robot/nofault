@@ -91,3 +91,6 @@ type RouteLike = { propertyKey: string | symbol };
  * 在热路径上反复做反射查询开销可观（实测占 POST 场景不小比例），
  * 因此按 (target, propertyKey) 记忆化一次。
  */
+const paramCache = new WeakMap<object, Map<string | symbol, ParamMetadata[]>>();
+
+function cachedParams(target: object, propertyKey: string | symbol): ParamMetadata[] {
