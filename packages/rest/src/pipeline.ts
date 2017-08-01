@@ -60,3 +60,6 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
       if (!key) return req.body;
       return (req.body as Record<string, unknown> | undefined)?.[key];
     case ParamSource.HEADERS:
+      return key ? req.header(key) : req.headers;
+    case ParamSource.REQUEST:
+      return req;
