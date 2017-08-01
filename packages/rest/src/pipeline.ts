@@ -81,3 +81,5 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
  *
  * 顺序必须与装饰器声明顺序一致（TS 的 `design:paramtypes` 顺序即参数顺序）。
  */
+/** 只需要 propertyKey，放宽类型以便复用（ResolvedRoute / RouteMetadata 都能传） */
+type RouteLike = { propertyKey: string | symbol };
