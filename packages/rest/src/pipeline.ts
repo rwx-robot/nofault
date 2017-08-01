@@ -50,3 +50,6 @@ function coerce(value: string, type: unknown): unknown {
 }
 
 function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
+  const req = ctx.request;
+  switch (source) {
+    case ParamSource.PARAM:
