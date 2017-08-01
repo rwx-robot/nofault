@@ -99,3 +99,5 @@ function cachedParams(target: object, propertyKey: string | symbol): ParamMetada
     byProp = new Map();
     paramCache.set(target, byProp);
   }
+  const hit = byProp.get(propertyKey);
+  if (hit) return hit;
