@@ -73,3 +73,5 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
       return ctx.response.raw;
     default:
       return undefined;
+  }
+}
