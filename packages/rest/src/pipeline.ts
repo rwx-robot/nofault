@@ -78,3 +78,6 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
 
 /**
  * 按方法签名解析实参。
+ *
+ * 顺序必须与装饰器声明顺序一致（TS 的 `design:paramtypes` 顺序即参数顺序）。
+ */
