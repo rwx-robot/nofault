@@ -75,3 +75,6 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
       return undefined;
   }
 }
+
+/**
+ * 按方法签名解析实参。
