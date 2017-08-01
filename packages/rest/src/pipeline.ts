@@ -96,3 +96,6 @@ const paramCache = new WeakMap<object, Map<string | symbol, ParamMetadata[]>>();
 function cachedParams(target: object, propertyKey: string | symbol): ParamMetadata[] {
   let byProp = paramCache.get(target);
   if (!byProp) {
+    byProp = new Map();
+    paramCache.set(target, byProp);
+  }
