@@ -83,3 +83,6 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
  */
 /** 只需要 propertyKey，放宽类型以便复用（ResolvedRoute / RouteMetadata 都能传） */
 type RouteLike = { propertyKey: string | symbol };
+
+/**
+ * 参数元数据缓存。
