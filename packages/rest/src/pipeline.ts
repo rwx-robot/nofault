@@ -71,3 +71,5 @@ function pick(source: ParamSource, ctx: RestContext, key?: string): unknown {
       return req.raw;
     case ParamSource.RAW_RESPONSE:
       return ctx.response.raw;
+    default:
+      return undefined;
