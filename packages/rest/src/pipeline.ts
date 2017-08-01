@@ -89,3 +89,5 @@ type RouteLike = { propertyKey: string | symbol };
  *
  * `Reflect.getMetadata` + `sort()` 是**每请求**都要走的路径，
  * 在热路径上反复做反射查询开销可观（实测占 POST 场景不小比例），
+ * 因此按 (target, propertyKey) 记忆化一次。
+ */
