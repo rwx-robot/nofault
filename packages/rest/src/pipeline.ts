@@ -148,3 +148,5 @@ export function resolveHandlerArgs(
 }
 
 /**
+ * DTO 校验：失败抛 422。
+ *
