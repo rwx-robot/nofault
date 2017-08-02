@@ -125,3 +125,5 @@ export function resolveHandlerArgs(
   route: RouteLike,
   ctx: RestContext,
 ): unknown[] {
+  const metas = cachedParams(target, route.propertyKey);
+  if (metas.length === 0) return [];
