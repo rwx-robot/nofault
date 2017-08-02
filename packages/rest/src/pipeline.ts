@@ -122,3 +122,6 @@ function cachedDto(target: object, propertyKey: string | symbol): (new () => obj
 
 export function resolveHandlerArgs(
   target: object,
+  route: RouteLike,
+  ctx: RestContext,
+): unknown[] {
