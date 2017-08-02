@@ -104,3 +104,6 @@ function cachedParams(target: object, propertyKey: string | symbol): ParamMetada
   const metas = getParams(target, propertyKey).sort((a, b) => a.index - b.index);
   byProp.set(propertyKey, metas);
   return metas;
+}
+
+const dtoCache = new WeakMap<object, Map<string | symbol, (new () => object) | undefined>>();
