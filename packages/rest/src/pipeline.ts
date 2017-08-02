@@ -132,3 +132,6 @@ export function resolveHandlerArgs(
   const args: unknown[] = new Array(maxIndex + 1).fill(undefined);
 
   for (const meta of metas) {
+    let value = pick(meta.source, ctx, meta.key);
+    if (typeof value === 'string' && meta.type) value = coerce(value, meta.type);
+    // 整个对象绑到 DTO 上时按属性声明类型做一次强制（query string 里全是字符串）
