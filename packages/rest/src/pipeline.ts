@@ -130,3 +130,5 @@ export function resolveHandlerArgs(
 
   const maxIndex = Math.max(...metas.map((m) => m.index));
   const args: unknown[] = new Array(maxIndex + 1).fill(undefined);
+
+  for (const meta of metas) {
