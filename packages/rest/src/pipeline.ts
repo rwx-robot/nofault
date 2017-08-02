@@ -112,3 +112,5 @@ function cachedDto(target: object, propertyKey: string | symbol): (new () => obj
   let byProp = dtoCache.get(target);
   if (!byProp) {
     byProp = new Map();
+    dtoCache.set(target, byProp);
+  }
