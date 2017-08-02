@@ -140,3 +140,6 @@ export function resolveHandlerArgs(
     }
     if (value === undefined) value = meta.defaultValue;
     if (value === undefined && meta.required) {
+      throw new BadRequestException(`Missing required parameter: ${meta.source}${meta.key ? ` "${meta.key}"` : ''}`);
+    }
+    args[meta.index] = value;
