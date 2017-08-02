@@ -135,3 +135,6 @@ export function resolveHandlerArgs(
     let value = pick(meta.source, ctx, meta.key);
     if (typeof value === 'string' && meta.type) value = coerce(value, meta.type);
     // 整个对象绑到 DTO 上时按属性声明类型做一次强制（query string 里全是字符串）
+    if (isDtoClass(meta.type) && meta.key === undefined && value !== null && typeof value === 'object') {
+      value = coerceDtoFields(meta.type as new () => object, value);
+    }
