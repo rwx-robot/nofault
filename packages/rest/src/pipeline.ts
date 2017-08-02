@@ -119,3 +119,6 @@ function cachedDto(target: object, propertyKey: string | symbol): (new () => obj
   byProp.set(propertyKey, dto);
   return dto;
 }
+
+export function resolveHandlerArgs(
+  target: object,
