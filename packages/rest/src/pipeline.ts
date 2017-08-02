@@ -127,3 +127,6 @@ export function resolveHandlerArgs(
 ): unknown[] {
   const metas = cachedParams(target, route.propertyKey);
   if (metas.length === 0) return [];
+
+  const maxIndex = Math.max(...metas.map((m) => m.index));
+  const args: unknown[] = new Array(maxIndex + 1).fill(undefined);
