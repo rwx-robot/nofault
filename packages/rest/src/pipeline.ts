@@ -109,3 +109,6 @@ function cachedParams(target: object, propertyKey: string | symbol): ParamMetada
 const dtoCache = new WeakMap<object, Map<string | symbol, (new () => object) | undefined>>();
 
 function cachedDto(target: object, propertyKey: string | symbol): (new () => object) | undefined {
+  let byProp = dtoCache.get(target);
+  if (!byProp) {
+    byProp = new Map();
