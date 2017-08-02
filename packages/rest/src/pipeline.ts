@@ -143,3 +143,5 @@ export function resolveHandlerArgs(
       throw new BadRequestException(`Missing required parameter: ${meta.source}${meta.key ? ` "${meta.key}"` : ''}`);
     }
     args[meta.index] = value;
+  }
+  return args;
