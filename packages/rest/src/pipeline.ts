@@ -138,3 +138,5 @@ export function resolveHandlerArgs(
     if (isDtoClass(meta.type) && meta.key === undefined && value !== null && typeof value === 'object') {
       value = coerceDtoFields(meta.type as new () => object, value);
     }
+    if (value === undefined) value = meta.defaultValue;
+    if (value === undefined && meta.required) {
