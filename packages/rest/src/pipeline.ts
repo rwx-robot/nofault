@@ -101,3 +101,6 @@ function cachedParams(target: object, propertyKey: string | symbol): ParamMetada
   }
   const hit = byProp.get(propertyKey);
   if (hit) return hit;
+  const metas = getParams(target, propertyKey).sort((a, b) => a.index - b.index);
+  byProp.set(propertyKey, metas);
+  return metas;
