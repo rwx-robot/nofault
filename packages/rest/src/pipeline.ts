@@ -117,3 +117,5 @@ function cachedDto(target: object, propertyKey: string | symbol): (new () => obj
   if (byProp.has(propertyKey)) return byProp.get(propertyKey);
   const dto = getRouteDto(target.constructor ?? (target as Function), propertyKey);
   byProp.set(propertyKey, dto);
+  return dto;
+}
