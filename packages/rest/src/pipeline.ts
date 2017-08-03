@@ -186,3 +186,6 @@ function isDtoClass(type: unknown): boolean {
     typeof type === 'function' &&
     type !== Number &&
     type !== String &&
+    type !== Boolean &&
+    type !== Date &&
+    type !== Array &&
