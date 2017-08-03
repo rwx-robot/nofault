@@ -194,3 +194,6 @@ function isDtoClass(type: unknown): boolean {
 }
 
 /** 把任意抛出的异常归一化成 HttpException */
+export function normalizeError(err: unknown): HttpException {
+  if (err instanceof HttpException) return err;
+  if (err instanceof Error) {
