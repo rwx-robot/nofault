@@ -189,3 +189,6 @@ function isDtoClass(type: unknown): boolean {
     type !== Boolean &&
     type !== Date &&
     type !== Array &&
+    type !== Object
+  );
+}
