@@ -163,3 +163,6 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
   );
   // 没有任何"整体绑定"的 DTO（例如只用了若干个 @Param），
   // 就没有可校验的对象 —— 跳过，不要拿空的 body 去撞必填规则
+  if (!bound) return;
+  const fromQuery = bound.source === ParamSource.QUERY;
+  const raw = fromQuery ? Object.fromEntries(ctx.request.query.entries()) : ctx.request.body;
