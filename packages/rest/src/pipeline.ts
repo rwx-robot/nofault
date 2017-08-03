@@ -161,3 +161,5 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
   const bound = cachedParams(target, route.propertyKey).find(
     (m) => m.source === ParamSource.BODY || m.source === ParamSource.QUERY,
   );
+  // 没有任何"整体绑定"的 DTO（例如只用了若干个 @Param），
+  // 就没有可校验的对象 —— 跳过，不要拿空的 body 去撞必填规则
