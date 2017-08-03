@@ -153,3 +153,6 @@ export function resolveHandlerArgs(
  * 取值要看 DTO **绑在哪儿**：绑 body 就校验 body，绑 query 就校验 query。
  * 只认 body 的话 `@Query() dto` 会完全绕过校验，
  * 而查询参数恰恰是最容易被外部乱填、最需要校验的一处。
+ */
+export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: RestContext): void {
+  const dto = cachedDto(target, route.propertyKey);
