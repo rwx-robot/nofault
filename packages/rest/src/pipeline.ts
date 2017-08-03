@@ -192,3 +192,5 @@ function isDtoClass(type: unknown): boolean {
     type !== Object
   );
 }
+
+/** 把任意抛出的异常归一化成 HttpException */
