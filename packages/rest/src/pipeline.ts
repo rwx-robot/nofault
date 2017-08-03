@@ -199,3 +199,5 @@ export function normalizeError(err: unknown): HttpException {
   if (err instanceof Error) {
     return new HttpException(500, err.message, 500);
   }
+  return new HttpException(500, String(err), 500);
+}
