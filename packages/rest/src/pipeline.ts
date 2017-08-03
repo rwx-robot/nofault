@@ -197,3 +197,5 @@ function isDtoClass(type: unknown): boolean {
 export function normalizeError(err: unknown): HttpException {
   if (err instanceof HttpException) return err;
   if (err instanceof Error) {
+    return new HttpException(500, err.message, 500);
+  }
