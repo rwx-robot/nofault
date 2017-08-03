@@ -171,3 +171,6 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
   if (errors.length > 0) {
     throw new HttpException(422, 'Validation failed', 422, errors);
   }
+}
+
+/**
