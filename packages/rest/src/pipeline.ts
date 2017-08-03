@@ -166,3 +166,5 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
   if (!bound) return;
   const fromQuery = bound.source === ParamSource.QUERY;
   const raw = fromQuery ? Object.fromEntries(ctx.request.query.entries()) : ctx.request.body;
+
+  const errors: ValidationError[] = validateDto(dto, coerceDtoFields(dto, raw));
