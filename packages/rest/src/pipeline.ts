@@ -168,3 +168,6 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
   const raw = fromQuery ? Object.fromEntries(ctx.request.query.entries()) : ctx.request.body;
 
   const errors: ValidationError[] = validateDto(dto, coerceDtoFields(dto, raw));
+  if (errors.length > 0) {
+    throw new HttpException(422, 'Validation failed', 422, errors);
+  }
