@@ -179,3 +179,5 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
  */
 export const validateBodyIfDeclared = (target: object, route: RouteLike, ctx: RestContext): void =>
   validateDtoIfDeclared(target, route, ctx);
+
+/** 是 DTO 类（而不是 Number/String 这类内建构造函数） */
