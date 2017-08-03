@@ -157,3 +157,7 @@ export function resolveHandlerArgs(
 export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: RestContext): void {
   const dto = cachedDto(target, route.propertyKey);
   if (!dto) return;
+
+  const bound = cachedParams(target, route.propertyKey).find(
+    (m) => m.source === ParamSource.BODY || m.source === ParamSource.QUERY,
+  );
