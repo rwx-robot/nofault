@@ -184,3 +184,5 @@ export const validateBodyIfDeclared = (target: object, route: RouteLike, ctx: Re
 function isDtoClass(type: unknown): boolean {
   return (
     typeof type === 'function' &&
+    type !== Number &&
+    type !== String &&
