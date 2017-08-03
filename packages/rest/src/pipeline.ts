@@ -181,3 +181,6 @@ export const validateBodyIfDeclared = (target: object, route: RouteLike, ctx: Re
   validateDtoIfDeclared(target, route, ctx);
 
 /** 是 DTO 类（而不是 Number/String 这类内建构造函数） */
+function isDtoClass(type: unknown): boolean {
+  return (
+    typeof type === 'function' &&
