@@ -201,3 +201,5 @@ export function normalizeError(err: unknown): HttpException {
   }
   return new HttpException(500, String(err), 500);
 }
+
+export type { RestContext, RestRequest, RestResponse };
