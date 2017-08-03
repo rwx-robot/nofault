@@ -176,3 +176,6 @@ export function validateDtoIfDeclared(target: object, route: RouteLike, ctx: Res
 /**
  * 保留旧名字：签名从 `(target, route, body)` 变成了 `(target, route, ctx)`，
  * 但已有代码不至于因为更名被打挂。
+ */
+export const validateBodyIfDeclared = (target: object, route: RouteLike, ctx: RestContext): void =>
+  validateDtoIfDeclared(target, route, ctx);
