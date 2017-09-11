@@ -28,3 +28,6 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
   const list: Rule[] = (Reflect.getMetadata(key, ctor) as Rule[] | undefined) ?? [];
   list.push(rule);
   Reflect.defineMetadata(key, list, ctor);
+
+  // 记录"声明过规则的属性名"。
+  // 不能靠 `Object.keys(new Dto())` —— `name!: string` 这类字段没有初始化器，
