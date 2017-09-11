@@ -25,3 +25,5 @@ const PROPS = 'nofault:validation:props';
 function addRule(target: object, propertyKey: string | symbol, rule: Rule): void {
   const ctor = target.constructor;
   const key = `${RULES}:${String(propertyKey)}`;
+  const list: Rule[] = (Reflect.getMetadata(key, ctor) as Rule[] | undefined) ?? [];
+  list.push(rule);
