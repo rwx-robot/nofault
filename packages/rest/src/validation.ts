@@ -21,3 +21,6 @@ interface Rule {
 
 const RULES = 'nofault:validation:rules';
 const PROPS = 'nofault:validation:props';
+
+function addRule(target: object, propertyKey: string | symbol, rule: Rule): void {
+  const ctor = target.constructor;
