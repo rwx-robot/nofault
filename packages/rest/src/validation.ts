@@ -7,3 +7,6 @@ import 'reflect-metadata';
  * v0.2.0 只需要"够用且零负担"的字段校验，因此自己实现一个 60 行的版本，
  * 语义与 class-validator 保持一致，未来可平滑替换。
  */
+
+export interface ValidationError {
+  property: string;
