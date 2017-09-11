@@ -14,3 +14,5 @@ export interface ValidationError {
 }
 
 interface Rule {
+  name: string;
+  check: (v: unknown) => boolean;
