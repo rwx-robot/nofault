@@ -18,3 +18,5 @@ interface Rule {
   check: (v: unknown) => boolean;
   message: string;
 }
+
+const RULES = 'nofault:validation:rules';
