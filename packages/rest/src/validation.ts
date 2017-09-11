@@ -20,3 +20,4 @@ interface Rule {
 }
 
 const RULES = 'nofault:validation:rules';
+const PROPS = 'nofault:validation:props';
