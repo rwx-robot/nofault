@@ -27,3 +27,4 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
   const key = `${RULES}:${String(propertyKey)}`;
   const list: Rule[] = (Reflect.getMetadata(key, ctor) as Rule[] | undefined) ?? [];
   list.push(rule);
+  Reflect.defineMetadata(key, list, ctor);
