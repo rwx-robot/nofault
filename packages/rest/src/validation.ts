@@ -35,3 +35,5 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
   const props: Array<string | symbol> = (Reflect.getMetadata(PROPS, ctor) as Array<string | symbol> | undefined) ?? [];
   if (!props.includes(propertyKey)) {
     props.push(propertyKey);
+    Reflect.defineMetadata(PROPS, props, ctor);
+  }
