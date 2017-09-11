@@ -31,3 +31,5 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
 
   // 记录"声明过规则的属性名"。
   // 不能靠 `Object.keys(new Dto())` —— `name!: string` 这类字段没有初始化器，
+  // 构造出来的实例上一个自有属性都没有。
+  const props: Array<string | symbol> = (Reflect.getMetadata(PROPS, ctor) as Array<string | symbol> | undefined) ?? [];
