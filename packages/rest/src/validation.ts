@@ -10,3 +10,5 @@ import 'reflect-metadata';
 
 export interface ValidationError {
   property: string;
+  constraints: Record<string, string>;
+}
