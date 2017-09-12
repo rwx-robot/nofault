@@ -64,3 +64,5 @@ export function MinLength(min: number): PropertyDecorator {
 
 export function MaxLength(max: number): PropertyDecorator {
   return (target, propertyKey) =>
+    addRule(target, propertyKey, {
+      name: 'maxLength',
