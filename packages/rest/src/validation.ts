@@ -54,3 +54,5 @@ export const IsEmail = rule('isEmail', (v) => typeof v === 'string' && /^[^\s@]+
 export const IsNotEmpty = rule('isNotEmpty', (v) => v !== undefined && v !== null && v !== '', 'must not be empty');
 
 export function MinLength(min: number): PropertyDecorator {
+  return (target, propertyKey) =>
+    addRule(target, propertyKey, {
