@@ -61,3 +61,6 @@ export function MinLength(min: number): PropertyDecorator {
       message: `must be at least ${min} characters`,
     });
 }
+
+export function MaxLength(max: number): PropertyDecorator {
+  return (target, propertyKey) =>
