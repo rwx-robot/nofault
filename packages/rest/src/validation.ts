@@ -60,3 +60,4 @@ export function MinLength(min: number): PropertyDecorator {
       check: (v) => typeof v === 'string' && v.length >= min,
       message: `must be at least ${min} characters`,
     });
+}
