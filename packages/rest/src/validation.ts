@@ -56,3 +56,5 @@ export const IsNotEmpty = rule('isNotEmpty', (v) => v !== undefined && v !== nul
 export function MinLength(min: number): PropertyDecorator {
   return (target, propertyKey) =>
     addRule(target, propertyKey, {
+      name: 'minLength',
+      check: (v) => typeof v === 'string' && v.length >= min,
