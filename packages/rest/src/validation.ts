@@ -58,3 +58,5 @@ export function MinLength(min: number): PropertyDecorator {
     addRule(target, propertyKey, {
       name: 'minLength',
       check: (v) => typeof v === 'string' && v.length >= min,
+      message: `must be at least ${min} characters`,
+    });
