@@ -47,3 +47,5 @@ function rule(name: string, check: (v: unknown) => boolean, message: string) {
 }
 
 export const IsString = rule('isString', (v) => typeof v === 'string', 'must be a string');
+export const IsNumber = rule('isNumber', (v) => typeof v === 'number' && !Number.isNaN(v), 'must be a number');
+export const IsInt = rule('isInt', (v) => Number.isInteger(v), 'must be an integer');
