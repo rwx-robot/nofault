@@ -45,3 +45,5 @@ function rule(name: string, check: (v: unknown) => boolean, message: string) {
       addRule(target, propertyKey, { name, check, message });
     };
 }
+
+export const IsString = rule('isString', (v) => typeof v === 'string', 'must be a string');
