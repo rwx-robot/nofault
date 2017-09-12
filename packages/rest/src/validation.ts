@@ -52,3 +52,5 @@ export const IsInt = rule('isInt', (v) => Number.isInteger(v), 'must be an integ
 export const IsBoolean = rule('isBoolean', (v) => typeof v === 'boolean', 'must be a boolean');
 export const IsEmail = rule('isEmail', (v) => typeof v === 'string' && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v), 'must be an email');
 export const IsNotEmpty = rule('isNotEmpty', (v) => v !== undefined && v !== null && v !== '', 'must not be empty');
+
+export function MinLength(min: number): PropertyDecorator {
