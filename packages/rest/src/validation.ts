@@ -38,3 +38,6 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
     Reflect.defineMetadata(PROPS, props, ctor);
   }
 }
+
+function rule(name: string, check: (v: unknown) => boolean, message: string) {
+  return (): PropertyDecorator =>
