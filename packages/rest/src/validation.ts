@@ -41,3 +41,5 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
 
 function rule(name: string, check: (v: unknown) => boolean, message: string) {
   return (): PropertyDecorator =>
+    (target, propertyKey) => {
+      addRule(target, propertyKey, { name, check, message });
