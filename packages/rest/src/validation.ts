@@ -68,3 +68,5 @@ export function MaxLength(max: number): PropertyDecorator {
       name: 'maxLength',
       check: (v) => typeof v === 'string' && v.length <= max,
       message: `must be at most ${max} characters`,
+    });
+}
