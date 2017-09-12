@@ -37,3 +37,4 @@ function addRule(target: object, propertyKey: string | symbol, rule: Rule): void
     props.push(propertyKey);
     Reflect.defineMetadata(PROPS, props, ctor);
   }
+}
