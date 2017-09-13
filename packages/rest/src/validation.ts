@@ -88,3 +88,6 @@ export function Max(max: number): PropertyDecorator {
       message: `must be <= ${max}`,
     });
 }
+
+export function IsOptional(): PropertyDecorator {
+  return (target, propertyKey) =>
