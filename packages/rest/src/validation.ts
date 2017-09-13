@@ -102,3 +102,5 @@ export function IsOptional(): PropertyDecorator {
  * 更糟的是即便跳过校验，handler 拿到的 `req.page` 实际是 `"1"`，
  * 类型标着 number、运行时却是 string —— 这种谎一旦撒下，后面全是隐性 bug。
  *
+ * 依赖 `emitDecoratorMetadata`；拿不到类型信息时原样返回（不猜、不报错）。
+ */
