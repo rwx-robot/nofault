@@ -108,3 +108,5 @@ export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Rec
   if (plain === null || typeof plain !== 'object') return {};
   const source = plain as Record<string, unknown>;
   const out: Record<string, unknown> = { ...source };
+  const proto = dtoClass.prototype as object;
+  for (const key of Object.keys(out)) {
