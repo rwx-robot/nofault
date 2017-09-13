@@ -97,3 +97,5 @@ export function IsOptional(): PropertyDecorator {
 /**
  * 按 DTO 的属性声明类型把字符串强制转换成目标类型。
  *
+ * 为什么必须有这一步：query string 里的值**永远是字符串**，
+ * 而 DTO 声明的往往是 `number`。不强制的话 `@IsInt()` 会统统失败；
