@@ -101,3 +101,4 @@ export function IsOptional(): PropertyDecorator {
  * 而 DTO 声明的往往是 `number`。不强制的话 `@IsInt()` 会统统失败；
  * 更糟的是即便跳过校验，handler 拿到的 `req.page` 实际是 `"1"`，
  * 类型标着 number、运行时却是 string —— 这种谎一旦撒下，后面全是隐性 bug。
+ *
