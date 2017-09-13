@@ -87,3 +87,4 @@ export function Max(max: number): PropertyDecorator {
       check: (v) => typeof v === 'number' && v <= max,
       message: `must be <= ${max}`,
     });
+}
