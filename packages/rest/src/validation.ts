@@ -93,3 +93,5 @@ export function IsOptional(): PropertyDecorator {
   return (target, propertyKey) =>
     addRule(target, propertyKey, { name: 'optional', check: () => true, message: '' });
 }
+
+/**
