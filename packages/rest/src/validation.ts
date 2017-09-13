@@ -106,3 +106,5 @@ export function IsOptional(): PropertyDecorator {
  */
 export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Record<string, unknown> {
   if (plain === null || typeof plain !== 'object') return {};
+  const source = plain as Record<string, unknown>;
+  const out: Record<string, unknown> = { ...source };
