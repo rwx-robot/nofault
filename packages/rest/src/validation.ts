@@ -85,3 +85,5 @@ export function Max(max: number): PropertyDecorator {
     addRule(target, propertyKey, {
       name: 'max',
       check: (v) => typeof v === 'number' && v <= max,
+      message: `must be <= ${max}`,
+    });
