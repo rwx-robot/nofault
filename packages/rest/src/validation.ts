@@ -77,3 +77,5 @@ export function Min(min: number): PropertyDecorator {
       name: 'min',
       check: (v) => typeof v === 'number' && v >= min,
       message: `must be >= ${min}`,
+    });
+}
