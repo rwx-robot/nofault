@@ -83,3 +83,5 @@ export function Min(min: number): PropertyDecorator {
 export function Max(max: number): PropertyDecorator {
   return (target, propertyKey) =>
     addRule(target, propertyKey, {
+      name: 'max',
+      check: (v) => typeof v === 'number' && v <= max,
