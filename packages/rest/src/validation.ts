@@ -112,3 +112,5 @@ export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Rec
   for (const key of Object.keys(out)) {
     const type = Reflect.getMetadata('design:type', proto, key) as Function | undefined;
     const value = out[key];
+    if (type === Number && typeof value === 'string') {
+      const n = Number(value);
