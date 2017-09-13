@@ -79,3 +79,5 @@ export function Min(min: number): PropertyDecorator {
       message: `must be >= ${min}`,
     });
 }
+
+export function Max(max: number): PropertyDecorator {
