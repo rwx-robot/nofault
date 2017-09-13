@@ -104,3 +104,5 @@ export function IsOptional(): PropertyDecorator {
  *
  * 依赖 `emitDecoratorMetadata`；拿不到类型信息时原样返回（不猜、不报错）。
  */
+export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Record<string, unknown> {
+  if (plain === null || typeof plain !== 'object') return {};
