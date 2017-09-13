@@ -95,3 +95,5 @@ export function IsOptional(): PropertyDecorator {
 }
 
 /**
+ * 按 DTO 的属性声明类型把字符串强制转换成目标类型。
+ *
