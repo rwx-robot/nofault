@@ -75,3 +75,5 @@ export function Min(min: number): PropertyDecorator {
   return (target, propertyKey) =>
     addRule(target, propertyKey, {
       name: 'min',
+      check: (v) => typeof v === 'number' && v >= min,
+      message: `must be >= ${min}`,
