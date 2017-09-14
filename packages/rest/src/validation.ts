@@ -122,3 +122,4 @@ export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Rec
     }
   }
   return out;
+}
