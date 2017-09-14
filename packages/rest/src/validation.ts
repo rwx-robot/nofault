@@ -114,3 +114,5 @@ export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Rec
     const value = out[key];
     if (type === Number && typeof value === 'string') {
       const n = Number(value);
+      if (!Number.isNaN(n)) out[key] = n;
+      continue;
