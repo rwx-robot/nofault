@@ -123,3 +123,6 @@ export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Rec
   }
   return out;
 }
+
+/** 校验一个普通对象是否满足 DTO 类上声明的规则 */
+export function validateDto(dtoClass: new () => object, plain: unknown): ValidationError[] {
