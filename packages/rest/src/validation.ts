@@ -120,3 +120,5 @@ export function coerceDtoFields(dtoClass: new () => object, plain: unknown): Rec
     if (type === Boolean && typeof value === 'string') {
       out[key] = value === 'true' || value === '1';
     }
+  }
+  return out;
