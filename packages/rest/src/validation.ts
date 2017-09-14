@@ -137,3 +137,5 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
     const key = String(prop);
     const list: Rule[] = (Reflect.getMetadata(`${RULES}:${key}`, dtoClass) as Rule[] | undefined) ?? [];
     if (list.length === 0) continue;
+
+    const optional = list.some((r) => r.name === 'optional');
