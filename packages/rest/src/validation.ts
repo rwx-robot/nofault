@@ -129,3 +129,5 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
   if (plain === null || typeof plain !== 'object') {
     return [{ property: '_root', constraints: { isObject: 'body must be an object' } }];
   }
+  const source = plain as Record<string, unknown>;
+  const errors: ValidationError[] = [];
