@@ -143,3 +143,5 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
     if ((value === undefined || value === null || value === '') && optional) continue;
 
     const constraints: Record<string, string> = {};
+    for (const r of list) {
+      if (r.name === 'optional') continue;
