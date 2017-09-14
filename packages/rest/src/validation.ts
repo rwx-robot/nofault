@@ -147,3 +147,5 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
       if (r.name === 'optional') continue;
       if (!r.check(value)) constraints[r.name] = r.message;
     }
+    if (Object.keys(constraints).length > 0) errors.push({ property: key, constraints });
+  }
