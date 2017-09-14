@@ -145,3 +145,5 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
     const constraints: Record<string, string> = {};
     for (const r of list) {
       if (r.name === 'optional') continue;
+      if (!r.check(value)) constraints[r.name] = r.message;
+    }
