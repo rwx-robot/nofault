@@ -132,3 +132,6 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
   const source = plain as Record<string, unknown>;
   const errors: ValidationError[] = [];
   const props: Array<string | symbol> = (Reflect.getMetadata(PROPS, dtoClass) as Array<string | symbol> | undefined) ?? [];
+
+  for (const prop of props) {
+    const key = String(prop);
