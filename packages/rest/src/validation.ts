@@ -149,3 +149,5 @@ export function validateDto(dtoClass: new () => object, plain: unknown): Validat
     }
     if (Object.keys(constraints).length > 0) errors.push({ property: key, constraints });
   }
+  return errors;
+}
