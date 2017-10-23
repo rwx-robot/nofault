@@ -41,3 +41,8 @@ export class ForbiddenException extends HttpException {
     this.name = 'ForbiddenException';
   }
 }
+
+export class NotFoundException extends HttpException {
+  constructor(message = 'Not Found') {
+    super(404, message, 404);
+    this.name = 'NotFoundException';
