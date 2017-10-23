@@ -69,3 +69,8 @@ export class UnprocessableEntityException extends HttpException {
     this.name = 'UnprocessableEntityException';
   }
 }
+
+export class InternalServerErrorException extends HttpException {
+  constructor(message = 'Internal Server Error') {
+    super(500, message, 500);
+    this.name = 'InternalServerErrorException';
