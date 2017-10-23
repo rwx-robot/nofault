@@ -6,3 +6,7 @@
  * - `code`：业务错误码（默认 -1，成功为 0）
  */
 export class HttpException extends Error {
+  constructor(
+    public readonly status: number,
+    message: string,
+    public readonly code: number = -1,
