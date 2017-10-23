@@ -58,3 +58,7 @@ export class MethodNotAllowedException extends HttpException {
 
 export class ConflictException extends HttpException {
   constructor(message = 'Conflict') {
+    super(409, message, 409);
+    this.name = 'ConflictException';
+  }
+}
