@@ -74,3 +74,7 @@ export class InternalServerErrorException extends HttpException {
   constructor(message = 'Internal Server Error') {
     super(500, message, 500);
     this.name = 'InternalServerErrorException';
+  }
+}
+
+export function isHttpException(err: unknown): err is HttpException {
