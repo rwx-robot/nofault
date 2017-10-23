@@ -46,3 +46,7 @@ export class NotFoundException extends HttpException {
   constructor(message = 'Not Found') {
     super(404, message, 404);
     this.name = 'NotFoundException';
+  }
+}
+
+export class MethodNotAllowedException extends HttpException {
