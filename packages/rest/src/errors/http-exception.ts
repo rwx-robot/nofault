@@ -26,3 +26,7 @@ export class BadRequestException extends HttpException {
     super(400, message, 400, details);
     this.name = 'BadRequestException';
   }
+}
+
+export class UnauthorizedException extends HttpException {
+  constructor(message = 'Unauthorized') {
