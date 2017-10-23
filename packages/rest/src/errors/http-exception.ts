@@ -62,3 +62,7 @@ export class ConflictException extends HttpException {
     this.name = 'ConflictException';
   }
 }
+
+export class UnprocessableEntityException extends HttpException {
+  constructor(message = 'Unprocessable Entity', details?: unknown) {
+    super(422, message, 422, details);
