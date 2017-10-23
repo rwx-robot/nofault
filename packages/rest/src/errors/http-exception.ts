@@ -18,3 +18,7 @@ export class HttpException extends Error {
 
   toBody(): { code: number; data: unknown; message: string } {
     return { code: this.code, data: this.details ?? null, message: this.message };
+  }
+}
+
+export class BadRequestException extends HttpException {
