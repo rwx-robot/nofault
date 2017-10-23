@@ -22,3 +22,7 @@ export class HttpException extends Error {
 }
 
 export class BadRequestException extends HttpException {
+  constructor(message = 'Bad Request', details?: unknown) {
+    super(400, message, 400, details);
+    this.name = 'BadRequestException';
+  }
