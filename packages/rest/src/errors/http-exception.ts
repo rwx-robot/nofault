@@ -10,3 +10,7 @@ export class HttpException extends Error {
     public readonly status: number,
     message: string,
     public readonly code: number = -1,
+    public readonly details?: unknown,
+  ) {
+    super(message);
+    this.name = 'HttpException';
