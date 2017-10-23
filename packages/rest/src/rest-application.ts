@@ -1,0 +1,308 @@
+import type { IncomingMessage, ServerResponse } from 'node:http';
+import { createHttpApplication } from '@nofault/http';
+import type { NofaultApplication } from '@nofault/core';
+import type { DynamicModule, Type } from '@nofault/core';
+import { RequestContext, requestContextStore } from '@nofault/context';
+import type { RequestContextStore } from '@nofault/context';
+import { parseTraceparent } from '@nofault/context';
+import { createLogger, type Logger } from '@nofault/logger';
+import { RestContext, RestRequest, RestResponse } from './http/context';
+import { MethodNotAllowedException, NotFoundException, isHttpException } from './errors/http-exception';
+import {
+  composeMiddleware,
+  resolveHandlerArgs,
+  validateDtoIfDeclared,
+  normalizeError,
+  type Middleware,
+} from './pipeline';
+import { RouteExplorer, type ResolvedRoute, type MiddlewareRegistry } from './route-explorer';
+import type { RouteTable } from './router/route-tree';
+import { HealthRegistry, statusToHttpCode } from './health';
+import type { HealthReport } from './health';
+
+export interface RestApplicationOptions {
+  name?: string;
+  quiet?: boolean;
+  /** 全局路由前缀 */
+  globalPrefix?: string;
+  /** 全局中间件 */
+  middleware?: Middleware[];
+  /** 是否把返回值包装成 `{ code, data, message }`，默认 true */
+  wrapResponse?: boolean;
+  /** 自定义日志器 */
+  logger?: Logger;
+  /**
+   * 上下文存储。默认开启（全局 `requestContextStore`）。
+   * 传 `null` 关闭——但没有上下文时 `Scope.REQUEST` 的 Provider 无法解析。
+   */
+  contextStore?: RequestContextStore | null;
+  /**
+   * 健康检查端点。默认开启：`/healthz`（存活）+ `/readyz`（就绪）。
+   * 传 `false` 关闭，或传对象自定义路径。
+   */
+  health?: false | { livenessPath?: string; readinessPath?: string };
+  /**
+   * 命名中间件表：契约/装饰器里以**字符串**声明的中间件在这里登记实现。
+   * 缺省为空，用到未登记的名字会立刻启动失败（而不是悄悄不生效）。
+   */
+  middlewareRegistry?: MiddlewareRegistry;
+}
+
+/**
+ * nofault REST 应用。
+ *
+ * 采用**组合**而非继承 `NofaultApplication`：
+ * Web 层只是内核之上的一层能力，组合能让两者的职责边界保持清晰。
+ */
+export class RestApplication {
+  private readonly logger: Logger;
+  private readonly options: Required<Pick<RestApplicationOptions, 'wrapResponse'>> & RestApplicationOptions;
+  private readonly store: RequestContextStore | null;
+  private table!: RouteTable<ResolvedRoute>;
+  /** 存在 REQUEST 作用域 Provider 时，控制器必须每请求重新解析 */
+  private perRequestControllers = false;
+  /** 健康检查注册表 */
+  private readonly healthRegistry = new HealthRegistry();
+
+  constructor(
+    private readonly app: NofaultApplication,
+    options: RestApplicationOptions = {},
+  ) {
+    this.options = { wrapResponse: true, ...options };
+    this.logger = options.logger ?? createLogger({ context: 'rest', level: options.quiet ? 'warn' : 'info' });
+    this.store = options.contextStore === undefined ? requestContextStore : options.contextStore;
+  }
+
+  static async create(
+    root: Type<unknown> | DynamicModule,
+    options: RestApplicationOptions = {},
+  ): Promise<RestApplication> {
+    const app = await createHttpApplication(root, { name: options.name, quiet: options.quiet });
+    const rest = new RestApplication(app, options);
+    await rest.registerRoutes();
+    return rest;
+  }
+
+  /** 扫描控制器并挂载请求处理器 */
+  async registerRoutes(): Promise<void> {
+    this.table = await RouteExplorer.explore(
+      this.app,
+      this.options.globalPrefix ?? '/',
+      this.options.middlewareRegistry ?? {},
+    );
+    this.perRequestControllers = this.app.hasRequestScopedProviders();
+    this.registerHealthRoutes();
+    this.app.use((req, res) => this.handle(req, res));
+    for (const r of this.table.listRoutes()) {
+      this.logger.debug('route registered', { method: r.method, path: r.pattern });
+    }
+  }
+
+  /** 直接注册一条路由（不走装饰器，给健康检查这类内建端点用） */
+  addRoute(method: string, path: string, handler: (ctx: RestContext) => unknown | Promise<unknown>): void {
+    this.table.add(method, path, {
+      method,
+      path,
+      controller: Object as never,
+      instance: { [method]: handler } as never,
+      propertyKey: method,
+      middleware: [],
+      synthetic: true,
+    });
+  }
+
+  /** 健康检查注册表：业务可注册自己的依赖检查 */
+  get health(): HealthRegistry {
+    return this.healthRegistry;
+  }
+
+  private registerHealthRoutes(): void {
+    const cfg = this.options.health;
+    if (cfg === false) return;
+    const livenessPath = cfg?.livenessPath ?? '/healthz';
+    const readinessPath = cfg?.readinessPath ?? '/readyz';
+
+    const send = (ctx: RestContext, report: HealthReport): void => {
+      ctx.response.status(statusToHttpCode(report.status)).json(report);
+    };
+
+    this.addRoute('GET', livenessPath, async (ctx) => {
+      send(ctx, await this.healthRegistry.checkLiveness());
+      return undefined;
+    });
+    this.addRoute('GET', readinessPath, async (ctx) => {
+      send(ctx, await this.healthRegistry.checkReadiness());
+      return undefined;
+    });
+  }
+
+  /**
+   * 标记应用就绪。
+   *
+   * 注册过 readiness 检查后默认是"未就绪"的，依赖预热完成后必须显式调用它，
+   * 否则 `/readyz` 会一直 503——这是有意的，避免半初始化的实例接流量。
+   */
+  markReady(): void {
+    this.healthRegistry.markReady();
+  }
+
+  /** 优雅退出前摘流量 */
+  markNotReady(): void {
+    this.healthRegistry.markNotReady();
+  }
+
+  /** 已注册路由（调试与文档用） */
+  getRoutes(): Array<{ method: string; path: string }> {
+    return this.table.listRoutes().map((r) => ({ method: r.method, path: r.pattern }));
+  }
+
+  get<T>(token: Type<T> | string | symbol, contextId?: object): Promise<T> {
+    return this.app.get<T>(token as never, contextId);
+  }
+
+  getHttpServer<T = unknown>(): T | undefined {
+    return this.app.getHttpServer<T>();
+  }
+
+  enableShutdownHooks(): this {
+    this.app.enableShutdownHooks();
+    return this;
+  }
+
+  async listen(port: number, host = '0.0.0.0'): Promise<{ port: number; hostname: string }> {
+    const addr = await this.app.listen(port, host);
+    this.logger.info('rest server listening', {
+      port: addr.port,
+      routes: this.table.size,
+      perRequestControllers: this.perRequestControllers,
+    });
+    return addr;
+  }
+
+  async close(signal?: string): Promise<void> {
+    await this.app.close(signal);
+  }
+
+  get isListening(): boolean {
+    return this.app.isListening;
+  }
+
+  // ------------------------------------------------------------------ 请求处理
+
+  private async handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
+    const request = new RestRequest(req);
+    const response = new RestResponse(res);
+    const ctx = new RestContext(request, response);
+
+    // 上下文被显式关闭：直接处理，此时 REQUEST 作用域不可用
+    if (!this.store) {
+      await this.dispatch(ctx);
+      ctx.response.commit();
+      return true;
+    }
+
+    const traceparent = parseTraceparent(request.header('traceparent'));
+    const requestCtx = new RequestContext({ traceparent });
+    ctx.state.set('requestContext', requestCtx);
+    response.header('x-request-id', requestCtx.id);
+
+    try {
+      await this.store.run(requestCtx, () => this.dispatch(ctx, requestCtx));
+      ctx.response.commit();
+    } finally {
+      // 释放请求级实例，否则 Map<contextId, instance> 会无限增长
+      this.app.clearRequestContext(requestCtx);
+    }
+    return true;
+  }
+
+  /** 全局中间件 → 路由匹配（匹配在中间件之后！）→ 参数绑定 → handler（异常在此收敛） */
+  private async dispatch(ctx: RestContext, contextId?: object): Promise<void> {
+    const { request, response } = ctx;
+    try {
+      const match = this.table.match(request.method, request.path);
+      const route = match?.handler;
+      request.params = match?.params ?? {};
+      if (route) {
+        // 挂到 ctx：鉴权中间件要按 handler 的装饰器（@Public/@Roles）做判断。
+        // 必须在中间件链**之前**挂（auth 中间件先于 handler 读它）；
+        // 必须挂 **instance**（或 prototype），不能挂类：
+        // 方法装饰器把 @Public/@Roles 挂在 prototype 上，
+        // 从类上查元数据只会得到 undefined，公开路由会被一起 401
+        ctx.route = {
+          controller: (route.instance ?? route.controller) as object,
+          propertyKey: route.propertyKey,
+          method: route.method,
+          path: route.path,
+        };
+      }
+      // 全局中间件在路由匹配**之外**：静态文件这类"没有路由也想响应"的中间件，
+      // 必须有机会接住未命中路径——此前 404 先于中间件，serveStatic 形同虚设
+      const chain = [...(this.options.middleware ?? []), ...(route?.middleware ?? [])];
+
+      await composeMiddleware(chain)(ctx, async () => {
+        if (!route) {
+          const allowed = this.table.allowedMethods(request.path);
+          if (allowed.length > 0) {
+            ctx.response.header('allow', allowed.join(', '));
+            throw new MethodNotAllowedException(`Allowed methods: ${allowed.join(', ')}`);
+          }
+          throw new NotFoundException(`Cannot ${request.method} ${request.path}`);
+        }
+
+        // 只有存在 REQUEST 作用域 Provider 时才每请求重新解析控制器；
+        // 否则复用启动期解析好的实例，省掉一次容器查找
+        const needResolve = !route.synthetic && (this.perRequestControllers || route.instance === null);
+        const instance = needResolve
+          ? ((await this.app.get(route.controller, contextId)) as Record<string | symbol, unknown>)
+          : (route.instance as Record<string | symbol, unknown>);
+
+        if (!route.synthetic) {
+          validateDtoIfDeclared(instance, route, ctx);
+        }
+        // 合成路由（内建端点）的 handler 签名就是 `(ctx)`，直接把上下文传进去
+        const args = route.synthetic ? [ctx] : resolveHandlerArgs(instance, route, ctx);
+        const fn = instance[route.propertyKey];
+        if (typeof fn !== 'function') {
+          throw new Error(`Route handler ${String(route.propertyKey)} is not a function`);
+        }
+        const result = await (fn as (...a: unknown[]) => unknown).apply(instance, args);
+
+        // handler 已经自己写过响应（合成端点、@Res() 用法）时不再覆盖
+        if (response.headersSent || response.hasBody) return;
+
+        if (request.method === 'HEAD') {
+          response.status(route.statusCode ?? 200).end();
+          return;
+        }
+        if (result === undefined || result === null) {
+          response.status(route.statusCode ?? 204).end();
+          return;
+        }
+        if (this.options.wrapResponse) {
+          response.status(route.statusCode ?? 200).json({ code: 0, data: result, message: 'ok' });
+        } else {
+          response.status(route.statusCode ?? 200).json(result);
+        }
+      });
+    } catch (err) {
+      await this.handleError(ctx, err);
+    }
+  }
+
+  private async handleError(ctx: RestContext, err: unknown): Promise<void> {
+    const httpErr = normalizeError(err);
+    if (ctx.response.headersSent) {
+      this.logger.error('error after response sent', { path: ctx.request.path }, httpErr);
+      return;
+    }
+    if (httpErr.status >= 500) {
+      this.logger.error(`${ctx.request.method} ${ctx.request.path} failed`, { status: httpErr.status }, httpErr);
+    } else if (!isHttpException(err) || httpErr.status >= 400) {
+      this.logger.debug(`${ctx.request.method} ${ctx.request.path} -> ${httpErr.status}`, {
+        message: httpErr.message,
+      });
+    }
+    ctx.response.status(httpErr.status).json(httpErr.toBody());
+  }
+}
