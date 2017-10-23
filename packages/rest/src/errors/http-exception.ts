@@ -34,3 +34,7 @@ export class UnauthorizedException extends HttpException {
     this.name = 'UnauthorizedException';
   }
 }
+
+export class ForbiddenException extends HttpException {
+  constructor(message = 'Forbidden') {
+    super(403, message, 403);
