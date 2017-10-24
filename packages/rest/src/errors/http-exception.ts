@@ -78,3 +78,5 @@ export class InternalServerErrorException extends HttpException {
 }
 
 export function isHttpException(err: unknown): err is HttpException {
+  return err instanceof HttpException;
+}
