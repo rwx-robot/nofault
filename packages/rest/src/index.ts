@@ -103,3 +103,7 @@ export {
   Max,
   validateDto,
   coerceDtoFields,
+} from './validation';
+export type { ValidationError } from './validation';
+// [history] omitted at this version (not yet introduced): export { HealthRegistry, statusToHttpCode } from './health';
+// [history] omitted at this version (not yet introduced): export type { HealthReport, HealthStatus, HealthCheck, HealthCheckResult } from './health';
