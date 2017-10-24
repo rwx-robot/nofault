@@ -86,3 +86,9 @@ export type {
   BodyParserOptions,
   SecurityHeadersOptions,
   StaticOptions,
+  RequestContextOptions,
+} from './middleware';
+
+export {
+  IsString,
+  IsNumber,
