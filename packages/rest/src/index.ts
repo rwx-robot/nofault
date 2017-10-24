@@ -81,3 +81,8 @@ export {
   rateLimit,
   requestContext,
 } from './middleware';
+export type {
+  CorsOptions,
+  BodyParserOptions,
+  SecurityHeadersOptions,
+  StaticOptions,
