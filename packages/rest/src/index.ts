@@ -75,3 +75,9 @@ export type { Middleware, Interceptor } from './pipeline';
 export {
   cors,
   bodyParser,
+  securityHeaders,
+  requestLogger,
+  serveStatic,
+  rateLimit,
+  requestContext,
+} from './middleware';
