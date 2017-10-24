@@ -15,3 +15,8 @@ export {
   Get,
   Post,
   Put,
+  Delete,
+  Patch,
+  Head,
+  Options,
+  All,
