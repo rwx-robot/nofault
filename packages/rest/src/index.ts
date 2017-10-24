@@ -59,3 +59,8 @@ export {
   ConflictException,
   UnprocessableEntityException,
   InternalServerErrorException,
+  isHttpException,
+} from './errors/http-exception';
+
+export {
+  composeMiddleware,
