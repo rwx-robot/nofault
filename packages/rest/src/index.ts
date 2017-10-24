@@ -37,3 +37,8 @@ export {
   Validate,
   ValidateBody,
   getRouteDto,
+  joinPath,
+} from './decorators';
+
+export { ParamSource, REST_METADATA } from './metadata';
+export type { ParamMetadata, RouteMetadata } from './metadata';
