@@ -64,3 +64,9 @@ export {
 
 export {
   composeMiddleware,
+  resolveHandlerArgs,
+  validateDtoIfDeclared,
+  validateBodyIfDeclared,
+  normalizeError,
+} from './pipeline';
+export type { Middleware, Interceptor } from './pipeline';
