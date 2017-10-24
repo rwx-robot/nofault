@@ -92,3 +92,8 @@ export type {
 export {
   IsString,
   IsNumber,
+  IsInt,
+  IsBoolean,
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
