@@ -9,3 +9,9 @@ import 'reflect-metadata';
 export { RouteTree, RouteTable, RouteConflictError } from './router/route-tree';
 export type { RouteMatch } from './router/route-tree';
 export { SegmentType } from './router/route-tree';
+
+export {
+  Controller,
+  Get,
+  Post,
+  Put,
