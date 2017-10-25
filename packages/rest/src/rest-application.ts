@@ -87,3 +87,17 @@ export class RestApplication {
   async registerRoutes(): Promise<void> {
     this.table = await RouteExplorer.explore(
       this.app,
+      this.options.globalPrefix ?? '/',
+      this.options.middlewareRegistry ?? {},
+    );
+    this.perRequestControllers = this.app.hasRequestScopedProviders();
+    this.registerHealthRoutes();
+    this.app.use((req, res) => this.handle(req, res));
+    for (const r of this.table.listRoutes()) {
+      this.logger.debug('route registered', { method: r.method, path: r.pattern });
+    }
+  }
+
+  /** 直接注册一条路由（不走装饰器，给健康检查这类内建端点用） */
+  addRoute(method: string, path: string, handler: (ctx: RestContext) => unknown | Promise<unknown>): void {
+    this.table.add(method, path, {
