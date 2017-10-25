@@ -57,3 +57,18 @@ export interface RestApplicationOptions {
 export class RestApplication {
   private readonly logger: Logger;
   private readonly options: Required<Pick<RestApplicationOptions, 'wrapResponse'>> & RestApplicationOptions;
+  private readonly store: RequestContextStore | null;
+  private table!: RouteTable<ResolvedRoute>;
+  /** 存在 REQUEST 作用域 Provider 时，控制器必须每请求重新解析 */
+  private perRequestControllers = false;
+  /** 健康检查注册表 */
+  private readonly healthRegistry = new HealthRegistry();
+
+  constructor(
+    private readonly app: NofaultApplication,
+    options: RestApplicationOptions = {},
+  ) {
+    this.options = { wrapResponse: true, ...options };
+    this.logger = options.logger ?? createLogger({ context: 'rest', level: options.quiet ? 'warn' : 'info' });
+    this.store = options.contextStore === undefined ? requestContextStore : options.contextStore;
+  }
