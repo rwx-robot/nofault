@@ -204,3 +204,18 @@ export class RestApplication {
     const traceparent = parseTraceparent(request.header('traceparent'));
     const requestCtx = new RequestContext({ traceparent });
     ctx.state.set('requestContext', requestCtx);
+    response.header('x-request-id', requestCtx.id);
+
+    try {
+      await this.store.run(requestCtx, () => this.dispatch(ctx, requestCtx));
+      ctx.response.commit();
+    } finally {
+      // 释放请求级实例，否则 Map<contextId, instance> 会无限增长
+      this.app.clearRequestContext(requestCtx);
+    }
+    return true;
+  }
+
+  /** 全局中间件 → 路由匹配（匹配在中间件之后！）→ 参数绑定 → handler（异常在此收敛） */
+  private async dispatch(ctx: RestContext, contextId?: object): Promise<void> {
+    const { request, response } = ctx;
