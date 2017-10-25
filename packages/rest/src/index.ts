@@ -107,3 +107,8 @@ export {
 export type { ValidationError } from './validation';
 // [history] omitted at this version (not yet introduced): export { HealthRegistry, statusToHttpCode } from './health';
 // [history] omitted at this version (not yet introduced): export type { HealthReport, HealthStatus, HealthCheck, HealthCheckResult } from './health';
+
+export { RouteExplorer } from './route-explorer';
+export type { MiddlewareRegistry } from './route-explorer';
+export type { ResolvedRoute } from './route-explorer';
+export type { RouteRef } from './http/context';
