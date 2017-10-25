@@ -249,3 +249,17 @@ export class RestApplication {
           }
           throw new NotFoundException(`Cannot ${request.method} ${request.path}`);
         }
+
+        // 只有存在 REQUEST 作用域 Provider 时才每请求重新解析控制器；
+        // 否则复用启动期解析好的实例，省掉一次容器查找
+        const needResolve = !route.synthetic && (this.perRequestControllers || route.instance === null);
+        const instance = needResolve
+          ? ((await this.app.get(route.controller, contextId)) as Record<string | symbol, unknown>)
+          : (route.instance as Record<string | symbol, unknown>);
+
+        if (!route.synthetic) {
+          validateDtoIfDeclared(instance, route, ctx);
+        }
+        // 合成路由（内建端点）的 handler 签名就是 `(ctx)`，直接把上下文传进去
+        const args = route.synthetic ? [ctx] : resolveHandlerArgs(instance, route, ctx);
+        const fn = instance[route.propertyKey];
