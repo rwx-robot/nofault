@@ -131,3 +131,17 @@ export class RestApplication {
       return undefined;
     });
     this.addRoute('GET', readinessPath, async (ctx) => {
+      send(ctx, await this.healthRegistry.checkReadiness());
+      return undefined;
+    });
+  }
+
+  /**
+   * 标记应用就绪。
+   *
+   * 注册过 readiness 检查后默认是"未就绪"的，依赖预热完成后必须显式调用它，
+   * 否则 `/readyz` 会一直 503——这是有意的，避免半初始化的实例接流量。
+   */
+  markReady(): void {
+    this.healthRegistry.markReady();
+  }
