@@ -72,3 +72,18 @@ export class RestApplication {
     this.logger = options.logger ?? createLogger({ context: 'rest', level: options.quiet ? 'warn' : 'info' });
     this.store = options.contextStore === undefined ? requestContextStore : options.contextStore;
   }
+
+  static async create(
+    root: Type<unknown> | DynamicModule,
+    options: RestApplicationOptions = {},
+  ): Promise<RestApplication> {
+    const app = await createHttpApplication(root, { name: options.name, quiet: options.quiet });
+    const rest = new RestApplication(app, options);
+    await rest.registerRoutes();
+    return rest;
+  }
+
+  /** 扫描控制器并挂载请求处理器 */
+  async registerRoutes(): Promise<void> {
+    this.table = await RouteExplorer.explore(
+      this.app,
