@@ -175,3 +175,18 @@ export class RestApplication {
       port: addr.port,
       routes: this.table.size,
       perRequestControllers: this.perRequestControllers,
+    });
+    return addr;
+  }
+
+  async close(signal?: string): Promise<void> {
+    await this.app.close(signal);
+  }
+
+  get isListening(): boolean {
+    return this.app.isListening;
+  }
+
+  // ------------------------------------------------------------------ 请求处理
+
+  private async handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
