@@ -263,3 +263,18 @@ export class RestApplication {
         // 合成路由（内建端点）的 handler 签名就是 `(ctx)`，直接把上下文传进去
         const args = route.synthetic ? [ctx] : resolveHandlerArgs(instance, route, ctx);
         const fn = instance[route.propertyKey];
+        if (typeof fn !== 'function') {
+          throw new Error(`Route handler ${String(route.propertyKey)} is not a function`);
+        }
+        const result = await (fn as (...a: unknown[]) => unknown).apply(instance, args);
+
+        // handler 已经自己写过响应（合成端点、@Res() 用法）时不再覆盖
+        if (response.headersSent || response.hasBody) return;
+
+        if (request.method === 'HEAD') {
+          response.status(route.statusCode ?? 200).end();
+          return;
+        }
+        if (result === undefined || result === null) {
+          response.status(route.statusCode ?? 204).end();
+          return;
