@@ -115,3 +115,19 @@ export class RestApplication {
   get health(): HealthRegistry {
     return this.healthRegistry;
   }
+
+  private registerHealthRoutes(): void {
+    const cfg = this.options.health;
+    if (cfg === false) return;
+    const livenessPath = cfg?.livenessPath ?? '/healthz';
+    const readinessPath = cfg?.readinessPath ?? '/readyz';
+
+    const send = (ctx: RestContext, report: HealthReport): void => {
+      ctx.response.status(statusToHttpCode(report.status)).json(report);
+    };
+
+    this.addRoute('GET', livenessPath, async (ctx) => {
+      send(ctx, await this.healthRegistry.checkLiveness());
+      return undefined;
+    });
+    this.addRoute('GET', readinessPath, async (ctx) => {
