@@ -43,3 +43,17 @@ export interface RestApplicationOptions {
   health?: false | { livenessPath?: string; readinessPath?: string };
   /**
    * 命名中间件表：契约/装饰器里以**字符串**声明的中间件在这里登记实现。
+   * 缺省为空，用到未登记的名字会立刻启动失败（而不是悄悄不生效）。
+   */
+  middlewareRegistry?: MiddlewareRegistry;
+}
+
+/**
+ * nofault REST 应用。
+ *
+ * 采用**组合**而非继承 `NofaultApplication`：
+ * Web 层只是内核之上的一层能力，组合能让两者的职责边界保持清晰。
+ */
+export class RestApplication {
+  private readonly logger: Logger;
+  private readonly options: Required<Pick<RestApplicationOptions, 'wrapResponse'>> & RestApplicationOptions;
