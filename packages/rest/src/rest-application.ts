@@ -145,3 +145,17 @@ export class RestApplication {
   markReady(): void {
     this.healthRegistry.markReady();
   }
+
+  /** 优雅退出前摘流量 */
+  markNotReady(): void {
+    this.healthRegistry.markNotReady();
+  }
+
+  /** 已注册路由（调试与文档用） */
+  getRoutes(): Array<{ method: string; path: string }> {
+    return this.table.listRoutes().map((r) => ({ method: r.method, path: r.pattern }));
+  }
+
+  get<T>(token: Type<T> | string | symbol, contextId?: object): Promise<T> {
+    return this.app.get<T>(token as never, contextId);
+  }
