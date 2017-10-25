@@ -234,3 +234,18 @@ export class RestApplication {
           propertyKey: route.propertyKey,
           method: route.method,
           path: route.path,
+        };
+      }
+      // 全局中间件在路由匹配**之外**：静态文件这类"没有路由也想响应"的中间件，
+      // 必须有机会接住未命中路径——此前 404 先于中间件，serveStatic 形同虚设
+      const chain = [...(this.options.middleware ?? []), ...(route?.middleware ?? [])];
+
+      await composeMiddleware(chain)(ctx, async () => {
+        if (!route) {
+          const allowed = this.table.allowedMethods(request.path);
+          if (allowed.length > 0) {
+            ctx.response.header('allow', allowed.join(', '));
+            throw new MethodNotAllowedException(`Allowed methods: ${allowed.join(', ')}`);
+          }
+          throw new NotFoundException(`Cannot ${request.method} ${request.path}`);
+        }
