@@ -278,3 +278,18 @@ export class RestApplication {
         if (result === undefined || result === null) {
           response.status(route.statusCode ?? 204).end();
           return;
+        }
+        if (this.options.wrapResponse) {
+          response.status(route.statusCode ?? 200).json({ code: 0, data: result, message: 'ok' });
+        } else {
+          response.status(route.statusCode ?? 200).json(result);
+        }
+      });
+    } catch (err) {
+      await this.handleError(ctx, err);
+    }
+  }
+
+  private async handleError(ctx: RestContext, err: unknown): Promise<void> {
+    const httpErr = normalizeError(err);
+    if (ctx.response.headersSent) {
