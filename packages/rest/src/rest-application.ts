@@ -13,3 +13,18 @@ import {
   resolveHandlerArgs,
   validateDtoIfDeclared,
   normalizeError,
+  type Middleware,
+} from './pipeline';
+import { RouteExplorer, type ResolvedRoute, type MiddlewareRegistry } from './route-explorer';
+import type { RouteTable } from './router/route-tree';
+import { HealthRegistry, statusToHttpCode } from './health';
+import type { HealthReport } from './health';
+
+export interface RestApplicationOptions {
+  name?: string;
+  quiet?: boolean;
+  /** 全局路由前缀 */
+  globalPrefix?: string;
+  /** 全局中间件 */
+  middleware?: Middleware[];
+  /** 是否把返回值包装成 `{ code, data, message }`，默认 true */
