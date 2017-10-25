@@ -101,3 +101,17 @@ export class RestApplication {
   /** 直接注册一条路由（不走装饰器，给健康检查这类内建端点用） */
   addRoute(method: string, path: string, handler: (ctx: RestContext) => unknown | Promise<unknown>): void {
     this.table.add(method, path, {
+      method,
+      path,
+      controller: Object as never,
+      instance: { [method]: handler } as never,
+      propertyKey: method,
+      middleware: [],
+      synthetic: true,
+    });
+  }
+
+  /** 健康检查注册表：业务可注册自己的依赖检查 */
+  get health(): HealthRegistry {
+    return this.healthRegistry;
+  }
