@@ -159,3 +159,19 @@ export class RestApplication {
   get<T>(token: Type<T> | string | symbol, contextId?: object): Promise<T> {
     return this.app.get<T>(token as never, contextId);
   }
+
+  getHttpServer<T = unknown>(): T | undefined {
+    return this.app.getHttpServer<T>();
+  }
+
+  enableShutdownHooks(): this {
+    this.app.enableShutdownHooks();
+    return this;
+  }
+
+  async listen(port: number, host = '0.0.0.0'): Promise<{ port: number; hostname: string }> {
+    const addr = await this.app.listen(port, host);
+    this.logger.info('rest server listening', {
+      port: addr.port,
+      routes: this.table.size,
+      perRequestControllers: this.perRequestControllers,
