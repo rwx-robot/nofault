@@ -190,3 +190,17 @@ export class RestApplication {
   // ------------------------------------------------------------------ 请求处理
 
   private async handle(req: IncomingMessage, res: ServerResponse): Promise<boolean> {
+    const request = new RestRequest(req);
+    const response = new RestResponse(res);
+    const ctx = new RestContext(request, response);
+
+    // 上下文被显式关闭：直接处理，此时 REQUEST 作用域不可用
+    if (!this.store) {
+      await this.dispatch(ctx);
+      ctx.response.commit();
+      return true;
+    }
+
+    const traceparent = parseTraceparent(request.header('traceparent'));
+    const requestCtx = new RequestContext({ traceparent });
+    ctx.state.set('requestContext', requestCtx);
