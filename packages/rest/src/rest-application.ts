@@ -293,3 +293,16 @@ export class RestApplication {
   private async handleError(ctx: RestContext, err: unknown): Promise<void> {
     const httpErr = normalizeError(err);
     if (ctx.response.headersSent) {
+      this.logger.error('error after response sent', { path: ctx.request.path }, httpErr);
+      return;
+    }
+    if (httpErr.status >= 500) {
+      this.logger.error(`${ctx.request.method} ${ctx.request.path} failed`, { status: httpErr.status }, httpErr);
+    } else if (!isHttpException(err) || httpErr.status >= 400) {
+      this.logger.debug(`${ctx.request.method} ${ctx.request.path} -> ${httpErr.status}`, {
+        message: httpErr.message,
+      });
+    }
+    ctx.response.status(httpErr.status).json(httpErr.toBody());
+  }
+}
