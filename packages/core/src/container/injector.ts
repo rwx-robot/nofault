@@ -147,3 +147,51 @@ export class Injector {
     instance: unknown,
     target: Function,
     moduleRef: ModuleRef,
+    contextId?: ContextId,
+  ): Promise<void> {
+    const props = readPropertyInjections(target);
+    for (const prop of props) {
+      try {
+        const value = await this.resolveFromModule(prop.token, moduleRef, contextId);
+        (instance as Record<string | symbol, unknown>)[prop.key] = value;
+      } catch (err) {
+        if (prop.optional && err instanceof UnknownDependencyError) continue;
+        throw err;
+      }
+    }
+  }
+
+  /** 按模块可见性规则解析令牌 */
+  async resolveFromModule(token: InjectionToken, moduleRef: ModuleRef, contextId?: ContextId): Promise<unknown> {
+    const name = tokenToString(token);
+    if (this.resolutionStack.includes(name)) {
+      throw new CircularDependencyError([...this.resolutionStack, name]);
+    }
+    this.resolutionStack.push(name);
+    try {
+      const wrapper = this.container.lookupWrapper(token, moduleRef);
+      if (!wrapper) throw new UnknownDependencyError(token, moduleRef.name);
+      return wrapper.resolve(contextId);
+    } finally {
+      this.resolutionStack.pop();
+    }
+  }
+
+  private async resolveMany(
+    tokens: InjectionToken[],
+    moduleRef: ModuleRef,
+    owner: InjectionToken,
+    contextId?: ContextId,
+  ): Promise<unknown[]> {
+    const out: unknown[] = [];
+    for (const t of tokens) {
+      try {
+        out.push(await this.resolveFromModule(t, moduleRef, contextId));
+      } catch {
+        // 上抛时带上"谁在注入它"，比不明来源的原始错误好排查得多
+        throw new UnknownDependencyError(t, `${tokenToString(owner)} factory`);
+      }
+    }
+    return out;
+  }
+}
