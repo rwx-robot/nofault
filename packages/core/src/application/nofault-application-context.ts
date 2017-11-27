@@ -148,3 +148,51 @@ export class NofaultApplicationContext {
         await instance.onApplicationBootstrap();
       }
     }
+  }
+
+  private async callShutdownHooks(signal?: string): Promise<void> {
+    const wrappers = this.allWrappers();
+    for (const wrapper of wrappers) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<BeforeApplicationShutdown>(instance, 'beforeApplicationShutdown')) {
+        await instance.beforeApplicationShutdown(signal);
+      }
+    }
+    for (const wrapper of wrappers) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnModuleDestroy>(instance, 'onModuleDestroy')) {
+        await instance.onModuleDestroy();
+      }
+    }
+    for (const wrapper of wrappers) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnApplicationShutdown>(instance, 'onApplicationShutdown')) {
+        await instance.onApplicationShutdown(signal);
+      }
+    }
+  }
+
+  protected allWrappers() {
+    return this.container.getAllModules().flatMap((m) => [...m.providers.values()]);
+  }
+
+  protected log(level: 'info' | 'error', msg: string): void {
+    if (this.options.quiet) return;
+    this.options.logger?.[level](msg);
+  }
+
+  /**
+   * 返回全部模块引用。
+   *
+   * 供上层（如 `@nofault/rest` 的路由扫描器）读取模块自带的元数据，
+   * 内核本身不理解"控制器"这类 Web 概念。
+   */
+  getModuleRefs(): ModuleRef[] {
+    return this.container.getAllModules();
+  }
+
+  /** 调试：打印模块树 */
+  describe(): string {
+    return ModuleScanner.printTree(this.rootRef);
+  }
+}
