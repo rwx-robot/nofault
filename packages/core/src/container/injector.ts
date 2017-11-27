@@ -97,3 +97,53 @@ export class Injector {
     ctor: { new (...args: never[]): unknown },
     target: Function,
     moduleRef: ModuleRef,
+    token: InjectionToken,
+    contextId?: ContextId,
+  ): Promise<unknown> {
+    const paramTypes = readParamTypes(target);
+    const overrides = readDependencyOverrides(target);
+    const optionals = readOptionalParams(target);
+    const length = Math.max(paramTypes.length, overrides.length);
+
+    const args: unknown[] = [];
+    for (let i = 0; i < length; i++) {
+      const depToken = overrides[i] ?? paramTypes[i];
+      if (depToken === undefined) {
+        args.push(undefined);
+        continue;
+      }
+      // 跳过 JS 内置类型（Number/String/Object 等），它们无法作为 Provider
+      if (this.isBuiltinType(depToken)) {
+        if (!optionals.includes(i)) {
+          throw new UnknownDependencyError(depToken, `${tokenToString(token)}[arg${i}]`);
+        }
+        args.push(undefined);
+        continue;
+      }
+      try {
+        args.push(await this.resolveFromModule(depToken, moduleRef, contextId));
+      } catch (err) {
+        if (optionals.includes(i) && err instanceof UnknownDependencyError) {
+          args.push(undefined);
+          continue;
+        }
+        throw err;
+      }
+    }
+
+    const instance = new ctor(...(args as never[]));
+    await this.injectProperties(instance, target, moduleRef, contextId);
+    return instance;
+  }
+
+  private isBuiltinType(token: InjectionToken): boolean {
+    if (typeof token !== 'function') return false;
+    const name = token.name;
+    return ['Number', 'String', 'Boolean', 'Object', 'Array', 'Function', 'Symbol', 'Promise', 'Date'].includes(name);
+  }
+
+  /** 属性注入 */
+  private async injectProperties(
+    instance: unknown,
+    target: Function,
+    moduleRef: ModuleRef,
