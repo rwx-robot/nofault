@@ -161,3 +161,57 @@ export class NofaultContainer {
     }
     return undefined;
   }
+
+  async resolveToken(token: InjectionToken, moduleRef?: ModuleRef, contextId?: ContextId): Promise<unknown> {
+    if (moduleRef) return this.injector.resolveFromModule(token, moduleRef, contextId);
+    const wrapper = this.lookupGlobal(token);
+    if (!wrapper) throw new UnknownTokenError(token);
+    return wrapper.resolve(contextId);
+  }
+
+  /**
+   * 释放某个上下文在所有 Provider 上的请求级实例。
+   *
+   * 请求结束时必须调用，否则 `Map<ContextId, instance>` 会无限增长。
+   * 返回被清理的实例数量。
+   */
+  clearRequestContext(contextId: ContextId): number {
+    let cleared = 0;
+    for (const mod of this.modules.values()) {
+      for (const wrapper of mod.providers.values()) {
+        if (wrapper.clearContext(contextId)) cleared++;
+      }
+    }
+    return cleared;
+  }
+
+  /** 是否声明过 REQUEST 作用域的 Provider（用于决定是否需要在请求内重新解析） */
+  hasRequestScopedProviders(): boolean {
+    for (const mod of this.modules.values()) {
+      for (const wrapper of mod.providers.values()) {
+        if (wrapper.scope === Scope.REQUEST) return true;
+      }
+    }
+    return false;
+  }
+
+  getInjector(): Injector {
+    return this.injector;
+  }
+
+  lock(): void {
+    this.locked = true;
+  }
+
+  /** 调试用：打印已注册模块树 */
+  toString(): string {
+    return [...this.modules.values()].map((m) => `- ${m.name} (providers: ${m.providers.size})`).join('\n');
+  }
+}
+
+class UnknownTokenError extends Error {
+  constructor(token: InjectionToken) {
+    super(`No provider found for token \`${tokenToString(token)}\` in the whole container.`);
+    this.name = 'UnknownTokenError';
+  }
+}
