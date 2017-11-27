@@ -81,3 +81,43 @@ export class NofaultApplication extends NofaultApplicationContext {
    * 编排顺序：停止监听 → 排在途请求 → beforeApplicationShutdown
    *          → onModuleDestroy → onApplicationShutdown
    *
+   * 超时存在的意义：某个 Provider 的 destroy 卡死时，
+   * 进程也必须能退出——否则 K8s 只能 SIGKILL，那是真丢数据。
+   */
+  override async close(signal?: string): Promise<void> {
+    const timeout = this.appOptions.shutdownTimeout ?? 5000;
+    const work = (async () => {
+      if (this.listening && this.adapter) {
+        await this.adapter.close();
+        this.listening = false;
+      }
+      await super.close(signal);
+    })();
+
+    if (timeout <= 0) {
+      await work;
+      return;
+    }
+
+    let timer: NodeJS.Timeout | undefined;
+    const guard = new Promise<void>((resolve) => {
+      timer = setTimeout(() => {
+        process.stderr.write(
+          `[nofault] graceful shutdown timed out after ${timeout}ms, forcing exit\n`,
+        );
+        resolve();
+      }, timeout);
+      timer.unref?.();
+    });
+
+    await Promise.race([work, guard]);
+    if (timer) clearTimeout(timer);
+  }
+
+  get isListening(): boolean {
+    return this.listening;
+  }
+
+  getHttpAdapter(): HttpAdapter | undefined {
+    return this.adapter;
+  }
