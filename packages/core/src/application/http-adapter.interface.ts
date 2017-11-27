@@ -22,3 +22,10 @@ export interface HttpAdapter {
   useHandler(handler: HttpHandler): void;
   /** 开始监听；返回实际监听的地址信息 */
   listen(port: number, hostname?: string): Promise<{ port: number; hostname: string }>;
+  /** 停止监听并释放资源 */
+  close(): Promise<void>;
+  /** 底层原生 server（供测试与高级场景使用） */
+  getHttpServer(): unknown;
+  /** 是否已监听 */
+  isListening(): boolean;
+}
