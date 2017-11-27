@@ -98,3 +98,53 @@ export class NofaultApplicationContext {
   /** 请求结束：释放该上下文的全部请求级实例 */
   clearRequestContext(contextId: ContextId): number {
     return this.container.clearRequestContext(contextId);
+  }
+
+  /** 是否声明过 REQUEST 作用域的 Provider */
+  hasRequestScopedProviders(): boolean {
+    return this.container.hasRequestScopedProviders();
+  }
+
+  /** 选择某个模块，返回该模块的解析句柄 */
+  select(moduleToken: Type<unknown>): {
+    get<T>(token: InjectionToken<T>, contextId?: ContextId): Promise<T>;
+  } {
+    const ref = this.container.getModule(moduleToken);
+    if (!ref) throw new Error(`Module ${tokenToString(moduleToken)} not found`);
+    return {
+      get: async <T>(token: InjectionToken<T>, contextId?: ContextId): Promise<T> => {
+        const wrapper = this.container.lookupWrapper(token, ref);
+        if (!wrapper) throw new Error(`No provider ${tokenToString(token)} in module ${ref.name}`);
+        return (await wrapper.resolve(contextId)) as T;
+      },
+    };
+  }
+
+  /** 有序关闭：先 beforeApplicationShutdown，再 onModuleDestroy，最后 onApplicationShutdown */
+  async close(signal?: string): Promise<void> {
+    if (this.closed) return;
+    this.closed = true;
+    await this.callShutdownHooks(signal);
+    this.log('info', 'Application closed');
+  }
+
+  get isInitialized(): boolean {
+    return this.initialized;
+  }
+
+  protected async callInitHooks(): Promise<void> {
+    for (const wrapper of this.allWrappers()) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnModuleInit>(instance, 'onModuleInit')) {
+        await instance.onModuleInit();
+      }
+    }
+  }
+
+  protected async callBootstrapHooks(): Promise<void> {
+    for (const wrapper of this.allWrappers()) {
+      const instance = wrapper.peek();
+      if (instance && hasHook<OnApplicationBootstrap>(instance, 'onApplicationBootstrap')) {
+        await instance.onApplicationBootstrap();
+      }
+    }
