@@ -97,3 +97,35 @@ export class InstanceWrapper<T = unknown> {
         throw err;
       }
     }
+
+    // TRANSIENT：每次都新建
+    const value = await this.factory(contextId);
+    this.isResolved = true;
+    return value;
+  }
+
+  /** 仅返回已存在的单例，不存在则返回 undefined（不触发创建） */
+  peek(): T | undefined {
+    return this.instance;
+  }
+
+  /**
+   * 释放某个上下文的请求级实例（请求结束时调用，防止内存泄漏）。
+   *
+   * @returns 是否真的释放了一个实例
+   */
+  clearContext(contextId: ContextId): boolean {
+    return this.contextInstances.delete(contextId);
+  }
+
+  /** 当前缓存了多少个上下文实例（测试与诊断用） */
+  get contextInstanceCount(): number {
+    return this.contextInstances.size;
+  }
+
+  /** 覆盖实例（测试替身、mock 用） */
+  override(value: T): void {
+    this.instance = value;
+    this.isResolved = true;
+  }
+}
