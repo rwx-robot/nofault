@@ -47,3 +47,53 @@ export class Injector {
     // 值 / 别名 Provider 本质上都是单例
     return Scope.SINGLETON;
   }
+
+  /** 为 Provider 创建实例包装器（惰性，不立即实例化） */
+  createWrapper(provider: Provider, moduleRef: ModuleRef): InstanceWrapper {
+    const token = typeof provider === 'function' ? provider : provider.provide;
+    const scope = Injector.resolveScope(provider);
+    const wrapper = new InstanceWrapper(
+      token,
+      scope,
+      (contextId) => this.instantiate(provider, moduleRef, token, contextId),
+      isFactoryProvider(provider) || this.isAsyncProvider(provider),
+    );
+    wrapper.hostModule = moduleRef.name;
+    return wrapper;
+  }
+
+  private isAsyncProvider(provider: Provider): boolean {
+    return isFactoryProvider(provider);
+  }
+
+  /** 真正创建对象 */
+  private async instantiate(
+    provider: Provider,
+    moduleRef: ModuleRef,
+    token: InjectionToken,
+    contextId?: ContextId,
+  ): Promise<unknown> {
+    if (typeof provider === 'function') {
+      return this.instantiateClass(provider, provider, moduleRef, token, contextId);
+    }
+    if (isClassProvider(provider)) {
+      return this.instantiateClass(provider.useClass, provider.useClass, moduleRef, token, contextId);
+    }
+    if (isValueProvider(provider)) {
+      return provider.useValue;
+    }
+    if (isFactoryProvider(provider)) {
+      const deps = provider.inject ?? [];
+      const args = await this.resolveMany(deps, moduleRef, token, contextId);
+      return provider.useFactory(...(args as never[]));
+    }
+    if (isExistingProvider(provider)) {
+      return this.resolveFromModule(provider.useExisting, moduleRef, contextId);
+    }
+    throw new UnknownDependencyError(token, moduleRef.name);
+  }
+
+  private async instantiateClass(
+    ctor: { new (...args: never[]): unknown },
+    target: Function,
+    moduleRef: ModuleRef,
