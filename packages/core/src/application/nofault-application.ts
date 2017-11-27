@@ -121,3 +121,44 @@ export class NofaultApplication extends NofaultApplicationContext {
   getHttpAdapter(): HttpAdapter | undefined {
     return this.adapter;
   }
+
+  getHttpServer<T = unknown>(): T | undefined {
+    return this.adapter?.getHttpServer() as T | undefined;
+  }
+
+  override async get<T>(token: InjectionToken<T>, contextId?: object): Promise<T> {
+    return super.get<T>(token, contextId);
+  }
+
+  /** 应用配置选项（供适配器与中间件读取） */
+  getOptions(): NofaultApplicationOptions {
+    return this.appOptions;
+  }
+
+  /** 顺序执行 handler 链，任一 handler 处理（返回 true 或已写响应）即终止 */
+  private async runHandlers(
+    handlers: Array<Parameters<HttpAdapter['useHandler']>[0]>,
+    req: import('node:http').IncomingMessage,
+    res: import('node:http').ServerResponse,
+  ): Promise<void> {
+    for (const handler of handlers) {
+      if (res.writableEnded) return;
+      const result = await handler(req, res);
+      if (result === true) return;
+    }
+    if (!res.writableEnded) {
+      res.statusCode = 404;
+      res.end('404 Not Found');
+    }
+  }
+}
+
+/** 工厂：创建并初始化应用 */
+export async function createApplication(
+  root: Type<unknown> | DynamicModule,
+  options: NofaultApplicationOptions = {},
+): Promise<NofaultApplication> {
+  const app = new NofaultApplication(options);
+  await app.init(root);
+  return app;
+}
