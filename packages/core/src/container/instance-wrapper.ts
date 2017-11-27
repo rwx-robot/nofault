@@ -64,3 +64,36 @@ export class InstanceWrapper<T = unknown> {
    */
   async resolve(contextId?: ContextId): Promise<T> {
     if (this.scope === Scope.REQUEST || this.contextDependent) {
+      if (contextId === undefined) {
+        throw new MissingContextIdError(this.token);
+      }
+      const cached = this.contextInstances.get(contextId);
+      if (cached !== undefined) return cached;
+      const created = await this.factory(contextId);
+      this.contextInstances.set(contextId, created);
+      return created;
+    }
+
+    if (this.scope === Scope.SINGLETON) {
+      if (this.instance !== undefined) return this.instance;
+      if (this.pending !== undefined) return this.pending;
+
+      const creating = (async () => {
+        const value = await this.factory(contextId);
+        this.instance = value;
+        this.isResolved = true;
+        this.pending = undefined;
+        return value;
+      })();
+      this.pending = creating;
+
+      try {
+        return await creating;
+      } catch (err) {
+        // 关键：失败**不能**缓存。
+        // 否则第一次解析失败后，后续每次请求都会拿到同一个 rejected promise，
+        // 表现为"错误被永久记住"——这是最难排查的一类 bug。
+        this.pending = undefined;
+        throw err;
+      }
+    }
