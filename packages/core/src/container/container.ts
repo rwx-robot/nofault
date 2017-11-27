@@ -107,3 +107,57 @@ export class NofaultContainer {
    *
    * 为什么必须做：单例缓存住一个请求级对象，会导致**跨请求数据串号**，
    * 这类 bug 在压测和线上偶发，靠 code review 很难发现。
+   */
+  propagateRequestScope(): void {
+    const byToken = new Map<InjectionToken, InstanceWrapper>();
+    for (const mod of this.modules.values()) {
+      for (const [token, wrapper] of mod.providers) byToken.set(token, wrapper);
+    }
+
+    const depsOf = (wrapper: InstanceWrapper): InjectionToken[] => {
+      const def = this.findProviderDef(wrapper.token);
+      if (!def || typeof def === 'function') return readParamTypes(def ?? (wrapper.token as never));
+      if (isClassProvider(def)) return readParamTypes(def.useClass);
+      if (isFactoryProvider(def)) return def.inject ?? [];
+      if (isExistingProvider(def)) return [def.useExisting];
+      return [];
+    };
+
+    let changed = true;
+    let guard = 0;
+    while (changed && guard++ < 100) {
+      changed = false;
+      for (const mod of this.modules.values()) {
+        for (const wrapper of mod.providers.values()) {
+          if (wrapper.scope === Scope.REQUEST || wrapper.contextDependent) continue;
+          for (const dep of depsOf(wrapper)) {
+            const target = byToken.get(dep);
+            if (target && (target.scope === Scope.REQUEST || target.contextDependent)) {
+              wrapper.contextDependent = true;
+              changed = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  /** 在任意模块里找 token 对应的 Provider 定义 */
+  private findProviderDef(token: InjectionToken): Provider | undefined {
+    for (const mod of this.modules.values()) {
+      for (const def of mod.providerDefs) {
+        if (getProviderToken(def) === token) return def;
+      }
+    }
+    return undefined;
+  }
+
+  /** 全局查找（不校验可见性），用于 `app.get()` */
+  lookupGlobal(token: InjectionToken): InstanceWrapper | undefined {
+    for (const mod of this.modules.values()) {
+      const w = mod.providers.get(token);
+      if (w) return w;
+    }
+    return undefined;
+  }
