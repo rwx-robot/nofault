@@ -48,3 +48,53 @@ export class NofaultApplicationContext {
 
     // 先沿依赖图传播 REQUEST 作用域，再决定谁该在启动期实例化
     this.container.propagateRequestScope();
+
+    const controllerTokens = new Set<unknown>();
+    for (const mod of this.container.getAllModules()) {
+      for (const c of mod.controllers) controllerTokens.add(c);
+    }
+
+    // 实例化所有 Provider（惰性包装器在此刻真正执行工厂）
+    for (const mod of this.container.getAllModules()) {
+      for (const wrapper of mod.providers.values()) {
+        // 四类不在此刻实例化：
+        // - TRANSIENT：按需创建
+        // - REQUEST：必须有 contextId，启动期拿不到
+        // - 被 REQUEST 污染（captive dependency）：同上
+        // - 控制器：它可能依赖请求级 Provider，交给 Web 层在请求内解析
+        if (
+          wrapper.scope === Scope.TRANSIENT ||
+          wrapper.scope === Scope.REQUEST ||
+          wrapper.contextDependent ||
+          controllerTokens.has(wrapper.token)
+        ) {
+          continue;
+        }
+        await wrapper.resolve();
+      }
+    }
+
+    this.container.lock();
+    await this.callInitHooks();
+    await this.callBootstrapHooks();
+    this.initialized = true;
+    return this;
+  }
+
+  /**
+   * 从根模块（或全容器）获取实例。
+   *
+   * @param contextId 请求上下文标识；REQUEST 作用域的 Provider 需要它。
+   *                  传了它，返回的实例在该上下文内共享同一份。
+   */
+  async get<T>(token: InjectionToken<T>, contextId?: ContextId): Promise<T> {
+    const wrapper = this.container.lookupWrapper(token, this.rootRef) ?? this.container.lookupGlobal(token);
+    if (!wrapper) {
+      throw new Error(`No provider found for ${tokenToString(token)}`);
+    }
+    return (await wrapper.resolve(contextId)) as T;
+  }
+
+  /** 请求结束：释放该上下文的全部请求级实例 */
+  clearRequestContext(contextId: ContextId): number {
+    return this.container.clearRequestContext(contextId);
