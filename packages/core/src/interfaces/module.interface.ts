@@ -21,3 +21,25 @@ export interface ModuleMetadata {
 /** 动态模块（如 `ConfigModule.forRoot()` 的返回值） */
 export interface DynamicModule extends ModuleMetadata {
   /** 动态模块必须显式指定宿主模块 */
+  module: Type<unknown>;
+  /** 是否全局模块 */
+  global?: boolean;
+}
+
+/** 值 Provider */
+export interface ValueProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useValue: T;
+}
+
+/** 类 Provider */
+export interface ClassProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useClass: Type<T>;
+  scope?: import('./type.interface').Scope;
+}
+
+/** 工厂 Provider */
+export interface FactoryProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useFactory: (...args: never[]) => T | Promise<T>;
