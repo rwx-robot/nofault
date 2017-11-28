@@ -57,3 +57,32 @@ export function Inject<T>(token: InjectionToken<T>): ParameterDecorator & Proper
       const props: Array<string | symbol> =
         Reflect.getMetadata('nofault:property:inject:keys', target.constructor) ?? [];
       if (!props.includes(propertyKey)) {
+        props.push(propertyKey);
+        Reflect.defineMetadata('nofault:property:inject:keys', props, target.constructor);
+      }
+    }
+  };
+}
+
+/** 标记依赖可选：找不到时不抛错，注入 undefined */
+export function Optional(): ParameterDecorator & PropertyDecorator {
+  return (target: object, propertyKey: string | symbol | undefined, index?: number) => {
+    if (typeof index === 'number') {
+      const optionals: number[] = Reflect.getMetadata('nofault:optional:params', target) ?? [];
+      optionals.push(index);
+      Reflect.defineMetadata('nofault:optional:params', optionals, target);
+      return;
+    }
+    if (propertyKey !== undefined) {
+      const optionals: Array<string | symbol> =
+        Reflect.getMetadata('nofault:optional:props', target.constructor) ?? [];
+      optionals.push(propertyKey);
+      Reflect.defineMetadata('nofault:optional:props', optionals, target.constructor);
+    }
+  };
+}
+
+/** 读取构造函数参数类型（由 TS 发射的元数据） */
+export function readParamTypes(target: object): InjectionToken[] {
+  return (Reflect.getMetadata(PARAM_TYPES_METADATA, target) as InjectionToken[] | undefined) ?? [];
+}
