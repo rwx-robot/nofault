@@ -25,3 +25,17 @@ export class ModuleRef {
   ) {
     this.isGlobal = (raw as DynamicModule)?.global === true;
   }
+
+  get name(): string {
+    return tokenToString(this.token);
+  }
+
+  addProvider(def: Provider, wrapper: InstanceWrapper): void {
+    const token = getProviderToken(def);
+    if (!this.providerDefs.includes(def)) this.providerDefs.push(def);
+    this.providers.set(token, wrapper);
+  }
+
+  hasProvider(token: InjectionToken): boolean {
+    return this.providers.has(token);
+  }
