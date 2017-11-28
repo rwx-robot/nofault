@@ -11,3 +11,16 @@ import type { Type } from '../interfaces/type.interface';
  * @Module({
  *   imports: [UserModule],
  *   providers: [UserService],
+ *   exports: [UserService],
+ * })
+ * export class AppModule {}
+ * ```
+ */
+export function Module(metadata: ModuleMetadata = {}): ClassDecorator {
+  return (target) => {
+    const imports = metadata.imports ?? [];
+    const providers = metadata.providers ?? [];
+    const exports = metadata.exports ?? [];
+
+    Reflect.defineMetadata(MODULE_METADATA.IMPORTS, imports, target);
+    Reflect.defineMetadata(MODULE_METADATA.PROVIDERS, providers, target);
