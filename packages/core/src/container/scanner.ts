@@ -19,3 +19,23 @@ export class ModuleScanner {
 
   async scan(root: Type<unknown> | DynamicModule | Promise<DynamicModule>): Promise<ModuleRef> {
     const resolved = await root;
+    return this.scanModule(resolved);
+  }
+
+  private async scanModule(raw: Type<unknown> | DynamicModule): Promise<ModuleRef> {
+    const ref = this.container.registerModule(raw);
+    const meta = isDynamicModule(raw)
+      ? {
+          imports: raw.imports ?? [],
+          providers: raw.providers ?? [],
+          exports: raw.exports ?? [],
+          controllers: raw.controllers ?? [],
+        }
+      : readModuleMetadata(raw as Type<unknown>);
+
+    // 1) 先注册导出的令牌，保证子模块解析时能命中
+    for (const exp of meta.exports) {
+      ref.addExport(exp as InjectionToken);
+    }
+
+    // 2) 递归扫描导入的模块
