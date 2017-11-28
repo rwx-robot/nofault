@@ -43,3 +43,24 @@ export interface ClassProvider<T = unknown> {
 export interface FactoryProvider<T = unknown> {
   provide: InjectionToken<T>;
   useFactory: (...args: never[]) => T | Promise<T>;
+  /** 工厂函数的入参令牌 */
+  inject?: InjectionToken[];
+  scope?: import('./type.interface').Scope;
+}
+
+/** 别名 Provider */
+export interface ExistingProvider<T = unknown> {
+  provide: InjectionToken<T>;
+  useExisting: InjectionToken<T>;
+}
+
+export type Provider<T = unknown> =
+  | Type<T>
+  | ValueProvider<T>
+  | ClassProvider<T>
+  | FactoryProvider<T>
+  | ExistingProvider<T>;
+
+export function isValueProvider<T>(p: Provider<T>): p is ValueProvider<T> {
+  return typeof p === 'object' && p !== null && 'useValue' in p;
+}
