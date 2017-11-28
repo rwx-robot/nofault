@@ -47,3 +47,18 @@ export interface OnApplicationShutdown {
 }
 
 export interface NofaultApplicationContext {
+  select<T>(module: Type<unknown>): T | undefined;
+  get<T>(token: InjectionToken<T>): T | undefined;
+}
+
+/** 判断某个值是否为类构造函数 */
+export function isType(value: unknown): value is Type {
+  return typeof value === 'function' && /^\s*class\s+/.test(Function.prototype.toString.call(value));
+}
+
+/** 把任意令牌转换成可读字符串，便于报错与日志 */
+export function tokenToString(token: InjectionToken): string {
+  if (typeof token === 'string') return token;
+  if (typeof token === 'symbol') return token.toString();
+  return token.name || '(anonymous class)';
+}
