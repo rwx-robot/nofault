@@ -64,3 +64,25 @@ export type Provider<T = unknown> =
 export function isValueProvider<T>(p: Provider<T>): p is ValueProvider<T> {
   return typeof p === 'object' && p !== null && 'useValue' in p;
 }
+
+export function isClassProvider<T>(p: Provider<T>): p is ClassProvider<T> {
+  return typeof p === 'object' && p !== null && 'useClass' in p;
+}
+
+export function isFactoryProvider<T>(p: Provider<T>): p is FactoryProvider<T> {
+  return typeof p === 'object' && p !== null && 'useFactory' in p;
+}
+
+export function isExistingProvider<T>(p: Provider<T>): p is ExistingProvider<T> {
+  return typeof p === 'object' && p !== null && 'useExisting' in p;
+}
+
+export function isDynamicModule(m: unknown): m is DynamicModule {
+  return typeof m === 'object' && m !== null && 'module' in m;
+}
+
+/** 取 Provider 的注入令牌 */
+export function getProviderToken<T>(provider: Provider<T>): InjectionToken<T> {
+  if (typeof provider === 'function') return provider as Type<T>;
+  return (provider as { provide: InjectionToken<T> }).provide;
+}
