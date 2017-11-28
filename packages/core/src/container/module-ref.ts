@@ -39,3 +39,16 @@ export class ModuleRef {
   hasProvider(token: InjectionToken): boolean {
     return this.providers.has(token);
   }
+
+  addImport(ref: ModuleRef): void {
+    this.imports.add(ref);
+  }
+
+  addExport(token: InjectionToken): void {
+    this.exports.add(token);
+  }
+
+  addController(controller: Type<unknown>): void {
+    if (!this.controllers.includes(controller)) this.controllers.push(controller);
+  }
+}
