@@ -28,3 +28,32 @@ export function readScope(target: Function): Scope {
 }
 
 /**
+ * 构造函数参数注入：显式指定某个位置参数的令牌。
+ *
+ * 典型场景：依赖是接口（抽象类）、字符串令牌，或 TS 无法发射 `design:paramtypes`（如循环依赖）。
+ *
+ * @example
+ * ```ts
+ * @Injectable()
+ * export class UserService {
+ *   constructor(@Inject('DB_CONFIG') private readonly config: DbConfig) {}
+ * }
+ * ```
+ */
+export function Inject<T>(token: InjectionToken<T>): ParameterDecorator & PropertyDecorator {
+  return (target: object, propertyKey: string | symbol | undefined, index?: number) => {
+    if (typeof index === 'number') {
+      // 构造函数参数注入
+      const deps: Array<InjectionToken | undefined> =
+        Reflect.getMetadata(PROVIDER_METADATA.DEPENDENCIES, target) ?? [];
+      deps[index] = token;
+      Reflect.defineMetadata(PROVIDER_METADATA.DEPENDENCIES, deps, target);
+      return;
+    }
+    if (propertyKey !== undefined) {
+      // 属性注入
+      const key = `nofault:property:inject:${tokenToString(propertyKey)}`;
+      Reflect.defineMetadata(key, token, target.constructor);
+      const props: Array<string | symbol> =
+        Reflect.getMetadata('nofault:property:inject:keys', target.constructor) ?? [];
+      if (!props.includes(propertyKey)) {
