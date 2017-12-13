@@ -7,11 +7,3 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "start": "node dist/main.js"
-  },
-  "dependencies": {
-    "@nofault/core": "workspace:*",
-    "@nofault/logger": "workspace:*",
-    "@nofault/rest": "workspace:*",
-    "reflect-metadata": "^0.2.2"
-  }
-}
