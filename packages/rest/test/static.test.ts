@@ -32,3 +32,36 @@ describe('static file middleware', () => {
     const app = await RestApplication.create(StaticModule, {
       quiet: true,
       middleware: [serveStatic({ root: dir, prefix: '/static' })],
+    });
+    const { port } = await app.listen(0, '127.0.0.1');
+    try {
+      const res = await fetch(`http://127.0.0.1:${port}/static/page.html`);
+      expect(res.status).toBe(200);
+      expect(res.headers.get('content-type')).toBe('text/html; charset=utf-8');
+      expect(res.headers.get('content-length')).toBe(String(payload.length));
+      expect(await res.text()).toBe(payload);
+    } finally {
+      await app.close();
+    }
+  });
+
+  it('falls through to the router on a miss and never serves traversal', async () => {
+    const dir = mkdtempSync(join(tmpdir(), 'nofault-static-'));
+    const app = await RestApplication.create(StaticModule, {
+      quiet: true,
+      middleware: [serveStatic({ root: dir, prefix: '/' })],
+    });
+    const { port } = await app.listen(0, '127.0.0.1');
+    try {
+      // 未命中 → 继续走路由，不吞掉业务端点
+      const ping = await fetch(`http://127.0.0.1:${port}/api/ping`);
+      expect(ping.status).toBe(200);
+
+      // 编码过的穿越段：无论落在"拒绝"还是"未命中"，都绝不能 200
+      const evil = await fetch(`http://127.0.0.1:${port}/%2e%2e/%2e%2e/etc/passwd`);
+      expect([400, 404]).toContain(evil.status);
+    } finally {
+      await app.close();
+    }
+  });
+});
