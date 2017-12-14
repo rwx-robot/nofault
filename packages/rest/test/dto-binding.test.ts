@@ -32,3 +32,35 @@ describe('coerceDtoFields', () => {
   it('leaves non-numeric strings alone rather than producing NaN', () => {
     // NaN 会让后续算术全部变 NaN —— 宁可保持字符串让校验去报错
     expect(coerceDtoFields(PageReq, { page: 'abc' }).page).toBe('abc');
+  });
+
+  it('does not invent keys', () => {
+    expect(Object.keys(coerceDtoFields(PageReq, { page: '1' }))).toEqual(['page']);
+  });
+
+  it('returns {} for non-objects', () => {
+    expect(coerceDtoFields(PageReq, undefined)).toEqual({});
+    expect(coerceDtoFields(PageReq, null)).toEqual({});
+  });
+});
+
+describe('validateDto', () => {
+  it('accepts coerced numeric values', () => {
+    expect(validateDto(PageReq, coerceDtoFields(PageReq, { page: '2', pageSize: '20' }))).toEqual([]);
+  });
+
+  it('rejects raw query strings that were never coerced', () => {
+    // 这正是我们要修的 bug 的反向证明：不做强制，`page: '2'` 过不了 @IsInt()
+    const errors = validateDto(PageReq, { page: '2', pageSize: '20' });
+    expect(errors.length).toBeGreaterThan(0);
+  });
+
+  it('skips optional fields when absent', () => {
+    expect(validateDto(PageReq, { page: 1, pageSize: 10 })).toEqual([]);
+  });
+
+  it('honours Min', () => {
+    const errors = validateDto(PageReq, { page: 0, pageSize: 10 });
+    expect(errors[0]!.constraints.min).toContain('>= 1');
+  });
+});
