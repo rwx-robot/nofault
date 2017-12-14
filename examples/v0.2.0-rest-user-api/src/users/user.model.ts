@@ -19,23 +19,3 @@ export function findAll(): User[] {
 
 export function findById(id: number): User | undefined {
   return store.get(id);
-}
-
-export function findByEmail(email: string): User | undefined {
-  return [...store.values()].find((u) => u.email === email);
-}
-
-export function save(user: User): User {
-  store.set(user.id, user);
-  return user;
-}
-
-export function remove(id: number): boolean {
-  return store.delete(id);
-}
-
-/** 测试用：清空数据 */
-export function reset(): void {
-  store.clear();
-  seq = 0;
-}
