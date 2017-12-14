@@ -60,3 +60,63 @@ describe('RouteTree', () => {
 
   it('rejects an invalid wildcard name', () => {
     const t = new RouteTree<string>();
+    expect(() => t.add('/static/*1bad', 'any')).toThrow(RouteConflictError);
+  });
+
+  it('decodes url-encoded params', () => {
+    const t = new RouteTree<string>();
+    t.add('/search/:q', 'q');
+    expect(t.match('/search/hello%20world')?.params.q).toBe('hello world');
+  });
+
+  it('throws on duplicate registration', () => {
+    const t = new RouteTree<string>();
+    t.add('/a', 'a');
+    expect(() => t.add('/a', 'b')).toThrow(RouteConflictError);
+  });
+
+  it('throws when two different param names collide', () => {
+    const t = new RouteTree<string>();
+    t.add('/x/:id', 'a');
+    expect(() => t.add('/x/:name', 'b')).toThrow(RouteConflictError);
+  });
+
+  it('normalizes trailing slashes', () => {
+    const t = new RouteTree<string>();
+    t.add('/a/', 'a');
+    expect(t.match('/a')?.handler).toBe('a');
+    expect(t.match('/a/')?.handler).toBe('a');
+  });
+});
+
+describe('RouteTable', () => {
+  it('keeps one tree per method', () => {
+    const table = new RouteTable<string>();
+    table.add('GET', '/users', 'list');
+    table.add('POST', '/users', 'create');
+    expect(table.match('GET', '/users')?.handler).toBe('list');
+    expect(table.match('POST', '/users')?.handler).toBe('create');
+    expect(table.match('DELETE', '/users')).toBeUndefined();
+    expect(table.size).toBe(2);
+  });
+
+  it('falls back to GET for HEAD', () => {
+    const table = new RouteTable<string>();
+    table.add('GET', '/ping', 'pong');
+    expect(table.match('HEAD', '/ping')?.handler).toBe('pong');
+  });
+
+  it('reports allowed methods for 405 responses', () => {
+    const table = new RouteTable<string>();
+    table.add('GET', '/users/:id', 'get');
+    table.add('PUT', '/users/:id', 'put');
+    expect(table.allowedMethods('/users/1')).toEqual(['GET', 'HEAD', 'PUT']);
+  });
+
+  it('lists registered routes for introspection', () => {
+    const table = new RouteTable<string>();
+    table.add('GET', '/b', 'b');
+    table.add('GET', '/a', 'a');
+    expect(table.listRoutes().map((r) => r.pattern)).toEqual(['/a', '/b']);
+  });
+});
