@@ -2,7 +2,7 @@
 
 > 严格遵循 **Node.js / NestJS 生态规范**的 Node.js 微服务框架，参考行业最佳实践设计。
 
-**当前版本：v0.2.0（HTTP 全栈）**
+**当前版本：v0.3.0（运行时基座）**
 
 ---
 
@@ -10,7 +10,7 @@
 
 nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约定优于配置、内置服务治理。
 
-补齐 Web 层：Radix 路由、装饰器、中间件链、DTO 校验、统一错误响应。
+补齐运行时：请求上下文、REQUEST 作用域、热配置、健康检查探针。
 
 ## 架构概览
 
@@ -22,13 +22,13 @@ _见下方架构文档_
 pnpm install
 pnpm build
 pnpm test
-pnpm example v0.2.0-rest-user-api
+pnpm example v0.3.0-runtime-basics
 ```
 
-- 运行/使用说明 → [`docs/v0.2.0/RUNNING.md`](./docs/v0.2.0/RUNNING.md)
-- 架构说明 → [`docs/v0.2.0/ARCHITECTURE.md`](./docs/v0.2.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.2.0/CHANGELOG.md`](./docs/v0.2.0/CHANGELOG.md)
-- 压测报告 → [`benchmarks/v0.2.0/REPORT.md`](./benchmarks/v0.2.0/REPORT.md)
+- 运行/使用说明 → [`docs/v0.3.0/RUNNING.md`](./docs/v0.3.0/RUNNING.md)
+- 架构说明 → [`docs/v0.3.0/ARCHITECTURE.md`](./docs/v0.3.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.3.0/CHANGELOG.md`](./docs/v0.3.0/CHANGELOG.md)
+- 压测报告 → [`benchmarks/v0.3.0/REPORT.md`](./benchmarks/v0.3.0/REPORT.md)
 
 
 ## 已发布的包
@@ -40,6 +40,7 @@ pnpm example v0.2.0-rest-user-api
 | `@nofault/logger` | v0.1.0 | 分级结构化日志 |
 | `@nofault/http` | v0.1.0 | 底层 HTTP 适配 |
 | `@nofault/rest` | v0.2.0 | 路由、装饰器、中间件、DTO 校验 |
+| `@nofault/context` | v0.3.0 | 请求上下文、REQUEST 作用域 |
 
 ## 版本路线
 
@@ -47,8 +48,8 @@ pnpm example v0.2.0-rest-user-api
 | --- | --- | --- | --- |
 | v0.1.0 | 2016 | 内核雏形 | ✅ |
 | v0.2.0 | 2017 | HTTP 全栈 | ✅ |
+| v0.3.0 | 2018 | 运行时基座 | ✅ |
 | v0.10.0 | 2025 | 工程化工具链 | ✅ |
-| v0.3.0 | 2018 | 运行时基座 | 计划 |
 | v0.4.0 | 2019 | 代码生成 v1 | 计划 |
 | v0.5.0 | 2020 | 数据访问层 | 计划 |
 | v0.6.0 | 2021 | RPC 框架 | 计划 |
