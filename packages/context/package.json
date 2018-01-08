@@ -2,3 +2,5 @@
   "name": "@nofault/context",
   "version": "0.3.0",
   "description": "nofault request context: AsyncLocalStorage-based context propagation, trace ids, REQUEST scope support",
+  "license": "MIT",
+  "main": "dist/index.js",
