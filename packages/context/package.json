@@ -4,3 +4,5 @@
   "description": "nofault request context: AsyncLocalStorage-based context propagation, trace ids, REQUEST scope support",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
