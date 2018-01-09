@@ -38,3 +38,13 @@ export function generateSpanId(): string {
 
 /** 短请求 ID（日志里人读友好），如 `req_9f3c1a2b` */
 export function generateRequestId(): string {
+  return `req_${randomHex(8)}`;
+}
+
+export interface RequestIds {
+  requestId: string;
+  traceId: string;
+  spanId: string;
+}
+
+/**
