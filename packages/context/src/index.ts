@@ -29,3 +29,8 @@ export {
 export type { TraceParent, RequestIds } from './ids';
 
 /** 顶层便捷 API（基于默认全局 store） */
+export function currentContext(): RequestContext | undefined {
+  return requestContextStore.current();
+}
+
+export function requireContext(): RequestContext {
