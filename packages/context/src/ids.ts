@@ -28,3 +28,13 @@ function randomHex(length: number): string {
 
 /** 32 位十六进制 traceId */
 export function generateTraceId(): string {
+  return randomHex(32);
+}
+
+/** 16 位十六进制 spanId */
+export function generateSpanId(): string {
+  return randomHex(16);
+}
+
+/** 短请求 ID（日志里人读友好），如 `req_9f3c1a2b` */
+export function generateRequestId(): string {
