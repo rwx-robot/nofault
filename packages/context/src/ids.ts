@@ -58,3 +58,13 @@ export interface RequestIds {
 export function generateRequestIds(): RequestIds {
   // 32 + 16 + 8 = 56 个 hex 字符 = 28 字节
   const buf = new Uint8Array(28);
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj?.getRandomValues) {
+    cryptoObj.getRandomValues(buf);
+  } else {
+    for (let i = 0; i < buf.length; i++) buf[i] = Math.floor(Math.random() * 256);
+  }
+  let hex = '';
+  for (const b of buf) {
+    hex += HEX[(b >> 4) & 0xf];
+    hex += HEX[b & 0xf];
