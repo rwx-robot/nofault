@@ -24,3 +24,8 @@ export {
   generateRequestId,
   generateRequestIds,
   parseTraceparent,
+  formatTraceparent,
+} from './ids';
+export type { TraceParent, RequestIds } from './ids';
+
+/** 顶层便捷 API（基于默认全局 store） */
