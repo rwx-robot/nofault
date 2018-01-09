@@ -98,3 +98,12 @@ export function parseTraceparent(header: string | undefined): TraceParent | unde
   const traceId = m[2]!;
   const spanId = m[3]!;
   // 全零的 traceId / spanId 视为无效
+  if (/^0+$/.test(traceId) || /^0+$/.test(spanId)) return undefined;
+  const flags = Number.parseInt(m[4]!, 16);
+  return { traceId, spanId, sampled: (flags & 0x01) === 0x01 };
+}
+
+/** 生成 `traceparent` 头，用于向下游传递 */
+export function formatTraceparent(traceId: string, spanId: string, sampled = true): string {
+  return `00-${traceId}-${spanId}-${sampled ? '01' : '00'}`;
+}
