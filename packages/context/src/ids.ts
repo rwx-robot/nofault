@@ -18,3 +18,13 @@ function randomHex(length: number): string {
   } else {
     for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
   }
+  let out = '';
+  for (const b of bytes) {
+    out += HEX[(b >> 4) & 0xf];
+    out += HEX[b & 0xf];
+  }
+  return out;
+}
+
+/** 32 位十六进制 traceId */
+export function generateTraceId(): string {
