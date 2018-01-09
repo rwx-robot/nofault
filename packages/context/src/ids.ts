@@ -78,3 +78,13 @@ export function generateRequestIds(): RequestIds {
 
 export interface TraceParent {
   traceId: string;
+  spanId: string;
+  /** sampled 标志位 */
+  sampled: boolean;
+}
+
+const TRACEPARENT_RE = /^([0-9a-f]{2})-([0-9a-f]{32})-([0-9a-f]{16})-([0-9a-f]{2})$/;
+
+/**
+ * 解析 `traceparent` 请求头。
+ *
