@@ -44,3 +44,8 @@ export function currentContextId(): object | undefined {
 
 export function setContextValue(key: string, value: unknown): void {
   requestContextStore.set(key, value);
+}
+
+export function getContextValue<T = unknown>(key: string): T | undefined {
+  return requestContextStore.get<T>(key);
+}
