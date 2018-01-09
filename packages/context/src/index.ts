@@ -14,3 +14,8 @@ export type { RequestContextInit } from './request-context';
 
 // 同理，`requestContextStore` 也被下面的便捷函数用到：必须先 import 建立本地绑定，
 // 再 export 出去。删掉这行 import 会得到 TS2552 —— 这个坑在本仓库已经踩过三次了。
+import { requestContextStore } from './store';
+
+export { RequestContextStore, requestContextStore } from './store';
+
+export {
