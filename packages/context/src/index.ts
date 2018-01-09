@@ -39,3 +39,8 @@ export function requireContext(): RequestContext {
 
 /** 内核 REQUEST 作用域需要的 contextId */
 export function currentContextId(): object | undefined {
+  return requestContextStore.contextId();
+}
+
+export function setContextValue(key: string, value: unknown): void {
+  requestContextStore.set(key, value);
