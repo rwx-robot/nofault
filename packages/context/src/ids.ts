@@ -68,3 +68,13 @@ export function generateRequestIds(): RequestIds {
   for (const b of buf) {
     hex += HEX[(b >> 4) & 0xf];
     hex += HEX[b & 0xf];
+  }
+  return {
+    traceId: hex.slice(0, 32),
+    spanId: hex.slice(32, 48),
+    requestId: `req_${hex.slice(48, 56)}`,
+  };
+}
+
+export interface TraceParent {
+  traceId: string;
