@@ -8,3 +8,13 @@
  */
 
 const HEX = '0123456789abcdef';
+
+function randomHex(length: number): string {
+  const bytes = new Uint8Array(length / 2);
+  // 用 crypto 而不是 Math.random：traceId 需要足够随机且不阻塞
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj?.getRandomValues) {
+    cryptoObj.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < bytes.length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
