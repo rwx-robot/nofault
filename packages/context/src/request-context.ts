@@ -32,3 +32,12 @@ export class RequestContext {
   /** 是否采样（影响日志与追踪是否落盘） */
   public readonly sampled: boolean;
   /** 创建时间（毫秒，hrtime） */
+  public readonly startedAt: number;
+
+  private readonly values = new Map<string, unknown>();
+
+  constructor(init: RequestContextInit = {}) {
+    if (init.id && init.traceparent) {
+      this.id = init.id;
+      this.traceId = init.traceparent.traceId;
+      this.spanId = generateSpanId();
