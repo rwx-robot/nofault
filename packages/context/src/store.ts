@@ -12,3 +12,9 @@ import type { RequestContextInit } from './request-context';
  */
 export class RequestContextStore {
   private readonly storage = new AsyncLocalStorage<RequestContext>();
+
+  /**
+   * 在上下文中执行 `fn`。
+   *
+   * @returns `fn` 的返回值（泛型透传，不丢类型）
+   */
