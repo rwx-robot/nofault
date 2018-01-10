@@ -45,3 +45,10 @@ export class RequestContextStore {
   }
 
   /** 是否有上下文 */
+  hasContext(): boolean {
+    return this.storage.getStore() !== undefined;
+  }
+
+  /**
+   * 供内核使用的 contextId。
+   *
