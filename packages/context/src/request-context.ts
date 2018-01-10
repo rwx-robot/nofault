@@ -49,3 +49,12 @@ export class RequestContext {
     }
     this.parentSpanId = init.traceparent?.spanId;
     this.sampled = init.traceparent?.sampled ?? true;
+    this.startedAt = performance.now();
+
+    if (init.values) {
+      for (const [k, v] of Object.entries(init.values)) this.values.set(k, v);
+    }
+  }
+
+  set(key: string, value: unknown): this {
+    this.values.set(key, value);
