@@ -83,3 +83,10 @@ export class RequestContext {
       sampled: this.sampled,
       elapsedMs: Number(this.elapsedMs().toFixed(3)),
     };
+  }
+
+  /** 从创建到现在经过的毫秒数 */
+  elapsedMs(): number {
+    return performance.now() - this.startedAt;
+  }
+}
