@@ -58,3 +58,11 @@ export class RequestContext {
 
   set(key: string, value: unknown): this {
     this.values.set(key, value);
+    return this;
+  }
+
+  get<T = unknown>(key: string): T | undefined {
+    return this.values.get(key) as T | undefined;
+  }
+
+  has(key: string): boolean {
