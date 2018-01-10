@@ -38,3 +38,10 @@ export class RequestContextStore {
     if (!ctx) {
       throw new Error(
         'No request context available. Make sure the code runs inside a request context ' +
+          '(see @nofault/context requestContextMiddleware).',
+      );
+    }
+    return ctx;
+  }
+
+  /** 是否有上下文 */
