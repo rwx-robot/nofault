@@ -24,3 +24,11 @@ export class RequestContext {
   /** 人读友好的请求 ID */
   public readonly id: string;
   /** W3C traceId（32 hex） */
+  public readonly traceId: string;
+  /** W3C spanId（16 hex） */
+  public readonly spanId: string;
+  /** 上游传下来的父 spanId */
+  public readonly parentSpanId?: string;
+  /** 是否采样（影响日志与追踪是否落盘） */
+  public readonly sampled: boolean;
+  /** 创建时间（毫秒，hrtime） */
