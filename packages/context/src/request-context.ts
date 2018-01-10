@@ -75,3 +75,11 @@ export class RequestContext {
 
   /** 快照（写日志用） */
   toJSON(): Record<string, unknown> {
+    return {
+      id: this.id,
+      traceId: this.traceId,
+      spanId: this.spanId,
+      parentSpanId: this.parentSpanId,
+      sampled: this.sampled,
+      elapsedMs: Number(this.elapsedMs().toFixed(3)),
+    };
