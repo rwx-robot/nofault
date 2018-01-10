@@ -7,3 +7,11 @@ export interface RequestContextInit {
   /** 复用上游传下来的链路信息 */
   traceparent?: TraceParent;
   /** 附加数据 */
+  values?: Record<string, unknown>;
+}
+
+/**
+ * 一次请求的上下文。
+ *
+ * 请求级值传递用 Node 惯用法表达：
+ * 显式对象 + `AsyncLocalStorage` 隐式传播，而不是把 ctx 当第一个参数到处传。
