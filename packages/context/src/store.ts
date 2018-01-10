@@ -52,3 +52,9 @@ export class RequestContextStore {
   /**
    * 供内核使用的 contextId。
    *
+   * 就是 `RequestContext` 实例本身——对象身份天然唯一，
+   * 请求结束时内核按它清理请求级实例。
+   */
+  contextId(): object | undefined {
+    return this.storage.getStore();
+  }
