@@ -66,3 +66,12 @@ export class RequestContext {
   }
 
   has(key: string): boolean {
+    return this.values.has(key);
+  }
+
+  delete(key: string): boolean {
+    return this.values.delete(key);
+  }
+
+  /** 快照（写日志用） */
+  toJSON(): Record<string, unknown> {
