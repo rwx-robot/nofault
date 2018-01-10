@@ -58,3 +58,10 @@ export class RequestContextStore {
   contextId(): object | undefined {
     return this.storage.getStore();
   }
+
+  set(key: string, value: unknown): void {
+    this.storage.getStore()?.set(key, value);
+  }
+
+  get<T = unknown>(key: string): T | undefined {
+    return this.storage.getStore()?.get<T>(key);
