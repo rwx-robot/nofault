@@ -119,3 +119,14 @@ describe('RequestContextStore', () => {
   it('set/get values without a context is a no-op', () => {
     expect(() => setContextValue('k', 1)).not.toThrow();
     expect(getContextValue('k')).toBeUndefined();
+  });
+
+  it('require() throws when outside a context', () => {
+    expect(() => requestContextStore.require()).toThrow(/No request context/);
+  });
+
+  it('runWithContext returns the callback result', () => {
+    const ctx = new RequestContext();
+    expect(runWithContext(ctx, () => 42)).toBe(42);
+  });
+});
