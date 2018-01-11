@@ -23,3 +23,14 @@ describe('ids', () => {
   it('parses a valid traceparent header', () => {
     const tp = parseTraceparent('00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-01');
     expect(tp).toEqual({
+      traceId: '4bf92f3577b34da6a3ce929d0e0e4736',
+      spanId: '00f067aa0ba902b7',
+      sampled: true,
+    });
+  });
+
+  it('returns undefined for malformed or all-zero headers', () => {
+    expect(parseTraceparent(undefined)).toBeUndefined();
+    expect(parseTraceparent('garbage')).toBeUndefined();
+    expect(parseTraceparent('00-00000000000000000000000000000000-00f067aa0ba902b7-01')).toBeUndefined();
+  });
