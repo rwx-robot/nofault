@@ -107,3 +107,15 @@ describe('RequestContextStore', () => {
       });
 
     const results = await Promise.all([runOne('slow', 20), runOne('fast', 1), runOne('mid', 10)]);
+    expect(results).toEqual(['slow', 'fast', 'mid']);
+  });
+
+  it('uses the context instance itself as the contextId', () => {
+    const ctx = new RequestContext();
+    const id = requestContextStore.run(ctx, () => currentContextId());
+    expect(id).toBe(ctx);
+  });
+
+  it('set/get values without a context is a no-op', () => {
+    expect(() => setContextValue('k', 1)).not.toThrow();
+    expect(getContextValue('k')).toBeUndefined();
