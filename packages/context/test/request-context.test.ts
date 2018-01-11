@@ -83,3 +83,15 @@ describe('RequestContextStore', () => {
     const store = new RequestContextStore();
     expect(store.current()).toBeUndefined();
     expect(store.hasContext()).toBe(false);
+
+    const ctx = new RequestContext({ id: 'req_a' });
+    const seen = store.run(ctx, () => store.current());
+    expect(seen).toBe(ctx);
+    expect(store.current()).toBeUndefined();
+  });
+
+  it('propagates across await boundaries', async () => {
+    const ctx = new RequestContext({ id: 'req_async' });
+    const result = await requestContextStore.run(ctx, async () => {
+      await new Promise((r) => setTimeout(r, 1));
+      return currentContext()?.id;
