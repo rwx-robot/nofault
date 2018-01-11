@@ -58,3 +58,16 @@ describe('RequestContext', () => {
     expect(ctx.spanId).not.toBe(parent.spanId);
     expect(ctx.sampled).toBe(false);
   });
+
+  it('stores and reads values', () => {
+    const ctx = new RequestContext({ values: { userId: 7 } });
+    expect(ctx.get<number>('userId')).toBe(7);
+    ctx.set('role', 'admin');
+    expect(ctx.get('role')).toBe('admin');
+    expect(ctx.has('role')).toBe(true);
+    expect(ctx.delete('role')).toBe(true);
+    expect(ctx.has('role')).toBe(false);
+  });
+
+  it('serializes to a log-friendly object', () => {
+    const ctx = new RequestContext({ id: 'req_fixed' });
