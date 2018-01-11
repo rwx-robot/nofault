@@ -34,3 +34,16 @@ describe('ids', () => {
     expect(parseTraceparent('garbage')).toBeUndefined();
     expect(parseTraceparent('00-00000000000000000000000000000000-00f067aa0ba902b7-01')).toBeUndefined();
   });
+
+  it('round-trips format and parse', () => {
+    const header = formatTraceparent('a'.repeat(32), 'b'.repeat(16), true);
+    expect(header).toBe(`00-${'a'.repeat(32)}-${'b'.repeat(16)}-01`);
+    expect(parseTraceparent(header)?.sampled).toBe(true);
+  });
+});
+
+describe('RequestContext', () => {
+  it('generates a request id and trace ids by default', () => {
+    const ctx = new RequestContext();
+    expect(ctx.id).toMatch(/^req_[0-9a-f]{8}$/);
+    expect(ctx.traceId).toMatch(/^[0-9a-f]{32}$/);
