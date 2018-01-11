@@ -47,3 +47,14 @@ describe('RequestContext', () => {
     const ctx = new RequestContext();
     expect(ctx.id).toMatch(/^req_[0-9a-f]{8}$/);
     expect(ctx.traceId).toMatch(/^[0-9a-f]{32}$/);
+    expect(ctx.spanId).toMatch(/^[0-9a-f]{16}$/);
+  });
+
+  it('inherits the upstream trace id but creates a new span', () => {
+    const parent = parseTraceparent('00-4bf92f3577b34da6a3ce929d0e0e4736-00f067aa0ba902b7-00')!;
+    const ctx = new RequestContext({ traceparent: parent });
+    expect(ctx.traceId).toBe(parent.traceId);
+    expect(ctx.parentSpanId).toBe(parent.spanId);
+    expect(ctx.spanId).not.toBe(parent.spanId);
+    expect(ctx.sampled).toBe(false);
+  });
