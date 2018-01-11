@@ -71,3 +71,15 @@ describe('RequestContext', () => {
 
   it('serializes to a log-friendly object', () => {
     const ctx = new RequestContext({ id: 'req_fixed' });
+    const json = ctx.toJSON();
+    expect(json.id).toBe('req_fixed');
+    expect(json.traceId).toHaveLength(32);
+    expect(typeof json.elapsedMs).toBe('number');
+  });
+});
+
+describe('RequestContextStore', () => {
+  it('exposes the context only inside run()', () => {
+    const store = new RequestContextStore();
+    expect(store.current()).toBeUndefined();
+    expect(store.hasContext()).toBe(false);
