@@ -95,3 +95,15 @@ describe('RequestContextStore', () => {
     const result = await requestContextStore.run(ctx, async () => {
       await new Promise((r) => setTimeout(r, 1));
       return currentContext()?.id;
+    });
+    expect(result).toBe('req_async');
+  });
+
+  it('isolates concurrent contexts', async () => {
+    const runOne = (id: string, delay: number) =>
+      requestContextStore.run(new RequestContext({ id }), async () => {
+        await new Promise((r) => setTimeout(r, delay));
+        return currentContext()!.id;
+      });
+
+    const results = await Promise.all([runOne('slow', 20), runOne('fast', 1), runOne('mid', 10)]);
