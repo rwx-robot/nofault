@@ -106,3 +106,13 @@ export class HealthRegistry {
           error: err instanceof Error ? err.message : String(err),
         });
       }
+    }
+
+    return { status, uptimeSec: Math.round(process.uptime()), checks: results };
+  }
+}
+
+export function statusToHttpCode(status: HealthStatus): number {
+  // degraded 仍返回 200：K8s 不会因为"降级"重启，但监控系统能看到字段
+  return status === 'down' ? 503 : 200;
+}
