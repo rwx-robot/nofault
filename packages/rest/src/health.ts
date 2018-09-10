@@ -58,3 +58,15 @@ export class HealthRegistry {
   /** 启动完成：标记为可接流量 */
   markReady(): void {
     this.ready = true;
+  }
+
+  /** 优雅退出前：先摘流量，再关进程 */
+  markNotReady(): void {
+    this.ready = false;
+  }
+
+  get isReady(): boolean {
+    return this.ready;
+  }
+
+  async checkLiveness(): Promise<HealthReport> {
