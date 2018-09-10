@@ -9,3 +9,16 @@
  */
 
 export type HealthStatus = 'ok' | 'degraded' | 'down';
+
+export interface HealthCheckResult {
+  name: string;
+  status: HealthStatus;
+  /** 耗时（毫秒） */
+  durationMs: number;
+  error?: string;
+}
+
+export interface HealthReport {
+  status: HealthStatus;
+  uptimeSec: number;
+  checks: HealthCheckResult[];
