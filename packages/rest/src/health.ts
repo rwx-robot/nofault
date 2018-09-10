@@ -46,3 +46,15 @@ export class HealthRegistry {
 
   registerLiveness(name: string, check: HealthCheck, degradeOnFailure = false): this {
     this.liveness.set(name, { name, check, degradeOnFailure });
+    return this;
+  }
+
+  registerReadiness(name: string, check: HealthCheck, degradeOnFailure = false): this {
+    this.ready = false;
+    this.readiness.set(name, { name, check, degradeOnFailure });
+    return this;
+  }
+
+  /** 启动完成：标记为可接流量 */
+  markReady(): void {
+    this.ready = true;
