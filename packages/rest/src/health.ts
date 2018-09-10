@@ -33,3 +33,16 @@ interface RegisteredCheck {
   /** true 表示失败只降级（degraded）不判死 */
   degradeOnFailure?: boolean;
 }
+
+const worst = (a: HealthStatus, b: HealthStatus): HealthStatus => {
+  const rank: Record<HealthStatus, number> = { ok: 0, degraded: 1, down: 2 };
+  return rank[a] >= rank[b] ? a : b;
+};
+
+export class HealthRegistry {
+  private readonly liveness = new Map<string, RegisteredCheck>();
+  private readonly readiness = new Map<string, RegisteredCheck>();
+  private ready = true;
+
+  registerLiveness(name: string, check: HealthCheck, degradeOnFailure = false): this {
+    this.liveness.set(name, { name, check, degradeOnFailure });
