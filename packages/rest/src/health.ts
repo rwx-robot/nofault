@@ -22,3 +22,14 @@ export interface HealthReport {
   status: HealthStatus;
   uptimeSec: number;
   checks: HealthCheckResult[];
+}
+
+/** 单项检查：抛错即视为 down */
+export type HealthCheck = () => Promise<unknown> | unknown;
+
+interface RegisteredCheck {
+  name: string;
+  check: HealthCheck;
+  /** true 表示失败只降级（degraded）不判死 */
+  degradeOnFailure?: boolean;
+}
