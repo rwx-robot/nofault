@@ -70,3 +70,15 @@ export class HealthRegistry {
   }
 
   async checkLiveness(): Promise<HealthReport> {
+    return this.run([...this.liveness.values()]);
+  }
+
+  async checkReadiness(): Promise<HealthReport> {
+    if (!this.ready) {
+      return { status: 'down', uptimeSec: Math.round(process.uptime()), checks: [] };
+    }
+    return this.run([...this.readiness.values()]);
+  }
+
+  private async run(checks: RegisteredCheck[]): Promise<HealthReport> {
+    let status: HealthStatus = 'ok';
