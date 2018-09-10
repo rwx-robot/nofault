@@ -82,3 +82,15 @@ export class HealthRegistry {
 
   private async run(checks: RegisteredCheck[]): Promise<HealthReport> {
     let status: HealthStatus = 'ok';
+    const results: HealthCheckResult[] = [];
+
+    for (const c of checks) {
+      const started = performance.now();
+      try {
+        await Promise.race([
+          Promise.resolve(c.check()),
+          new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), 3000)),
+        ]);
+        results.push({
+          name: c.name,
+          status: 'ok',
