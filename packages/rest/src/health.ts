@@ -94,3 +94,15 @@ export class HealthRegistry {
         results.push({
           name: c.name,
           status: 'ok',
+          durationMs: Number((performance.now() - started).toFixed(2)),
+        });
+      } catch (err) {
+        const failed: HealthStatus = c.degradeOnFailure ? 'degraded' : 'down';
+        status = worst(status, failed);
+        results.push({
+          name: c.name,
+          status: failed,
+          durationMs: Number((performance.now() - started).toFixed(2)),
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
