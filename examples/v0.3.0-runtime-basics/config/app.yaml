@@ -1,0 +1,13 @@
+# v0.3.0 示例配置
+#
+# 试着在进程运行时改这个文件（watch: true 已开启），
+# 再访问 GET /api/runtime/config，会看到值实时变化。
+app:
+  name: runtime-basics
+  tenant: acme
+server:
+  port: 3000
+feature:
+  # 改这个开关，观察 /api/runtime/config 与业务行为同步变化
+  betaEnabled: false
+  greeting: Hello from v0.3.0
