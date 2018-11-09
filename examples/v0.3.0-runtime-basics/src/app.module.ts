@@ -15,3 +15,10 @@ import { RequestScopeService } from './request-scope.service';
   imports: [
     ConfigModule.forRootAsync({
       path: process.env.NOFAULT_CONFIG_PATH ?? resolve(__dirname, '../config/app.yaml'),
+      watch: true,
+    }),
+  ],
+  controllers: [RuntimeController],
+  providers: [RequestScopeService],
+})
+export class AppModule {}
