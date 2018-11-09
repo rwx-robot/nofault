@@ -15,3 +15,19 @@ export class RequestScopeService {
   public readonly instanceNo = ++seq;
   /** 从请求上下文拿到的 requestId */
   public readonly requestId: string;
+
+  constructor() {
+    this.requestId = currentContext()?.id ?? 'no-context';
+  }
+
+  /** 请求内共享的暂存区（同一请求内多次调用会累积） */
+  private readonly notes: string[] = [];
+
+  addNote(note: string): void {
+    this.notes.push(note);
+  }
+
+  getNotes(): string[] {
+    return [...this.notes];
+  }
+}
