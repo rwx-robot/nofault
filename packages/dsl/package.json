@@ -1,21 +1,2 @@
 {
   "name": "@nofault/dsl",
-  "version": "0.4.0",
-  "description": "nofault API contract DSL: decorators for .api.ts contract files plus the spec model shared by parser and codegen",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "files": ["dist", "README.md"],
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "dependencies": {
-    "reflect-metadata": "^0.2.2"
-  }
-}
