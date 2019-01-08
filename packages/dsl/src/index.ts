@@ -9,3 +9,9 @@ export {
   FieldSource,
   createApiSpec,
   findType,
+  findService,
+} from './spec';
+export type { FieldSpec, TypeSpec, RouteSpec, ServiceSpec, ApiSpec } from './spec';
+
+export {
+  Api,
