@@ -26,3 +26,8 @@ export {
   Put,
   Delete,
   Patch,
+  Head,
+  Options,
+  Handler,
+  Body,
+  Path,
