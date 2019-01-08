@@ -112,3 +112,17 @@ function fieldDecorator(source: FieldSource) {
 }
 
 export const Body = fieldDecorator(FieldSource.BODY);
+export const Path = fieldDecorator(FieldSource.PATH);
+export const Query = fieldDecorator(FieldSource.QUERY);
+export const Header = fieldDecorator(FieldSource.HEADER);
+export const Form = fieldDecorator(FieldSource.FORM);
+
+/** 追加一条校验规则（规则以字符串保存，生成代码时翻译成 Node.js 的写法） */
+export function Rule(rule: string): PropertyDecorator {
+  return (target, propertyKey) => {
+    const ctor = target.constructor;
+    const list: FieldMeta[] = Reflect.getMetadata(M.FIELDS, ctor) ?? [];
+    const field = [...list].reverse().find((f) => f.name === String(propertyKey));
+    if (field) field.rules.push(rule);
+    else list.push({ name: String(propertyKey), source: FieldSource.BODY, rules: [rule], optional: false });
+    Reflect.defineMetadata(M.FIELDS, list, ctor);
