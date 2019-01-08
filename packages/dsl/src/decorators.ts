@@ -13,3 +13,17 @@ const M = {
   API: 'nofault:dsl:api',
   SERVICE: 'nofault:dsl:service',
   ROUTE: 'nofault:dsl:routes',
+  FIELDS: 'nofault:dsl:fields',
+} as const;
+
+export interface ServiceMeta {
+  name?: string;
+  prefix?: string;
+  group?: string;
+  jwt?: string;
+  middleware?: string[];
+  timeout?: string;
+  maxBytes?: number;
+}
+
+export interface RouteMeta {
