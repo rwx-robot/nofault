@@ -154,3 +154,16 @@ export const Max = (n: number): PropertyDecorator => Rule(`max:${n}`);
 
 export function readServiceMeta(target: Function): ServiceMeta | undefined {
   return Reflect.getMetadata(M.SERVICE, target);
+}
+
+export function readRouteMeta(target: Function): RouteMeta[] {
+  return Reflect.getMetadata(M.ROUTE, target) ?? [];
+}
+
+export function readFieldMeta(target: Function): FieldMeta[] {
+  return Reflect.getMetadata(M.FIELDS, target) ?? [];
+}
+
+export function isApiService(target: Function): boolean {
+  return Reflect.getMetadata(M.API, target) === true || (readServiceMeta(target)?.name !== undefined);
+}
