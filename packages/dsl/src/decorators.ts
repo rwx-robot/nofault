@@ -98,3 +98,17 @@ export function Handler(name: string): MethodDecorator {
     Reflect.defineMetadata(M.ROUTE, list, target.constructor);
   };
 }
+
+// ------------------------------------------------------------------ 字段级
+
+function fieldDecorator(source: FieldSource) {
+  return (key?: string): PropertyDecorator =>
+    (target, propertyKey) => {
+      const ctor = target.constructor;
+      const list: FieldMeta[] = Reflect.getMetadata(M.FIELDS, ctor) ?? [];
+      list.push({ name: String(propertyKey), key, source, rules: [], optional: false });
+      Reflect.defineMetadata(M.FIELDS, list, ctor);
+    };
+}
+
+export const Body = fieldDecorator(FieldSource.BODY);
