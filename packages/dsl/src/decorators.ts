@@ -55,3 +55,16 @@ export function Prefix(prefix: string): ClassDecorator {
 }
 export function Group(group: string): ClassDecorator {
   return (target) => mergeService(target, { group });
+}
+export function Jwt(scheme: string): ClassDecorator {
+  return (target) => mergeService(target, { jwt: scheme });
+}
+export function Middleware(...names: string[]): ClassDecorator {
+  return (target) => mergeService(target, { middleware: names });
+}
+export function Timeout(value: string): ClassDecorator {
+  return (target) => mergeService(target, { timeout: value });
+}
+export function MaxBytes(bytes: number): ClassDecorator {
+  return (target) => mergeService(target, { maxBytes: bytes });
+}
