@@ -126,3 +126,17 @@ export function Rule(rule: string): PropertyDecorator {
     if (field) field.rules.push(rule);
     else list.push({ name: String(propertyKey), source: FieldSource.BODY, rules: [rule], optional: false });
     Reflect.defineMetadata(M.FIELDS, list, ctor);
+  };
+}
+
+export function Optional(): PropertyDecorator {
+  return (target, propertyKey) => {
+    const ctor = target.constructor;
+    const list: FieldMeta[] = Reflect.getMetadata(M.FIELDS, ctor) ?? [];
+    const field = [...list].reverse().find((f) => f.name === String(propertyKey));
+    if (field) field.optional = true;
+    Reflect.defineMetadata(M.FIELDS, list, ctor);
+  };
+}
+
+// 常用校验规则的语法糖
