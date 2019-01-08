@@ -140,3 +140,17 @@ export function Optional(): PropertyDecorator {
 }
 
 // 常用校验规则的语法糖
+export const IsString = (): PropertyDecorator => Rule('isString');
+export const IsInt = (): PropertyDecorator => Rule('isInt');
+export const IsNumber = (): PropertyDecorator => Rule('isNumber');
+export const IsEmail = (): PropertyDecorator => Rule('isEmail');
+export const IsNotEmpty = (): PropertyDecorator => Rule('isNotEmpty');
+export const MinLength = (n: number): PropertyDecorator => Rule(`minLength:${n}`);
+export const MaxLength = (n: number): PropertyDecorator => Rule(`maxLength:${n}`);
+export const Min = (n: number): PropertyDecorator => Rule(`min:${n}`);
+export const Max = (n: number): PropertyDecorator => Rule(`max:${n}`);
+
+// ------------------------------------------------------------------ 读取
+
+export function readServiceMeta(target: Function): ServiceMeta | undefined {
+  return Reflect.getMetadata(M.SERVICE, target);
