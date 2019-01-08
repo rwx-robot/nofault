@@ -15,3 +15,8 @@ export type { FieldSpec, TypeSpec, RouteSpec, ServiceSpec, ApiSpec } from './spe
 
 export {
   Api,
+  Prefix,
+  Group,
+  Jwt,
+  Middleware,
+  Timeout,
