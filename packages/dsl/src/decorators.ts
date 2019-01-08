@@ -83,3 +83,18 @@ function methodDecorator(method: string) {
 export const Get = methodDecorator('GET');
 export const Post = methodDecorator('POST');
 export const Put = methodDecorator('PUT');
+export const Delete = methodDecorator('DELETE');
+export const Patch = methodDecorator('PATCH');
+export const Head = methodDecorator('HEAD');
+export const Options = methodDecorator('OPTIONS');
+
+/** 显式指定生成的 handler 名（默认取方法名） */
+export function Handler(name: string): MethodDecorator {
+  return (target, propertyKey) => {
+    const list: RouteMeta[] = Reflect.getMetadata(M.ROUTE, target.constructor) ?? [];
+    const last = [...list].reverse().find((r) => r.handler === String(propertyKey) || r.handler === undefined);
+    if (last) last.handler = name;
+    else list.push({ method: 'GET', path: '/', handler: name });
+    Reflect.defineMetadata(M.ROUTE, list, target.constructor);
+  };
+}
