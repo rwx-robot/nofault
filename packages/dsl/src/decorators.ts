@@ -41,3 +41,17 @@ export interface FieldMeta {
 }
 
 function mergeService(target: object, patch: ServiceMeta): void {
+  const cur: ServiceMeta = Reflect.getMetadata(M.SERVICE, target.constructor) ?? {};
+  Reflect.defineMetadata(M.SERVICE, { ...cur, ...patch }, target.constructor);
+}
+
+// ------------------------------------------------------------------ 服务级
+
+export function Api(name: string): ClassDecorator {
+  return (target) => mergeService(target, { name });
+}
+export function Prefix(prefix: string): ClassDecorator {
+  return (target) => mergeService(target, { prefix });
+}
+export function Group(group: string): ClassDecorator {
+  return (target) => mergeService(target, { group });
