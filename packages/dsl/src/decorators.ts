@@ -68,3 +68,18 @@ export function Timeout(value: string): ClassDecorator {
 export function MaxBytes(bytes: number): ClassDecorator {
   return (target) => mergeService(target, { maxBytes: bytes });
 }
+
+// ------------------------------------------------------------------ 路由级
+
+function methodDecorator(method: string) {
+  return (path: string, handler?: string): MethodDecorator =>
+    (target, propertyKey) => {
+      const list: RouteMeta[] = Reflect.getMetadata(M.ROUTE, target.constructor) ?? [];
+      list.push({ method, path, handler: handler ?? String(propertyKey) });
+      Reflect.defineMetadata(M.ROUTE, list, target.constructor);
+    };
+}
+
+export const Get = methodDecorator('GET');
+export const Post = methodDecorator('POST');
+export const Put = methodDecorator('PUT');
