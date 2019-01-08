@@ -27,3 +27,17 @@ export interface ServiceMeta {
 }
 
 export interface RouteMeta {
+  method: string;
+  path: string;
+  handler?: string;
+}
+
+export interface FieldMeta {
+  name: string;
+  key?: string;
+  source: FieldSource;
+  rules: string[];
+  optional: boolean;
+}
+
+function mergeService(target: object, patch: ServiceMeta): void {
