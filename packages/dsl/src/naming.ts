@@ -35,3 +35,9 @@ export function snakeCase(input: string): string {
   return splitWords(input)
     .map((w) => w.toLowerCase())
     .join('_');
+}
+
+/** 单数化（极其保守：只处理常见复数形式，拿不准就原样返回） */
+export function singularize(input: string): string {
+  if (/ies$/i.test(input)) return input.slice(0, -3) + 'y';
+  if (/(ch|sh|ss|x|z)es$/i.test(input)) return input.slice(0, -2);
