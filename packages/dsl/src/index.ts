@@ -47,3 +47,9 @@ export {
   Max,
   readServiceMeta,
   readRouteMeta,
+  readFieldMeta,
+  isApiService,
+} from './decorators';
+export type { ServiceMeta, RouteMeta, FieldMeta } from './decorators';
+
+export {
