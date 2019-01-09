@@ -59,3 +59,9 @@ export function handlerNameFromPath(method: string, path: string): string {
   if (segments.length === 0) return camelCase(method.toLowerCase());
   const last = segments[segments.length - 1]!;
   if (/^(by|of)/.test(last) || last.toLowerCase() !== last) {
+    // 形如 /user/:id：用资源名 + 后缀
+    const resource = segments[0] ?? 'item';
+    return camelCase(`${singularize(resource)}-detail`);
+  }
+  return camelCase(last);
+}
