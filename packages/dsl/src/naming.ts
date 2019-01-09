@@ -47,3 +47,9 @@ export function singularize(input: string): string {
 
 /**
  * 由路由路径推导 handler 名。
+ *
+ * `/user/list` → `list`；`/user/:id` → `userDetail`（`:id` 视为详情）
+ */
+export function handlerNameFromPath(method: string, path: string): string {
+  const segments = path
+    .split('/')
