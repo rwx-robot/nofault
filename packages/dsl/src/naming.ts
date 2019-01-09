@@ -29,3 +29,9 @@ export function kebabCase(input: string): string {
   return splitWords(input)
     .map((w) => w.toLowerCase())
     .join('-');
+}
+
+export function snakeCase(input: string): string {
+  return splitWords(input)
+    .map((w) => w.toLowerCase())
+    .join('_');
