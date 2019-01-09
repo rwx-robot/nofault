@@ -41,3 +41,9 @@ export function snakeCase(input: string): string {
 export function singularize(input: string): string {
   if (/ies$/i.test(input)) return input.slice(0, -3) + 'y';
   if (/(ch|sh|ss|x|z)es$/i.test(input)) return input.slice(0, -2);
+  if (/s$/i.test(input) && !/ss$/i.test(input)) return input.slice(0, -1);
+  return input;
+}
+
+/**
+ * 由路由路径推导 handler 名。
