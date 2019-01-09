@@ -29,3 +29,11 @@ export interface FieldSpec {
 }
 
 export interface TypeSpec {
+  name: string;
+  fields: FieldSpec[];
+  comment?: string;
+}
+
+export interface RouteSpec {
+  /** 处理器名，如 `login` */
+  handler: string;
