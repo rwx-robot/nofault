@@ -22,3 +22,10 @@ export interface FieldSpec {
   type: string;
   source: FieldSource;
   optional: boolean;
+  /** 校验规则，如 `['isString', 'minLength:3']` */
+  rules: string[];
+  /** 注释（生成代码时保留） */
+  comment?: string;
+}
+
+export interface TypeSpec {
