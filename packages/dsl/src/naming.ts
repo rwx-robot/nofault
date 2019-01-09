@@ -65,3 +65,8 @@ export function handlerNameFromPath(method: string, path: string): string {
   }
   return camelCase(last);
 }
+
+/** 生成 TypeScript 类型名（去掉 Req/Resp 之外的修饰，首字母大写） */
+export function typeName(input: string): string {
+  return pascalCase(input);
+}
