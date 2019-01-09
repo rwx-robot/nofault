@@ -42,3 +42,8 @@ export {
   IsEmail,
   IsNotEmpty,
   MinLength,
+  MaxLength,
+  Min,
+  Max,
+  readServiceMeta,
+  readRouteMeta,
