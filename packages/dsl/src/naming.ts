@@ -53,3 +53,9 @@ export function singularize(input: string): string {
 export function handlerNameFromPath(method: string, path: string): string {
   const segments = path
     .split('/')
+    .filter((s) => s.length > 0)
+    .map((s) => (s.startsWith(':') ? `by${pascalCase(s.slice(1))}` : s));
+
+  if (segments.length === 0) return camelCase(method.toLowerCase());
+  const last = segments[segments.length - 1]!;
+  if (/^(by|of)/.test(last) || last.toLowerCase() !== last) {
