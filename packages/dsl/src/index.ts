@@ -58,3 +58,7 @@ export {
   camelCase,
   kebabCase,
   snakeCase,
+  singularize,
+  handlerNameFromPath,
+  typeName,
+} from './naming';
