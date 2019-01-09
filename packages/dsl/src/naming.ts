@@ -17,3 +17,9 @@ export function splitWords(input: string): string[] {
 export function pascalCase(input: string): string {
   return splitWords(input)
     .map((w) => w[0]!.toUpperCase() + w.slice(1).toLowerCase())
+    .join('');
+}
+
+export function camelCase(input: string): string {
+  const p = pascalCase(input);
+  return p.length === 0 ? p : p[0]!.toLowerCase() + p.slice(1);
