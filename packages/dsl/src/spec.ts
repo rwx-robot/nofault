@@ -13,3 +13,12 @@ export enum FieldSource {
   HEADER = 'header',
   FORM = 'form',
 }
+
+export interface FieldSpec {
+  name: string;
+  /** 传输时的键名（默认与 name 相同） */
+  key: string;
+  /** TS 类型文本，如 `string` / `number` / `User[]` */
+  type: string;
+  source: FieldSource;
+  optional: boolean;
