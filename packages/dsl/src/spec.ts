@@ -6,3 +6,10 @@
  */
 
 /** 字段来源（对应 HTTP 请求的哪个部分） */
+export enum FieldSource {
+  BODY = 'body',
+  PATH = 'path',
+  QUERY = 'query',
+  HEADER = 'header',
+  FORM = 'form',
+}
