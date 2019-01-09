@@ -23,3 +23,9 @@ export function pascalCase(input: string): string {
 export function camelCase(input: string): string {
   const p = pascalCase(input);
   return p.length === 0 ? p : p[0]!.toLowerCase() + p.slice(1);
+}
+
+export function kebabCase(input: string): string {
+  return splitWords(input)
+    .map((w) => w.toLowerCase())
+    .join('-');
