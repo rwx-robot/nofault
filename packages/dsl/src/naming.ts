@@ -11,3 +11,9 @@ export function splitWords(input: string): string[] {
     .replace(/([a-z0-9])([A-Z])/g, '$1 $2')
     .replace(/([A-Z]+)([A-Z][a-z])/g, '$1 $2')
     .split(/[^a-zA-Z0-9]+/)
+    .filter((w) => w.length > 0);
+}
+
+export function pascalCase(input: string): string {
+  return splitWords(input)
+    .map((w) => w[0]!.toUpperCase() + w.slice(1).toLowerCase())
