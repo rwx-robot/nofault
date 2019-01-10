@@ -60,3 +60,11 @@ export interface ServiceSpec {
   /** 鉴权方式，如 `Auth`；为空表示不鉴权 */
   jwt?: string;
   /** 服务级中间件 */
+  middleware: string[];
+  /** 超时，如 `3s` */
+  timeout?: string;
+  /** 请求体大小上限（字节） */
+  maxBytes?: number;
+  routes: RouteSpec[];
+  comment?: string;
+}
