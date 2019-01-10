@@ -84,3 +84,9 @@ export function createApiSpec(name: string, file?: string): ApiSpec {
 
 /** 按名字找类型（找不到返回 undefined，调用方决定如何报错） */
 export function findType(spec: ApiSpec, name: string): TypeSpec | undefined {
+  return spec.types.find((t) => t.name === name);
+}
+
+export function findService(spec: ApiSpec, name: string): ServiceSpec | undefined {
+  return spec.services.find((s) => s.name === name);
+}
