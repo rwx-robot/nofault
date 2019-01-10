@@ -53,3 +53,10 @@ export interface RouteSpec {
 export interface ServiceSpec {
   /** 服务名，如 `user` */
   name: string;
+  /** 路由前缀，如 `/v1` */
+  prefix?: string;
+  /** 分组（决定生成目录），如 `user` */
+  group: string;
+  /** 鉴权方式，如 `Auth`；为空表示不鉴权 */
+  jwt?: string;
+  /** 服务级中间件 */
