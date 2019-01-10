@@ -76,3 +76,11 @@ export interface ApiSpec {
   name: string;
   types: TypeSpec[];
   services: ServiceSpec[];
+}
+
+export function createApiSpec(name: string, file?: string): ApiSpec {
+  return { name, file, types: [], services: [] };
+}
+
+/** 按名字找类型（找不到返回 undefined，调用方决定如何报错） */
+export function findType(spec: ApiSpec, name: string): TypeSpec | undefined {
