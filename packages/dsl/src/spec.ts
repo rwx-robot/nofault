@@ -37,3 +37,11 @@ export interface TypeSpec {
 export interface RouteSpec {
   /** 处理器名，如 `login` */
   handler: string;
+  method: string;
+  path: string;
+  /** 请求类型名（可选：无 body 的路由可以没有） */
+  requestType?: string;
+  /** 响应类型名 */
+  responseType?: string;
+  /** 路由级覆盖：是否鉴权 */
+  auth?: boolean;
