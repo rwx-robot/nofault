@@ -45,3 +45,11 @@ export interface RouteSpec {
   responseType?: string;
   /** 路由级覆盖：是否鉴权 */
   auth?: boolean;
+  /** 路由级中间件 */
+  middleware?: string[];
+  comment?: string;
+}
+
+export interface ServiceSpec {
+  /** 服务名，如 `user` */
+  name: string;
