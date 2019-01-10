@@ -68,3 +68,11 @@ export interface ServiceSpec {
   routes: RouteSpec[];
   comment?: string;
 }
+
+export interface ApiSpec {
+  /** 契约来源文件路径（便于报错定位） */
+  readonly file?: string;
+  /** 契约名（默认取文件名） */
+  name: string;
+  types: TypeSpec[];
+  services: ServiceSpec[];
