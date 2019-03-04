@@ -37,3 +37,43 @@ export class ApiParseError extends Error {
 }
 
 const HTTP_METHODS = new Set(['get', 'post', 'put', 'delete', 'patch', 'head', 'options']);
+
+export function parseApiSource(source: string, file?: string): ApiSpec {
+  return new ApiParser(source, file).parse();
+}
+
+class ApiParser {
+  private readonly tokens: Token[];
+  private index = 0;
+
+  constructor(source: string, private readonly file?: string) {
+    this.tokens = new Scanner(source).scan();
+  }
+
+  parse(): ApiSpec {
+    const spec = createApiSpec('api', this.file);
+
+    while (!this.isEof()) {
+      const tok = this.peek();
+
+      // 顶层关键字
+      if (this.matchIdent('syntax')) {
+        this.advance();
+        this.expectPunct('=');
+        this.advanceString();
+        continue;
+      }
+      if (this.matchIdent('info')) {
+        this.advance();
+        this.skipBalancedParens();
+        continue;
+      }
+      if (this.matchIdent('type')) {
+        this.parseTypeBlock(spec);
+        continue;
+      }
+      if (this.matchPunct('@')) {
+        // @server(...) 后面必然跟 service
+        const server = this.parseServerBlock();
+        const service = this.parseServiceBlock();
+        spec.services.push({ ...service, ...server });
