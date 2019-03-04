@@ -195,3 +195,42 @@ class ApiParser {
       case 'int':
       case 'int64':
       case 'int32':
+      case 'uint':
+        return 'number';
+      case 'float':
+      case 'float64':
+      case 'float32':
+      case 'double':
+        return 'number';
+      case 'bool':
+        return 'boolean';
+      default:
+        return raw;
+    }
+  }
+
+  // ---------------------------------------------------------------- @server
+
+  private parseServerBlock(): Partial<ServiceSpec> {
+    this.expectPunct('@');
+    const kw = this.peek();
+    if (kw.type !== TokenType.IDENT || kw.value !== 'server') {
+      throw new ApiParseError(`Expected "@server", got "@${kw.value}"`, kw.line, kw.column);
+    }
+    this.advance();
+    this.expectPunct('(');
+
+    const out: Partial<ServiceSpec> = { middleware: [] };
+    while (!this.matchPunct(')') && !this.isEof()) {
+      const keyTok = this.peek();
+      if (keyTok.type !== TokenType.IDENT) {
+        throw new ApiParseError(`Expected server option, got "${keyTok.value}"`, keyTok.line, keyTok.column);
+      }
+      this.advance();
+      this.expectPunct(':');
+      const value = this.readValueUntilSeparator();
+
+      switch (keyTok.value) {
+        case 'group':
+          out.group = value;
+          break;
