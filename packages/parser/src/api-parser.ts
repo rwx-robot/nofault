@@ -77,3 +77,42 @@ class ApiParser {
         const server = this.parseServerBlock();
         const service = this.parseServiceBlock();
         spec.services.push({ ...service, ...server });
+        continue;
+      }
+      if (this.matchIdent('service')) {
+        spec.services.push(this.parseServiceBlock());
+        continue;
+      }
+      // 注释掉的内容已被扫描器吃掉；其它一律报错，避免静默忽略拼写错误
+      throw new ApiParseError(`Unexpected token "${tok.value}"`, tok.line, tok.column);
+    }
+
+    if (spec.services.length === 0) {
+      throw new ApiParseError('No service defined', this.peek().line, this.peek().column);
+    }
+    return spec;
+  }
+
+  // ---------------------------------------------------------------- type
+
+  private parseTypeBlock(spec: ApiSpec): void {
+    this.expectIdent('type');
+    // `type (` 或 `type Name`
+    if (this.matchPunct('(')) {
+      this.advance();
+      while (!this.matchPunct(')') && !this.isEof()) {
+        spec.types.push(this.parseTypeDecl());
+      }
+      this.expectPunct(')');
+      return;
+    }
+    spec.types.push(this.parseTypeDecl());
+  }
+
+  private parseTypeDecl(): TypeSpec {
+    const nameTok = this.peek();
+    if (nameTok.type !== TokenType.IDENT) {
+      throw new ApiParseError(`Expected type name, got "${nameTok.value}"`, nameTok.line, nameTok.column);
+    }
+    this.advance();
+    this.expectPunct('{');
