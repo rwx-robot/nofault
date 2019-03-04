@@ -2,3 +2,5 @@
   "name": "@nofault/parser",
   "version": "0.4.0",
   "description": "nofault API contract parsers: .api (text DSL syntax) and TypeScript contract files, both producing the same ApiSpec",
+  "license": "MIT",
+  "main": "dist/index.js",
