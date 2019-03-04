@@ -273,3 +273,42 @@ class ApiParser {
       // 出现 `ident:` 说明进入下一个选项
       if (tok.type === TokenType.IDENT && this.isOptionKeyAhead()) break;
       if (tok.type === TokenType.PUNCT && tok.value === ',') {
+        this.advance();
+        out += ',';
+        continue;
+      }
+      out += tok.value;
+      this.advance();
+    }
+    return out
+      .split(',')
+      .map((part) => part.trim())
+      .filter((part) => part.length > 0)
+      .join(',');
+  }
+
+  /** 当前 IDENT 后面紧跟 `:` —— 即它是一个选项名 */
+  private isOptionKeyAhead(): boolean {
+    const next = this.tokens[this.index + 1];
+    return next?.type === TokenType.PUNCT && next.value === ':';
+  }
+
+  // ---------------------------------------------------------------- service
+
+  private parseServiceBlock(): ServiceSpec {
+    this.expectIdent('service');
+    // 服务名可能带连字符（`user-api`），扫描器会切成 `user` `-` `api`，需拼回去
+    const nameTok = this.peek();
+    if (nameTok.type !== TokenType.IDENT) {
+      throw new ApiParseError(`Expected service name, got "${nameTok.value}"`, nameTok.line, nameTok.column);
+    }
+    let serviceName = '';
+    while (!this.isEof() && !this.matchPunct('{')) {
+      serviceName += this.advance().value;
+    }
+    this.expectPunct('{');
+
+    const routes: RouteSpec[] = [];
+    let currentHandler: string | undefined;
+
+    while (!this.matchPunct('}') && !this.isEof()) {
