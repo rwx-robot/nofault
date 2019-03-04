@@ -234,3 +234,42 @@ class ApiParser {
         case 'group':
           out.group = value;
           break;
+        case 'prefix':
+          out.prefix = value;
+          break;
+        case 'jwt':
+          out.jwt = value;
+          break;
+        case 'middleware':
+          out.middleware = value.split(',').map((s) => s.trim()).filter(Boolean);
+          break;
+        case 'timeout':
+          out.timeout = value;
+          break;
+        case 'maxBytes':
+          out.maxBytes = Number(value);
+          break;
+        default:
+          // 未知选项不报错：DSL 版本差异会带来新选项
+          break;
+      }
+    }
+    this.expectPunct(')');
+    return out;
+  }
+
+  /**
+   * 读一个值：可能是标识符、路径（含 `/`）、字符串、数字，或逗号分隔的列表。
+   *
+   * 难点：逗号既可能是值列表的分隔（`middleware: A,B`），
+   * 也可能是选项之间的分隔（`.api` 里两者都靠换行/空白区分）。
+   * 判据是"逗号后面是不是 `ident:`"——是则视为新选项。
+   */
+  private readValueUntilSeparator(): string {
+    let out = '';
+    while (!this.isEof()) {
+      const tok = this.peek();
+      if (tok.type === TokenType.PUNCT && (tok.value === ')' || tok.value === '}')) break;
+      // 出现 `ident:` 说明进入下一个选项
+      if (tok.type === TokenType.IDENT && this.isOptionKeyAhead()) break;
+      if (tok.type === TokenType.PUNCT && tok.value === ',') {
