@@ -1,0 +1,170 @@
+import { describe, expect, it } from 'vitest';
+import { parseApiSource, ApiParseError } from '../src/api-parser';
+import { FieldSource } from '@nofault/dsl';
+
+const SAMPLE = `
+syntax = "v1"
+
+info (
+  title: "user api"
+)
+
+type (
+  LoginReq {
+    Username string \`json:"username"\`
+    Password string \`json:"password"\`
+  }
+)
+
+type LoginResp {
+  Token string \`json:"token"\`
+  Name  string \`json:"name"\`
+  Age   int    \`json:"age,optional"\`
+}
+
+@server (
+  group:      user
+  prefix:     /v1
+  jwt:        Auth
+  middleware: AuthInterceptor,Log
+  timeout:    3s
+)
+service user-api {
+  @handler ping
+  get /ping
+
+  @handler login
+  post /user/login (LoginReq) returns (LoginResp)
+}
+
+service health-api {
+  @handler health
+  get /health
+}
+`;
+
+describe('parseApiSource', () => {
+  const spec = parseApiSource(SAMPLE, 'user.api');
+
+  it('parses types with json tags', () => {
+    const req = spec.types.find((t) => t.name === 'LoginReq')!;
+    expect(req.fields).toHaveLength(2);
+    expect(req.fields[0]).toMatchObject({
+      name: 'Username',
+      key: 'username',
+      type: 'string',
+      source: FieldSource.BODY,
+    });
+    expect(req.fields[0]!.rules).toContain('isString');
+  });
+
+  it('maps go scalar types to TS types', () => {
+    const resp = spec.types.find((t) => t.name === 'LoginResp')!;
+    expect(resp.fields.find((f) => f.name === 'Age')!.type).toBe('number');
+  });
+
+  it('detects optional from json tag options', () => {
+    const resp = spec.types.find((t) => t.name === 'LoginResp')!;
+    expect(resp.fields.find((f) => f.name === 'Age')!.optional).toBe(true);
+    expect(resp.fields.find((f) => f.name === 'Token')!.optional).toBe(false);
+  });
+
+  it('parses server options', () => {
+    const user = spec.services.find((s) => s.name === 'user-api')!;
+    expect(user).toMatchObject({
+      group: 'user',
+      prefix: '/v1',
+      jwt: 'Auth',
+      timeout: '3s',
+    });
+    expect(user.middleware).toEqual(['AuthInterceptor', 'Log']);
+  });
+
+  it('parses routes with handler / request / response', () => {
+    const user = spec.services.find((s) => s.name === 'user-api')!;
+    expect(user.routes).toHaveLength(2);
+
+    expect(user.routes[0]).toMatchObject({ handler: 'ping', method: 'GET', path: '/ping' });
+
+    const login = user.routes[1]!;
+    expect(login).toMatchObject({
+      handler: 'login',
+      method: 'POST',
+      path: '/user/login',
+      requestType: 'LoginReq',
+      responseType: 'LoginResp',
+    });
+  });
+
+  it('parses multiple services', () => {
+    expect(spec.services).toHaveLength(2);
+    expect(spec.services[1]!.name).toBe('health-api');
+    expect(spec.services[1]!.group).toBe('health');
+  });
+
+  it('ignores comments', () => {
+    const withComments = `
+      // top level comment
+      type A {   // inline
+        X string \`json:"x"\`  /* block */
+      }
+      service a-api {
+        @handler h
+        get /x
+      }
+    `;
+    const s = parseApiSource(withComments);
+    expect(s.types[0]!.fields).toHaveLength(1);
+    expect(s.services[0]!.routes).toHaveLength(1);
+  });
+
+  it('reports errors with line and column', () => {
+    expect(() => parseApiSource('service {')).toThrow(ApiParseError);
+    try {
+      parseApiSource('bogus');
+    } catch (err) {
+      const e = err as ApiParseError;
+      expect(e.line).toBeGreaterThan(0);
+      expect(e.message).toContain('line');
+    }
+  });
+
+  it('fails when no service is defined', () => {
+    expect(() => parseApiSource('type A { X string }')).toThrow(/No service defined/);
+  });
+});
+
+describe('path parameters', () => {
+  const src = `
+type GetUserReq {
+  Id int \`path:"id"\`
+}
+type User {
+  Id   int    \`path:"id"\`
+  Name string \`json:"name"\`
+}
+service user-api {
+  @handler get
+  get /users/:id (GetUserReq)
+}
+`;
+  const spec = parseApiSource(src, 'user.api');
+
+  it('marks `path` tagged fields as coming from the path', () => {
+    const req = spec.types.find((t) => t.name === 'GetUserReq')!;
+    expect(req.fields[0]).toMatchObject({ name: 'Id', key: 'id', source: FieldSource.PATH, type: 'number' });
+  });
+
+  it('leaves json tagged fields on the body', () => {
+    const user = spec.types.find((t) => t.name === 'User')!;
+    expect(user.fields[1]!.source).toBe(FieldSource.BODY);
+  });
+
+  it('keeps `returns` separate from the route path', () => {
+    const withReturns = parseApiSource('type A { X string `json:"x"` }\nservice a-api {\n @handler p\n get /ping returns (A)\n}\n', 'a.api');
+    const route = withReturns.services[0]!.routes[0]!;
+    expect(route.path).toBe('/ping');
+    expect(route.responseType).toBe('A');
+    expect(route.requestType).toBeUndefined();
+  });
+});
