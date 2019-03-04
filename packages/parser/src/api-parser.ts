@@ -312,3 +312,43 @@ class ApiParser {
     let currentHandler: string | undefined;
 
     while (!this.matchPunct('}') && !this.isEof()) {
+      const tok = this.peek();
+
+      if (this.matchPunct('@')) {
+        this.advance();
+        const kw = this.peek();
+        if (kw.type === TokenType.IDENT && kw.value === 'handler') {
+          this.advance();
+          const h = this.peek();
+          if (h.type !== TokenType.IDENT) {
+            throw new ApiParseError(`Expected handler name, got "${h.value}"`, h.line, h.column);
+          }
+          currentHandler = h.value;
+          this.advance();
+          continue;
+        }
+        // 其它 @xxx 指令本版忽略
+        this.skipBalancedParens();
+        continue;
+      }
+
+      if (tok.type === TokenType.IDENT && HTTP_METHODS.has(tok.value.toLowerCase())) {
+        routes.push(this.parseRoute(tok, currentHandler));
+        currentHandler = undefined;
+        continue;
+      }
+
+      throw new ApiParseError(`Unexpected token "${tok.value}" in service`, tok.line, tok.column);
+    }
+    this.expectPunct('}');
+
+    return {
+      name: serviceName,
+      group: serviceName.replace(/-api$/, ''),
+      middleware: [],
+      routes,
+    };
+  }
+
+  private parseRoute(methodTok: Token, handler: string | undefined): RouteSpec {
+    const method = methodTok.value.toUpperCase();
