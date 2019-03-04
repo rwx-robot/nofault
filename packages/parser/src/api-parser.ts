@@ -116,3 +116,42 @@ class ApiParser {
     }
     this.advance();
     this.expectPunct('{');
+
+    const fields: FieldSpec[] = [];
+    while (!this.matchPunct('}') && !this.isEof()) {
+      const field = this.parseField();
+      if (field) fields.push(field);
+    }
+    this.expectPunct('}');
+    return { name: nameTok.value, fields };
+  }
+
+  private parseField(): FieldSpec | undefined {
+    // `Name string `json:"name"``   或   `Name string`   或   `Age int // optional`
+    const nameTok = this.peek();
+    if (nameTok.type !== TokenType.IDENT) {
+      this.advance();
+      return undefined;
+    }
+    // 跳过匿名嵌套结构体的情况（本版不支持）
+    if (this.matchPunct('*') || this.matchPunct('[')) {
+      this.skipToFieldEnd();
+      return undefined;
+    }
+    this.advance();
+
+    let type = 'string';
+    if (this.peek().type === TokenType.IDENT) {
+      type = this.mapType(this.advance().value);
+    }
+
+    // 结构体 tag：`json:"name,optional"` 或 `path:"id"`
+    let key = nameTok.value;
+    let optional = false;
+    let source: FieldSource = FieldSource.BODY;
+    const rules: string[] = [];
+    if (this.peek().type === TokenType.STRING) {
+      const tag = this.advance().value;
+      const jsonMatch = /json:\s*"([^"]*)"/.exec(tag);
+      if (jsonMatch) {
+        const [name, ...opts] = jsonMatch[1]!.split(',');
