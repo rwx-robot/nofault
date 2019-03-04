@@ -155,3 +155,43 @@ class ApiParser {
       const jsonMatch = /json:\s*"([^"]*)"/.exec(tag);
       if (jsonMatch) {
         const [name, ...opts] = jsonMatch[1]!.split(',');
+        if (name && name !== '-') key = name;
+        optional = opts.includes('optional') || opts.includes('omitempty');
+      }
+      // `.api` DSL 里路径参数用 `path:"id"` 标记；带它的字段不属于请求体，
+      // 生成器会改成 `@Param()` 绑定（见 codegen callShape）
+      const pathMatch = /path:\s*"([^"]*)"/.exec(tag);
+      if (pathMatch) {
+        const [name, ...opts] = pathMatch[1]!.split(',');
+        if (name) key = name;
+        source = FieldSource.PATH;
+        if (opts.includes('optional') || opts.includes('omitempty')) optional = true;
+        if (type === 'number') rules.push('isInt');
+      }
+    }
+
+    if (type === 'string') rules.push('isString');
+    if (type === 'number' || type === 'int') rules.push(type === 'int' ? 'isInt' : 'isNumber');
+
+    return { name: nameTok.value, key, type, source, optional, rules };
+  }
+
+  private skipToFieldEnd(): void {
+    let depth = 0;
+    while (!this.isEof()) {
+      if (this.matchPunct('{')) depth++;
+      if (this.matchPunct('}')) {
+        if (depth === 0) return;
+        depth--;
+      }
+      this.advance();
+    }
+  }
+
+  private mapType(raw: string): string {
+    switch (raw) {
+      case 'string':
+        return 'string';
+      case 'int':
+      case 'int64':
+      case 'int32':
