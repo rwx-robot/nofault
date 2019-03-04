@@ -4,3 +4,5 @@
   "description": "nofault API contract parsers: .api (text DSL syntax) and TypeScript contract files, both producing the same ApiSpec",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
