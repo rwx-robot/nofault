@@ -429,3 +429,42 @@ class ApiParser {
       this.advance();
     }
   }
+
+  private peek(): Token {
+    return this.tokens[this.index]!;
+  }
+  private advance(): Token {
+    return this.tokens[this.index++]!;
+  }
+  private isEof(): boolean {
+    return this.peek().type === TokenType.EOF;
+  }
+  private matchIdent(value: string): boolean {
+    const t = this.peek();
+    return t.type === TokenType.IDENT && t.value === value;
+  }
+  private matchPunct(value: string): boolean {
+    const t = this.peek();
+    return t.type === TokenType.PUNCT && t.value === value;
+  }
+  private expectIdent(value: string): void {
+    const t = this.peek();
+    if (!this.matchIdent(value)) throw new ApiParseError(`Expected "${value}", got "${t.value}"`, t.line, t.column);
+    this.advance();
+  }
+  private expectPunct(value: string): void {
+    const t = this.peek();
+    if (!this.matchPunct(value)) throw new ApiParseError(`Expected "${value}", got "${t.value}"`, t.line, t.column);
+    this.advance();
+  }
+  private advanceString(): string {
+    const t = this.advance();
+    return t.value;
+  }
+}
+
+function pathToHandler(method: string, path: string): string {
+  const last = path.split('/').filter(Boolean).pop() ?? '';
+  const base = last.startsWith(':') ? 'detail' : last;
+  return pascalCase(base || method.toLowerCase())[0]!.toLowerCase() + pascalCase(base || method.toLowerCase()).slice(1);
+}
