@@ -391,3 +391,41 @@ class ApiParser {
         this.advance();
       }
       this.expectPunct(')');
+    }
+
+    if (this.matchIdent('returns')) {
+      this.advance();
+      this.expectPunct('(');
+      const t = this.peek();
+      if (t.type === TokenType.IDENT) {
+        responseType = t.value;
+        this.advance();
+      }
+      this.expectPunct(')');
+    }
+
+    return {
+      handler: handler ?? pathToHandler(method, path),
+      method,
+      path,
+      requestType,
+      responseType,
+    };
+  }
+
+  // ---------------------------------------------------------------- 工具
+
+  private skipBalancedParens(): void {
+    if (!this.matchPunct('(')) return;
+    let depth = 0;
+    while (!this.isEof()) {
+      if (this.matchPunct('(')) depth++;
+      if (this.matchPunct(')')) {
+        depth--;
+        this.advance();
+        if (depth === 0) return;
+        continue;
+      }
+      this.advance();
+    }
+  }
