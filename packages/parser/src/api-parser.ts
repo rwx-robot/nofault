@@ -352,3 +352,42 @@ class ApiParser {
 
   private parseRoute(methodTok: Token, handler: string | undefined): RouteSpec {
     const method = methodTok.value.toUpperCase();
+    this.advance();
+
+    // 路径：可能由 IDENT 与 `/` 组成
+    let path = '';
+    while (!this.isEof()) {
+      const tok = this.peek();
+      if (tok.type === TokenType.PUNCT && tok.value === '/') {
+        path += '/';
+        this.advance();
+        continue;
+      }
+      // `returns` 是响应类型的引导关键字，不是路径片段
+      // （漏判会让 `get /ping returns (GreetResp)` 变成路径 `/pingreturns`）
+      if (tok.type === TokenType.IDENT && tok.value === 'returns') break;
+      if (tok.type === TokenType.IDENT || tok.type === TokenType.NUMBER) {
+        path += tok.value;
+        this.advance();
+        continue;
+      }
+      if (tok.type === TokenType.PUNCT && tok.value === ':') {
+        path += ':';
+        this.advance();
+        continue;
+      }
+      break;
+    }
+    path = path.replace(/\/+/g, '/') || '/';
+
+    let requestType: string | undefined;
+    let responseType: string | undefined;
+
+    if (this.matchPunct('(')) {
+      this.advance();
+      const t = this.peek();
+      if (t.type === TokenType.IDENT) {
+        requestType = t.value;
+        this.advance();
+      }
+      this.expectPunct(')');
