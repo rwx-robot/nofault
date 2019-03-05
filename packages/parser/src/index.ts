@@ -8,3 +8,5 @@
  * 两者都**不执行用户代码**，只是词法 + 递归下降，安全且快。
  */
 export { Scanner, ScannerError } from './scanner';
+export type { Token } from './scanner';
+export { TokenType } from './scanner';
