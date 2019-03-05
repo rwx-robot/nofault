@@ -11,3 +11,5 @@ export function detectFormat(source: string, file?: string): ContractFormat {
   if (file) {
     const ext = extname(file).toLowerCase();
     if (ext === '.api') return 'api';
+    if (ext === '.ts') return 'ts';
+  }
