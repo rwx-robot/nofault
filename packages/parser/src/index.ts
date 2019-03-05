@@ -13,3 +13,6 @@ export { TokenType } from './scanner';
 
 export { parseApiSource, ApiParseError } from './api-parser';
 export { parseTsSource, TsParseError } from './ts-parser';
+
+export { parseContract, parseContractFile, detectFormat } from './parse-contract';
+export type { ContractFormat } from './parse-contract';
