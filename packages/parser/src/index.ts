@@ -10,3 +10,6 @@
 export { Scanner, ScannerError } from './scanner';
 export type { Token } from './scanner';
 export { TokenType } from './scanner';
+
+export { parseApiSource, ApiParseError } from './api-parser';
+export { parseTsSource, TsParseError } from './ts-parser';
