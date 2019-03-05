@@ -5,3 +5,4 @@
  * - `parseApiSource()` 解析 `.api` 文本 DSL
  * - `parseTsSource()`  解析 TypeScript 契约文件（`.api.ts`）
  *
+ * 两者都**不执行用户代码**，只是词法 + 递归下降，安全且快。
