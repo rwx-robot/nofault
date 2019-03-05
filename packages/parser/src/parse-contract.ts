@@ -13,3 +13,5 @@ export function detectFormat(source: string, file?: string): ContractFormat {
     if (ext === '.api') return 'api';
     if (ext === '.ts') return 'ts';
   }
+  return /\bclass\s+[A-Za-z_$]/.test(source) ? 'ts' : 'api';
+}
