@@ -3,3 +3,5 @@
  *
  * 两种输入 → 同一个 `ApiSpec`：
  * - `parseApiSource()` 解析 `.api` 文本 DSL
+ * - `parseTsSource()`  解析 TypeScript 契约文件（`.api.ts`）
+ *
