@@ -80,3 +80,21 @@ export class Scanner {
         this.advance();
         continue;
       }
+
+      // 字符串
+      if (ch === '"' || ch === "'") {
+        this.tokens.push(this.readString(ch));
+        continue;
+      }
+
+      // 反引号（Go struct tag）整段作为一个 string
+      if (ch === '`') {
+        this.tokens.push(this.readBacktick());
+        continue;
+      }
+
+      // 数字
+      if (isDigit(ch) || (ch === '-' && isDigit(this.source[this.pos + 1] ?? ''))) {
+        this.tokens.push(this.readNumber());
+        continue;
+      }
