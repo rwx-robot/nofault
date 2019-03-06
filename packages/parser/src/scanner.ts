@@ -98,3 +98,20 @@ export class Scanner {
         this.tokens.push(this.readNumber());
         continue;
       }
+
+      // 标识符 / 关键字
+      if (isIdentStart(ch)) {
+        this.tokens.push(this.readIdent());
+        continue;
+      }
+
+      if (PUNCT_CHARS.has(ch)) {
+        const startLine = this.line;
+        const startColumn = this.column;
+        this.advance();
+        this.tokens.push({ type: TokenType.PUNCT, value: ch, line: startLine, column: startColumn });
+        continue;
+      }
+
+      throw new ScannerError(`Unexpected character "${ch}"`, this.line, this.column);
+    }
