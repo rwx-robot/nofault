@@ -55,3 +55,18 @@ describe('parseApiSource', () => {
       type: 'string',
       source: FieldSource.BODY,
     });
+    expect(req.fields[0]!.rules).toContain('isString');
+  });
+
+  it('maps go scalar types to TS types', () => {
+    const resp = spec.types.find((t) => t.name === 'LoginResp')!;
+    expect(resp.fields.find((f) => f.name === 'Age')!.type).toBe('number');
+  });
+
+  it('detects optional from json tag options', () => {
+    const resp = spec.types.find((t) => t.name === 'LoginResp')!;
+    expect(resp.fields.find((f) => f.name === 'Age')!.optional).toBe(true);
+    expect(resp.fields.find((f) => f.name === 'Token')!.optional).toBe(false);
+  });
+
+  it('parses server options', () => {
