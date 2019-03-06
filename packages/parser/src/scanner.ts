@@ -181,3 +181,18 @@ export class Scanner {
     let out = '';
     while (this.pos < this.source.length && isIdentPart(this.source[this.pos]!)) {
       out += this.source[this.pos];
+      this.advance();
+    }
+    return { type: TokenType.IDENT, value: out, line, column };
+  }
+}
+
+function isDigit(ch: string): boolean {
+  return ch >= '0' && ch <= '9';
+}
+function isIdentStart(ch: string): boolean {
+  return /[A-Za-z_$]/.test(ch);
+}
+function isIdentPart(ch: string): boolean {
+  return /[A-Za-z0-9_$]/.test(ch);
+}
