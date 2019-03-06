@@ -15,3 +15,6 @@ export function detectFormat(source: string, file?: string): ContractFormat {
   }
   return /\bclass\s+[A-Za-z_$]/.test(source) ? 'ts' : 'api';
 }
+
+/** 解析契约源码（自动识别格式） */
+export function parseContract(source: string, file?: string, format?: ContractFormat): ApiSpec {
