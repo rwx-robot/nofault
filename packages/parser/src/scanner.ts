@@ -65,3 +65,18 @@ export class Scanner {
       if (ch === '/' && this.source[this.pos + 1] === '/') {
         while (this.pos < this.source.length && this.source[this.pos] !== '\n') this.advance();
         continue;
+      }
+      if (ch === '/' && this.source[this.pos + 1] === '*') {
+        this.advance();
+        this.advance();
+        while (this.pos < this.source.length && !(this.source[this.pos] === '*' && this.source[this.pos + 1] === '/')) {
+          if (this.source[this.pos] === '\n') {
+            this.line++;
+            this.column = 1;
+          }
+          this.advance();
+        }
+        this.advance();
+        this.advance();
+        continue;
+      }
