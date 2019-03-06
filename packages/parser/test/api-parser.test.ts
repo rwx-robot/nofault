@@ -27,3 +27,17 @@ type LoginResp {
   prefix:     /v1
   jwt:        Auth
   middleware: AuthInterceptor,Log
+  timeout:    3s
+)
+service user-api {
+  @handler ping
+  get /ping
+
+  @handler login
+  post /user/login (LoginReq) returns (LoginResp)
+}
+
+service health-api {
+  @handler health
+  get /health
+}
