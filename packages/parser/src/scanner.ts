@@ -148,3 +148,19 @@ export class Scanner {
   }
 
   private readBacktick(): Token {
+    const line = this.line;
+    const column = this.column;
+    this.advance();
+    let out = '';
+    while (this.pos < this.source.length && this.source[this.pos] !== '`') {
+      out += this.source[this.pos];
+      this.advance();
+    }
+    this.advance();
+    return { type: TokenType.STRING, value: out, line, column };
+  }
+
+  private readNumber(): Token {
+    const line = this.line;
+    const column = this.column;
+    let out = '';
