@@ -115,3 +115,19 @@ export class Scanner {
 
       throw new ScannerError(`Unexpected character "${ch}"`, this.line, this.column);
     }
+
+    this.tokens.push({ type: TokenType.EOF, value: '', line: this.line, column: this.column });
+    return this.tokens;
+  }
+
+  private advance(): void {
+    this.pos++;
+    this.column++;
+  }
+
+  private readString(quote: string): Token {
+    const line = this.line;
+    const column = this.column;
+    this.advance();
+    let out = '';
+    while (this.pos < this.source.length && this.source[this.pos] !== quote) {
