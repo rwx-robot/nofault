@@ -48,3 +48,20 @@ export class Scanner {
   scan(): Token[] {
     while (this.pos < this.source.length) {
       const ch = this.source[this.pos]!;
+
+      // 空白
+      if (ch === '\n') {
+        this.advance();
+        this.line++;
+        this.column = 1;
+        continue;
+      }
+      if (ch === ' ' || ch === '\t' || ch === '\r') {
+        this.advance();
+        continue;
+      }
+
+      // 注释
+      if (ch === '/' && this.source[this.pos + 1] === '/') {
+        while (this.pos < this.source.length && this.source[this.pos] !== '\n') this.advance();
+        continue;
