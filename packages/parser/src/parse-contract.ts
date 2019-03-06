@@ -18,3 +18,5 @@ export function detectFormat(source: string, file?: string): ContractFormat {
 
 /** 解析契约源码（自动识别格式） */
 export function parseContract(source: string, file?: string, format?: ContractFormat): ApiSpec {
+  const kind = format ?? detectFormat(source, file);
+  return kind === 'api' ? parseApiSource(source, file) : parseTsSource(source, file);
