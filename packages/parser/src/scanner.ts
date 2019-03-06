@@ -164,3 +164,20 @@ export class Scanner {
     const line = this.line;
     const column = this.column;
     let out = '';
+    if (this.source[this.pos] === '-') {
+      out += this.source[this.pos];
+      this.advance();
+    }
+    while (this.pos < this.source.length && (isDigit(this.source[this.pos]!) || this.source[this.pos] === '.')) {
+      out += this.source[this.pos];
+      this.advance();
+    }
+    return { type: TokenType.NUMBER, value: out, line, column };
+  }
+
+  private readIdent(): Token {
+    const line = this.line;
+    const column = this.column;
+    let out = '';
+    while (this.pos < this.source.length && isIdentPart(this.source[this.pos]!)) {
+      out += this.source[this.pos];
