@@ -23,3 +23,5 @@ export function parseContract(source: string, file?: string, format?: ContractFo
 }
 
 /** 从文件读取并解析 */
+export function parseContractFile(file: string, format?: ContractFormat): ApiSpec {
+  return parseContract(readFileSync(file, 'utf8'), file, format);
