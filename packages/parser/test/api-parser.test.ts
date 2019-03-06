@@ -13,3 +13,17 @@ type (
   LoginReq {
     Username string \`json:"username"\`
     Password string \`json:"password"\`
+  }
+)
+
+type LoginResp {
+  Token string \`json:"token"\`
+  Name  string \`json:"name"\`
+  Age   int    \`json:"age,optional"\`
+}
+
+@server (
+  group:      user
+  prefix:     /v1
+  jwt:        Auth
+  middleware: AuthInterceptor,Log
