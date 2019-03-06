@@ -20,3 +20,6 @@ export function detectFormat(source: string, file?: string): ContractFormat {
 export function parseContract(source: string, file?: string, format?: ContractFormat): ApiSpec {
   const kind = format ?? detectFormat(source, file);
   return kind === 'api' ? parseApiSource(source, file) : parseTsSource(source, file);
+}
+
+/** 从文件读取并解析 */
