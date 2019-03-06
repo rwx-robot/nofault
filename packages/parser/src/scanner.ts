@@ -15,3 +15,20 @@ export enum TokenType {
   PUNCT = 'punct',
   EOF = 'eof',
 }
+
+export interface Token {
+  type: TokenType;
+  value: string;
+  line: number;
+  column: number;
+}
+
+export class ScannerError extends Error {
+  constructor(message: string, line: number, column: number) {
+    super(`${message} (line ${line}, column ${column})`);
+    this.name = 'ScannerError';
+  }
+}
+
+// 注意 `!` 必须在这里：TS 契约里用 `prop!: string` 关闭 strictPropertyInitialization，
+// 这是写 DTO 最常见的写法，不支持等于解析器不可用。
