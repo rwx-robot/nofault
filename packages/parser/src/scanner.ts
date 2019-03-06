@@ -32,3 +32,19 @@ export class ScannerError extends Error {
 
 // 注意 `!` 必须在这里：TS 契约里用 `prop!: string` 关闭 strictPropertyInitialization，
 // 这是写 DTO 最常见的写法，不支持等于解析器不可用。
+const PUNCT_CHARS = new Set([
+  '{', '}', '(', ')', '[', ']', ':', ';', ',', '=', '*', '-', '/', '@', '`',
+  '<', '>', '?', '|', '&', '.', '!', '+', '%', '~', '^',
+]);
+
+export class Scanner {
+  private pos = 0;
+  private line = 1;
+  private column = 1;
+  private readonly tokens: Token[] = [];
+
+  constructor(private readonly source: string) {}
+
+  scan(): Token[] {
+    while (this.pos < this.source.length) {
+      const ch = this.source[this.pos]!;
