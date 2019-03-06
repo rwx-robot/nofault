@@ -131,3 +131,20 @@ export class Scanner {
     this.advance();
     let out = '';
     while (this.pos < this.source.length && this.source[this.pos] !== quote) {
+      if (this.source[this.pos] === '\\') {
+        out += this.source[this.pos + 1] ?? '';
+        this.advance();
+        this.advance();
+        continue;
+      }
+      out += this.source[this.pos];
+      this.advance();
+    }
+    if (this.pos >= this.source.length) {
+      throw new ScannerError('Unterminated string', line, column);
+    }
+    this.advance();
+    return { type: TokenType.STRING, value: out, line, column };
+  }
+
+  private readBacktick(): Token {
