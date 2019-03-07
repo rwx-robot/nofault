@@ -154,3 +154,17 @@ service user-api {
     const req = spec.types.find((t) => t.name === 'GetUserReq')!;
     expect(req.fields[0]).toMatchObject({ name: 'Id', key: 'id', source: FieldSource.PATH, type: 'number' });
   });
+
+  it('leaves json tagged fields on the body', () => {
+    const user = spec.types.find((t) => t.name === 'User')!;
+    expect(user.fields[1]!.source).toBe(FieldSource.BODY);
+  });
+
+  it('keeps `returns` separate from the route path', () => {
+    const withReturns = parseApiSource('type A { X string `json:"x"` }\nservice a-api {\n @handler p\n get /ping returns (A)\n}\n', 'a.api');
+    const route = withReturns.services[0]!.routes[0]!;
+    expect(route.path).toBe('/ping');
+    expect(route.responseType).toBe('A');
+    expect(route.requestType).toBeUndefined();
+  });
+});
