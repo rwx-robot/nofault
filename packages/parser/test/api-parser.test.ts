@@ -98,3 +98,17 @@ describe('parseApiSource', () => {
 
   it('parses multiple services', () => {
     expect(spec.services).toHaveLength(2);
+    expect(spec.services[1]!.name).toBe('health-api');
+    expect(spec.services[1]!.group).toBe('health');
+  });
+
+  it('ignores comments', () => {
+    const withComments = `
+      // top level comment
+      type A {   // inline
+        X string \`json:"x"\`  /* block */
+      }
+      service a-api {
+        @handler h
+        get /x
+      }
