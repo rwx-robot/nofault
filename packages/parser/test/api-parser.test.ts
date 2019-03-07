@@ -141,3 +141,16 @@ type GetUserReq {
 }
 type User {
   Id   int    \`path:"id"\`
+  Name string \`json:"name"\`
+}
+service user-api {
+  @handler get
+  get /users/:id (GetUserReq)
+}
+`;
+  const spec = parseApiSource(src, 'user.api');
+
+  it('marks `path` tagged fields as coming from the path', () => {
+    const req = spec.types.find((t) => t.name === 'GetUserReq')!;
+    expect(req.fields[0]).toMatchObject({ name: 'Id', key: 'id', source: FieldSource.PATH, type: 'number' });
+  });
