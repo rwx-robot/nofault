@@ -112,3 +112,18 @@ describe('parseApiSource', () => {
         @handler h
         get /x
       }
+    `;
+    const s = parseApiSource(withComments);
+    expect(s.types[0]!.fields).toHaveLength(1);
+    expect(s.services[0]!.routes).toHaveLength(1);
+  });
+
+  it('reports errors with line and column', () => {
+    expect(() => parseApiSource('service {')).toThrow(ApiParseError);
+    try {
+      parseApiSource('bogus');
+    } catch (err) {
+      const e = err as ApiParseError;
+      expect(e.line).toBeGreaterThan(0);
+      expect(e.message).toContain('line');
+    }
