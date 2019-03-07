@@ -70,3 +70,16 @@ describe('parseApiSource', () => {
   });
 
   it('parses server options', () => {
+    const user = spec.services.find((s) => s.name === 'user-api')!;
+    expect(user).toMatchObject({
+      group: 'user',
+      prefix: '/v1',
+      jwt: 'Auth',
+      timeout: '3s',
+    });
+    expect(user.middleware).toEqual(['AuthInterceptor', 'Log']);
+  });
+
+  it('parses routes with handler / request / response', () => {
+    const user = spec.services.find((s) => s.name === 'user-api')!;
+    expect(user.routes).toHaveLength(2);
