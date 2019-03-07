@@ -83,3 +83,18 @@ describe('parseApiSource', () => {
   it('parses routes with handler / request / response', () => {
     const user = spec.services.find((s) => s.name === 'user-api')!;
     expect(user.routes).toHaveLength(2);
+
+    expect(user.routes[0]).toMatchObject({ handler: 'ping', method: 'GET', path: '/ping' });
+
+    const login = user.routes[1]!;
+    expect(login).toMatchObject({
+      handler: 'login',
+      method: 'POST',
+      path: '/user/login',
+      requestType: 'LoginReq',
+      responseType: 'LoginResp',
+    });
+  });
+
+  it('parses multiple services', () => {
+    expect(spec.services).toHaveLength(2);
