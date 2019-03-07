@@ -127,3 +127,17 @@ describe('parseApiSource', () => {
       expect(e.line).toBeGreaterThan(0);
       expect(e.message).toContain('line');
     }
+  });
+
+  it('fails when no service is defined', () => {
+    expect(() => parseApiSource('type A { X string }')).toThrow(/No service defined/);
+  });
+});
+
+describe('path parameters', () => {
+  const src = `
+type GetUserReq {
+  Id int \`path:"id"\`
+}
+type User {
+  Id   int    \`path:"id"\`
