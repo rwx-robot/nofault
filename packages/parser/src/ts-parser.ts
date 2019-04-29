@@ -105,3 +105,24 @@ class TsParser {
     }
 
     if (spec.services.length === 0) {
+      throw new TsParseError('No API service class found (missing @Api / route decorators)', 1, 1);
+    }
+    return spec;
+  }
+
+  private parseClass(spec: ApiSpec): void {
+    const decorators = this.pending;
+    this.pending = [];
+    this.expectIdent('class');
+
+    const nameTok = this.peek();
+    if (nameTok.type !== TokenType.IDENT) {
+      throw new TsParseError(`Expected class name, got "${nameTok.value}"`, nameTok.line, nameTok.column);
+    }
+    this.advance();
+
+    // 跳过 `extends X` / `implements Y`
+    while (!this.matchPunct('{') && !this.isEof()) this.advance();
+    this.expectPunct('{');
+
+    const isService = decorators.some(
