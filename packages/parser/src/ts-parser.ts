@@ -126,3 +126,24 @@ class TsParser {
     this.expectPunct('{');
 
     const isService = decorators.some(
+      (d) => d.name === 'Api' || METHOD_DECORATORS.has(d.name) || d.name === 'Group' || d.name === 'Prefix',
+    ) || this.classHasRouteDecorators();
+
+    if (isService) {
+      spec.services.push(this.parseServiceBody(nameTok.value, decorators));
+    } else {
+      spec.types.push(this.parseTypeBody(nameTok.value, decorators));
+    }
+  }
+
+  /** 预扫一眼：类名之后若有 @Get/@Post 之类，就是服务类 */
+  private classHasRouteDecorators(): boolean {
+    let depth = 0;
+    for (let i = this.index; i < this.tokens.length; i++) {
+      const t = this.tokens[i]!;
+      if (t.type === TokenType.PUNCT && t.value === '{') depth++;
+      if (t.type === TokenType.PUNCT && t.value === '}') {
+        if (depth === 0) break;
+        depth--;
+      }
+      if (t.type === TokenType.PUNCT && t.value === '@') {
