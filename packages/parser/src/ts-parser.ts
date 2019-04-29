@@ -360,3 +360,23 @@ class TsParser {
     if (responseType && /^(Promise<\s*)?void\s*>?$/.test(responseType)) responseType = undefined;
 
     const route: RouteSpec = {
+      handler: handlerDec?.args[0] ?? methodTok.value,
+      method: routeDec.name.toUpperCase(),
+      path: routeDec.args[0] ?? '/',
+      requestType,
+      responseType,
+    };
+
+    this.skipMethodTail();
+    return route;
+  }
+
+  // ---------------------------------------------------------------- 工具
+
+  private readDecorator(): Decorator {
+    this.expectPunct('@');
+    const nameTok = this.peek();
+    if (nameTok.type !== TokenType.IDENT) {
+      throw new TsParseError(`Expected decorator name, got "${nameTok.value}"`, nameTok.line, nameTok.column);
+    }
+    this.advance();
