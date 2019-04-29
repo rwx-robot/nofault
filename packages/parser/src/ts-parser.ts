@@ -62,3 +62,25 @@ const RULE_DECORATORS: Record<string, (args: string[]) => string> = {
   MaxLength: (a) => `maxLength:${a[0] ?? 0}`,
   Min: (a) => `min:${a[0] ?? 0}`,
   Max: (a) => `max:${a[0] ?? 0}`,
+  Rule: (a) => a[0] ?? '',
+};
+
+export function parseTsSource(source: string, file?: string): ApiSpec {
+  return new TsParser(source, file).parse();
+}
+
+class TsParser {
+  private readonly tokens: Token[];
+  private index = 0;
+  private pending: Decorator[] = [];
+
+  constructor(source: string, private readonly file?: string) {
+    this.tokens = new Scanner(source).scan();
+  }
+
+  parse(): ApiSpec {
+    const name = (this.file ?? 'api').replace(/^.*[\\/]/, '').replace(/\.api\.ts$|\.ts$/, '');
+    const spec = createApiSpec(name, this.file);
+
+    while (!this.isEof()) {
+      const tok = this.peek();
