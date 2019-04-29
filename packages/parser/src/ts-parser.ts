@@ -380,3 +380,26 @@ class TsParser {
       throw new TsParseError(`Expected decorator name, got "${nameTok.value}"`, nameTok.line, nameTok.column);
     }
     this.advance();
+
+    const args: string[] = [];
+    if (this.matchPunct('(')) {
+      this.advance();
+      let current = '';
+      let depth = 1;
+      while (!this.isEof() && depth > 0) {
+        const tok = this.peek();
+        if (tok.type === TokenType.PUNCT && tok.value === '(') depth++;
+        if (tok.type === TokenType.PUNCT && tok.value === ')') {
+          depth--;
+          if (depth === 0) {
+            this.advance();
+            break;
+          }
+        }
+        if (tok.type === TokenType.PUNCT && tok.value === ',' && depth === 1) {
+          if (current.trim()) args.push(unquote(current.trim()));
+          current = '';
+          this.advance();
+          continue;
+        }
+        current += tok.value;
