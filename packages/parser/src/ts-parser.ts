@@ -318,3 +318,24 @@ class TsParser {
       if (t.type === TokenType.PUNCT && t.value === '<') {
         i++;
         continue;
+      }
+      if (t.type === TokenType.IDENT) {
+        i++;
+        continue;
+      }
+      return false;
+    }
+    return false;
+  }
+
+  private parseMethod(): RouteSpec | undefined {
+    const decorators = this.pending;
+    this.pending = [];
+
+    const methodTok = this.peek();
+    this.advance();
+
+    const routeDec = decorators.find((d) => METHOD_DECORATORS.has(d.name));
+    if (!routeDec) {
+      this.skipMethodTail();
+      return undefined;
