@@ -147,3 +147,25 @@ class TsParser {
         depth--;
       }
       if (t.type === TokenType.PUNCT && t.value === '@') {
+        const next = this.tokens[i + 1];
+        if (next?.type === TokenType.IDENT && METHOD_DECORATORS.has(next.value)) return true;
+      }
+    }
+    return false;
+  }
+
+  // ---------------------------------------------------------------- 类型
+
+  private parseTypeBody(name: string, decorators: Decorator[]): TypeSpec {
+    void decorators;
+    const fields: FieldSpec[] = [];
+    let depth = 1;
+
+    while (depth > 0 && !this.isEof()) {
+      const tok = this.peek();
+
+      if (this.matchPunct('@')) {
+        this.pending.push(this.readDecorator());
+        continue;
+      }
+      if (this.matchPunct('{')) {
