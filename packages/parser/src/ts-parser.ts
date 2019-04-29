@@ -232,3 +232,25 @@ class TsParser {
     let angle = 0;
     while (!this.isEof() && !this.matchPunct(';')) {
       const tok = this.peek();
+      if (tok.type === TokenType.PUNCT && tok.value === '<') angle++;
+      if (tok.type === TokenType.PUNCT && tok.value === '>') angle--;
+      if (tok.type === TokenType.PUNCT && (tok.value === '=' || tok.value === '{')) break;
+      if (tok.type === TokenType.PUNCT && tok.value === ',' && angle === 0) break;
+      out += tok.value;
+      this.advance();
+    }
+    return out.trim();
+  }
+
+  // ---------------------------------------------------------------- 服务
+
+  private parseServiceBody(name: string, decorators: Decorator[]): ServiceSpec {
+    const service: ServiceSpec = {
+      name,
+      group: name.replace(/(Service|Api)$/, '').toLowerCase(),
+      middleware: [],
+      routes: [],
+    };
+
+    for (const d of decorators) {
+      switch (d.name) {
