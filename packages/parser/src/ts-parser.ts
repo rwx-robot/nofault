@@ -169,3 +169,24 @@ class TsParser {
         continue;
       }
       if (this.matchPunct('{')) {
+        depth++;
+        this.advance();
+        continue;
+      }
+      if (this.matchPunct('}')) {
+        depth--;
+        this.advance();
+        continue;
+      }
+      if (this.matchPunct(';')) {
+        this.advance();
+        continue;
+      }
+      if (tok.type === TokenType.IDENT && tok.value === 'constructor') {
+        this.skipStatement();
+        continue;
+      }
+      if (tok.type === TokenType.IDENT) {
+        const field = this.parseProperty();
+        if (field) fields.push(field);
+        continue;
