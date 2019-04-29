@@ -190,3 +190,24 @@ class TsParser {
         const field = this.parseProperty();
         if (field) fields.push(field);
         continue;
+      }
+      this.advance();
+    }
+
+    return { name, fields };
+  }
+
+  private parseProperty(): FieldSpec | undefined {
+    const decorators = this.pending;
+    this.pending = [];
+
+    const nameTok = this.peek();
+    this.advance();
+
+    // 跳过 `!` `?` `:`
+    let optional = false;
+    let sawColon = false;
+    while (!this.isEof() && !this.matchPunct(';')) {
+      if (this.matchPunct('?')) optional = true;
+      if (this.matchPunct(':')) sawColon = true;
+      if (sawColon) break;
