@@ -41,3 +41,24 @@ export class TsParseError extends Error {
 interface Decorator {
   name: string;
   args: string[];
+}
+
+const METHOD_DECORATORS = new Set(['Get', 'Post', 'Put', 'Delete', 'Patch', 'Head', 'Options']);
+const FIELD_SOURCE_DECORATORS: Record<string, FieldSource> = {
+  Body: FieldSource.BODY,
+  Path: FieldSource.PATH,
+  Query: FieldSource.QUERY,
+  Header: FieldSource.HEADER,
+  Form: FieldSource.FORM,
+};
+const RULE_DECORATORS: Record<string, (args: string[]) => string> = {
+  IsString: () => 'isString',
+  IsInt: () => 'isInt',
+  IsNumber: () => 'isNumber',
+  IsBoolean: () => 'isBoolean',
+  IsEmail: () => 'isEmail',
+  IsNotEmpty: () => 'isNotEmpty',
+  MinLength: (a) => `minLength:${a[0] ?? 0}`,
+  MaxLength: (a) => `maxLength:${a[0] ?? 0}`,
+  Min: (a) => `min:${a[0] ?? 0}`,
+  Max: (a) => `max:${a[0] ?? 0}`,
