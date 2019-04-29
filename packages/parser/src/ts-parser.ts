@@ -211,3 +211,24 @@ class TsParser {
       if (this.matchPunct('?')) optional = true;
       if (this.matchPunct(':')) sawColon = true;
       if (sawColon) break;
+      this.advance();
+    }
+
+    let type = 'string';
+    if (sawColon) {
+      this.advance(); // ':'
+      type = this.readTypeText();
+    }
+
+    const source = sourceFrom(decorators);
+    const rules = rulesFrom(decorators);
+    const key = explicitKey(decorators) ?? nameTok.value;
+
+    return { name: nameTok.value, key, type, source, optional, rules };
+  }
+
+  private readTypeText(): string {
+    let out = '';
+    let angle = 0;
+    while (!this.isEof() && !this.matchPunct(';')) {
+      const tok = this.peek();
