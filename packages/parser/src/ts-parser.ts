@@ -403,3 +403,24 @@ class TsParser {
           continue;
         }
         current += tok.value;
+        this.advance();
+      }
+      if (current.trim()) args.push(unquote(current.trim()));
+    }
+    return { name: nameTok.value, args };
+  }
+
+  private readUntilMatching(open: string, close: string): string {
+    void open;
+    let depth = 1;
+    let out = '';
+    while (!this.isEof() && depth > 0) {
+      const tok = this.peek();
+      if (tok.type === TokenType.PUNCT && tok.value === '(') depth++;
+      if (tok.type === TokenType.PUNCT && tok.value === ')') {
+        depth--;
+        if (depth === 0) {
+          this.advance();
+          break;
+        }
+      }
