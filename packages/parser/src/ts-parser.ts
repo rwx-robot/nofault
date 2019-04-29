@@ -84,3 +84,24 @@ class TsParser {
 
     while (!this.isEof()) {
       const tok = this.peek();
+
+      if (this.matchPunct('@')) {
+        this.pending.push(this.readDecorator());
+        continue;
+      }
+      if (tok.type === TokenType.IDENT && (tok.value === 'export' || tok.value === 'declare' || tok.value === 'default')) {
+        this.advance();
+        continue;
+      }
+      if (tok.type === TokenType.IDENT && tok.value === 'class') {
+        this.parseClass(spec);
+        continue;
+      }
+      if (tok.type === TokenType.IDENT && (tok.value === 'import' || tok.value === 'from')) {
+        this.skipStatement();
+        continue;
+      }
+      this.advance();
+    }
+
+    if (spec.services.length === 0) {
