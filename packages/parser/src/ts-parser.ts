@@ -275,3 +275,24 @@ class TsParser {
         case 'Middleware':
           service.middleware = d.args.flatMap((a) => a.split(',').map((s) => s.trim())).filter(Boolean);
           break;
+        default:
+          break;
+      }
+    }
+
+    let depth = 1;
+    while (depth > 0 && !this.isEof()) {
+      const tok = this.peek();
+
+      if (this.matchPunct('@')) {
+        this.pending.push(this.readDecorator());
+        continue;
+      }
+      if (this.matchPunct('{')) {
+        depth++;
+        this.advance();
+        continue;
+      }
+      if (this.matchPunct('}')) {
+        depth--;
+        this.advance();
