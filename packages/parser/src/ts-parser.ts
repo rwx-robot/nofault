@@ -339,3 +339,24 @@ class TsParser {
     if (!routeDec) {
       this.skipMethodTail();
       return undefined;
+    }
+
+    // 跳过泛型与参数列表
+    while (!this.isEof() && !this.matchPunct('(')) this.advance();
+    this.expectPunct('(');
+    const params = this.readUntilMatching('(', ')');
+
+    // 返回类型
+    let responseType: string | undefined;
+    if (this.matchPunct(':')) {
+      this.advance();
+      responseType = this.readTypeText();
+    }
+
+    const requestType = firstTypeInParams(params);
+    const handlerDec = decorators.find((d) => d.name === 'Handler');
+
+    // `void` / `Promise<void>` 在契约里就是"没有响应体"，不要让用户拿到字面量 "void"
+    if (responseType && /^(Promise<\s*)?void\s*>?$/.test(responseType)) responseType = undefined;
+
+    const route: RouteSpec = {
