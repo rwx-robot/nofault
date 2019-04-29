@@ -254,3 +254,24 @@ class TsParser {
 
     for (const d of decorators) {
       switch (d.name) {
+        case 'Api':
+          service.name = d.args[0] ?? service.name;
+          break;
+        case 'Prefix':
+          service.prefix = d.args[0];
+          break;
+        case 'Group':
+          service.group = d.args[0] ?? service.group;
+          break;
+        case 'Jwt':
+          service.jwt = d.args[0];
+          break;
+        case 'Timeout':
+          service.timeout = d.args[0];
+          break;
+        case 'MaxBytes':
+          service.maxBytes = Number(d.args[0]);
+          break;
+        case 'Middleware':
+          service.middleware = d.args.flatMap((a) => a.split(',').map((s) => s.trim())).filter(Boolean);
+          break;
