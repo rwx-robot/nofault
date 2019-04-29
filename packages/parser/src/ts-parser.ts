@@ -20,3 +20,24 @@ import {
  * 支持：
  * ```ts
  * @Api('user') @Prefix('/v1') @Group('user') @Jwt('Auth') @Timeout('3s')
+ * export class UserService {
+ *   @Post('/login') @Handler('login')
+ *   login(req: LoginReq): LoginResp { throw new Error('todo'); }
+ * }
+ *
+ * export class LoginReq {
+ *   @Body('username') @IsString() @MinLength(3)
+ *   username!: string;
+ * }
+ * ```
+ */
+export class TsParseError extends Error {
+  constructor(message: string, public readonly line: number, public readonly column: number) {
+    super(`${message} (line ${line}, column ${column})`);
+    this.name = 'TsParseError';
+  }
+}
+
+interface Decorator {
+  name: string;
+  args: string[];
