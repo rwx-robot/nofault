@@ -296,3 +296,25 @@ class TsParser {
       if (this.matchPunct('}')) {
         depth--;
         this.advance();
+        continue;
+      }
+      if (tok.type === TokenType.IDENT && this.isMethodStart()) {
+        const route = this.parseMethod();
+        if (route) service.routes.push(route);
+        continue;
+      }
+      this.advance();
+    }
+
+    return service;
+  }
+
+  /** 标识符后紧跟 `(` 或 `<` 视为方法（泛型方法） */
+  private isMethodStart(): boolean {
+    let i = this.index + 1;
+    while (i < this.tokens.length) {
+      const t = this.tokens[i]!;
+      if (t.type === TokenType.PUNCT && t.value === '(') return true;
+      if (t.type === TokenType.PUNCT && t.value === '<') {
+        i++;
+        continue;
