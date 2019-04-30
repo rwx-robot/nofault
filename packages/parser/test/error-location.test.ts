@@ -9,3 +9,4 @@ describe('scanner', () => {
     const nameTok = tokens.find((t) => t.value === 'Name')!;
     expect(nameTok.line).toBe(2);
     expect(nameTok.column).toBe(3);
+  });
