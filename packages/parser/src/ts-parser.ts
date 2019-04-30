@@ -445,3 +445,24 @@ class TsParser {
       return;
     }
     this.skipBlock();
+  }
+
+  /** 跳过一个配对的 `{ ... }` 块（要求当前 token 是 `{`） */
+  private skipBlock(): void {
+    if (!this.matchPunct('{')) return;
+    let depth = 0;
+    do {
+      const tok = this.peek();
+      if (tok.type === TokenType.PUNCT && tok.value === '{') depth++;
+      if (tok.type === TokenType.PUNCT && tok.value === '}') depth--;
+      this.advance();
+    } while (depth > 0 && !this.isEof());
+  }
+
+  private skipStatement(): void {
+    // 跳到 `;` 或配对的 `}` 之后
+    let depth = 0;
+    while (!this.isEof()) {
+      if (this.matchPunct('{')) depth++;
+      if (this.matchPunct('}')) {
+        if (depth === 0) {
