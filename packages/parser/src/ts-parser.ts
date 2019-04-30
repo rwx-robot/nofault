@@ -509,3 +509,24 @@ class TsParser {
 }
 
 function unquote(value: string): string {
+  if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+    return value.slice(1, -1);
+  }
+  return value;
+}
+
+function sourceFrom(decorators: Decorator[]): FieldSource {
+  for (const d of decorators) {
+    const s = FIELD_SOURCE_DECORATORS[d.name];
+    if (s) return s;
+  }
+  return FieldSource.BODY;
+}
+
+function rulesFrom(decorators: Decorator[]): string[] {
+  const out: string[] = [];
+  for (const d of decorators) {
+    const fn = RULE_DECORATORS[d.name];
+    if (fn) out.push(fn(d.args));
+  }
+  return out.filter(Boolean);
