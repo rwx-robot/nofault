@@ -13,3 +13,5 @@ describe('scanner', () => {
 
   it('skips both comment styles but keeps line numbers accurate', () => {
     const tokens = new Scanner('// hi\n/* multi\nline */\ntype').scan();
+    const kw = tokens.find((t) => t.value === 'type')!;
+    expect(kw.line).toBe(4);
