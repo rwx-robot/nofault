@@ -488,3 +488,24 @@ class TsParser {
     return this.tokens[this.index++]!;
   }
   private isEof(): boolean {
+    return this.peek().type === TokenType.EOF;
+  }
+  private matchPunct(value: string): boolean {
+    const t = this.peek();
+    return t.type === TokenType.PUNCT && t.value === value;
+  }
+  private expectPunct(value: string): void {
+    const t = this.peek();
+    if (!this.matchPunct(value)) throw new TsParseError(`Expected "${value}", got "${t.value}"`, t.line, t.column);
+    this.advance();
+  }
+  private expectIdent(value: string): void {
+    const t = this.peek();
+    if (t.type !== TokenType.IDENT || t.value !== value) {
+      throw new TsParseError(`Expected "${value}", got "${t.value}"`, t.line, t.column);
+    }
+    this.advance();
+  }
+}
+
+function unquote(value: string): string {
