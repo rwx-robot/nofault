@@ -15,3 +15,6 @@ describe('scanner', () => {
     const tokens = new Scanner('// hi\n/* multi\nline */\ntype').scan();
     const kw = tokens.find((t) => t.value === 'type')!;
     expect(kw.line).toBe(4);
+  });
+
+  it('treats `!:` / `?:` as punctuation so TS DTOs scan cleanly', () => {
