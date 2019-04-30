@@ -466,3 +466,25 @@ class TsParser {
       if (this.matchPunct('{')) depth++;
       if (this.matchPunct('}')) {
         if (depth === 0) {
+          this.advance();
+          return;
+        }
+        depth--;
+        this.advance();
+        continue;
+      }
+      if (this.matchPunct(';') && depth === 0) {
+        this.advance();
+        return;
+      }
+      this.advance();
+    }
+  }
+
+  private peek(): Token {
+    return this.tokens[this.index]!;
+  }
+  private advance(): Token {
+    return this.tokens[this.index++]!;
+  }
+  private isEof(): boolean {
