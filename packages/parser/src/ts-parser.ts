@@ -530,3 +530,23 @@ function rulesFrom(decorators: Decorator[]): string[] {
     if (fn) out.push(fn(d.args));
   }
   return out.filter(Boolean);
+}
+
+function explicitKey(decorators: Decorator[]): string | undefined {
+  for (const d of decorators) {
+    if (FIELD_SOURCE_DECORATORS[d.name] && d.args[0]) return d.args[0];
+  }
+  return undefined;
+}
+
+/** 从 `(req: LoginReq, other: string)` 里取第一个看起来像 DTO 的类型 */
+function firstTypeInParams(params: string): string | undefined {
+  const text = params.trim();
+  if (!text) return undefined;
+  const first = text.split(',')[0] ?? '';
+  const m = /:\s*([A-Za-z_$][\w$]*)/.exec(first);
+  const t = m?.[1];
+  if (!t) return undefined;
+  // 原始类型不算 DTO
+  return ['string', 'number', 'boolean', 'any', 'unknown', 'void', 'object'].includes(t) ? undefined : t;
+}
