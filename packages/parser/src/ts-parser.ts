@@ -424,3 +424,24 @@ class TsParser {
           break;
         }
       }
+      out += tok.value;
+      this.advance();
+    }
+    void close;
+    return out;
+  }
+
+  /**
+   * 跳到方法定义结束。
+   *
+   * 这里**不能**用通用的 `skipStatement()`：方法体是一个块 `{ ... }`，
+   * 通用版本遇到方法体的 `{` 会以为进入语句，一路吃到**类的收尾花括号**，
+   * 于是后续所有方法都被吞掉——只会解析出第一条路由。
+   */
+  private skipMethodTail(): void {
+    while (!this.isEof() && !this.matchPunct('{') && !this.matchPunct(';')) this.advance();
+    if (this.matchPunct(';')) {
+      this.advance();
+      return;
+    }
+    this.skipBlock();
