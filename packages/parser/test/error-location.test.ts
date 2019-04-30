@@ -22,3 +22,5 @@ describe('scanner', () => {
     expect(tokens.some((t) => t.type === TokenType.PUNCT && t.value === '!')).toBe(true);
     expect(tokens.some((t) => t.type === TokenType.PUNCT && t.value === '?')).toBe(true);
   });
+
+  it('reports unterminated strings with a position', () => {
