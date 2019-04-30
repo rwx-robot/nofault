@@ -20,3 +20,5 @@ describe('scanner', () => {
   it('treats `!:` / `?:` as punctuation so TS DTOs scan cleanly', () => {
     const tokens = new Scanner('name!: string;\nother?: number;').scan();
     expect(tokens.some((t) => t.type === TokenType.PUNCT && t.value === '!')).toBe(true);
+    expect(tokens.some((t) => t.type === TokenType.PUNCT && t.value === '?')).toBe(true);
+  });
