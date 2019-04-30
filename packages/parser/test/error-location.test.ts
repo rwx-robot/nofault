@@ -26,3 +26,4 @@ describe('scanner', () => {
   it('reports unterminated strings with a position', () => {
     expect(() => new Scanner('a = "oops').scan()).toThrow(ScannerError);
   });
+});
