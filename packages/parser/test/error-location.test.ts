@@ -10,3 +10,6 @@ describe('scanner', () => {
     expect(nameTok.line).toBe(2);
     expect(nameTok.column).toBe(3);
   });
+
+  it('skips both comment styles but keeps line numbers accurate', () => {
+    const tokens = new Scanner('// hi\n/* multi\nline */\ntype').scan();
