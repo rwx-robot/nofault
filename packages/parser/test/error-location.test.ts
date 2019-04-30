@@ -27,3 +27,6 @@ describe('scanner', () => {
     expect(() => new Scanner('a = "oops').scan()).toThrow(ScannerError);
   });
 });
+
+describe('parse errors carry a position', () => {
+  it('points at the offending token in .api files', () => {
