@@ -37,3 +37,9 @@ export class PageReq {
 export class UserService {
   @Get('/ping')
   @Handler('ping')
+  ping(): void {}
+
+  @Post('/login')
+  login(req: LoginReq): LoginResp {
+    throw new Error('not implemented');
+  }
