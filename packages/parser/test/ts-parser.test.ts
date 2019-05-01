@@ -18,3 +18,9 @@ export class LoginReq {
 export class LoginResp {
   @Body('token') @IsString()
   token!: string;
+
+  @Body('name') @IsString() @Optional()
+  name?: string;
+}
+
+export class PageReq {
