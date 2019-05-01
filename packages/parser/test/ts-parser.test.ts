@@ -57,3 +57,8 @@ describe('parseTsSource', () => {
   it('derives the spec name from the file name', () => {
     expect(spec.name).toBe('user');
   });
+
+  it('collects DTO classes as types (not services)', () => {
+    const names = spec.types.map((t) => t.name).sort();
+    expect(names).toEqual(['LoginReq', 'LoginResp', 'PageReq']);
+  });
