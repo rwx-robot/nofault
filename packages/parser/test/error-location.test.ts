@@ -49,3 +49,5 @@ describe('parse errors carry a position', () => {
   });
 
   it('rejects malformed decorator args', () => {
+    expect(() => parseTsSource('@Get(\nclass X { y(): void {} }', 'x.api.ts')).toThrow(TsParseError);
+  });
