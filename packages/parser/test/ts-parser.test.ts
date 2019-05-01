@@ -31,3 +31,9 @@ export class PageReq {
 @Api('user')
 @Prefix('/v1')
 @Group('user')
+@Jwt('Auth')
+@Middleware('AuthInterceptor', 'Log')
+@Timeout('3s')
+export class UserService {
+  @Get('/ping')
+  @Handler('ping')
