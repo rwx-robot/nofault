@@ -47,3 +47,5 @@ describe('parse errors carry a position', () => {
   it('rejects TS contracts with no service class', () => {
     expect(() => parseTsSource('export class Foo { a!: string; }', 'foo.api.ts')).toThrow(TsParseError);
   });
+
+  it('rejects malformed decorator args', () => {
