@@ -39,3 +39,5 @@ describe('parse errors carry a position', () => {
       expect((err as ApiParseError).message).toMatch(/line 3/);
     }
   });
+
+  it('rejects a service without a name', () => {
