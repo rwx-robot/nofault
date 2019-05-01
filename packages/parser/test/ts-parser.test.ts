@@ -10,3 +10,11 @@ import { Body, IsString, MinLength, IsEmail, Optional, MaxLength } from '@nofaul
 export class LoginReq {
   @Body('username') @IsString() @MinLength(3) @MaxLength(32)
   username!: string;
+
+  @Body('password') @IsString() @MinLength(8)
+  password!: string;
+}
+
+export class LoginResp {
+  @Body('token') @IsString()
+  token!: string;
