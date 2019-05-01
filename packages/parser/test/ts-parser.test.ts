@@ -50,3 +50,10 @@ export class UserService {
   }
 }
 `;
+
+describe('parseTsSource', () => {
+  const spec = parseTsSource(CONTRACT, 'user.api.ts');
+
+  it('derives the spec name from the file name', () => {
+    expect(spec.name).toBe('user');
+  });
