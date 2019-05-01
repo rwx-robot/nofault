@@ -34,3 +34,6 @@ describe('parse errors carry a position', () => {
       parseApiSource('type Req {\n  Name string\n');
       throw new Error('should have thrown');
     } catch (err) {
+      expect(err).toBeInstanceOf(ApiParseError);
+      // 缺收尾花括号，报错应指向第 3 行而不是笼统的\"失败\"
+      expect((err as ApiParseError).message).toMatch(/line 3/);
