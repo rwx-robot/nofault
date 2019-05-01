@@ -24,3 +24,10 @@ export class LoginResp {
 }
 
 export class PageReq {
+  @Query('page') @IsInt()
+  page!: number;
+}
+
+@Api('user')
+@Prefix('/v1')
+@Group('user')
