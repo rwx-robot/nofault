@@ -43,3 +43,10 @@ export class UserService {
   login(req: LoginReq): LoginResp {
     throw new Error('not implemented');
   }
+
+  @Get('/list')
+  list(req: PageReq): LoginResp[] {
+    throw new Error('not implemented');
+  }
+}
+`;
