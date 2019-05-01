@@ -43,3 +43,5 @@ describe('parse errors carry a position', () => {
   it('rejects a service without a name', () => {
     expect(() => parseApiSource('syntax = "v1"\nservice { get /x }')).toThrow(ApiParseError);
   });
+
+  it('rejects TS contracts with no service class', () => {
