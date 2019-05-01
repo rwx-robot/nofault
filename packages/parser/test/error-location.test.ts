@@ -30,3 +30,5 @@ describe('scanner', () => {
 
 describe('parse errors carry a position', () => {
   it('points at the offending token in .api files', () => {
+    try {
+      parseApiSource('type Req {\n  Name string\n');
