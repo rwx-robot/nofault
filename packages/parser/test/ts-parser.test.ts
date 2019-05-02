@@ -121,3 +121,10 @@ describe('parseTsSource', () => {
   });
 
   it('ignores import statements and comments', () => {
+    const src = `
+      // a comment
+      import { Api, Get } from '@nofault/dsl';   /* block */
+      @Api('x')
+      export class XService {
+        @Get('/y')
+        y(): void {}
