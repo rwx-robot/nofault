@@ -81,3 +81,11 @@ describe('parseTsSource', () => {
     expect(page.fields[0]).toMatchObject({ source: FieldSource.QUERY, key: 'page', type: 'number' });
     expect(page.fields[0]!.rules).toContain('isInt');
   });
+
+  it('marks @Optional() properties optional', () => {
+    const resp = spec.types.find((t) => t.name === 'LoginResp')!;
+    expect(resp.fields.find((f) => f.name === 'name')!.optional).toBe(true);
+    expect(resp.fields.find((f) => f.name === 'token')!.optional).toBe(false);
+  });
+
+  it('parses service-level decorators', () => {
