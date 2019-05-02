@@ -128,3 +128,9 @@ describe('parseTsSource', () => {
       export class XService {
         @Get('/y')
         y(): void {}
+      }
+    `;
+    const s = parseTsSource(src, 'x.api.ts');
+    expect(s.types).toHaveLength(0);
+    expect(s.services[0]!.routes).toHaveLength(1);
+  });
