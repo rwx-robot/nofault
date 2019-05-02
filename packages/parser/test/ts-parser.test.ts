@@ -108,3 +108,9 @@ describe('parseTsSource', () => {
 
     const login = svc.routes[1]!;
     expect(login).toMatchObject({
+      handler: 'login',
+      method: 'POST',
+      path: '/login',
+      requestType: 'LoginReq',
+      responseType: 'LoginResp',
+    });
