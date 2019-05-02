@@ -160,3 +160,8 @@ describe('parseContract', () => {
     );
 
     expect(api.services[0]!.routes[0]).toMatchObject({ handler: 'login', method: 'POST' });
+    expect(ts.services[0]!.routes[0]).toMatchObject({ handler: 'login', method: 'POST' });
+    expect(api.types[0]!.fields[0]!.key).toBe('name');
+    expect(ts.types[0]!.fields[0]!.key).toBe('name');
+  });
+});
