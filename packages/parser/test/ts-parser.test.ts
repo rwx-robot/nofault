@@ -89,3 +89,9 @@ describe('parseTsSource', () => {
   });
 
   it('parses service-level decorators', () => {
+    const svc = spec.services[0]!;
+    expect(svc).toMatchObject({
+      name: 'user',
+      prefix: '/v1',
+      group: 'user',
+      jwt: 'Auth',
