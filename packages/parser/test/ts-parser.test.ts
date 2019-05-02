@@ -70,3 +70,8 @@ describe('parseTsSource', () => {
     expect(req.fields[0]).toMatchObject({
       name: 'username',
       key: 'username',
+      type: 'string',
+      source: FieldSource.BODY,
+    });
+    expect(req.fields[0]!.rules).toEqual(['isString', 'minLength:3', 'maxLength:32']);
+  });
