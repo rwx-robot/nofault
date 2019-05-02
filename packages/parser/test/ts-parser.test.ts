@@ -134,3 +134,10 @@ describe('parseTsSource', () => {
     expect(s.types).toHaveLength(0);
     expect(s.services[0]!.routes).toHaveLength(1);
   });
+
+  it('throws when no service class is present', () => {
+    expect(() => parseTsSource('export class Foo { a!: string; }', 'foo.api.ts')).toThrow(TsParseError);
+  });
+});
+
+describe('parseContract', () => {
