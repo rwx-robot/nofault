@@ -75,3 +75,9 @@ describe('parseTsSource', () => {
     });
     expect(req.fields[0]!.rules).toEqual(['isString', 'minLength:3', 'maxLength:32']);
   });
+
+  it('honours explicit keys that differ from the property name', () => {
+    const page = spec.types.find((t) => t.name === 'PageReq')!;
+    expect(page.fields[0]).toMatchObject({ source: FieldSource.QUERY, key: 'page', type: 'number' });
+    expect(page.fields[0]!.rules).toContain('isInt');
+  });
