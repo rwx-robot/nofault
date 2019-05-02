@@ -102,3 +102,9 @@ describe('parseTsSource', () => {
 
   it('parses routes including handler override and array return types', () => {
     const svc = spec.services[0]!;
+    expect(svc.routes).toHaveLength(3);
+
+    expect(svc.routes[0]).toMatchObject({ handler: 'ping', method: 'GET', path: '/ping' });
+
+    const login = svc.routes[1]!;
+    expect(login).toMatchObject({
