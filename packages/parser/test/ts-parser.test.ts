@@ -141,3 +141,9 @@ describe('parseTsSource', () => {
 });
 
 describe('parseContract', () => {
+  it('sniffs the format from the file extension', () => {
+    expect(detectFormat('service a-api { get /x }', 'x.api')).toBe('api');
+    expect(detectFormat('export class X { }', 'x.api.ts')).toBe('ts');
+  });
+
+  it('produces the same shape from both formats', () => {
