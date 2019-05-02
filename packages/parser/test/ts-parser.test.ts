@@ -147,3 +147,10 @@ describe('parseContract', () => {
   });
 
   it('produces the same shape from both formats', () => {
+    const api = parseContract(
+      `type Req { Name string \`json:"name"\` }
+       service user-api { @handler login
+       post /login (Req) }`,
+      'user.api',
+    );
+    const ts = parseContract(
