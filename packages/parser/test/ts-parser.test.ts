@@ -154,3 +154,9 @@ describe('parseContract', () => {
       'user.api',
     );
     const ts = parseContract(
+      `export class Req { @Body('name') name!: string; }
+       @Api('user') export class UserService { @Post('/login') login(req: Req): void {} }`,
+      'user.api.ts',
+    );
+
+    expect(api.services[0]!.routes[0]).toMatchObject({ handler: 'login', method: 'POST' });
