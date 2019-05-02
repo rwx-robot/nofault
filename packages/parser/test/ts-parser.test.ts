@@ -95,3 +95,10 @@ describe('parseTsSource', () => {
       prefix: '/v1',
       group: 'user',
       jwt: 'Auth',
+      timeout: '3s',
+    });
+    expect(svc.middleware).toEqual(['AuthInterceptor', 'Log']);
+  });
+
+  it('parses routes including handler override and array return types', () => {
+    const svc = spec.services[0]!;
