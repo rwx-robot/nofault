@@ -62,3 +62,11 @@ describe('parseTsSource', () => {
     const names = spec.types.map((t) => t.name).sort();
     expect(names).toEqual(['LoginReq', 'LoginResp', 'PageReq']);
   });
+
+  it('parses fields with source, key and rules', () => {
+    const req = spec.types.find((t) => t.name === 'LoginReq')!;
+    expect(req.fields).toHaveLength(2);
+
+    expect(req.fields[0]).toMatchObject({
+      name: 'username',
+      key: 'username',
