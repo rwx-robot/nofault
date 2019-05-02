@@ -114,3 +114,10 @@ describe('parseTsSource', () => {
       requestType: 'LoginReq',
       responseType: 'LoginResp',
     });
+
+    const list = svc.routes[2]!;
+    expect(list).toMatchObject({ handler: 'list', method: 'GET', path: '/list', requestType: 'PageReq' });
+    expect(list.responseType).toContain('LoginResp');
+  });
+
+  it('ignores import statements and comments', () => {
