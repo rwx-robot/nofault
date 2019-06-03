@@ -20,3 +20,4 @@
     "node": ">=20.0.0"
   },
   "dependencies": {
+    "@nofault/dsl": "workspace:*"
