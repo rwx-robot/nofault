@@ -11,3 +11,4 @@
       "default": "./dist/index.js"
     },
     "./templates": {
+      "types": "./templates/index.d.ts",
