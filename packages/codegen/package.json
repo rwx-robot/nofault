@@ -14,3 +14,4 @@
       "types": "./templates/index.d.ts",
       "default": "./templates/index.js"
     }
+  },
