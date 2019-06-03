@@ -7,3 +7,14 @@
  *
  * 每个诊断都带**位置信息**（哪个服务、哪个字段），因为"spec 有问题"这种话毫无用处。
  */
+
+import type { ApiSpec, FieldSpec, ServiceSpec, TypeSpec } from '@nofault/dsl';
+import { camelCase } from '@nofault/dsl';
+
+export type DiagnosticSeverity = 'error' | 'warning';
+
+export interface Diagnostic {
+  severity: DiagnosticSeverity;
+  /** 出错位置，如 `service user > route login` */
+  at: string;
+  message: string;
