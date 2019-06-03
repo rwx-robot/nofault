@@ -15,3 +15,5 @@
       "default": "./templates/index.js"
     }
   },
+  "files": ["dist", "README.md"],
+  "engines": {
