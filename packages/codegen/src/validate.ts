@@ -18,3 +18,13 @@ export interface Diagnostic {
   /** 出错位置，如 `service user > route login` */
   at: string;
   message: string;
+}
+
+export class SpecValidationError extends Error {
+  constructor(public readonly diagnostics: Diagnostic[]) {
+    super(
+      `Invalid API spec (${diagnostics.length} problem${diagnostics.length === 1 ? '' : 's'}):\n` +
+        diagnostics.map((d) => `  - [${d.severity}] ${d.at}: ${d.message}`).join('\n'),
+    );
+    this.name = 'SpecValidationError';
+  }
