@@ -28,3 +28,12 @@ export class SpecValidationError extends Error {
     );
     this.name = 'SpecValidationError';
   }
+}
+
+const HTTP_METHODS = new Set(['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD', 'OPTIONS', 'ALL']);
+const VALID_RULES = new Set([
+  'isString',
+  'isInt',
+  'isNumber',
+  'isBoolean',
+  'isEmail',
