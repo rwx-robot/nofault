@@ -134,3 +134,13 @@ function validateService(service: ServiceSpec, typeNames: Set<string>, diags: Di
   }
   if (service.prefix !== undefined && !service.prefix.startsWith('/')) {
     diags.push({ severity: 'error', at, message: `prefix must start with "/", got "${service.prefix}"` });
+  }
+
+  const seen = new Map<string, string>();
+  for (const route of service.routes) {
+    const rat = `${at} > route ${route.handler}`;
+    if (!HTTP_METHODS.has(route.method.toUpperCase())) {
+      diags.push({ severity: 'error', at: rat, message: `unknown HTTP method "${route.method}"` });
+    }
+    if (!route.path.startsWith('/')) {
+      diags.push({ severity: 'error', at: rat, message: `path must start with "/", got "${route.path}"` });
