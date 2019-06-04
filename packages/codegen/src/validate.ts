@@ -37,3 +37,12 @@ const VALID_RULES = new Set([
   'isNumber',
   'isBoolean',
   'isEmail',
+  'isNotEmpty',
+  'minLength',
+  'maxLength',
+  'min',
+  'max',
+]);
+
+export function validateSpec(spec: ApiSpec): Diagnostic[] {
+  const diags: Diagnostic[] = [];
