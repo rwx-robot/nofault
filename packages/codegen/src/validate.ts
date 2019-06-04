@@ -154,3 +154,11 @@ function validateService(service: ServiceSpec, typeNames: Set<string>, diags: Di
     if (route.requestType && !typeNames.has(route.requestType)) {
       diags.push({ severity: 'error', at: rat, message: `unknown request type "${route.requestType}"` });
     }
+    if (route.responseType) {
+      const base = route.responseType.replace(/\[\]$/, '');
+      if (!typeNames.has(base) && !['string', 'number', 'boolean', 'void'].includes(base)) {
+        diags.push({ severity: 'error', at: rat, message: `unknown response type "${route.responseType}"` });
+      }
+    }
+  }
+}
