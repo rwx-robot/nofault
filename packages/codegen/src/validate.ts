@@ -46,3 +46,14 @@ const VALID_RULES = new Set([
 
 export function validateSpec(spec: ApiSpec): Diagnostic[] {
   const diags: Diagnostic[] = [];
+
+  if (spec.services.length === 0) {
+    diags.push({ severity: 'error', at: spec.name, message: 'no service defined' });
+  }
+
+  const typeNames = new Set<string>();
+  for (const type of spec.types) {
+    if (typeNames.has(type.name)) {
+      diags.push({ severity: 'error', at: `type ${type.name}`, message: 'duplicate type name' });
+    }
+    typeNames.add(type.name);
