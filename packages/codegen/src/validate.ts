@@ -57,3 +57,12 @@ export function validateSpec(spec: ApiSpec): Diagnostic[] {
       diags.push({ severity: 'error', at: `type ${type.name}`, message: 'duplicate type name' });
     }
     typeNames.add(type.name);
+    validateType(type, diags);
+  }
+
+  const serviceNames = new Set<string>();
+  for (const service of spec.services) {
+    if (serviceNames.has(service.name)) {
+      diags.push({ severity: 'error', at: `service ${service.name}`, message: 'duplicate service name' });
+    }
+    serviceNames.add(service.name);
