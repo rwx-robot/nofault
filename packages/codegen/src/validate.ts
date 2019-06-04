@@ -125,3 +125,12 @@ function validateField(type: TypeSpec, field: FieldSpec, seen: Set<string>, diag
       diags.push({ severity: 'error', at, message: `rule "${head}" requires a numeric argument` });
     }
   }
+}
+
+function validateService(service: ServiceSpec, typeNames: Set<string>, diags: Diagnostic[]): void {
+  const at = `service ${service.name}`;
+  if (service.routes.length === 0) {
+    diags.push({ severity: 'warning', at, message: 'service has no routes' });
+  }
+  if (service.prefix !== undefined && !service.prefix.startsWith('/')) {
+    diags.push({ severity: 'error', at, message: `prefix must start with "/", got "${service.prefix}"` });
