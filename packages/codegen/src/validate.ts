@@ -144,3 +144,13 @@ function validateService(service: ServiceSpec, typeNames: Set<string>, diags: Di
     }
     if (!route.path.startsWith('/')) {
       diags.push({ severity: 'error', at: rat, message: `path must start with "/", got "${route.path}"` });
+    }
+    const key = `${route.method.toUpperCase()} ${route.path}`;
+    if (seen.has(key)) {
+      diags.push({ severity: 'error', at: rat, message: `duplicate route ${key} (also handled by ${seen.get(key)})` });
+    }
+    seen.set(key, route.handler);
+
+    if (route.requestType && !typeNames.has(route.requestType)) {
+      diags.push({ severity: 'error', at: rat, message: `unknown request type "${route.requestType}"` });
+    }
