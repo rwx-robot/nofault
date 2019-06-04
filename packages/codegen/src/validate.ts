@@ -115,3 +115,13 @@ function validateField(type: TypeSpec, field: FieldSpec, seen: Set<string>, diag
     diags.push({ severity: 'error', at, message: 'field name is not a valid identifier' });
   }
   if (!field.type || field.type.length === 0) {
+    diags.push({ severity: 'error', at, message: 'field has no type' });
+  }
+  for (const rule of field.rules) {
+    if (!rule) continue;
+    const [head, arg] = rule.split(':');
+    if (!VALID_RULES.has(head!)) continue; // 自定义规则（Rule('...')）不校验
+    if ((head === 'minLength' || head === 'maxLength' || head === 'min' || head === 'max') && arg === undefined) {
+      diags.push({ severity: 'error', at, message: `rule "${head}" requires a numeric argument` });
+    }
+  }
