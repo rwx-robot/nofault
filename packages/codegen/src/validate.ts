@@ -86,3 +86,13 @@ function validateType(type: TypeSpec, diags: Diagnostic[]): void {
   if (type.fields.length === 0) {
     diags.push({ severity: 'warning', at: `type ${type.name}`, message: 'type has no fields' });
   }
+  const fieldNames = new Set<string>();
+  // 生成器按"传输键"给属性命名，所以重名判据是**转换后**的属性名，
+  // 而不是源字段名 —— Name(name) 与 name(name) 会撞到一起
+  const propNames = new Set<string>();
+  for (const field of type.fields) {
+    const prop = camelCase(field.key || field.name);
+    if (propNames.has(prop)) {
+      diags.push({
+        severity: 'error',
+        at: `type ${type.name} > field ${field.name}`,
