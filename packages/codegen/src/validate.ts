@@ -66,3 +66,13 @@ export function validateSpec(spec: ApiSpec): Diagnostic[] {
       diags.push({ severity: 'error', at: `service ${service.name}`, message: 'duplicate service name' });
     }
     serviceNames.add(service.name);
+    validateService(service, typeNames, diags);
+  }
+
+  return diags;
+}
+
+/** 有 error 级别诊断就抛错，warning 只返回不拦 */
+export function assertValidSpec(spec: ApiSpec, diagnostics = validateSpec(spec)): Diagnostic[] {
+  const errors = diagnostics.filter((d) => d.severity === 'error');
+  if (errors.length > 0) throw new SpecValidationError(errors);
