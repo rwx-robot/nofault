@@ -76,3 +76,13 @@ export function validateSpec(spec: ApiSpec): Diagnostic[] {
 export function assertValidSpec(spec: ApiSpec, diagnostics = validateSpec(spec)): Diagnostic[] {
   const errors = diagnostics.filter((d) => d.severity === 'error');
   if (errors.length > 0) throw new SpecValidationError(errors);
+  return diagnostics;
+}
+
+function validateType(type: TypeSpec, diags: Diagnostic[]): void {
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(type.name)) {
+    diags.push({ severity: 'error', at: `type ${type.name}`, message: 'type name is not a valid identifier' });
+  }
+  if (type.fields.length === 0) {
+    diags.push({ severity: 'warning', at: `type ${type.name}`, message: 'type has no fields' });
+  }
