@@ -96,3 +96,12 @@ function validateType(type: TypeSpec, diags: Diagnostic[]): void {
       diags.push({
         severity: 'error',
         at: `type ${type.name} > field ${field.name}`,
+        message: `collides with another field on property "${prop}"`,
+      });
+    }
+    propNames.add(prop);
+  }
+  for (const field of type.fields) validateField(type, field, fieldNames, diags);
+}
+
+function validateField(type: TypeSpec, field: FieldSpec, seen: Set<string>, diags: Diagnostic[]): void {
