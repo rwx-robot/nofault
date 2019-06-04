@@ -105,3 +105,13 @@ function validateType(type: TypeSpec, diags: Diagnostic[]): void {
 }
 
 function validateField(type: TypeSpec, field: FieldSpec, seen: Set<string>, diags: Diagnostic[]): void {
+  const at = `type ${type.name} > field ${field.name}`;
+  if (seen.has(field.name)) {
+    diags.push({ severity: 'error', at, message: 'duplicate field name' });
+  }
+  seen.add(field.name);
+
+  if (!/^[A-Za-z_$][A-Za-z0-9_$]*$/.test(field.name)) {
+    diags.push({ severity: 'error', at, message: 'field name is not a valid identifier' });
+  }
+  if (!field.type || field.type.length === 0) {
