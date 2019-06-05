@@ -5,3 +5,4 @@
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {},
+    "types": ["node"]
