@@ -27,3 +27,6 @@ export const DEFAULT_TEMPLATES: Record<string, string> = {
 {{/if}}import { Injectable } from '@nofault/core';
 
 @Injectable()
+export class {{ className }} {
+{{#each methods}}{{ this.body }}{{/each}}}
+`,
