@@ -21,3 +21,7 @@ export const DEFAULT_TEMPLATES: Record<string, string> = {
 {{/if}}export class {{ className }} {
 {{#each fields}}{{ this.body }}{{/each}}}
 `,
+
+  service: `{{#if header}}{{ header }}{{/if}}
+{{#if imports}}{{ imports }}
+{{/if}}import { Injectable } from '@nofault/core';
