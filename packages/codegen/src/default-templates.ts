@@ -40,3 +40,6 @@ export class {{ className }} {
 
 {{#each routes}}{{ this.body }}{{/each}}}
 `,
+
+  module: `{{#if header}}{{ header }}{{/if}}
+{{#if imports}}{{ imports }}
