@@ -32,3 +32,6 @@ export class {{ className }} {
 `,
 
   controller: `{{#if header}}{{ header }}{{/if}}
+{{#if imports}}{{ imports }}
+{{/if}}{{#if classDecorators}}{{ classDecorators }}
+{{/if}}@Controller({ path: '{{ path }}'{{#if middlewareCsv}}, middleware: [{{ middlewareCsv }}]{{/if}} })
