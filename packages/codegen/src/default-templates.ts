@@ -46,3 +46,5 @@ export class {{ className }} {
 {{/if}}import { Module } from '@nofault/core';
 
 @Module({
+  controllers: [{{ controllersCsv }}],
+  providers: [{{ providersCsv }}],
