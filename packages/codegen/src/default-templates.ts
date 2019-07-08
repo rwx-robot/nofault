@@ -37,3 +37,6 @@ export class {{ className }} {
 {{/if}}@Controller({ path: '{{ path }}'{{#if middlewareCsv}}, middleware: [{{ middlewareCsv }}]{{/if}} })
 export class {{ className }} {
   constructor(private readonly service: {{ serviceClass }}) {}
+
+{{#each routes}}{{ this.body }}{{/each}}}
+`,
