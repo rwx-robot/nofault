@@ -43,3 +43,6 @@ export class {{ className }} {
 
   module: `{{#if header}}{{ header }}{{/if}}
 {{#if imports}}{{ imports }}
+{{/if}}import { Module } from '@nofault/core';
+
+@Module({
