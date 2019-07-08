@@ -25,3 +25,5 @@ export const DEFAULT_TEMPLATES: Record<string, string> = {
   service: `{{#if header}}{{ header }}{{/if}}
 {{#if imports}}{{ imports }}
 {{/if}}import { Injectable } from '@nofault/core';
+
+@Injectable()
