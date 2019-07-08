@@ -48,3 +48,6 @@ export class {{ className }} {
 @Module({
   controllers: [{{ controllersCsv }}],
   providers: [{{ providersCsv }}],
+  exports: [{{ providersCsv }}],
+})
+export class {{ className }} {}
