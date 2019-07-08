@@ -35,3 +35,5 @@ export class {{ className }} {
 {{#if imports}}{{ imports }}
 {{/if}}{{#if classDecorators}}{{ classDecorators }}
 {{/if}}@Controller({ path: '{{ path }}'{{#if middlewareCsv}}, middleware: [{{ middlewareCsv }}]{{/if}} })
+export class {{ className }} {
+  constructor(private readonly service: {{ serviceClass }}) {}
