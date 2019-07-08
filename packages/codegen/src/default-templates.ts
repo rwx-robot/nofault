@@ -19,3 +19,5 @@ export const DEFAULT_TEMPLATES: Record<string, string> = {
  * {{ comment }}
  */
 {{/if}}export class {{ className }} {
+{{#each fields}}{{ this.body }}{{/each}}}
+`,
