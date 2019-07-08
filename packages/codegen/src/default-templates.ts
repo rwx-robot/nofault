@@ -11,3 +11,6 @@
  * 2. 短列表（imports / 装饰器 / 数组字面量）一律用 `…Csv` 预拼好的字符串，
  *    不给模板引擎加"最后一个元素"这类逻辑——那属于 TS 该干的活。
  */
+
+export const DEFAULT_TEMPLATES: Record<string, string> = {
+  dto: `{{#if header}}{{ header }}{{/if}}
