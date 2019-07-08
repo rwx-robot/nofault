@@ -30,3 +30,5 @@ export const DEFAULT_TEMPLATES: Record<string, string> = {
 export class {{ className }} {
 {{#each methods}}{{ this.body }}{{/each}}}
 `,
+
+  controller: `{{#if header}}{{ header }}{{/if}}
