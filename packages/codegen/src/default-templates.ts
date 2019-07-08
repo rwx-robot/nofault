@@ -17,3 +17,5 @@ export const DEFAULT_TEMPLATES: Record<string, string> = {
 {{#if imports}}{{ imports }}
 {{/if}}{{#if comment}}/**
  * {{ comment }}
+ */
+{{/if}}export class {{ className }} {
