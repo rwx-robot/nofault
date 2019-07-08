@@ -14,3 +14,6 @@
 
 export const DEFAULT_TEMPLATES: Record<string, string> = {
   dto: `{{#if header}}{{ header }}{{/if}}
+{{#if imports}}{{ imports }}
+{{/if}}{{#if comment}}/**
+ * {{ comment }}
