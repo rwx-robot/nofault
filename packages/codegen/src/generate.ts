@@ -59,3 +59,23 @@ export interface GenerateOptions {
 
 export interface GenerateResult {
   files: GeneratedFile[];
+  /** 生成过程中的非致命提示，例如"规则 X 不支持" */
+  warnings: string[];
+}
+
+const METHOD_NO_BODY = new Set(['GET', 'HEAD', 'DELETE', 'OPTIONS']);
+
+const RULE_TO_DECORATOR: Record<string, (rest: string) => { name: string; args: string[] } | undefined> = {
+  isString: () => ({ name: 'IsString', args: [] }),
+  isInt: () => ({ name: 'IsInt', args: [] }),
+  isNumber: () => ({ name: 'IsNumber', args: [] }),
+  isBoolean: () => ({ name: 'IsBoolean', args: [] }),
+  isEmail: () => ({ name: 'IsEmail', args: [] }),
+  isNotEmpty: () => ({ name: 'IsNotEmpty', args: [] }),
+  minLength: (rest) => ({ name: 'MinLength', args: [rest] }),
+  maxLength: (rest) => ({ name: 'MaxLength', args: [rest] }),
+  min: (rest) => ({ name: 'Min', args: [rest] }),
+  max: (rest) => ({ name: 'Max', args: [rest] }),
+};
+
+/** 只生成没有语法错的 TypeScript —— 规则值必须是字面量白名单，避免注入模板 */
