@@ -262,3 +262,23 @@ function renderController(
         restSymbols.add(paramDecoratorFor(route));
         restSymbols.add('Validate');
       }
+    }
+  }
+  if (service.routes.some((r) => (r.middleware ?? []).length > 0)) restSymbols.add('UseMiddleware');
+
+  const imports = [
+    `import { ${className}Service } from './${kebabCase(className)}.service';`,
+    ...[...dtoImports.values()].sort(),
+    `import { ${[...restSymbols].sort().join(', ')} } from '@nofault/rest';`,
+  ].join('\n');
+
+  const controllerPath = normalizePath(`${service.prefix ?? ''}/${service.group}`);
+  const classDecorators: string[] = [];
+  if (service.jwt) {
+    classDecorators.push(`// 鉴权：${service.jwt}（框架 v0.4.0 尚未内建 JWT，此处留待接入）`);
+  }
+
+  return renderTemplate(templates.controller ?? DEFAULT_TEMPLATES.controller!, {
+    header,
+    imports,
+    classDecorators: classDecorators.join('\n'),
