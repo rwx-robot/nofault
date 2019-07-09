@@ -39,3 +39,23 @@ export interface GeneratedFile {
 }
 
 export interface TemplateOverrides {
+  dto?: string;
+  service?: string;
+  controller?: string;
+  module?: string;
+  'app-module'?: string;
+}
+
+export interface GenerateOptions {
+  /** 模板覆盖目录：存在 `<dir>/<name>.tpl` 就优先用它 */
+  templatesDir?: string;
+  /** 是否额外生成根 `app.module.ts` */
+  rootModule?: boolean;
+  /** 每个文件顶部的注释（用于打"此文件由生成器产生"的标记） */
+  header?: string | false;
+  /** 尚未支持的校验规则如何处理：`comment`（注释掉）或 `throw` */
+  unknownRule?: 'comment' | 'throw';
+}
+
+export interface GenerateResult {
+  files: GeneratedFile[];
