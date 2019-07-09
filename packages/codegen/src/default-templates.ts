@@ -61,3 +61,5 @@ export class {{ className }} {}
   imports: [{{ modulesCsv }}],
 })
 export class {{ className }} {}
+`,
+};
