@@ -120,3 +120,23 @@ export function generate(spec: ApiSpec, options: GenerateOptions = {}): Generate
     files.push({
       kind: 'dto',
       path: `dto/${dtoFileName(type.name)}`,
+      content: renderDto(type, typeNames, templates.dto, header, options, warnings),
+    });
+  }
+
+  for (const service of spec.services) {
+    const groupFiles = renderServiceFiles(service, spec, templates, header, options, warnings);
+    files.push(...groupFiles);
+  }
+
+  if (options.rootModule && spec.services.length > 0) {
+    const seen = new Set<string>();
+    const modules: string[] = [];
+    const imports: string[] = [];
+    for (const service of spec.services) {
+      const cls = `${pascalCase(service.group)}Module`;
+      if (seen.has(cls)) continue;
+      seen.add(cls);
+      modules.push(cls);
+      imports.push(`import { ${cls} } from './${kebabCase(service.group)}/${kebabCase(service.group)}.module';`);
+    }
