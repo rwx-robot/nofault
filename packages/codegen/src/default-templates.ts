@@ -63,3 +63,5 @@ export class {{ className }} {}
 export class {{ className }} {}
 `,
 };
+
+export const TEMPLATE_NAMES = Object.keys(DEFAULT_TEMPLATES);
