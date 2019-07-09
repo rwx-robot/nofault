@@ -242,3 +242,23 @@ function renderServiceFiles(
 
 function renderController(
   service: ServiceSpec,
+  className: string,
+  dtoImports: Map<string, string>,
+  types: Map<string, TypeSpec>,
+  templates: Record<string, string>,
+  header: string,
+  _options: GenerateOptions,
+): string {
+  const routes = service.routes.map((route) => ({ body: renderRoute(route, types) }));
+
+  const restSymbols = new Set<string>(['Controller']);
+  for (const route of service.routes) {
+    restSymbols.add(routeDecoratorFor(route.method));
+    if (route.requestType) {
+      const fields = types.get(route.requestType)?.fields ?? [];
+      if (fields.some((f) => f.source === FieldSource.PATH)) {
+        restSymbols.add('Param');
+      } else {
+        restSymbols.add(paramDecoratorFor(route));
+        restSymbols.add('Validate');
+      }
