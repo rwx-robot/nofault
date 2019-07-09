@@ -181,3 +181,23 @@ function renderServiceFiles(
   };
 
   for (const route of service.routes) {
+    if (route.requestType && !isBuiltinType(route.requestType)) {
+      remember(route.requestType, dtoImports);
+      const pathOnly = (types.get(route.requestType)?.fields ?? []).some(
+        (f) => f.source === FieldSource.PATH,
+      );
+      if (!pathOnly) remember(route.requestType, controllerDtoImports);
+    }
+    if (route.responseType && !isBuiltinType(baseTypeOf(route.responseType))) {
+      const name = baseTypeOf(route.responseType);
+      remember(name, dtoImports);
+      remember(name, controllerDtoImports);
+    }
+  }
+
+  const methods = service.routes.map((route) => ({ body: renderServiceMethod(route, warnings) }));
+
+  files.push({
+    kind: 'service',
+    path: `${group}/${kebabCase(className)}.service.ts`,
+    content: renderTemplate(templates.service ?? DEFAULT_TEMPLATES.service!, {
