@@ -51,3 +51,4 @@ export class {{ className }} {
   exports: [{{ providersCsv }}],
 })
 export class {{ className }} {}
+`,
