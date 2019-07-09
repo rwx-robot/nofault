@@ -19,3 +19,23 @@ import {
   type TypeSpec,
 } from '@nofault/dsl';
 import { camelCase, kebabCase, pascalCase } from '@nofault/dsl';
+import { renderTemplate } from './template';
+import { DEFAULT_TEMPLATES } from './default-templates';
+
+export type GeneratedKind =
+  | 'dto'
+  | 'service'
+  | 'controller'
+  | 'module'
+  | 'app-module'
+  | 'entity'
+  | 'repository';
+
+export interface GeneratedFile {
+  /** 相对输出根目录的路径 */
+  path: string;
+  content: string;
+  kind: GeneratedKind;
+}
+
+export interface TemplateOverrides {
