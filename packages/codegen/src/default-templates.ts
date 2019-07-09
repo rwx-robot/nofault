@@ -59,3 +59,5 @@ export class {{ className }} {}
 
 @Module({
   imports: [{{ modulesCsv }}],
+})
+export class {{ className }} {}
