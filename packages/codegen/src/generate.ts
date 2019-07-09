@@ -282,3 +282,24 @@ function renderController(
     header,
     imports,
     classDecorators: classDecorators.join('\n'),
+    path: controllerPath,
+    middlewareCsv: service.middleware.map((m) => `'${m}'`).join(', '),
+    className: `${className}Controller`,
+    serviceClass: `${className}Service`,
+    routes,
+  });
+}
+
+function renderRoute(route: RouteSpec, types: Map<string, TypeSpec>): string {
+  const lines: string[] = [];
+  if (route.comment) lines.push(`  /** ${route.comment} */`);
+  for (const mw of route.middleware ?? []) lines.push(`  @UseMiddleware('${mw}')`);
+  if (route.requestType && needsValidationDecorator(route, types)) {
+    lines.push(`  @Validate(${route.requestType})`);
+  }
+  lines.push(`  @${routeDecoratorFor(route.method)}('${route.path}')`);
+
+  const { params, callArg } = callShape(route, types);
+  lines.push(
+    // 统一 async + Promise<…>：无响应时也必须写成 Promise<void>，
+    // 否则 `return this.service.x()`（返回 Promise<void>）在 `: void` 签名下编译不过
