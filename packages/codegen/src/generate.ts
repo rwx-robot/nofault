@@ -201,3 +201,23 @@ function renderServiceFiles(
     kind: 'service',
     path: `${group}/${kebabCase(className)}.service.ts`,
     content: renderTemplate(templates.service ?? DEFAULT_TEMPLATES.service!, {
+      header,
+      imports: [...dtoImports.values()].sort().join('\n'),
+      className: `${className}Service`,
+      methods,
+    }),
+  });
+
+  files.push({
+    kind: 'controller',
+    path: `${group}/${kebabCase(className)}.controller.ts`,
+    content: renderController(
+      service,
+      className,
+      controllerDtoImports,
+      types,
+      templates,
+      header,
+      options,
+    ),
+  });
