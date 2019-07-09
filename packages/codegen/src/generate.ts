@@ -140,3 +140,24 @@ export function generate(spec: ApiSpec, options: GenerateOptions = {}): Generate
       modules.push(cls);
       imports.push(`import { ${cls} } from './${kebabCase(service.group)}/${kebabCase(service.group)}.module';`);
     }
+    files.push({
+      kind: 'app-module',
+      path: 'app.module.ts',
+      content: renderTemplate(templates['app-module'] ?? DEFAULT_TEMPLATES['app-module']!, {
+        header,
+        imports: imports.join('\n'),
+        modulesCsv: modules.join(', '),
+        className: 'AppModule',
+      }),
+    });
+  }
+
+  return { files, warnings };
+}
+
+// --------------------------------------------------------------------- 各文件
+
+function renderServiceFiles(
+  service: ServiceSpec,
+  spec: ApiSpec,
+  templates: Record<string, string>,
