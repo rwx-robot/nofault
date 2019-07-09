@@ -221,3 +221,24 @@ function renderServiceFiles(
       options,
     ),
   });
+
+  files.push({
+    kind: 'module',
+    path: `${group}/${kebabCase(className)}.module.ts`,
+    content: renderTemplate(templates.module ?? DEFAULT_TEMPLATES.module!, {
+      header,
+      imports: [
+        `import { ${className}Controller } from './${kebabCase(className)}.controller';`,
+        `import { ${className}Service } from './${kebabCase(className)}.service';`,
+      ].join('\n'),
+      className: `${className}Module`,
+      controllersCsv: `${className}Controller`,
+      providersCsv: `${className}Service`,
+    }),
+  });
+
+  return files;
+}
+
+function renderController(
+  service: ServiceSpec,
