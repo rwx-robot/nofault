@@ -161,3 +161,23 @@ function renderServiceFiles(
   service: ServiceSpec,
   spec: ApiSpec,
   templates: Record<string, string>,
+  header: string,
+  options: GenerateOptions,
+  warnings: string[],
+): GeneratedFile[] {
+  const group = kebabCase(service.group || service.name);
+  const className = pascalCase(service.group || service.name);
+  const files: GeneratedFile[] = [];
+
+  const types = new Map<string, TypeSpec>(spec.types.map((t) => [t.name, t]));
+  const dtoImports = new Map<string, string>();
+
+  // controller 侧会被 `@Param()` 逐个拆开绑定（看不到 DTO 类型），
+  // service 侧的方法签名却要写 `req: XxxReq`（看得到）——两份清单因此不同。
+  const controllerDtoImports = new Map<string, string>();
+
+  const remember = (name: string, target: Map<string, string>): void => {
+    target.set(name, `import { ${name} } from '${dtoModulePathFromService(name)}';`);
+  };
+
+  for (const route of service.routes) {
