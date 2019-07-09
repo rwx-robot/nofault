@@ -79,3 +79,24 @@ const RULE_TO_DECORATOR: Record<string, (rest: string) => { name: string; args: 
 };
 
 /** 只生成没有语法错的 TypeScript —— 规则值必须是字面量白名单，避免注入模板 */
+
+function dtoFileName(typeName: string): string {
+  return `${kebabCase(typeName)}.dto.ts`;
+}
+
+/**
+ * 模块说明符（**不带** `.ts`）。
+ *
+ * ESM/TS 的 import 写的是模块名而不是文件名；把扩展名拼进去，
+ * 在 `moduleResolution: bundler` 下直接编译不过。
+ */
+function dtoModulePath(typeName: string): string {
+  return `./${kebabCase(typeName)}.dto`;
+}
+
+/**
+ * 从 `<out>/<group>/` 引用 DTO 的相对路径。
+ *
+ * DTO 统一放在输出根目录的 `dto/` 下（**每个类型只有一份**，跨服务共享），
+ * 而 controller/service 在 `<out>/<group>/` 里，所以要回退一级。
+ * 早先写成 `./dto/...`，生成物编译直接失败——这个问题只有端到端编译才暴露得出来。
