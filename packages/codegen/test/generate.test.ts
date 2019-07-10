@@ -41,3 +41,13 @@ describe('validateSpec', () => {
         }),
       ]),
     );
+    const err = diags.find((d) => d.message.includes('duplicate route'))!;
+    expect(err.severity).toBe('error');
+    // 报错要说清"和谁重复"，否则用户得自己找
+    expect(err.message).toContain('a');
+  });
+
+  it('flags a request type that does not exist', () => {
+    const diags = validateSpec(spec([service({ routes: [{ handler: 'a', method: 'POST', path: '/x', requestType: 'Nope' }] })]));
+    expect(diags.some((d) => d.message.includes('unknown request type'))).toBe(true);
+  });
