@@ -9,3 +9,13 @@ function type(name: string, fields: TypeSpec['fields'] = [{ name: 'a', key: 'a',
 function service(partial: Partial<ServiceSpec> = {}): ServiceSpec {
   return {
     name: 'user',
+    group: 'user',
+    middleware: [],
+    routes: [{ handler: 'ping', method: 'GET', path: '/ping' }],
+    ...partial,
+  };
+}
+
+function spec(services: ServiceSpec[], types: TypeSpec[] = []): ApiSpec {
+  return { name: 'demo', types, services };
+}
