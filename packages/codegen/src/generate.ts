@@ -404,3 +404,23 @@ function renderDto(
     const decorators = renderFieldDecorators(field, validatorImports, options, warnings);
     if (!isBuiltinType(baseTypeOf(field.type)) && typeNames.has(baseTypeOf(field.type))) {
       const name = baseTypeOf(field.type);
+      if (name !== type.name) crossImports.add(`import { ${name} } from '${dtoModulePath(name)}';`);
+    }
+    const body = [
+      field.comment ? `  /** ${field.comment} */\n` : '',
+      keyNote(field),
+      ...decorators.map((d) => `  ${d}\n`),
+      `  ${propName(field)}: ${field.type};\n`,
+    ].join('');
+    return { body };
+  });
+
+  const imports: string[] = [...crossImports].sort();
+  if (validatorImports.size > 0) {
+    imports.push(`import { ${[...validatorImports].sort().join(', ')} } from '@nofault/rest';`);
+  }
+
+  return renderTemplate(template ?? DEFAULT_TEMPLATES.dto!, {
+    header,
+    imports: imports.join('\n'),
+    comment: type.comment,
