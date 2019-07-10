@@ -363,3 +363,24 @@ function paramDecoratorFor(route: RouteSpec): string {
  *
  * 带**路径参数**的路由不加：它的字段是逐个 `@Param()` 接的，
  * 没有一个完整的"请求对象"可供整体校验，加上反而会把每个请求都判成缺字段。
+ */
+function needsValidationDecorator(route: RouteSpec, types: Map<string, TypeSpec>): boolean {
+  if (!route.requestType) return false;
+  const fields = types.get(route.requestType)?.fields ?? [];
+  return !fields.some((f) => f.source === FieldSource.PATH);
+}
+
+function routeDecoratorFor(method: string): string {
+  const upper = method.toUpperCase();
+  return upper.charAt(0) + upper.slice(1).toLowerCase();
+}
+
+function renderServiceMethod(route: RouteSpec, warnings: string[]): string {
+  void warnings;
+  const ret = route.responseType ?? 'void';
+  const arg = route.requestType ? `${camelCase(route.requestType)}: ${route.requestType}` : '';
+  const lines: string[] = [];
+  if (route.comment) lines.push(`  /** ${route.comment} */`);
+  lines.push(
+    `  async ${camelCase(route.handler)}(${arg}): Promise<${ret}> {\n` +
+      `    throw new Error('not implemented: ${route.handler}');\n` +
