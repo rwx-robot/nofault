@@ -62,3 +62,14 @@ describe('validateSpec', () => {
 
   it('flags unknown HTTP methods', () => {
     const diags = validateSpec(spec([service({ routes: [{ handler: 'a', method: 'FETCH', path: '/x' }] })]));
+    expect(diags.some((d) => d.message.includes('unknown HTTP method'))).toBe(true);
+  });
+
+  it('flags duplicate type names and fields', () => {
+    const diags = validateSpec(spec([service()], [type('A'), type('A')]));
+    expect(diags.some((d) => d.message.includes('duplicate type name'))).toBe(true);
+  });
+
+  it('warns but does not fail on a service without routes', () => {
+    const diags = validateSpec(spec([service({ routes: [] })]));
+    const w = diags.find((d) => d.message.includes('no routes'))!;
