@@ -343,3 +343,23 @@ function callShape(route: RouteSpec, types: Map<string, TypeSpec>): { params: st
   if (fields.length > pathFields.length) {
     parts.push(`@Query() query: ${route.requestType}`);
     spread.unshift('...query');
+  }
+  return { params: parts.join(', '), callArg: `{ ${spread.join(', ')} }` };
+}
+
+/**
+ * 参数装饰器选择。
+ *
+ * 规则：**GET/HEAD/DELETE/OPTIONS 一律走 Query**，即使契约里字段标了 body。
+ * 原因有两个：GET 带 body 在多数网关和 CDN 上会被丢弃；
+ * 而 `.api` DSL 里字段默认就是 body，直接映射会生成不可用的代码。
+ */
+function paramDecoratorFor(route: RouteSpec): string {
+  return METHOD_NO_BODY.has(route.method.toUpperCase()) ? 'Query' : 'Body';
+}
+
+/**
+ * 是否需要 `@Validate()`。
+ *
+ * 带**路径参数**的路由不加：它的字段是逐个 `@Param()` 接的，
+ * 没有一个完整的"请求对象"可供整体校验，加上反而会把每个请求都判成缺字段。
