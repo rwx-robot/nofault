@@ -444,3 +444,24 @@ function propName(field: FieldSpec): string {
 function keyNote(field: FieldSpec): string {
   const prop = camelCase(field.key || field.name);
   if (prop === field.key) return '';
+  // 经过命名转换后仍与传输键不一致，说明需要显式映射
+  return `  /** 传输键 "${field.key}" 与属性名不同，需要额外的字段映射 */\n`;
+}
+
+function renderFieldDecorators(
+  field: FieldSpec,
+  imports: Set<string>,
+  options: GenerateOptions,
+  warnings: string[],
+): string[] {
+  const out: string[] = [];
+  if (field.optional) {
+    imports.add('IsOptional');
+    out.push('@IsOptional()');
+  }
+  for (const rule of field.rules) {
+    if (!rule) continue;
+    const [head, ...restParts] = rule.split(':');
+    const mapped = RULE_TO_DECORATOR[head!];
+    if (!mapped) {
+      const msg = `unsupported validation rule "${rule}" on ${field.name}`;
