@@ -94,3 +94,14 @@ describe('validateSpec', () => {
     } catch (err) {
       expect(err).toBeInstanceOf(SpecValidationError);
       expect((err as SpecValidationError).diagnostics.length).toBeGreaterThanOrEqual(2);
+    }
+  });
+});
+
+describe('generate', () => {
+  const spec_ = spec(
+    [
+      service({
+        prefix: '/v1',
+        jwt: 'Auth',
+        middleware: ['Log'],
