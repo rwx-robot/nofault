@@ -485,3 +485,23 @@ function renderFieldDecorators(
   }
   return out;
 }
+
+/**
+ * 规则参数必须是一个字面量数字。
+ *
+ * 这是我们**唯一**一处把字符串塞进生成代码的地方，
+ * 所以白名单要卡死——否则契约里写 `@MinLength(process.exit)` 就会被原样生成进源码。
+ */
+function validateLiteralArg(rest: string): string {
+  if (rest === '') return '';
+  if (!/^-?\d+(\.\d+)?$/.test(rest)) {
+    throw new Error(`validation rule argument must be a number, got "${rest}"`);
+  }
+  return rest;
+}
+
+// --------------------------------------------------------------------- 工具
+
+function isBuiltinType(name: string): boolean {
+  return ['string', 'number', 'boolean', 'Date', 'unknown', 'any', 'void'].includes(name);
+}
