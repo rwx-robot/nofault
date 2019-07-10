@@ -84,3 +84,13 @@ describe('validateSpec', () => {
         spec([
           service({
             routes: [
+              { handler: 'a', method: 'GET', path: 'x' },
+              { handler: 'b', method: 'GET', path: '/x', requestType: 'Missing' },
+            ],
+          }),
+        ]),
+      );
+      throw new Error('should have thrown');
+    } catch (err) {
+      expect(err).toBeInstanceOf(SpecValidationError);
+      expect((err as SpecValidationError).diagnostics.length).toBeGreaterThanOrEqual(2);
