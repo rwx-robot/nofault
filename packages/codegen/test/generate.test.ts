@@ -19,3 +19,13 @@ function service(partial: Partial<ServiceSpec> = {}): ServiceSpec {
 function spec(services: ServiceSpec[], types: TypeSpec[] = []): ApiSpec {
   return { name: 'demo', types, services };
 }
+
+describe('validateSpec', () => {
+  it('accepts a minimal valid spec', () => {
+    expect(validateSpec(spec([service()]))).toHaveLength(0);
+  });
+
+  it('flags an empty spec', () => {
+    const diags = validateSpec(spec([]));
+    expect(diags.some((d) => d.severity === 'error' && d.message.includes('no service'))).toBe(true);
+  });
