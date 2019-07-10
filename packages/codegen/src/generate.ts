@@ -465,3 +465,23 @@ function renderFieldDecorators(
     const mapped = RULE_TO_DECORATOR[head!];
     if (!mapped) {
       const msg = `unsupported validation rule "${rule}" on ${field.name}`;
+      if (options.unknownRule === 'throw') throw new Error(msg);
+      warnings.push(msg);
+      out.push(`// TODO ${msg}`);
+      continue;
+    }
+    const rest = validateLiteralArg(restParts.join(':'));
+    const decorator = mapped(rest);
+    if (!decorator) {
+      // 参数非法（例如 minLength 没给数字），交给 validator 报错，这里跳过
+      out.push(`// invalid rule: ${rule}`);
+      continue;
+    }
+    imports.add(decorator.name);
+    out.push(`@${decorator.name}(${decorator.args.length > 0 ? rest : ''})`);
+  }
+  if (field.source === FieldSource.HEADER) {
+    out.unshift('// 来源：HTTP header');
+  }
+  return out;
+}
