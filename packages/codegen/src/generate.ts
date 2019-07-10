@@ -303,3 +303,23 @@ function renderRoute(route: RouteSpec, types: Map<string, TypeSpec>): string {
   lines.push(
     // 统一 async + Promise<…>：无响应时也必须写成 Promise<void>，
     // 否则 `return this.service.x()`（返回 Promise<void>）在 `: void` 签名下编译不过
+    `  async ${camelCase(route.handler)}(${params}): Promise<${route.responseType ?? 'void'}> {\n` +
+      `    return this.service.${camelCase(route.handler)}(${callArg});\n` +
+      `  }\n`,
+  );
+  return `${lines.join('\n')}\n`;
+}
+
+/**
+ * 决定 handler 的参数形态。
+ *
+ * 两种情形：
+ * - 普通路由：整个请求体/查询串绑定到一个 DTO
+ * - **带路径参数**的路由：`@Path` 字段必须用 `@Param()` 逐个接，
+ *   剩下的字段仍绑到一个对象，最后在调用处展开合并。
+ *   若不区分，`:id` 会跑去 query 里找，永远取不到值。
+ */
+function callShape(route: RouteSpec, types: Map<string, TypeSpec>): { params: string; callArg: string } {
+  if (!route.requestType) return { params: '', callArg: '' };
+
+  const fields = types.get(route.requestType)?.fields ?? [];
