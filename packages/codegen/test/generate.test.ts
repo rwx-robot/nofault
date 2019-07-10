@@ -51,3 +51,14 @@ describe('validateSpec', () => {
     const diags = validateSpec(spec([service({ routes: [{ handler: 'a', method: 'POST', path: '/x', requestType: 'Nope' }] })]));
     expect(diags.some((d) => d.message.includes('unknown request type'))).toBe(true);
   });
+
+  it('flags paths and prefixes without a leading slash', () => {
+    const relative = validateSpec(spec([service({ routes: [{ handler: 'a', method: 'GET', path: 'x' }] })]));
+    expect(relative.some((d) => d.message.includes('must start with'))).toBe(true);
+
+    const badPrefix = validateSpec(spec([service({ prefix: 'v1' })]));
+    expect(badPrefix.some((d) => d.message.includes('must start with'))).toBe(true);
+  });
+
+  it('flags unknown HTTP methods', () => {
+    const diags = validateSpec(spec([service({ routes: [{ handler: 'a', method: 'FETCH', path: '/x' }] })]));
