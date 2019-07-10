@@ -323,3 +323,23 @@ function callShape(route: RouteSpec, types: Map<string, TypeSpec>): { params: st
   if (!route.requestType) return { params: '', callArg: '' };
 
   const fields = types.get(route.requestType)?.fields ?? [];
+  const pathFields = fields.filter((f) => f.source === FieldSource.PATH);
+
+  if (pathFields.length === 0) {
+    const varName = camelCase(route.requestType);
+    return {
+      params: `@${paramDecoratorFor(route)}() ${varName}: ${route.requestType}`,
+      callArg: varName,
+    };
+  }
+
+  const parts: string[] = [];
+  const spread: string[] = [];
+  for (const f of pathFields) {
+    const prop = camelCase(f.key || f.name);
+    parts.push(`@Param('${f.key || f.name}') ${prop}: ${f.type}`);
+    spread.push(prop);
+  }
+  if (fields.length > pathFields.length) {
+    parts.push(`@Query() query: ${route.requestType}`);
+    spread.unshift('...query');
