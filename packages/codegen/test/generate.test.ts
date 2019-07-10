@@ -73,3 +73,14 @@ describe('validateSpec', () => {
   it('warns but does not fail on a service without routes', () => {
     const diags = validateSpec(spec([service({ routes: [] })]));
     const w = diags.find((d) => d.message.includes('no routes'))!;
+    expect(w.severity).toBe('warning');
+    expect(() => assertValidSpec(spec([service({ routes: [] })]))).not.toThrow();
+  });
+
+  it('throws a SpecValidationError listing every error at once', () => {
+    // 一次报完所有问题，而不是修一个再报下一个 —— 契约文件通常一次错好几处
+    try {
+      assertValidSpec(
+        spec([
+          service({
+            routes: [
