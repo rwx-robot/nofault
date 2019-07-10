@@ -29,3 +29,15 @@ describe('validateSpec', () => {
     const diags = validateSpec(spec([]));
     expect(diags.some((d) => d.severity === 'error' && d.message.includes('no service'))).toBe(true);
   });
+
+  it('flags duplicate routes with the conflicting handler named', () => {
+    const diags = validateSpec(
+      spec([
+        service({
+          routes: [
+            { handler: 'a', method: 'GET', path: '/x' },
+            { handler: 'b', method: 'GET', path: '/x' },
+          ],
+        }),
+      ]),
+    );
