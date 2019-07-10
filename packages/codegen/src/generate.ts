@@ -384,3 +384,23 @@ function renderServiceMethod(route: RouteSpec, warnings: string[]): string {
   lines.push(
     `  async ${camelCase(route.handler)}(${arg}): Promise<${ret}> {\n` +
       `    throw new Error('not implemented: ${route.handler}');\n` +
+      `  }\n`,
+  );
+  return `${lines.join('\n')}\n`;
+}
+
+function renderDto(
+  type: TypeSpec,
+  typeNames: Set<string>,
+  template: string,
+  header: string,
+  options: GenerateOptions,
+  warnings: string[],
+): string {
+  const validatorImports = new Set<string>();
+  const crossImports = new Set<string>();
+
+  const fields = type.fields.map((field) => {
+    const decorators = renderFieldDecorators(field, validatorImports, options, warnings);
+    if (!isBuiltinType(baseTypeOf(field.type)) && typeNames.has(baseTypeOf(field.type))) {
+      const name = baseTypeOf(field.type);
