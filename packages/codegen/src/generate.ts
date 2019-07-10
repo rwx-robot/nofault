@@ -424,3 +424,23 @@ function renderDto(
     header,
     imports: imports.join('\n'),
     comment: type.comment,
+    className: pascalCase(type.name),
+    fields,
+  });
+}
+
+/**
+ * 属性名取**传输键**（json tag / 装饰器里指定的 key），而不是源字段名。
+ *
+ * 为什么：DTO 既要绑定请求体，又要跑校验，两者都看属性名。
+ * 若照抄 Go 的字段名（`Name`），而线上真正传的是 `name`，
+ * 生成物能编译、能启动，但**永远校验失败**——这类错误最难发现。
+ * 传输格式才是契约，源字段名只是书写习惯。
+ */
+function propName(field: FieldSpec): string {
+  return camelCase(field.key || field.name) + '!';
+}
+
+function keyNote(field: FieldSpec): string {
+  const prop = camelCase(field.key || field.name);
+  if (prop === field.key) return '';
