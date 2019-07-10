@@ -505,3 +505,22 @@ function validateLiteralArg(rest: string): string {
 function isBuiltinType(name: string): boolean {
   return ['string', 'number', 'boolean', 'Date', 'unknown', 'any', 'void'].includes(name);
 }
+
+function baseTypeOf(typeText: string): string {
+  return typeText.replace(/\[\]$/, '').trim();
+}
+
+function normalizePath(path: string): string {
+  const cleaned = path.replace(/\/+/g, '/').replace(/\/$/, '');
+  return cleaned.startsWith('/') ? cleaned : `/${cleaned}`;
+}
+
+function loadTemplates(dir?: string): Record<string, string> {
+  if (!dir) return DEFAULT_TEMPLATES;
+  const out = { ...DEFAULT_TEMPLATES };
+  for (const name of Object.keys(DEFAULT_TEMPLATES)) {
+    const file = join(dir, `${name}.tpl`);
+    if (existsSync(file)) out[name] = readFileSync(file, 'utf8');
+  }
+  return out;
+}
