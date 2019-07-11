@@ -105,3 +105,14 @@ describe('generate', () => {
         prefix: '/v1',
         jwt: 'Auth',
         middleware: ['Log'],
+        routes: [
+          { handler: 'ping', method: 'GET', path: '/ping', responseType: 'PingResp' },
+          { handler: 'login', method: 'POST', path: '/login', requestType: 'LoginReq', responseType: 'LoginResp' },
+        ],
+      }),
+    ],
+    [
+      { name: 'PingResp', fields: [{ name: 'msg', key: 'msg', type: 'string', source: FieldSource.BODY, optional: false, rules: ['isString'] }] },
+      {
+        name: 'LoginReq',
+        fields: [
