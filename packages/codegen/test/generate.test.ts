@@ -233,3 +233,13 @@ describe('path parameters', () => {
   const pathService = service({
     routes: [
       { handler: 'getUser', method: 'GET', path: '/users/:id', requestType: 'GetUserReq', responseType: 'User' },
+    ],
+  });
+
+  const pathSpec = spec(
+    [pathService],
+    [
+      { name: 'GetUserReq', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.PATH, optional: false, rules: ['isInt'] }] },
+      { name: 'User', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.BODY, optional: false, rules: [] }] },
+    ],
+  );
