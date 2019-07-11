@@ -190,3 +190,14 @@ describe('generate', () => {
       spec([service()], [
         { name: 'A', fields: [{ name: 'x', key: 'x', type: 'string', source: FieldSource.BODY, optional: false, rules: ['isAlien'] }] },
       ]),
+    );
+    expect(warnings).toHaveLength(1);
+    expect(warnings[0]).toContain('isAlien');
+    expect(files.find((f) => f.path === 'dto/a.dto.ts')!.content).toContain('// TODO');
+  });
+
+  it('refuses to inject non-numeric rule arguments into generated code', () => {
+    // 契约文本会被塞进生成器输入，这是唯一的注入面，必须挡住
+    expect(() =>
+      generate(
+        spec([service()], [
