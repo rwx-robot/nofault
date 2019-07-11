@@ -137,3 +137,14 @@ describe('generate', () => {
       'user/user.service.ts',
     ]);
   });
+
+  it('renders dto fields with validation decorators and imports', () => {
+    const { files } = generate(spec_);
+    const dto = files.find((f) => f.path === 'dto/login-req.dto.ts')!.content;
+    expect(dto).toContain("import { IsOptional, IsString, MinLength } from '@nofault/rest';");
+    expect(dto).toContain('@IsString()');
+    expect(dto).toContain('@MinLength(3)');
+    expect(dto).toContain('username!: string;');
+    // 可选字段用 IsOptional 表达，而不是 `?:` —— 见 generate.ts propName 的注释
+    expect(dto).toContain('@IsOptional()');
+    expect(dto).not.toContain('remember?:');
