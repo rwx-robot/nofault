@@ -126,3 +126,14 @@ describe('generate', () => {
   );
 
   it('emits one file per dto, plus controller / service / module', () => {
+    const { files } = generate(spec_);
+    const paths = files.map((f) => f.path).sort();
+    expect(paths).toEqual([
+      'dto/login-req.dto.ts',
+      'dto/login-resp.dto.ts',
+      'dto/ping-resp.dto.ts',
+      'user/user.controller.ts',
+      'user/user.module.ts',
+      'user/user.service.ts',
+    ]);
+  });
