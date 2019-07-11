@@ -169,3 +169,14 @@ describe('generate', () => {
     expect(svc).toContain('@Injectable()');
     expect(svc).toContain('async ping(): Promise<PingResp>');
     expect(svc).toContain("throw new Error('not implemented: ping');");
+  });
+
+  it('wires the module', () => {
+    const { files } = generate(spec_);
+    const mod = files.find((f) => f.path === 'user/user.module.ts')!.content;
+    expect(mod).toContain('controllers: [UserController]');
+    expect(mod).toContain('providers: [UserService]');
+  });
+
+  it('generates an app module on request and de-duplicates modules', () => {
+    const { files } = generate(spec_, { rootModule: true });
