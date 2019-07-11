@@ -158,3 +158,14 @@ describe('generate', () => {
     expect(ctrl).toContain('ping(): Promise<PingResp>');
     expect(ctrl).toContain('@Post(\'/login\')');
     // GET 也必须校验（走 query），否则分页参数是裸字符串、没有下界检查
+    expect(ctrl).toContain('@Validate(LoginReq)');
+    expect(ctrl).toContain('login(@Body() loginReq: LoginReq)');
+    expect(ctrl).toContain('return this.service.login(loginReq);');
+  });
+
+  it('generates service methods that throw until implemented', () => {
+    const { files } = generate(spec_);
+    const svc = files.find((f) => f.path === 'user/user.service.ts')!.content;
+    expect(svc).toContain('@Injectable()');
+    expect(svc).toContain('async ping(): Promise<PingResp>');
+    expect(svc).toContain("throw new Error('not implemented: ping');");
