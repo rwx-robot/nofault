@@ -116,3 +116,13 @@ describe('generate', () => {
       {
         name: 'LoginReq',
         fields: [
+          { name: 'username', key: 'username', type: 'string', source: FieldSource.BODY, optional: false, rules: ['isString', 'minLength:3'] },
+          { name: 'password', key: 'password', type: 'string', source: FieldSource.BODY, optional: false, rules: ['isString'] },
+          { name: 'remember', key: 'remember', type: 'boolean', source: FieldSource.BODY, optional: true, rules: [] },
+        ],
+      },
+      { name: 'LoginResp', fields: [{ name: 'token', key: 'token', type: 'string', source: FieldSource.BODY, optional: false, rules: [] }] },
+    ],
+  );
+
+  it('emits one file per dto, plus controller / service / module', () => {
