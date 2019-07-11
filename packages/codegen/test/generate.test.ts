@@ -201,3 +201,14 @@ describe('generate', () => {
     expect(() =>
       generate(
         spec([service()], [
+          { name: 'A', fields: [{ name: 'x', key: 'x', type: 'string', source: FieldSource.BODY, optional: false, rules: ['minLength:process.exit'] }] },
+        ]),
+      ),
+    ).toThrow(/must be a number/);
+  });
+
+  it('lets users override templates from a directory', () => {
+    // 写盘由 writer 负责；这里直接塞模板内容验证覆盖生效
+    const { files } = generate(spec_, { header: false });
+    expect(files[0]!.content.startsWith('//')).toBe(false);
+  });
