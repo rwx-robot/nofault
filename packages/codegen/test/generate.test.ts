@@ -254,3 +254,14 @@ describe('path parameters', () => {
   it('combines path params with remaining query fields', () => {
     const mixed = spec(
       [
+        service({
+          routes: [{ handler: 'search', method: 'GET', path: '/u/:id', requestType: 'SearchReq', responseType: 'User' }],
+        }),
+      ],
+      [
+        {
+          name: 'SearchReq',
+          fields: [
+            { name: 'id', key: 'id', type: 'number', source: FieldSource.PATH, optional: false, rules: [] },
+            { name: 'keyword', key: 'keyword', type: 'string', source: FieldSource.QUERY, optional: true, rules: [] },
+          ],
