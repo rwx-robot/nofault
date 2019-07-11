@@ -148,3 +148,13 @@ describe('generate', () => {
     // 可选字段用 IsOptional 表达，而不是 `?:` —— 见 generate.ts propName 的注释
     expect(dto).toContain('@IsOptional()');
     expect(dto).not.toContain('remember?:');
+  });
+
+  it('routes every method to the service and keeps GET on Query', () => {
+    const { files } = generate(spec_);
+    const ctrl = files.find((f) => f.path === 'user/user.controller.ts')!.content;
+    expect(ctrl).toContain("@Controller({ path: '/v1/user', middleware: ['Log'] })");
+    expect(ctrl).toContain("@Get('/ping')");
+    expect(ctrl).toContain('ping(): Promise<PingResp>');
+    expect(ctrl).toContain('@Post(\'/login\')');
+    // GET 也必须校验（走 query），否则分页参数是裸字符串、没有下界检查
