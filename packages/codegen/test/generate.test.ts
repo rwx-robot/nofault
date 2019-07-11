@@ -180,3 +180,13 @@ describe('generate', () => {
 
   it('generates an app module on request and de-duplicates modules', () => {
     const { files } = generate(spec_, { rootModule: true });
+    const app = files.find((f) => f.kind === 'app-module')!.content;
+    expect(app).toContain('imports: [UserModule]');
+    expect(app).toContain("from './user/user.module'");
+  });
+
+  it('warns about unsupported validation rules instead of emitting broken code', () => {
+    const { files, warnings } = generate(
+      spec([service()], [
+        { name: 'A', fields: [{ name: 'x', key: 'x', type: 'string', source: FieldSource.BODY, optional: false, rules: ['isAlien'] }] },
+      ]),
