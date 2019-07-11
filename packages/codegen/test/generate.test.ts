@@ -212,3 +212,13 @@ describe('generate', () => {
     const { files } = generate(spec_, { header: false });
     expect(files[0]!.content.startsWith('//')).toBe(false);
   });
+
+  it('normalizes duplicated slashes in controller paths', () => {
+    const { files } = generate(spec([service({ prefix: '/v1/', group: 'user' })]));
+    expect(files.find((f) => f.kind === 'controller')!.content).toContain("path: '/v1/user'");
+  });
+
+  it('cross-imports dto types referenced by other dtos', () => {
+    const { files } = generate(
+      spec([service()], [
+        { name: 'Item', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.BODY, optional: false, rules: [] }] },
