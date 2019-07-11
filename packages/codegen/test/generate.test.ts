@@ -222,3 +222,14 @@ describe('generate', () => {
     const { files } = generate(
       spec([service()], [
         { name: 'Item', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.BODY, optional: false, rules: [] }] },
+        { name: 'Page', fields: [{ name: 'items', key: 'items', type: 'Item[]', source: FieldSource.BODY, optional: false, rules: [] }] },
+      ]),
+    );
+    expect(files.find((f) => f.path === 'dto/page.dto.ts')!.content).toContain("import { Item } from './item.dto';");
+  });
+});
+
+describe('path parameters', () => {
+  const pathService = service({
+    routes: [
+      { handler: 'getUser', method: 'GET', path: '/users/:id', requestType: 'GetUserReq', responseType: 'User' },
