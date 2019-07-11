@@ -265,3 +265,12 @@ describe('path parameters', () => {
             { name: 'id', key: 'id', type: 'number', source: FieldSource.PATH, optional: false, rules: [] },
             { name: 'keyword', key: 'keyword', type: 'string', source: FieldSource.QUERY, optional: true, rules: [] },
           ],
+        },
+        { name: 'User', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.BODY, optional: false, rules: [] }] },
+      ],
+    );
+    const ctrl = generate(mixed).files.find((f) => f.kind === 'controller')!.content;
+    expect(ctrl).toContain("async search(@Param('id') id: number, @Query() query: SearchReq)");
+    expect(ctrl).toContain('return this.service.search({ ...query, id });');
+  });
+});
