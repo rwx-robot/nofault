@@ -243,3 +243,14 @@ describe('path parameters', () => {
       { name: 'User', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.BODY, optional: false, rules: [] }] },
     ],
   );
+
+  it('binds @Path fields with @Param and spreads them into the call', () => {
+    const ctrl = generate(pathSpec).files.find((f) => f.kind === 'controller')!.content;
+    expect(ctrl).toContain("import { Controller, Get, Param } from '@nofault/rest';");
+    expect(ctrl).toContain("async getUser(@Param('id') id: number): Promise<User>");
+    expect(ctrl).toContain('return this.service.getUser({ id });');
+  });
+
+  it('combines path params with remaining query fields', () => {
+    const mixed = spec(
+      [
