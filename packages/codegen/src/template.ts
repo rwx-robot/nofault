@@ -79,3 +79,16 @@ class TemplateRenderer {
     }
 
     if (tag.startsWith('#if ')) {
+      const cond = lookup(ctx, tag.slice('#if '.length).trim());
+      const { body, elseBody } = this.readBodyWithElse('if');
+      return truthy(cond) ? renderTemplate(body, ctx) : renderTemplate(elseBody, ctx);
+    }
+
+    if (tag.startsWith('#unless ')) {
+      const cond = lookup(ctx, tag.slice('#unless '.length).trim());
+      const body = this.readBodyWithElse('unless').body;
+      return truthy(cond) ? '' : renderTemplate(body, ctx);
+    }
+
+    return null;
+  }
