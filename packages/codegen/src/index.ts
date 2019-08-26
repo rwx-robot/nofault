@@ -18,3 +18,6 @@ export type { Diagnostic, DiagnosticSeverity } from './validate';
 
 export { writeFiles } from './writer';
 export type { WriteOptions, WritePolicy, WriteResult } from './writer';
+
+export { renderTemplate, lookup, TemplateError } from './template';
+export type { TemplateContext } from './template';
