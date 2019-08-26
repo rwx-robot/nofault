@@ -17,3 +17,4 @@ export type { Diagnostic, DiagnosticSeverity } from './validate';
 // [history] omitted at this version (not yet introduced): export type { OpenApiDocument, OpenApiInfo, OpenApiOperation, OpenApiOptions, OpenApiParameter, OpenApiSchema, } from './openapi';
 
 export { writeFiles } from './writer';
+export type { WriteOptions, WritePolicy, WriteResult } from './writer';
