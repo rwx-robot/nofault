@@ -8,3 +8,5 @@ export { generate } from './generate';
 export type { GeneratedFile, GeneratedKind, GenerateOptions, GenerateResult, TemplateOverrides } from './generate';
 
 export { validateSpec, assertValidSpec, SpecValidationError } from './validate';
+export type { Diagnostic, DiagnosticSeverity } from './validate';
+// [history] omitted at this version (not yet introduced): export { generateDataLayer } from './data-generator';
