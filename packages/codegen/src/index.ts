@@ -11,3 +11,5 @@ export { validateSpec, assertValidSpec, SpecValidationError } from './validate';
 export type { Diagnostic, DiagnosticSeverity } from './validate';
 // [history] omitted at this version (not yet introduced): export { generateDataLayer } from './data-generator';
 // [history] omitted at this version (not yet introduced): export type { DataLayerOptions } from './data-generator';
+// [history] omitted at this version (not yet introduced): export { watchFile, debounce } from './watch';
+// [history] omitted at this version (not yet introduced): export type { WatchOptions, WatchHandle } from './watch';
