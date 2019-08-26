@@ -52,3 +52,16 @@ class TemplateRenderer {
       const end = this.src.indexOf(CLOSE, this.pos);
       if (end < 0) throw new TemplateError('Unclosed template tag');
       const inner = this.src.slice(this.pos, end).trim();
+      this.pos = end + CLOSE.length;
+
+      // 消费块要到收尾标签（会把 body 传出来），否则是普通插值
+      const block = this.tryBlock(inner, this.ctx);
+      if (block !== null) {
+        out += block;
+        continue;
+      }
+      const value = lookup(this.ctx, inner);
+      out += stringify(value);
+    }
+    return out;
+  }
