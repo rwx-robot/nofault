@@ -65,3 +65,17 @@ class TemplateRenderer {
     }
     return out;
   }
+
+  /** 识别并消费一个块标签，返回渲染结果；不是块则返回 null */
+  private tryBlock(tag: string, ctx: TemplateContext): string | null {
+    if (tag.startsWith('#each ')) {
+      const list = lookup(ctx, tag.slice('#each '.length).trim());
+      const body = this.readBodyWithElse('each').body;
+      if (!Array.isArray(list)) {
+        if (list === undefined || list === null || list === false) return '';
+        throw new TemplateError(`#each expects an array, got ${typeof list}`);
+      }
+      return list.map((item) => renderTemplate(body, { ...ctx, ...asObject(item), this: item })).join('');
+    }
+
+    if (tag.startsWith('#if ')) {
