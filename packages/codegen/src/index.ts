@@ -21,3 +21,5 @@ export type { WriteOptions, WritePolicy, WriteResult } from './writer';
 
 export { renderTemplate, lookup, TemplateError } from './template';
 export type { TemplateContext } from './template';
+
+export { DEFAULT_TEMPLATES, TEMPLATE_NAMES } from './default-templates';
