@@ -6,3 +6,5 @@
  */
 export { generate } from './generate';
 export type { GeneratedFile, GeneratedKind, GenerateOptions, GenerateResult, TemplateOverrides } from './generate';
+
+export { validateSpec, assertValidSpec, SpecValidationError } from './validate';
