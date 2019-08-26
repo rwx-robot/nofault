@@ -15,3 +15,5 @@ export type { Diagnostic, DiagnosticSeverity } from './validate';
 // [history] omitted at this version (not yet introduced): export type { WatchOptions, WatchHandle } from './watch';
 // [history] omitted at this version (not yet introduced): export { openApiDocument } from './openapi';
 // [history] omitted at this version (not yet introduced): export type { OpenApiDocument, OpenApiInfo, OpenApiOperation, OpenApiOptions, OpenApiParameter, OpenApiSchema, } from './openapi';
+
+export { writeFiles } from './writer';
