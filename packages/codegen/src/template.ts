@@ -25,3 +25,17 @@ export class TemplateError extends Error {
 
 const OPEN = '{{';
 const CLOSE = '}}';
+
+export function renderTemplate(source: string, context: TemplateContext): string {
+  return new TemplateRenderer(source, context).render();
+}
+
+class TemplateRenderer {
+  private pos = 0;
+
+  constructor(
+    private readonly src: string,
+    private readonly ctx: TemplateContext,
+  ) {}
+
+  render(): string {
