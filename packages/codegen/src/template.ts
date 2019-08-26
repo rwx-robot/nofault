@@ -39,3 +39,16 @@ class TemplateRenderer {
   ) {}
 
   render(): string {
+    let out = '';
+    while (this.pos < this.src.length) {
+      const next = this.src.indexOf(OPEN, this.pos);
+      if (next < 0) {
+        out += this.src.slice(this.pos);
+        break;
+      }
+      out += this.src.slice(this.pos, next);
+      this.pos = next + OPEN.length;
+
+      const end = this.src.indexOf(CLOSE, this.pos);
+      if (end < 0) throw new TemplateError('Unclosed template tag');
+      const inner = this.src.slice(this.pos, end).trim();
