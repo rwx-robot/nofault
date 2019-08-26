@@ -12,3 +12,16 @@
  *
  * **为什么不用 TS 模板字符串直接拼**：那样模板就不能被使用者覆盖了。
  * 生成器内置一套默认模板（`templates/*.tpl`），用户放一份同名文件即可整体替换。
+ */
+
+export type TemplateContext = Record<string, unknown>;
+
+export class TemplateError extends Error {
+  constructor(message: string) {
+    super(message);
+    this.name = 'TemplateError';
+  }
+}
+
+const OPEN = '{{';
+const CLOSE = '}}';
