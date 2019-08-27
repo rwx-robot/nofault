@@ -40,3 +40,8 @@ export function writeFiles(files: GeneratedFile[], options: WriteOptions): Write
   const result: WriteResult = { written: [], skipped: [], changed: [] };
 
   for (const file of files) {
+    const abs = join(options.outDir, file.path);
+
+    if (existsSync(abs)) {
+      const existing = readFileSync(abs, 'utf8');
+      const ours = existing.includes(marker);
