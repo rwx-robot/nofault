@@ -119,3 +119,16 @@ class TemplateRenderer {
 
       // 自己的收尾标签：不写进 body，直接返回
       if (inner === `/${name}` || inner.startsWith(`/${name} `)) {
+        depth--;
+        if (depth === 0) {
+          this.pos = end + CLOSE.length;
+          return { body, elseBody };
+        }
+      }
+
+      const chunk = this.src.slice(next, end + CLOSE.length);
+      this.pos = end + CLOSE.length;
+
+      // `else` 只在最外层块生效；更深层的 else 属于内层块，原样保留
+      if (inner === 'else' && depth === 1) {
+        inElse = true;
