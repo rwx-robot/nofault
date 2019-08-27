@@ -172,3 +172,15 @@ function stringify(value: unknown): string {
 /** 支持 `a.b.0.c` 形式的取值；找不到返回 undefined 而不是抛错（模板里缺字段很常见） */
 export function lookup(ctx: TemplateContext, path: string): unknown {
   let current: unknown = ctx;
+  for (const part of path.split('.')) {
+    if (current === undefined || current === null) return undefined;
+    if (Array.isArray(current)) {
+      const idx = Number(part);
+      current = Number.isInteger(idx) ? current[idx] : undefined;
+      continue;
+    }
+    if (typeof current !== 'object') return undefined;
+    current = (current as TemplateContext)[part];
+  }
+  return current;
+}
