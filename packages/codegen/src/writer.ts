@@ -50,3 +50,9 @@ export function writeFiles(files: GeneratedFile[], options: WriteOptions): Write
       if (identical) {
         // 内容一致就不算"变更"，避免 diff 里出现一堆假信息
         result.skipped.push(file.path);
+        continue;
+      }
+      const allowed = policy === 'overwrite' || (policy === 'generated' && ours);
+      if (!allowed) {
+        result.skipped.push(file.path);
+        continue;
