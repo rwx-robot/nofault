@@ -105,3 +105,17 @@ class TemplateRenderer {
     let elseBody = '';
     let inElse = false;
     let depth = 1;
+
+    while (this.pos < this.src.length) {
+      const next = this.src.indexOf(OPEN, this.pos);
+      if (next < 0) throw new TemplateError(`Unclosed block "{{#${name}}}"`);
+      const end = this.src.indexOf(CLOSE, next + OPEN.length);
+      if (end < 0) throw new TemplateError('Unclosed template tag');
+
+      const inner = this.src.slice(next + OPEN.length, end).trim();
+      const before = this.src.slice(this.pos, next);
+      if (inElse) elseBody += before;
+      else body += before;
+
+      // 自己的收尾标签：不写进 body，直接返回
+      if (inner === `/${name}` || inner.startsWith(`/${name} `)) {
