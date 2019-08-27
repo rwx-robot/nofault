@@ -56,3 +56,8 @@ export function writeFiles(files: GeneratedFile[], options: WriteOptions): Write
       if (!allowed) {
         result.skipped.push(file.path);
         continue;
+      }
+      result.changed.push(file.path);
+      if (!options.dryRun) write(abs, file.content);
+      result.written.push(file.path);
+      continue;
