@@ -14,3 +14,8 @@ import { dirname, join } from 'node:path';
 import type { GeneratedFile } from './generate';
 
 export type WritePolicy = 'generated' | 'skip' | 'overwrite';
+
+export interface WriteOptions {
+  /** 输出根目录 */
+  outDir: string;
+  /** 覆盖策略，默认 `generated` */
