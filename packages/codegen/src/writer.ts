@@ -24,3 +24,9 @@ export interface WriteOptions {
   dryRun?: boolean;
   /** 生成标记：判断"这个文件是不是我们生成的" */
   marker?: string;
+}
+
+export interface WriteResult {
+  written: string[];
+  skipped: string[];
+  /** 内容有变化的文件（即使没有真的写盘） */
