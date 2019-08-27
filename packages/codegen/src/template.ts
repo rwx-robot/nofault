@@ -132,3 +132,16 @@ class TemplateRenderer {
       // `else` 只在最外层块生效；更深层的 else 属于内层块，原样保留
       if (inner === 'else' && depth === 1) {
         inElse = true;
+        continue;
+      }
+      if (inner.startsWith('#')) {
+        depth++;
+        if (inElse) elseBody += chunk;
+        else body += chunk;
+        continue;
+      }
+      if (inner.startsWith('/')) {
+        if (inElse) elseBody += chunk;
+        else body += chunk;
+        continue;
+      }
