@@ -66,3 +66,7 @@ export function writeFiles(files: GeneratedFile[], options: WriteOptions): Write
     result.changed.push(file.path);
     result.written.push(file.path);
     if (!options.dryRun) write(abs, file.content);
+  }
+
+  return result;
+}
