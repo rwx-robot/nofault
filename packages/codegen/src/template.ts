@@ -159,3 +159,16 @@ function asObject(item: unknown): TemplateContext {
 
 function truthy(value: unknown): boolean {
   if (Array.isArray(value)) return value.length > 0;
+  return Boolean(value);
+}
+
+function stringify(value: unknown): string {
+  if (value === undefined || value === null) return '';
+  if (typeof value === 'string') return value;
+  if (typeof value === 'number' || typeof value === 'boolean') return String(value);
+  return JSON.stringify(value);
+}
+
+/** 支持 `a.b.0.c` 形式的取值；找不到返回 undefined 而不是抛错（模板里缺字段很常见） */
+export function lookup(ctx: TemplateContext, path: string): unknown {
+  let current: unknown = ctx;
