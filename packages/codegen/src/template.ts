@@ -145,3 +145,17 @@ class TemplateRenderer {
         else body += chunk;
         continue;
       }
+      if (inElse) elseBody += chunk;
+      else body += chunk;
+    }
+
+    throw new TemplateError(`Unclosed block "{{#${name}}}"`);
+  }
+}
+
+function asObject(item: unknown): TemplateContext {
+  return typeof item === 'object' && item !== null ? (item as TemplateContext) : {};
+}
+
+function truthy(value: unknown): boolean {
+  if (Array.isArray(value)) return value.length > 0;
