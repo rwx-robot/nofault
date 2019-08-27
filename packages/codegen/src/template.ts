@@ -92,3 +92,16 @@ class TemplateRenderer {
 
     return null;
   }
+
+  /**
+   * 读到配对的 `{{/name}}`，返回块内容。
+   *
+   * 关键点是**嵌套块要原样保留**：body 里仍然带着 `{{#each inner}}` 这样的原文，
+   * 等外层 `renderTemplate(body, ctx)` 递归时再处理。若在此时就把内层标签吃掉，
+   * 嵌套列表永远拿不到正确的上下文。
+   */
+  private readBodyWithElse(name: string): { body: string; elseBody: string } {
+    let body = '';
+    let elseBody = '';
+    let inElse = false;
+    let depth = 1;
