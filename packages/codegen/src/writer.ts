@@ -45,3 +45,8 @@ export function writeFiles(files: GeneratedFile[], options: WriteOptions): Write
     if (existsSync(abs)) {
       const existing = readFileSync(abs, 'utf8');
       const ours = existing.includes(marker);
+      const identical = existing === file.content;
+
+      if (identical) {
+        // 内容一致就不算"变更"，避免 diff 里出现一堆假信息
+        result.skipped.push(file.path);
