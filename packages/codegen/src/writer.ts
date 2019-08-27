@@ -8,3 +8,9 @@
  * （首行是我们写进去的生成标记），用户手工改过的文件一律跳过。
  * 这是唯一的合理默认——代码生成器最恶劣的行为莫过于静默覆盖用户的代码。
  */
+
+import { mkdirSync, existsSync, writeFileSync, readFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
+import type { GeneratedFile } from './generate';
+
+export type WritePolicy = 'generated' | 'skip' | 'overwrite';
