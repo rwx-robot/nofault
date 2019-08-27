@@ -19,3 +19,8 @@ export interface WriteOptions {
   /** 输出根目录 */
   outDir: string;
   /** 覆盖策略，默认 `generated` */
+  policy?: WritePolicy;
+  /** 只报告打算做什么，不真的写盘 */
+  dryRun?: boolean;
+  /** 生成标记：判断"这个文件是不是我们生成的" */
+  marker?: string;
