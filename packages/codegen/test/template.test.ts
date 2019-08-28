@@ -49,3 +49,10 @@ describe('renderTemplate', () => {
     expect(renderTemplate(tpl, { items: [] })).toBe('none');
     expect(renderTemplate(tpl, {})).toBe('none');
   });
+
+  it('supports #unless', () => {
+    expect(renderTemplate('{{#unless done}}todo{{/unless}}', { done: false })).toBe('todo');
+    expect(renderTemplate('{{#unless done}}todo{{/unless}}', { done: true })).toBe('');
+  });
+
+  it('keeps surrounding text and newlines intact', () => {
