@@ -21,3 +21,9 @@ describe('writeFiles', () => {
     const r = writeFiles([file('a/b/c.ts', 'x')], { outDir: dir });
     expect(r.written).toEqual(['a/b/c.ts']);
     expect(readFileSync(join(dir, 'a/b/c.ts'), 'utf8')).toBe('x');
+  });
+
+  it('skips identical files and does not report them as changed', () => {
+    const dir = tmp();
+    writeFiles([file('a.ts', 'same')], { outDir: dir });
+    const r = writeFiles([file('a.ts', 'same')], { outDir: dir });
