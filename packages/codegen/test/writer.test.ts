@@ -27,3 +27,9 @@ describe('writeFiles', () => {
     const dir = tmp();
     writeFiles([file('a.ts', 'same')], { outDir: dir });
     const r = writeFiles([file('a.ts', 'same')], { outDir: dir });
+    expect(r.written).toHaveLength(0);
+    expect(r.changed).toHaveLength(0);
+    // 内容没变却出现在"变更列表"里，会让使用方以为要重新编译/重新提交
+  });
+
+  it('overwrites files it previously generated even without force', () => {
