@@ -16,3 +16,8 @@ function tmp(): string {
 }
 
 describe('writeFiles', () => {
+  it('creates missing files including nested directories', () => {
+    const dir = tmp();
+    const r = writeFiles([file('a/b/c.ts', 'x')], { outDir: dir });
+    expect(r.written).toEqual(['a/b/c.ts']);
+    expect(readFileSync(join(dir, 'a/b/c.ts'), 'utf8')).toBe('x');
