@@ -37,3 +37,9 @@ describe('renderTemplate', () => {
     });
     expect(out).toBe('12,3,');
   });
+
+  it('supports #if / else', () => {
+    const tpl = '{{#if ok}}yes{{else}}no{{/if}}';
+    expect(renderTemplate(tpl, { ok: true })).toBe('yes');
+    expect(renderTemplate(tpl, { ok: false })).toBe('no');
+  });
