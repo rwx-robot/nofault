@@ -10,3 +10,11 @@ describe('renderTemplate', () => {
     const ctx = { user: { profile: { age: 3 } } };
     expect(renderTemplate('{{ user.profile.age }}', ctx)).toBe('3');
   });
+
+  it('renders missing values as empty string instead of "undefined"', () => {
+    // 模板里缺字段非常常见；输出 "undefined" 会生成出语法正确但语义错误的代码
+    expect(renderTemplate('a{{ missing }}b', {})).toBe('ab');
+  });
+
+  it('loops with #each and exposes the item as `this`', () => {
+    const out = renderTemplate('{{#each items}}{{ this }};{{/each}}', { items: ['a', 'b'] });
