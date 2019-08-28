@@ -63,3 +63,9 @@ describe('renderTemplate', () => {
   it('throws a named error on unclosed blocks', () => {
     expect(() => renderTemplate('{{#each items}}oops', { items: [1] })).toThrow(TemplateError);
   });
+
+  it('throws when #each receives a non-array truthy value', () => {
+    expect(() => renderTemplate('{{#each x}}{{/each}}', { x: 'str' })).toThrow(TemplateError);
+  });
+
+  it('rejects non-numeric rule arguments before they reach generated source', () => {
