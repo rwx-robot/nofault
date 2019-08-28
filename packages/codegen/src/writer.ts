@@ -70,3 +70,8 @@ export function writeFiles(files: GeneratedFile[], options: WriteOptions): Write
 
   return result;
 }
+
+function write(abs: string, content: string): void {
+  mkdirSync(dirname(abs), { recursive: true });
+  writeFileSync(abs, content, 'utf8');
+}
