@@ -24,3 +24,9 @@ describe('renderTemplate', () => {
   it('loops over objects and exposes their keys directly', () => {
     const out = renderTemplate('{{#each rows}}{{ name }}={{ age }}|{{/each}}', {
       rows: [
+        { name: 'a', age: 1 },
+        { name: 'b', age: 2 },
+      ],
+    });
+    expect(out).toBe('a=1|b=2|');
+  });
