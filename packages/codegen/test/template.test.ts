@@ -76,3 +76,9 @@ describe('renderTemplate', () => {
 
 describe('lookup', () => {
   it('returns undefined for missing paths', () => {
+    expect(lookup({ a: 1 }, 'b.c')).toBeUndefined();
+  });
+
+  it('supports array indices', () => {
+    expect(lookup({ xs: [1, 2, 3] }, 'xs.1')).toBe(2);
+  });
