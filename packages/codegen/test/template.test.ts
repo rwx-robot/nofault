@@ -18,3 +18,9 @@ describe('renderTemplate', () => {
 
   it('loops with #each and exposes the item as `this`', () => {
     const out = renderTemplate('{{#each items}}{{ this }};{{/each}}', { items: ['a', 'b'] });
+    expect(out).toBe('a;b;');
+  });
+
+  it('loops over objects and exposes their keys directly', () => {
+    const out = renderTemplate('{{#each rows}}{{ name }}={{ age }}|{{/each}}', {
+      rows: [
