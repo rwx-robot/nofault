@@ -33,3 +33,8 @@ describe('writeFiles', () => {
   });
 
   it('overwrites files it previously generated even without force', () => {
+    const dir = tmp();
+    writeFileSync(join(dir, 'a.ts'), `// ${MARKER}\nold\n`);
+    const r = writeFiles([file('a.ts', `// ${MARKER}\nnew\n`)], { outDir: dir });
+    expect(r.written).toEqual(['a.ts']);
+    expect(readFileSync(join(dir, 'a.ts'), 'utf8')).toContain('new');
