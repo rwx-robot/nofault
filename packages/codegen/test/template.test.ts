@@ -30,3 +30,10 @@ describe('renderTemplate', () => {
     });
     expect(out).toBe('a=1|b=2|');
   });
+
+  it('handles nested #each without losing inner context', () => {
+    const out = renderTemplate('{{#each groups}}{{#each this.items}}{{ this }}{{/each}},{{/each}}', {
+      groups: [{ items: [1, 2] }, { items: [3] }],
+    });
+    expect(out).toBe('12,3,');
+  });
