@@ -56,3 +56,10 @@ describe('renderTemplate', () => {
   });
 
   it('keeps surrounding text and newlines intact', () => {
+    const out = renderTemplate('line1\n{{ value }}\nline3', { value: 'two' });
+    expect(out).toBe('line1\ntwo\nline3');
+  });
+
+  it('throws a named error on unclosed blocks', () => {
+    expect(() => renderTemplate('{{#each items}}oops', { items: [1] })).toThrow(TemplateError);
+  });
