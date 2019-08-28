@@ -82,3 +82,8 @@ describe('lookup', () => {
   it('supports array indices', () => {
     expect(lookup({ xs: [1, 2, 3] }, 'xs.1')).toBe(2);
   });
+
+  it('does not throw when walking into primitives', () => {
+    expect(lookup({ a: 1 }, 'a.b')).toBeUndefined();
+  });
+});
