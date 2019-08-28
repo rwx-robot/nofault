@@ -69,3 +69,10 @@ describe('renderTemplate', () => {
   });
 
   it('rejects non-numeric rule arguments before they reach generated source', () => {
+    // 见 generate.ts validateLiteralArg：这是唯一的注入面
+    expect(() => renderTemplate('{{ x }}', { x: 'process.exit' })).toBeTruthy();
+  });
+});
+
+describe('lookup', () => {
+  it('returns undefined for missing paths', () => {
