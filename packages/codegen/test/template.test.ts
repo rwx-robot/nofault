@@ -43,3 +43,9 @@ describe('renderTemplate', () => {
     expect(renderTemplate(tpl, { ok: true })).toBe('yes');
     expect(renderTemplate(tpl, { ok: false })).toBe('no');
   });
+
+  it('treats empty arrays and missing keys as falsy', () => {
+    const tpl = '{{#if items}}have{{else}}none{{/if}}';
+    expect(renderTemplate(tpl, { items: [] })).toBe('none');
+    expect(renderTemplate(tpl, {})).toBe('none');
+  });
