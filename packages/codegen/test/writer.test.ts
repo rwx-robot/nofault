@@ -56,3 +56,8 @@ describe('writeFiles', () => {
     const r = writeFiles([file('a.ts', 'generated\n')], { outDir: dir, policy: 'overwrite' });
     expect(r.written).toEqual(['a.ts']);
     expect(readFileSync(join(dir, 'a.ts'), 'utf8')).toBe('generated\n');
+  });
+
+  it('honours policy=skip for everything existing', () => {
+    const dir = tmp();
+    writeFileSync(join(dir, 'a.ts'), `// ${MARKER}\nold\n`);
