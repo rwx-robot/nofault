@@ -73,3 +73,7 @@ describe('writeFiles', () => {
 
   it('supports a custom marker so the policy can be pointed at other tools', () => {
     const dir = tmp();
+    writeFileSync(join(dir, 'a.ts'), '// by other-tool\nold\n');
+    expect(writeFiles([file('a.ts', 'new\n')], { outDir: dir, marker: 'by other-tool' }).written).toEqual(['a.ts']);
+  });
+});
