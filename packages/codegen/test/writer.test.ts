@@ -44,3 +44,8 @@ describe('writeFiles', () => {
     // 这是最该被守住的一条：静默覆盖用户代码是生成器最恶劣的行为
     const dir = tmp();
     writeFileSync(join(dir, 'a.ts'), 'const myOwnCode = 1;\n');
+    const r = writeFiles([file('a.ts', `// ${MARKER}\ngenerated\n`)], { outDir: dir });
+    expect(r.written).toHaveLength(0);
+    expect(r.skipped).toEqual(['a.ts']);
+    expect(readFileSync(join(dir, 'a.ts'), 'utf8')).toBe('const myOwnCode = 1;\n');
+  });
