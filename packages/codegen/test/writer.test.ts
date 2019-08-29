@@ -67,3 +67,9 @@ describe('writeFiles', () => {
   it('dryRun reports intent without touching the disk', () => {
     const dir = tmp();
     const r = writeFiles([file('a.ts', 'x')], { outDir: dir, dryRun: true });
+    expect(r.written).toEqual(['a.ts']);
+    expect(existsSync(join(dir, 'a.ts'))).toBe(false);
+  });
+
+  it('supports a custom marker so the policy can be pointed at other tools', () => {
+    const dir = tmp();
