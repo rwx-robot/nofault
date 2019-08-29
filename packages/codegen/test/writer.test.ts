@@ -49,3 +49,10 @@ describe('writeFiles', () => {
     expect(r.skipped).toEqual(['a.ts']);
     expect(readFileSync(join(dir, 'a.ts'), 'utf8')).toBe('const myOwnCode = 1;\n');
   });
+
+  it('honours policy=overwrite', () => {
+    const dir = tmp();
+    writeFileSync(join(dir, 'a.ts'), 'hand written\n');
+    const r = writeFiles([file('a.ts', 'generated\n')], { outDir: dir, policy: 'overwrite' });
+    expect(r.written).toEqual(['a.ts']);
+    expect(readFileSync(join(dir, 'a.ts'), 'utf8')).toBe('generated\n');
