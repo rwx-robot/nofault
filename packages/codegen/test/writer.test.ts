@@ -61,3 +61,9 @@ describe('writeFiles', () => {
   it('honours policy=skip for everything existing', () => {
     const dir = tmp();
     writeFileSync(join(dir, 'a.ts'), `// ${MARKER}\nold\n`);
+    expect(writeFiles([file('a.ts', 'new\n')], { outDir: dir, policy: 'skip' }).written).toHaveLength(0);
+  });
+
+  it('dryRun reports intent without touching the disk', () => {
+    const dir = tmp();
+    const r = writeFiles([file('a.ts', 'x')], { outDir: dir, dryRun: true });
