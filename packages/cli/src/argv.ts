@@ -21,3 +21,16 @@ export function parseArgs(argv: string[]): ParsedArgs {
 
   for (let i = 0; i < argv.length; i++) {
     const arg = argv[i]!;
+
+    if (arg === '--') {
+      positional.push(...argv.slice(i + 1));
+      break;
+    }
+
+    if (arg.startsWith('--')) {
+      const body = arg.slice(2);
+      const eq = body.indexOf('=');
+      if (eq >= 0) {
+        options[body.slice(0, eq)] = body.slice(eq + 1);
+        continue;
+      }
