@@ -9,3 +9,8 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "nofaultctl": "bin/nofaultctl.js",
+    "nfc": "bin/nfc.js"
