@@ -4,27 +4,3 @@
   "description": "nofaultctl — project scaffolding and code generation from API contracts",
   "license": "MIT",
   "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "bin": {
-    "nofaultctl": "bin/nofaultctl.js",
-    "nfc": "bin/nfc.js"
-  },
-  "files": ["dist", "bin", "README.md"],
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@nofault/codegen": "workspace:*",
-    "@nofault/dsl": "workspace:*",
-    "@nofault/parser": "workspace:*"
-  }
-}
