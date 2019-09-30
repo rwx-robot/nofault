@@ -21,3 +21,25 @@ export interface DevOptions {
   /** 防抖窗口，默认 150ms */
   debounceMs?: number;
   /** 重启前留给旧进程的退出时间，默认 2000ms */
+  killTimeoutMs?: number;
+  cwd?: string;
+  onLog?: (line: string) => void;
+}
+
+export interface DevHandle {
+  stop: () => Promise<void>;
+}
+
+export class DevRunner {
+  private child?: ChildProcess;
+  private timer?: NodeJS.Timeout;
+  private pendingRestart = false;
+  private restarting = false;
+  private stopped = false;
+  private readonly watchers: Array<{ close: () => void }> = [];
+
+  constructor(private readonly options: DevOptions) {}
+
+  async start(): Promise<DevHandle> {
+    const dirs = this.options.watchDirs ?? ['src'];
+    const cwd = this.options.cwd ?? process.cwd();
