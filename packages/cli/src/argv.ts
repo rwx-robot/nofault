@@ -46,3 +46,15 @@ export function parseArgs(argv: string[]): ParsedArgs {
     }
 
     if (arg.startsWith('-') && arg.length > 1) {
+      for (const ch of arg.slice(1)) flags.add(ch);
+      continue;
+    }
+
+    positional.push(arg);
+  }
+
+  return { positional, options, flags };
+}
+
+/** 给了 fallback 就一定返回 string —— 这样调用方不用到处写 `?? 'x'` */
+export function stringOption(args: ParsedArgs, name: string): string | undefined;
