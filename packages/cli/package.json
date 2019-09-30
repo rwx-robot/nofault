@@ -24,3 +24,7 @@
   },
   "dependencies": {
     "@nofault/codegen": "workspace:*",
+    "@nofault/dsl": "workspace:*",
+    "@nofault/parser": "workspace:*"
+  }
+}
