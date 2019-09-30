@@ -211,3 +211,55 @@ function openApiCommand(sub: string | undefined, args: ParsedArgs): CliResult {
   const spec = compileContract(contract);
   const options: OpenApiOptions = {
     title: stringOption(args, 'title'),
+    version: stringOption(args, 'version'),
+    serverUrl: stringOption(args, 'server-url'),
+  };
+  const doc = openApiDocument(spec, options);
+
+  const out = stringOption(args, 'out', 'openapi.json');
+  if (booleanOption(args, 'dry-run')) {
+    process.stdout.write(`${JSON.stringify(doc, null, 2)}\n`);
+    return { exitCode: 0 };
+  }
+  writeFileSync(resolve(out), `${JSON.stringify(doc, null, 2)}\n`);
+  log.success(`${out}: ${Object.keys(doc.paths).length} path(s), ${Object.keys(doc.components.schemas).length} schema(s)`);
+  return { exitCode: 0 };
+}
+
+function mcpCommand(sub: string | undefined, args: ParsedArgs): CliResult {
+  if (sub !== 'new') throw new Error('usage: nofaultctl mcp new <project>');
+  const name = args.positional[2];
+  if (!name) throw new Error('missing project name: nofaultctl mcp new <project>');
+  scaffoldMcp(name, { dir: stringOption(args, 'dir', name) });
+  log.success(`mcp server "${name}" ready at ${resolve(stringOption(args, 'dir', name))}`);
+  log.info(log.dim(`next:  cd ${resolve(stringOption(args, 'dir', name))} && npm install && npm run build && npm start`));
+  return { exitCode: 0 };
+}
+
+function devCommand(args: ParsedArgs): CliResult {
+  const command = stringOption(args, 'cmd', 'node dist/main.js');
+  const dirs = stringOption(args, 'watch')?.split(',') ?? ['src'];
+
+  const runner = new DevRunner({
+    command,
+    watchDirs: dirs,
+    debounceMs: Number(stringOption(args, 'debounce', '150')),
+    onLog: (line) => process.stdout.write(`${line}\n`),
+  });
+
+  log.info(`watching ${dirs.join(', ')} — ${command}`);
+  // dev 是长驻进程：这里不 await，直接把控制权交回 shell
+  void runner.start();
+  return { exitCode: 0 };
+}
+
+function doctorCommand(): CliResult {
+  const report = doctor();
+  for (const check of report.checks) {
+    const mark = check.status === 'ok' ? log.green('ok  ') : check.status === 'warn' ? log.yellow('warn') : log.red('fail');
+    process.stdout.write(`${mark}  ${check.name.padEnd(22)} ${check.message}\n`);
+    if (check.hint) process.stdout.write(`        ${log.dim(check.hint)}\n`);
+  }
+  process.stdout.write(`\n${report.failures} failure(s), ${report.warnings} warning(s)\n`);
+  return { exitCode: report.ok ? 0 : 1 };
+}
