@@ -4,3 +4,8 @@
   "description": "nofaultctl — project scaffolding and code generation from API contracts",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
