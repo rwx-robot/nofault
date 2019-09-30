@@ -105,3 +105,56 @@ function dispatch(command: string, sub: string | undefined, args: ParsedArgs): C
     case 'doctor':
       return doctorCommand();
     default:
+      log.error(`unknown command "${command}"`);
+      process.stdout.write(`${HELP}\n`);
+      return { exitCode: 1 };
+  }
+}
+
+// --------------------------------------------------------------------- 命令
+
+function newCommand(args: ParsedArgs): CliResult {
+  const name = args.positional[1];
+  if (!name) throw new Error('missing project name: nofaultctl new <project>');
+
+  const dir = stringOption(args, 'dir', name);
+  scaffold(name, { dir });
+
+  // 立刻按示例契约生成一遍，让工程开箱可跑
+  if (!booleanOption(args, 'skip-generate')) {
+    const result = generateFromSpec(compileContract(resolve(dir, 'api', contractFileName(name))), {
+      templates: stringOption(args, 'templates'),
+      rootModule: true,
+    });
+    const outDir = resolve(dir, stringOption(args, 'out', 'src'));
+    writeFiles(result.files, { outDir, policy: 'generated' });
+    log.success(`${result.files.length} file(s) generated`);
+  }
+
+  log.success(`project "${name}" ready at ${resolve(dir)}`);
+  log.info(log.dim(`next:  cd ${resolve(dir)} && npm install && npm run dev`));
+  return { exitCode: 0 };
+}
+
+function generateCommand(sub: string | undefined, args: ParsedArgs): CliResult {
+  if (sub !== 'api') throw new Error('usage: nofaultctl generate api <contract>');
+  const contract = args.positional.slice(2)[0] ?? stringOption(args, 'contract');
+  if (!contract) throw new Error('missing contract file');
+
+  const spec = compileContract(contract);
+  // 先跑一遍校验：契约有错就在此失败，不会走到写盘
+  generateFromSpec(spec, {
+    templates: stringOption(args, 'templates'),
+    rootModule: booleanOption(args, 'root-module'),
+    withOrm: booleanOption(args, 'with-orm'),
+    force: booleanOption(args, 'force'),
+  });
+
+  void generateApi({
+    contract,
+    out: stringOption(args, 'out', 'src'),
+    templates: stringOption(args, 'templates'),
+    rootModule: booleanOption(args, 'root-module'),
+    withOrm: booleanOption(args, 'with-orm'),
+    watch: booleanOption(args, 'watch') || args.flags.has('w'),
+    force: booleanOption(args, 'force'),
