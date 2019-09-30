@@ -52,3 +52,56 @@ ${log.bold('nofaultctl')} ${VERSION} — nofault 工程脚手架与代码生成
 示例:
   nofaultctl new user-service
   nofaultctl mcp new echo-server
+  nofaultctl generate api api/user.api.ts --out src --root-module
+  nofaultctl generate api api/user.api.ts --out src --with-orm --watch
+  nofaultctl generate api user.api --out src --dry-run
+  nofaultctl openapi api/user.api.ts --out openapi.json
+  nofaultctl dev --cmd "node dist/main.js"
+  nofaultctl doctor
+`;
+
+export interface CliResult {
+  exitCode: number;
+}
+
+export function run(argv: string[]): CliResult {
+  const args = parseArgs(argv);
+  if (booleanOption(args, 'help') || args.flags.has('h') || args.positional.length === 0) {
+    process.stdout.write(`${HELP}\n`);
+    return { exitCode: 0 };
+  }
+  if (booleanOption(args, 'version') || args.flags.has('v')) {
+    process.stdout.write(`${VERSION}\n`);
+    return { exitCode: 0 };
+  }
+
+  const [command, sub] = args.positional;
+  try {
+    return dispatch(command!, sub, args);
+  } catch (err) {
+    log.error(err instanceof Error ? err.message : String(err));
+    return { exitCode: 1 };
+  }
+}
+
+function dispatch(command: string, sub: string | undefined, args: ParsedArgs): CliResult {
+  switch (command) {
+    case 'new':
+      return newCommand(args);
+    case 'mcp':
+      return mcpCommand(sub, args);
+    case 'g':
+    case 'gen':
+    case 'generate':
+      return generateCommand(sub, args);
+    case 'validate':
+      return validateCommand(sub, args);
+    case 'routes':
+      return routesCommand(sub, args);
+    case 'openapi':
+      return openApiCommand(sub, args);
+    case 'dev':
+      return devCommand(args);
+    case 'doctor':
+      return doctorCommand();
+    default:
