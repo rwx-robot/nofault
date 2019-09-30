@@ -158,3 +158,56 @@ function generateCommand(sub: string | undefined, args: ParsedArgs): CliResult {
     withOrm: booleanOption(args, 'with-orm'),
     watch: booleanOption(args, 'watch') || args.flags.has('w'),
     force: booleanOption(args, 'force'),
+    dryRun: booleanOption(args, 'dry-run'),
+  });
+  return { exitCode: 0 };
+}
+
+function validateCommand(sub: string | undefined, args: ParsedArgs): CliResult {
+  const contract = sub ?? args.positional[1];
+  if (!contract) throw new Error('missing contract file');
+
+  const spec = compileContract(contract);
+  const diagnostics = validateSpec(spec);
+  if (diagnostics.length === 0) {
+    log.success(`${contract}: ${spec.types.length} type(s), ${spec.services.length} service(s), no problems`);
+    return { exitCode: 0 };
+  }
+  for (const d of diagnostics) {
+    (d.severity === 'error' ? log.error : log.warn)(`${d.at}: ${d.message}`);
+  }
+  return { exitCode: diagnostics.some((d) => d.severity === 'error') ? 1 : 0 };
+}
+
+function routesCommand(sub: string | undefined, args: ParsedArgs): CliResult {
+  const contract = sub ?? args.positional[1];
+  if (!contract) throw new Error('missing contract file');
+
+  const spec = compileContract(contract);
+  for (const service of spec.services) {
+    log.info(log.bold(`service ${service.name}`) + log.dim(`  prefix=${service.prefix ?? '/'} group=${service.group}`));
+    for (const route of service.routes) {
+      const req = route.requestType ?? '-';
+      const res = route.responseType ?? 'void';
+      log.info(`  ${route.method.padEnd(6)} ${route.path.padEnd(28)} ${route.handler}(${req}) -> ${res}`);
+    }
+  }
+  return { exitCode: 0 };
+}
+
+function contractFileName(name: string): string {
+  // 与 commands/new.ts 里的契约文件名保持一致
+  const kebab = name
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .replace(/[_\s]+/g, '-')
+    .toLowerCase();
+  return `${kebab}.api.ts`;
+}
+
+function openApiCommand(sub: string | undefined, args: ParsedArgs): CliResult {
+  const contract = sub ?? args.positional[1];
+  if (!contract) throw new Error('missing contract file');
+
+  const spec = compileContract(contract);
+  const options: OpenApiOptions = {
+    title: stringOption(args, 'title'),
