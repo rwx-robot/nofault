@@ -34,3 +34,15 @@ export function parseArgs(argv: string[]): ParsedArgs {
         options[body.slice(0, eq)] = body.slice(eq + 1);
         continue;
       }
+      const next = argv[i + 1];
+      if (next !== undefined && !next.startsWith('-')) {
+        options[body] = next;
+        i++;
+      } else {
+        options[body] = true;
+        flags.add(body);
+      }
+      continue;
+    }
+
+    if (arg.startsWith('-') && arg.length > 1) {
