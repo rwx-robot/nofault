@@ -58,3 +58,13 @@ export function parseArgs(argv: string[]): ParsedArgs {
 
 /** 给了 fallback 就一定返回 string —— 这样调用方不用到处写 `?? 'x'` */
 export function stringOption(args: ParsedArgs, name: string): string | undefined;
+export function stringOption(args: ParsedArgs, name: string, fallback: string): string;
+export function stringOption(args: ParsedArgs, name: string, fallback?: string): string | undefined {
+  const v = args.options[name];
+  if (typeof v === 'string') return v;
+  return fallback;
+}
+
+export function booleanOption(args: ParsedArgs, name: string): boolean {
+  return args.options[name] === true || args.flags.has(name);
+}
