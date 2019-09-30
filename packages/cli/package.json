@@ -14,3 +14,8 @@
   "bin": {
     "nofaultctl": "bin/nofaultctl.js",
     "nfc": "bin/nfc.js"
+  },
+  "files": ["dist", "bin", "README.md"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
