@@ -31,3 +31,35 @@ const MIN_NODE_MAJOR = 20;
 export function doctor(cwd: string = process.cwd()): DoctorReport {
   const checks: Check[] = [
     checkNodeVersion(),
+    checkPackageJson(cwd),
+    checkDecoratorMetadata(cwd),
+    checkExperimentalDecorators(cwd),
+    checkReflectMetadata(cwd),
+    checkSourceLayout(cwd),
+  ];
+
+  const failures = checks.filter((c) => c.status === 'fail').length;
+  const warnings = checks.filter((c) => c.status === 'warn').length;
+  return { checks, ok: failures === 0, failures, warnings };
+}
+
+function checkNodeVersion(): Check {
+  const major = Number(process.versions.node.split('.')[0]);
+  return {
+    name: 'node version',
+    status: major >= MIN_NODE_MAJOR ? 'ok' : 'fail',
+    message: `Node ${process.versions.node}`,
+    hint: major >= MIN_NODE_MAJOR ? undefined : `需要 Node >= ${MIN_NODE_MAJOR}，当前 ${major}`,
+  };
+}
+
+function checkPackageJson(cwd: string): Check {
+  const path = join(cwd, 'package.json');
+  if (!existsSync(path)) {
+    return { name: 'package.json', status: 'fail', message: '缺失', hint: '在項目根目录运行 npm init' };
+  }
+  try {
+    const pkg = JSON.parse(readFileSync(path, 'utf8')) as { type?: string };
+    // 本项目全部包都是 ESM；type 不对会在运行时报"Cannot use import statement"
+    return {
+      name: 'package.json',
