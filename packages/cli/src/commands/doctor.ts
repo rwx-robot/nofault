@@ -127,3 +127,35 @@ function resolveParentPath(value: string, fromFile: string): string {
   if (isAbsolute(value)) return value;
   if (value.startsWith('.')) return resolve(dirname(fromFile), value);
   return resolve(dirname(fromFile), 'node_modules', value);
+}
+
+/**
+ * 装饰器元数据（emitDecoratorMetadata）必须单独一项检查。
+ *
+ * 之前把它和 experimentalDecorators 塞在同一个检查里，
+ * 结果"两项都开"时检查项的名字会变，调用方按名字找不到它——
+ * 检查项的名字必须是**稳定**的，否则 CI 里按名过滤就失效了。
+ */
+function checkDecoratorMetadata(cwd: string): Check {
+  const compilerOptions = compilerOptionsOf(cwd);
+  const on = compilerOptions?.emitDecoratorMetadata === true;
+  return {
+    name: 'emitDecoratorMetadata',
+    status: on ? 'ok' : 'fail',
+    message: on ? '已开启' : '未开启',
+    hint: on
+      ? undefined
+      : '在 tsconfig 的 compilerOptions 里设置 "emitDecoratorMetadata": true',
+  };
+}
+
+function checkExperimentalDecorators(cwd: string): Check {
+  const compilerOptions = compilerOptionsOf(cwd);
+  const on = compilerOptions?.experimentalDecorators === true;
+  return {
+    name: 'experimentalDecorators',
+    status: on ? 'ok' : 'warn',
+    message: on ? '已开启' : '未开启',
+    hint: on ? undefined : '设置 "experimentalDecorators": true',
+  };
+}
