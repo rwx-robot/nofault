@@ -142,3 +142,31 @@ for (const sig of ['SIGINT', 'SIGTERM'] as NodeJS.Signals[]) {
   process.on(sig, () => {
     void server.close().finally(() => process.exit(0));
   });
+}
+`;
+}
+
+function toolsTs(_name: string): string {
+  return `import type { McpTool } from '@nofault/mcp';
+
+/**
+ * 工具清单。
+ *
+ * inputSchema 用 JSON Schema 描述入参形状——协议层只做分发，
+ * 入参的运行时校验由 handler 自己负责（这里给 echo 演示用最简形态）。
+ */
+export const tools: McpTool[] = [
+  {
+    name: 'echo',
+    description: 'echo the input text back to the caller',
+    inputSchema: {
+      type: 'object',
+      properties: { text: { type: 'string', minLength: 1 } },
+      required: ['text'],
+      additionalProperties: false,
+    },
+    handler: (input) => ({ echoed: input.text }),
+  },
+];
+`;
+}
