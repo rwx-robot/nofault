@@ -99,3 +99,27 @@ function writeOnce(options: GenerateApiOptions): GenerateApiResult {
 
 export function generateApi(options: GenerateApiOptions): GenerateApiResult {
   const result = writeOnce(options);
+
+  if (options.watch) {
+    const contractPath = resolve(options.contract);
+    log.step(`watching ${contractPath} (Ctrl-C to stop)`);
+    const handle = watchFile(
+      contractPath,
+      () => {
+        // 契约改坏了不能让监听器死掉：报错后继续等下一次保存
+        try {
+          writeOnce(options);
+        } catch (err) {
+          log.error(err instanceof Error ? err.message : String(err));
+        }
+      },
+      { onError: (err: unknown) => log.error(String(err)) },
+    );
+    process.on('SIGINT', () => {
+      handle.close();
+      process.exit(0);
+    });
+  }
+
+  return result;
+}
