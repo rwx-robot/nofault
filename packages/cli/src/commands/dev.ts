@@ -89,3 +89,26 @@ export class DevRunner {
     const timeout = this.options.killTimeoutMs ?? 2000;
     const exited = new Promise<void>((done) => {
       child.once('exit', () => done());
+    });
+
+    child.kill('SIGTERM');
+    const forced = new Promise<void>((done) => setTimeout(done, timeout));
+    await Promise.race([exited, forced]);
+    // 到点还没退出就强杀：留着它只会让新进程起不来
+    if (child.exitCode === null && child.signalCode === null) child.kill('SIGKILL');
+    this.child = undefined;
+  }
+
+  private async spawnChild(): Promise<void> {
+    const [cmd, ...rest] = this.options.command.split(/\s+/);
+    const child = spawn(cmd!, [...rest, ...(this.options.args ?? [])], {
+      cwd: this.options.cwd ?? process.cwd(),
+      stdio: ['ignore', 'pipe', 'pipe'],
+      env: process.env,
+    });
+    this.child = child;
+
+    child.stdout?.on('data', (chunk: Buffer) => this.log(chunk.toString()));
+    child.stderr?.on('data', (chunk: Buffer) => this.log(chunk.toString()));
+    child.on('exit', (code) => {
+      // 自己退出（比如崩溃）时不要自动重启成无限循环——
