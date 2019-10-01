@@ -84,3 +84,32 @@ function tsconfig(): string {
         module: 'NodeNext',
         moduleResolution: 'NodeNext',
         strict: true,
+        skipLibCheck: true,
+        esModuleInterop: true,
+        outDir: 'dist',
+        rootDir: 'src',
+      },
+      include: ['src/**/*.ts'],
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+function gitignore(): string {
+  return ['node_modules/', 'dist/', ''].join('\n');
+}
+
+function readme(name: string): string {
+  return `# ${pascalCase(name)} MCP 服务器
+
+由 \`nofaultctl mcp new ${name}\` 生成。
+
+## 用法
+
+\`\`\`bash
+npm install
+npm run build
+npm start
+# stdio 上换行分隔 JSON-RPC，把这一行加到 MCP 客户端的配置里：
+#   { "command": "node", "args": ["$(pwd)/dist/main.js"] }
