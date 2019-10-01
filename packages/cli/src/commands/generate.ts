@@ -74,3 +74,28 @@ export function generateFromSpec(
     templatesDir: options.templates,
     rootModule: options.rootModule,
   });
+  if (options.withOrm) files.push(...generateDataLayer(spec));
+  for (const w of warnings) log.warn(w);
+  return { files, warnings };
+}
+
+function writeOnce(options: GenerateApiOptions): GenerateApiResult {
+  const contractPath = resolve(options.contract);
+  const spec = compileContract(contractPath);
+  log.step(`parsed ${contractPath}: ${spec.types.length} type(s), ${spec.services.length} service(s)`);
+
+  const { files } = generateFromSpec(spec, options);
+
+  const outDir = resolve(options.out ?? 'src');
+  const summary = writeFiles(files, {
+    outDir,
+    policy: options.policy ?? 'generated',
+    dryRun: options.dryRun,
+  });
+
+  printSummary(summary, options.dryRun ? `${outDir} (dry run)` : outDir);
+  return { spec, files, ...summary };
+}
+
+export function generateApi(options: GenerateApiOptions): GenerateApiResult {
+  const result = writeOnce(options);
