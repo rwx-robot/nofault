@@ -95,3 +95,35 @@ function readTsConfigFile(path: string, seen: Set<string>): Record<string, unkno
     // tsconfig 允许注释与尾逗号，这里做最小容错
     const cleaned = readFileSync(path, 'utf8')
       .replace(/\/\*[\s\S]*?\*\//g, '')
+      .replace(/^\s*\/\/.*$/gm, '');
+    parsed = JSON.parse(cleaned) as Record<string, unknown>;
+  } catch {
+    return undefined;
+  }
+
+  const parentName = typeof parsed.extends === 'string' ? parsed.extends : undefined;
+  if (!parentName) return parsed;
+
+  const parent = readTsConfigFile(resolveParentPath(parentName, path), seen);
+  if (!parent) return parsed;
+
+  // 子配置优先：compilerOptions 逐键合并
+  return {
+    ...parent,
+    ...parsed,
+    compilerOptions: {
+      ...((parent.compilerOptions ?? {}) as Record<string, unknown>),
+      ...((parsed.compilerOptions ?? {}) as Record<string, unknown>),
+    },
+  };
+}
+
+/**
+ * `extends` 的值可能是一个路径，也可能是包名（如 "@tsconfig/node20/tsconfig.json"）。
+ * 路径按**父文件所在目录**解析；包名试着去 node_modules 里找，找不到就跳过
+ * （跳过只是少一层信息，不该让整个检查失败）。
+ */
+function resolveParentPath(value: string, fromFile: string): string {
+  if (isAbsolute(value)) return value;
+  if (value.startsWith('.')) return resolve(dirname(fromFile), value);
+  return resolve(dirname(fromFile), 'node_modules', value);
