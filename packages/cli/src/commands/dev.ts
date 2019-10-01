@@ -66,3 +66,26 @@ export class DevRunner {
     this.timer = setTimeout(() => {
       void this.restart();
     }, this.options.debounceMs ?? 150);
+  }
+
+  private async restart(): Promise<void> {
+    this.restarting = true;
+    this.log('change detected, restarting');
+    await this.killChild();
+    await this.spawnChild();
+    this.restarting = false;
+
+    if (this.pendingRestart) {
+      this.pendingRestart = false;
+      await this.restart();
+    }
+  }
+
+  /** 杀掉旧进程并**等它真的退出** —— 不等的话新进程会抢端口失败 */
+  private async killChild(): Promise<void> {
+    const child = this.child;
+    if (!child || child.exitCode !== null || child.signalCode !== null) return;
+
+    const timeout = this.options.killTimeoutMs ?? 2000;
+    const exited = new Promise<void>((done) => {
+      child.once('exit', () => done());
