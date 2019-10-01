@@ -63,3 +63,35 @@ function checkPackageJson(cwd: string): Check {
     // 本项目全部包都是 ESM；type 不对会在运行时报"Cannot use import statement"
     return {
       name: 'package.json',
+      status: pkg.type === 'module' ? 'ok' : 'warn',
+      message: `type=${pkg.type ?? 'commonjs'}`,
+      hint: pkg.type === 'module' ? undefined : '建议设置 "type": "module"',
+    };
+  } catch (err) {
+    return { name: 'package.json', status: 'fail', message: `无法解析：${String(err)}` };
+  }
+}
+
+/**
+ * 读取 tsconfig 并**解析 extends 链**。
+ *
+ * 不解析会大面积误报：绝大多数工程的 tsconfig 都是
+ * `extends: "../../tsconfig.base.json"`，装饰器元数据写在基配置里，
+ * 只检查子文件就会把"配置正确"报成"未开启"。
+ * 这种假阴性比漏检更糟——它会让人直接不信任这个工具。
+ */
+function readTsConfig(cwd: string): Record<string, unknown> | undefined {
+  return readTsConfigFile(join(cwd, 'tsconfig.json'), new Set());
+}
+
+function readTsConfigFile(path: string, seen: Set<string>): Record<string, unknown> | undefined {
+  if (!existsSync(path)) return undefined;
+  // 循环继承（a extends b，b extends a）必须能停下来
+  if (seen.has(path)) return undefined;
+  seen.add(path);
+
+  let parsed: Record<string, unknown>;
+  try {
+    // tsconfig 允许注释与尾逗号，这里做最小容错
+    const cleaned = readFileSync(path, 'utf8')
+      .replace(/\/\*[\s\S]*?\*\//g, '')
