@@ -56,3 +56,31 @@ function packageJson(name: string): string {
     {
       name: kebabCase(name),
       version: '0.1.0',
+      private: true,
+      description: `${pascalCase(name)} MCP server (stdio, JSON-RPC)`,
+      type: 'module',
+      scripts: {
+        build: 'tsc -p tsconfig.json',
+        start: 'node dist/main.js',
+      },
+      dependencies: {
+        '@nofault/mcp': '^1.0.0',
+      },
+      devDependencies: {
+        typescript: '^5.6.0',
+        '@types/node': '^22.7.0',
+      },
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+function tsconfig(): string {
+  return `${JSON.stringify(
+    {
+      compilerOptions: {
+        target: 'ES2022',
+        module: 'NodeNext',
+        moduleResolution: 'NodeNext',
+        strict: true,
