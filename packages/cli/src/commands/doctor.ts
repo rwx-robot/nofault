@@ -159,3 +159,34 @@ function checkExperimentalDecorators(cwd: string): Check {
     hint: on ? undefined : '设置 "experimentalDecorators": true',
   };
 }
+
+function compilerOptionsOf(cwd: string): Record<string, unknown> | undefined {
+  const config = readTsConfig(cwd);
+  if (!config) return undefined;
+  return (config.compilerOptions ?? {}) as Record<string, unknown>;
+}
+
+function checkReflectMetadata(cwd: string): Check {
+  const path = join(cwd, 'node_modules', 'reflect-metadata');
+  if (existsSync(path)) return { name: 'reflect-metadata', status: 'ok', message: '已安装' };
+  return {
+    name: 'reflect-metadata',
+    status: 'fail',
+    message: '未安装',
+    hint: 'npm i reflect-metadata，并在入口第一行 import "reflect-metadata"',
+  };
+}
+
+function checkSourceLayout(cwd: string): Check {
+  const candidates = ['src', 'app', 'api'];
+  const found = candidates.filter((d) => existsSync(resolve(cwd, d)));
+  if (found.length > 0) {
+    return { name: 'source directory', status: 'ok', message: found.join(', ') };
+  }
+  return {
+    name: 'source directory',
+    status: 'warn',
+    message: '未找到 src/',
+    hint: '约定源码放在 src/ 下',
+  };
+}
