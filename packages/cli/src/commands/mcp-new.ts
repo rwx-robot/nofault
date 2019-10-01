@@ -113,3 +113,32 @@ npm run build
 npm start
 # stdio 上换行分隔 JSON-RPC，把这一行加到 MCP 客户端的配置里：
 #   { "command": "node", "args": ["$(pwd)/dist/main.js"] }
+\`\`\`
+
+## 自定义工具
+
+工具写在 \`src/tools.ts\`：每个 \`McpTool\` 含 \`name\` / \`description\` / \`inputSchema\` / \`handler\`，
+\`main.ts\` 把它交给 \`McpServer\` 启动。
+
+inputSchema 是 JSON Schema（draft 2020-12），参数校验由 handler 自行负责，协议层只做分发。
+`;
+}
+
+function mainTs(name: string): string {
+  return `import 'node:process';
+import { McpServer } from '@nofault/mcp';
+import { tools } from './tools.js';
+
+const server = new McpServer({
+  name: '${kebabCase(name)}',
+  version: '0.1.0',
+  tools,
+});
+
+server.start();
+
+// 干净的退出：STDIO 模式下 node 默认会卡住
+for (const sig of ['SIGINT', 'SIGTERM'] as NodeJS.Signals[]) {
+  process.on(sig, () => {
+    void server.close().finally(() => process.exit(0));
+  });
