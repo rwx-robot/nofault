@@ -80,3 +80,43 @@ function packageJson(name: string): string {
         'reflect-metadata': '^0.2.2',
       },
       devDependencies: {
+        '@nofault/cli': '^0.4.0',
+        typescript: '^5.6.0',
+      },
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+function tsconfig(): string {
+  return `${JSON.stringify(
+    {
+      compilerOptions: {
+        target: 'ES2022',
+        module: 'commonjs',
+        moduleResolution: 'node',
+        experimentalDecorators: true,
+        emitDecoratorMetadata: true,
+        strict: true,
+        skipLibCheck: true,
+        esModuleInterop: true,
+        declaration: false,
+        outDir: 'dist',
+        rootDir: 'src',
+      },
+      include: ['src/**/*.ts'],
+    },
+    null,
+    2,
+  )}\n`;
+}
+
+function gitignore(): string {
+  return ['node_modules/', 'dist/', 'logs/', ''].join('\n');
+}
+
+function readme(name: string): string {
+  const kebab = kebabCase(name);
+  // 说明文字里刻意不出现反引号：这是模板字符串，反引号会提前结束字符串
+  return `# ${pascalCase(name)}
