@@ -49,3 +49,28 @@ export function compileContract(file: string): ApiSpec {
   if (!existsSync(file)) {
     throw new Error(`contract not found: ${file}`);
   }
+  return parseContractFile(file);
+}
+
+export function generateFromSpec(
+  spec: ApiSpec,
+  options: Omit<GenerateApiOptions, 'contract'> = {},
+): { files: GeneratedFile[]; warnings: string[] } {
+  const diagnostics = validateSpec(spec);
+  const errors = diagnostics.filter((d) => d.severity === 'error');
+
+  if (errors.length > 0) {
+    for (const d of errors) log.error(`${d.at}: ${d.message}`);
+    if (!options.force) {
+      throw new Error(`contract has ${errors.length} error(s); refusing to generate partial code (use --force to override)`);
+    }
+    log.warn(`--force given, generating anyway (${errors.length} error(s))`);
+  }
+  for (const d of diagnostics.filter((w) => w.severity === 'warning')) {
+    log.warn(`${d.at}: ${d.message}`);
+  }
+
+  const { files, warnings } = generate(spec, {
+    templatesDir: options.templates,
+    rootModule: options.rootModule,
+  });
