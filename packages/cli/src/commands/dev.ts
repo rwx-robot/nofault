@@ -43,3 +43,26 @@ export class DevRunner {
   async start(): Promise<DevHandle> {
     const dirs = this.options.watchDirs ?? ['src'];
     const cwd = this.options.cwd ?? process.cwd();
+
+    for (const dir of dirs) {
+      const watcher = watch(resolve(cwd, dir), { recursive: true }, () => {
+        if (this.stopped) return;
+        this.scheduleRestart();
+      });
+      this.watchers.push(watcher);
+    }
+
+    await this.spawnChild();
+    return { stop: () => this.stop() };
+  }
+
+  private scheduleRestart(): void {
+    if (this.restarting) {
+      // 重启期间又变了：记一笔，结束后立刻再重启（不能丢掉这次变更）
+      this.pendingRestart = true;
+      return;
+    }
+    if (this.timer) clearTimeout(this.timer);
+    this.timer = setTimeout(() => {
+      void this.restart();
+    }, this.options.debounceMs ?? 150);
