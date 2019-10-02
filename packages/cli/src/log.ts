@@ -11,3 +11,15 @@ type Color = keyof typeof COLORS;
 function enabled(): boolean {
   return !process.env.NO_COLOR && Boolean(process.stdout.isTTY);
 }
+
+function paint(text: string, color: Color): string {
+  if (!enabled()) return text;
+  return `\u001b[${COLORS[color]}m${text}\u001b[0m`;
+}
+
+export const log = {
+  info(message: string): void {
+    process.stdout.write(`${message}\n`);
+  },
+  success(message: string): void {
+    process.stdout.write(`${paint('✓', 'green')} ${message}\n`);
