@@ -52,3 +52,29 @@ describe('scaffold', () => {
     const r = scaffold('my-service', { dir });
     expect(r.files).toContain('src/main.ts');
     expect(r.files).toContain('src/app.module.ts');
+    expect(r.files).toContain('api/my-service.api.ts');
+    expect(r.files).toContain('package.json');
+    expect(existsSync(join(dir, 'tsconfig.json'))).toBe(true);
+  });
+
+  it('refuses to overwrite an existing directory', () => {
+    const dir = projectPath('my-service');
+    scaffold('my-service', { dir });
+    writeFileSync(join(dir, 'package.json'), 'hand written\n');
+    // 已存在内容时宁可失败：脚手架覆盖用户代码是不可接受的
+    expect(() => scaffold('my-service', { dir })).toThrow(/already exists/);
+  });
+
+  it('kebab-cases the project name everywhere', () => {
+    const dir = projectPath('UserService');
+    scaffold('UserService', { dir });
+    const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+    expect(pkg.name).toBe('user-service');
+    expect(pkg.scripts.generate).toContain('api/user-service.api.ts');
+  });
+});
+
+describe('nofaultctl commands', () => {
+  it('prints help and exits 0 with no args', () => {
+    expect(run([]).exitCode).toBe(0);
+    expect(run(['--help']).exitCode).toBe(0);
