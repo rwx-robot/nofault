@@ -78,3 +78,29 @@ describe('nofaultctl commands', () => {
   it('prints help and exits 0 with no args', () => {
     expect(run([]).exitCode).toBe(0);
     expect(run(['--help']).exitCode).toBe(0);
+  });
+
+  it('reports its version', () => {
+    expect(VERSION).toMatch(/^\d+\.\d+\.\d+$/);
+  });
+
+  it('returns exit code 1 for unknown commands', () => {
+    expect(run(['wat']).exitCode).toBe(1);
+  });
+
+  it('errors clearly when the contract file does not exist', () => {
+    expect(() => generateApi({ contract: join(tmp(), 'nope.api.ts') })).toThrow(/contract not found/);
+  });
+
+  it('generate writes dto, controller, service and module', () => {
+    const dir = tmp();
+    const contract = join(dir, 'user.api.ts');
+    writeFileSync(contract, CONTRACT, 'utf8');
+
+    const result = generateApi({ contract, out: join(dir, 'src'), rootModule: true });
+    expect(result.spec.services).toHaveLength(1);
+    expect(result.files.map((f) => f.path)).toContain('user/user.controller.ts');
+    expect(result.written.length).toBeGreaterThan(0);
+    expect(existsSync(join(dir, 'src/user/user.service.ts'))).toBe(true);
+    expect(existsSync(join(dir, 'src/app.module.ts'))).toBe(true);
+  });
