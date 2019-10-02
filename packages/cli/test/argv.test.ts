@@ -8,3 +8,13 @@ describe('parseArgs', () => {
 
   it('reads --key=value', () => {
     expect(parseArgs(['gen', '--out=src']).options.out).toBe('src');
+  });
+
+  it('reads --key value but never steals the next positional-looking flag', () => {
+    const a = parseArgs(['gen', '--out', 'src']);
+    expect(a.options.out).toBe('src');
+
+    // 后面是 flag 时，`--force` 必须当布尔，而不是把 "--dry-run" 当成它的值
+    const b = parseArgs(['gen', '--force', '--dry-run']);
+    expect(b.options.force).toBe(true);
+    expect(b.options['dry-run']).toBe(true);
