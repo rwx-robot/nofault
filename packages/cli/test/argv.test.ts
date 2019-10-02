@@ -27,3 +27,12 @@ describe('parseArgs', () => {
   });
 
   it('supports short flag clustering', () => {
+    expect(parseArgs(['-hv']).flags.has('h')).toBe(true);
+    expect(parseArgs(['-hv']).flags.has('v')).toBe(true);
+  });
+
+  it('stops option parsing after --', () => {
+    const a = parseArgs(['--', '--not-a-flag']);
+    expect(a.positional).toEqual(['--not-a-flag']);
+  });
+});
