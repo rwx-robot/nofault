@@ -23,3 +23,16 @@ export const log = {
   },
   success(message: string): void {
     process.stdout.write(`${paint('✓', 'green')} ${message}\n`);
+  },
+  warn(message: string): void {
+    process.stdout.write(`${paint('!', 'yellow')} ${message}\n`);
+  },
+  error(message: string): void {
+    process.stderr.write(`${paint('✗', 'red')} ${message}\n`);
+  },
+  step(message: string): void {
+    process.stdout.write(`${paint('›', 'dim')} ${message}\n`);
+  },
+  dim(message: string): string {
+    return paint(message, 'dim');
+  },
