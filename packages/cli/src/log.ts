@@ -36,3 +36,15 @@ export const log = {
   dim(message: string): string {
     return paint(message, 'dim');
   },
+  bold(message: string): string {
+    return paint(message, 'bold');
+  },
+  /** 供需要自定义标记的场景（如 doctor 的状态列）直接取色 */
+  green(message: string): string {
+    return paint(message, 'green');
+  },
+  yellow(message: string): string {
+    return paint(message, 'yellow');
+  },
+  red(message: string): string {
+    return paint(message, 'red');
