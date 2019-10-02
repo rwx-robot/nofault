@@ -25,3 +25,30 @@ export class GreetResp {
   @Body('text') @IsString()
   text!: string;
 }
+
+export class PageReq {
+  @Query('page') @IsInt()
+  page!: number;
+}
+
+@Api('user')
+@Prefix('/api')
+export class UserService {
+  @Get('/ping')
+  @Handler('ping')
+  ping(): GreetResp { throw new Error('x'); }
+
+  @Post('/greet')
+  greet(req: GreetReq): GreetResp { throw new Error('x'); }
+
+  @Get('/page')
+  page(req: PageReq): GreetResp { throw new Error('x'); }
+}
+`;
+
+describe('scaffold', () => {
+  it('creates a project layout including a sample contract', () => {
+    const dir = projectPath('my-service');
+    const r = scaffold('my-service', { dir });
+    expect(r.files).toContain('src/main.ts');
+    expect(r.files).toContain('src/app.module.ts');
