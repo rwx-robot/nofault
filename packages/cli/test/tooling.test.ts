@@ -70,3 +70,41 @@ describe('openapi generation', () => {
     // GET 不该有 requestBody
     expect(operation.requestBody).toBeUndefined();
   });
+
+  it('puts required fields in required and omits the key when nothing is required', () => {
+    const user = doc.components.schemas.User!;
+    expect(user.required).toEqual(['id', 'name']);
+    expect(user.properties!).toHaveProperty('bio');
+
+    const optionalOnly: TypeSpec = {
+      name: 'Loose',
+      fields: [field('a', 'string', FieldSource.BODY, true)],
+    };
+    const looseDoc = openApiDocument(spec([], [optionalOnly]));
+    // 空 required 数组在部分工具里会被当成"全部必填"，所以整个键要省掉
+    expect(looseDoc.components.schemas.Loose!.required).toBeUndefined();
+  });
+
+  it('references known types and inlines arrays of them', () => {
+    const listDoc = openApiDocument(
+      spec(
+        [service([{ handler: 'list', method: 'GET', path: '/users', responseType: 'User[]' }])],
+        [User],
+      ),
+    );
+    const schema = listDoc.paths['/api/user/users']!.get!.responses['200']!.content![
+      'application/json'
+    ]!.schema;
+    expect(schema).toEqual({ type: 'array', items: { $ref: '#/components/schemas/User' } });
+  });
+
+  it('uses 204 for void responses and always documents 422', () => {
+    const operation = doc.paths['/api/user/users/{id}']!.delete!;
+    expect(operation.responses['204']).toEqual({ description: 'No Content' });
+    expect(operation.responses['422']).toBeDefined();
+  });
+
+  it('carries the info block through', () => {
+    expect(doc.openapi).toBe('3.0.3');
+    expect(doc.info).toEqual({ title: 'Demo API', version: '2.1.0' });
+  });
