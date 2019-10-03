@@ -35,3 +35,38 @@ const GetUserReq: TypeSpec = {
   name: 'GetUserReq',
   fields: [field('id', 'number', FieldSource.PATH), field('verbose', 'boolean', FieldSource.QUERY, true)],
 };
+
+describe('openapi generation', () => {
+  const doc = openApiDocument(
+    spec(
+      [
+        service([
+          { handler: 'getUser', method: 'GET', path: '/users/:id', requestType: 'GetUserReq', responseType: 'User' },
+          { handler: 'createUser', method: 'POST', path: '/users', requestType: 'User', responseType: 'User' },
+          { handler: 'deleteUser', method: 'DELETE', path: '/users/:id', requestType: 'GetUserReq' },
+        ]),
+      ],
+      [User, GetUserReq],
+    ),
+    { title: 'Demo API', version: '2.1.0' },
+  );
+
+  it('renders path params with braces, not colons', () => {
+    // `:id` 在 OpenAPI 里是非法的；Swagger UI / codegen 都会解析失败
+    expect(Object.keys(doc.paths)).toContain('/api/user/users/{id}');
+    expect(Object.keys(doc.paths)).not.toContain('/api/user/users/:id');
+  });
+
+  it('marks path params as required and in:path', () => {
+    const operation = doc.paths['/api/user/users/{id}']!.get!;
+    const id = operation.parameters.find((p) => p.name === 'id');
+    expect(id).toMatchObject({ in: 'path', required: true, schema: { type: 'number' } });
+  });
+
+  it('splits query params out of the body', () => {
+    const operation = doc.paths['/api/user/users/{id}']!.get!;
+    const verbose = operation.parameters.find((p) => p.name === 'verbose');
+    expect(verbose).toMatchObject({ in: 'query', required: false, schema: { type: 'boolean' } });
+    // GET 不该有 requestBody
+    expect(operation.requestBody).toBeUndefined();
+  });
