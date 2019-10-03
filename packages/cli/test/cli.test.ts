@@ -132,3 +132,28 @@ describe('nofaultctl commands', () => {
     expect(run(['generate', 'api', join(dir, 'api/demo.api.ts'), '--out', join(dir, 'src'), '--root-module']).exitCode).toBe(0);
     expect(existsSync(join(dir, 'src/demo/demo.controller.ts'))).toBe(true);
   });
+
+  it('reports contract errors with a non-zero exit code', () => {
+    const dir = tmp();
+    const bad = join(dir, 'bad.api.ts');
+    writeFileSync(bad, `@Api('x')\nexport class XService { @Get('/a') a(): void {} @Get('/a') b(): void {} }\n`, 'utf8');
+    expect(run(['validate', bad]).exitCode).toBe(1);
+  });
+
+  it('scaffolds a runnable mcp server with a sample tool and wires cli dispatch', () => {
+    const dir = mkdtempSync(join(tmpdir(), 'nfcli-mcp-'));
+    // 函数层：scaffoldMcp 直接验证生成结果
+    const result = scaffoldMcp('echo-server', { dir });
+    const pkg = JSON.parse(readFileSync(join(dir, 'package.json'), 'utf8'));
+    expect(pkg.dependencies).toHaveProperty('@nofault/mcp');
+    expect(pkg.type).toBe('module');
+    expect(result.files).toContain('src/main.ts');
+    expect(result.files).toContain('src/tools.ts');
+
+    // CLI 层：`nofaultctl mcp new` 派发走通
+    expect(run(['mcp', 'new', 'second', '--dir', join(dir, 'second')]).exitCode).toBe(0);
+    expect(existsSync(join(dir, 'second/src/main.ts'))).toBe(true);
+    // 误用应给清晰错误
+    expect(run(['mcp', 'scaffold', 'x']).exitCode).toBe(1);
+  });
+});
