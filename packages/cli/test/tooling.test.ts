@@ -108,3 +108,39 @@ describe('openapi generation', () => {
     expect(doc.openapi).toBe('3.0.3');
     expect(doc.info).toEqual({ title: 'Demo API', version: '2.1.0' });
   });
+});
+
+describe('doctor', () => {
+  function project(files: Record<string, string>, deps: string[] = []): string {
+    const dir = mkdtempSync(join(tmpdir(), 'nf-doctor-'));
+    for (const [name, content] of Object.entries(files)) {
+      const path = join(dir, name);
+      mkdirSync(join(path, '..'), { recursive: true });
+      writeFileSync(path, content);
+    }
+    for (const dep of deps) mkdirSync(join(dir, 'node_modules', dep), { recursive: true });
+    return dir;
+  }
+
+  it('fails when decorator metadata is off', () => {
+    // 这是本项目最常见的一类"跑不起来"：@Inject / @Column 拿不到类型，
+    // 而报错信息完全指不到 tsconfig
+    const dir = project({
+      'package.json': JSON.stringify({ type: 'module' }),
+      'tsconfig.json': JSON.stringify({ compilerOptions: { target: 'ES2022' } }),
+      'src/main.ts': '',
+    });
+    const report = doctor(dir);
+    const check = report.checks.find((c) => c.name === 'emitDecoratorMetadata');
+    expect(check?.status).toBe('fail');
+    expect(check?.hint).toContain('emitDecoratorMetadata');
+    expect(report.ok).toBe(false);
+  });
+
+  it('passes a correctly configured project', () => {
+    const dir = project({
+      'package.json': JSON.stringify({ type: 'module' }),
+      'tsconfig.json': JSON.stringify({
+        // 故意带注释：tsconfig 允许注释，解析器必须容错
+        compilerOptions: {
+          /* 装饰器元数据 */
