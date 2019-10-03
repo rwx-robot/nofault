@@ -104,3 +104,31 @@ describe('nofaultctl commands', () => {
     expect(existsSync(join(dir, 'src/user/user.service.ts'))).toBe(true);
     expect(existsSync(join(dir, 'src/app.module.ts'))).toBe(true);
   });
+
+  it('dry-run generates nothing on disk', () => {
+    const dir = tmp();
+    const contract = join(dir, 'user.api.ts');
+    writeFileSync(contract, CONTRACT, 'utf8');
+
+    generateApi({ contract, out: join(dir, 'src'), dryRun: true });
+    expect(existsSync(join(dir, 'src/user/user.service.ts'))).toBe(false);
+  });
+
+  it('refuses to generate from an invalid contract unless forced', () => {
+    const dir = tmp();
+    const bad = join(dir, 'bad.api.ts');
+    writeFileSync(bad, `@Api('x')\nexport class XService { @Get('no-slash') y(): void {} }\n`, 'utf8');
+
+    expect(() => generateApi({ contract: bad, out: join(dir, 'src') })).toThrow(/refusing to generate/);
+    expect(() => generateApi({ contract: bad, out: join(dir, 'src'), force: true })).not.toThrow();
+  });
+
+  it('scaffold + generate produces a runnable module list', () => {
+    const dir = projectPath('demo');
+    scaffold('demo', { dir });
+    // 脚手架自带的示例契约必须能通过校验，否则"开箱可用"就是空话
+    expect(run(['validate', join(dir, 'api/demo.api.ts')]).exitCode).toBe(0);
+    expect(run(['routes', join(dir, 'api/demo.api.ts')]).exitCode).toBe(0);
+    expect(run(['generate', 'api', join(dir, 'api/demo.api.ts'), '--out', join(dir, 'src'), '--root-module']).exitCode).toBe(0);
+    expect(existsSync(join(dir, 'src/demo/demo.controller.ts'))).toBe(true);
+  });
