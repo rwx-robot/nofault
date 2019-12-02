@@ -1,0 +1,22 @@
+{
+  "name": "@nofault/example-v040-codegen-user-api",
+  "version": "0.4.0",
+  "private": true,
+  "description": "v0.4.0 示例：由契约生成 controller / service / module / dto，并真的跑起来",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js",
+    "generate": "nofaultctl generate api api/user.api.ts --out src --root-module"
+  },
+  "dependencies": {
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  },
+  "devDependencies": {
+    "@nofault/cli": "workspace:*",
+    "@nofault/dsl": "workspace:*"
+  }
+}
