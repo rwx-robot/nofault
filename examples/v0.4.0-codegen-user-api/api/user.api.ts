@@ -92,3 +92,34 @@ export class OkResp {
   @Body('ok') @IsString()
   ok!: string;
 }
+
+@Api('user')
+@Prefix('/api')
+@Middleware('RequestLogger')
+export class UserService {
+  @Get('/ping')
+  @Handler('ping')
+  ping(): OkResp {
+    throw new Error('not implemented');
+  }
+
+  @Get('/users')
+  listUsers(_req: ListUsersReq): UserPageResp {
+    throw new Error('not implemented');
+  }
+
+  @Get('/users/:id')
+  getUser(_req: GetUserReq): UserResp {
+    throw new Error('not implemented');
+  }
+
+  @Post('/users')
+  createUser(_req: CreateUserReq): UserResp {
+    throw new Error('not implemented');
+  }
+
+  @Delete('/users/:id')
+  deleteUser(_req: DeleteUserReq): OkResp {
+    throw new Error('not implemented');
+  }
+}
