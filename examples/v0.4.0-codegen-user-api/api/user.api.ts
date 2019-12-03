@@ -61,3 +61,34 @@ export class ListUsersReq {
 /** 路径参数：来自 URL 的 `:id` */
 export class GetUserReq {
   @Path('id') @IsInt()
+  id!: number;
+}
+
+export class DeleteUserReq {
+  @Path('id') @IsInt()
+  id!: number;
+}
+
+export class UserResp {
+  @Body('id') @IsInt()
+  id!: number;
+
+  @Body('name') @IsString()
+  name!: string;
+
+  @Body('email') @IsString()
+  email!: string;
+}
+
+export class UserPageResp {
+  @Body('total') @IsInt()
+  total!: number;
+
+  @Body('page') @IsInt()
+  page!: number;
+}
+
+export class OkResp {
+  @Body('ok') @IsString()
+  ok!: string;
+}
