@@ -33,3 +33,22 @@ curl -s -X POST http://127.0.0.1:3000/api/user/users \
 curl -s -X POST http://127.0.0.1:3000/api/user/users \
   -H 'content-type: application/json' -d '{"name":"bob","email":"nope"}'
 # {"code":422,"data":[{"property":"email","constraints":{"isEmail":"must be an email"}}],...}
+
+# 路径参数（:id 走 @Param 绑定，非数字 400）
+curl -s http://127.0.0.1:3000/api/user/users/1
+curl -s http://127.0.0.1:3000/api/user/users/abc
+
+# query 校验（page 最小值 1，契约里 @Min(1)）
+curl -s "http://127.0.0.1:3000/api/user/users?page=1&pageSize=10"
+curl -s "http://127.0.0.1:3000/api/user/users?page=0&pageSize=10"   # 422
+```
+
+## 文件说明
+
+| 文件 | 谁维护 | 说明 |
+| --- | --- | --- |
+| `api/user.api.ts` | **人** | 契约。日常只改这个 |
+| `src/dto/*.dto.ts` | 生成器 | 属性名取传输键，带校验装饰器 |
+| `src/user/user.controller.ts` | 生成器 | 路由 + 参数绑定 + `@Validate` |
+| `src/user/user.module.ts` | 生成器 | `@Module` 装配 |
+| `src/user/user.service.ts` | **人** | 业务实现（已删掉生成标记，生成器不再碰） |
