@@ -30,3 +30,34 @@ import {
 } from '@nofault/dsl';
 
 /** 创建用户的请求体 */
+export class CreateUserReq {
+  @Body('name') @IsString() @IsNotEmpty() @MinLength(2) @MaxLength(32)
+  name!: string;
+
+  @Body('email') @IsString() @IsEmail()
+  email!: string;
+
+  @Body('age') @IsInt() @Min(0) @Max(150) @Optional()
+  age?: number;
+}
+
+export class UpdateUserReq {
+  @Body('id') @IsInt()
+  id!: number;
+
+  @Body('name') @IsString() @MinLength(2) @MaxLength(32) @Optional()
+  name?: string;
+}
+
+/** 分页参数：来自 query string */
+export class ListUsersReq {
+  @Query('page') @IsInt() @Min(1)
+  page!: number;
+
+  @Query('pageSize') @IsInt() @Min(1) @Max(100)
+  pageSize!: number;
+}
+
+/** 路径参数：来自 URL 的 `:id` */
+export class GetUserReq {
+  @Path('id') @IsInt()
