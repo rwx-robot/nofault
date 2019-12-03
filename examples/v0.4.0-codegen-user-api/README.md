@@ -52,3 +52,20 @@ curl -s "http://127.0.0.1:3000/api/user/users?page=0&pageSize=10"   # 422
 | `src/user/user.controller.ts` | 生成器 | 路由 + 参数绑定 + `@Validate` |
 | `src/user/user.module.ts` | 生成器 | `@Module` 装配 |
 | `src/user/user.service.ts` | **人** | 业务实现（已删掉生成标记，生成器不再碰） |
+| `src/main.ts` | **人** | 启动入口、中间件、命名中间件注册表 |
+
+## 这个示例证明了什么
+
+1. **契约即事实来源** —— 路由、DTO、校验规则全部由 90 行契约推导出来
+2. **生成物能被框架正常加载** —— 装饰器元数据、模块装配、路由注册全链路可用
+3. **校验真的生效** —— body 与 query 都校验，且指出具体字段与规则
+4. **路径参数绑定正确** —— `:id` 走 `@Param`，非数字直接 400
+5. **手写实现不会被覆盖** —— 重新生成时 controller 更新、service 保留：
+
+   ```bash
+   node ../../packages/cli/bin/nofaultctl.js generate api api/user.api.ts --out src --root-module
+   # ✓ write  user/user.controller.ts
+   # ✓ 1 file(s) into src      ← 手写过的 service 被跳过
+   ```
+
+## 改契约试试
