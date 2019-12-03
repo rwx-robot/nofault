@@ -69,3 +69,20 @@ curl -s "http://127.0.0.1:3000/api/user/users?page=0&pageSize=10"   # 422
    ```
 
 ## 改契约试试
+
+在 `api/user.api.ts` 里加一条：
+
+```ts
+@Get('/stats')
+@Handler('stats')
+stats(): OkResp { throw new Error('not implemented'); }
+```
+
+然后重新生成，controller 会多出 `stats` 路由，而 service 里你的实现原样保留
+（需要自己在 service 里补 `stats()`，否则调用时会抛 not implemented）。
+
+## 测试
+
+```bash
+pnpm vitest run tests/integration/v0.4.0
+```
