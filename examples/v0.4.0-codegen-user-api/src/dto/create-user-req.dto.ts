@@ -7,3 +7,8 @@ export class CreateUserReq {
   @MaxLength(32)
   name!: string;
   @IsString()
+  @IsEmail()
+  email!: string;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
