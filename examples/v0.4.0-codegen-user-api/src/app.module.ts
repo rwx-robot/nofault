@@ -3,3 +3,5 @@ import { UserModule } from './user/user.module';
 import { Module } from '@nofault/core';
 
 @Module({
+  imports: [UserModule],
+})
