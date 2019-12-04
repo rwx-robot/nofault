@@ -3,3 +3,4 @@ import { IsInt } from '@nofault/rest';
 export class DeleteUserReq {
   @IsInt()
   id!: number;
+}
