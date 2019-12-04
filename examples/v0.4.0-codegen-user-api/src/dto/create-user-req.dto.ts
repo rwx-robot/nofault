@@ -3,15 +3,3 @@ import { IsEmail, IsInt, IsNotEmpty, IsOptional, IsString, Max, MaxLength, Min, 
 export class CreateUserReq {
   @IsString()
   @IsNotEmpty()
-  @MinLength(2)
-  @MaxLength(32)
-  name!: string;
-  @IsString()
-  @IsEmail()
-  email!: string;
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  @Max(150)
-  age!: number;
-}

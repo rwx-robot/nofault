@@ -5,3 +5,4 @@ import { Module } from '@nofault/core';
 @Module({
   imports: [UserModule],
 })
+export class AppModule {}
