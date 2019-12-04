@@ -16,3 +16,7 @@
     "reflect-metadata": "^0.2.2"
   },
   "devDependencies": {
+    "@nofault/cli": "workspace:*",
+    "@nofault/dsl": "workspace:*"
+  }
+}
