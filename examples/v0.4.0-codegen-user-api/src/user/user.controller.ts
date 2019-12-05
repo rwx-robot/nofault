@@ -9,32 +9,3 @@ import { Body, Controller, Delete, Get, Param, Post, Query, Validate } from '@no
 @Controller({ path: '/api/user', middleware: ['RequestLogger'] })
 export class UserController {
   constructor(private readonly service: UserService) {}
-
-  @Get('/ping')
-  async ping(): Promise<OkResp> {
-    return this.service.ping();
-  }
-
-  @Validate(ListUsersReq)
-  @Get('/users')
-  async listUsers(@Query() listUsersReq: ListUsersReq): Promise<UserPageResp> {
-    return this.service.listUsers(listUsersReq);
-  }
-
-  @Get('/users/:id')
-  async getUser(@Param('id') id: number): Promise<UserResp> {
-    return this.service.getUser({ id });
-  }
-
-  @Validate(CreateUserReq)
-  @Post('/users')
-  async createUser(@Body() createUserReq: CreateUserReq): Promise<UserResp> {
-    return this.service.createUser(createUserReq);
-  }
-
-  @Delete('/users/:id')
-  async deleteUser(@Param('id') id: number): Promise<OkResp> {
-    return this.service.deleteUser({ id });
-  }
-
-}
