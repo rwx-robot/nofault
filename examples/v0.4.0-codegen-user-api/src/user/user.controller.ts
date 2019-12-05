@@ -19,3 +19,13 @@ export class UserController {
   @Get('/users')
   async listUsers(@Query() listUsersReq: ListUsersReq): Promise<UserPageResp> {
     return this.service.listUsers(listUsersReq);
+  }
+
+  @Get('/users/:id')
+  async getUser(@Param('id') id: number): Promise<UserResp> {
+    return this.service.getUser({ id });
+  }
+
+  @Validate(CreateUserReq)
+  @Post('/users')
+  async createUser(@Body() createUserReq: CreateUserReq): Promise<UserResp> {
