@@ -2,3 +2,5 @@
 import { IsInt } from '@nofault/rest';
 export class UserPageResp {
   @IsInt()
+  total!: number;
+  @IsInt()
