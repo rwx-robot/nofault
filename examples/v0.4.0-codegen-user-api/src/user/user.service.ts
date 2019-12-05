@@ -17,3 +17,21 @@ import { Injectable } from '@nofault/core';
 import { ConflictException, NotFoundException } from '@nofault/rest';
 import { CreateUserReq } from '../dto/create-user-req.dto';
 import { DeleteUserReq } from '../dto/delete-user-req.dto';
+import { GetUserReq } from '../dto/get-user-req.dto';
+import { ListUsersReq } from '../dto/list-users-req.dto';
+import { OkResp } from '../dto/ok-resp.dto';
+import { UserPageResp } from '../dto/user-page-resp.dto';
+import { UserResp } from '../dto/user-resp.dto';
+
+interface StoredUser {
+  id: number;
+  name: string;
+  email: string;
+}
+
+@Injectable()
+export class UserService {
+  private readonly users = new Map<number, StoredUser>();
+  private seq = 0;
+
+  ping(): OkResp {
