@@ -4,3 +4,6 @@ import { UserService } from './user.service';
 import { Module } from '@nofault/core';
 
 @Module({
+  controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
