@@ -27,3 +27,18 @@ const requestLogger: Middleware = async (ctx, next) => {
     status: ctx.response.statusCodeValue,
     ms: Date.now() - started,
   });
+  return result;
+};
+
+async function bootstrap(): Promise<void> {
+  const app = await RestApplication.create(AppModule, {
+    name: 'codegen-user-api',
+    logger,
+    middleware: [requestContext(), cors(), securityHeaders(), bodyParser()],
+    // 契约里 `@Middleware('RequestLogger')` 只是个名字，实现在这里登记。
+    // 忘了登记会**直接启动失败**并提示缺哪个，而不是静默跳过 —— 见 route-explorer.ts
+    middlewareRegistry: { RequestLogger: requestLogger },
+  });
+
+  app.enableShutdownHooks();
+  const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
