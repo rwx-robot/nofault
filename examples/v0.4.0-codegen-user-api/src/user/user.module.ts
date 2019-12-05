@@ -7,3 +7,5 @@ import { Module } from '@nofault/core';
   controllers: [UserController],
   providers: [UserService],
   exports: [UserService],
+})
+export class UserModule {}
