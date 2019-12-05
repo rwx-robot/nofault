@@ -7,3 +7,4 @@ export class UserResp {
   name!: string;
   @IsString()
   email!: string;
+}
