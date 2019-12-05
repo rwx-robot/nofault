@@ -29,3 +29,12 @@ export class UserController {
   @Validate(CreateUserReq)
   @Post('/users')
   async createUser(@Body() createUserReq: CreateUserReq): Promise<UserResp> {
+    return this.service.createUser(createUserReq);
+  }
+
+  @Delete('/users/:id')
+  async deleteUser(@Param('id') id: number): Promise<OkResp> {
+    return this.service.deleteUser({ id });
+  }
+
+}
