@@ -13,3 +13,17 @@ import { AppModule } from './app.module';
 const logger = createLogger({ context: 'user-api', level: LogLevel.INFO });
 
 /**
+ * 契约里 `@Middleware('RequestLogger')` 声明的中间件，需要在**这里注册实现**。
+ *
+ * 生成器只保留名字（它需要知道调用哪个中间件），实现留给人——
+ * 中间件往往依赖连接池、鉴权 SDK 之类无法从契约推导的东西。
+ */
+const requestLogger: Middleware = async (ctx, next) => {
+  const started = Date.now();
+  const result = await next();
+  logger.info('request', {
+    method: ctx.request.method,
+    path: ctx.request.path,
+    status: ctx.response.statusCodeValue,
+    ms: Date.now() - started,
+  });
