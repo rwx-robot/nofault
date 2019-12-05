@@ -4,3 +4,6 @@ export class UpdateUserReq {
   @IsInt()
   id!: number;
   @IsOptional()
+  @IsString()
+  @MinLength(2)
+  @MaxLength(32)
