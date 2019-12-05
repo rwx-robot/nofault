@@ -7,3 +7,5 @@ export class UpdateUserReq {
   @IsString()
   @MinLength(2)
   @MaxLength(32)
+  name!: string;
+}
