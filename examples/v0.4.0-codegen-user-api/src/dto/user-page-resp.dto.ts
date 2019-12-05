@@ -4,3 +4,5 @@ export class UserPageResp {
   @IsInt()
   total!: number;
   @IsInt()
+  page!: number;
+}
