@@ -53,3 +53,20 @@ export class UserService {
 
   createUser(req: CreateUserReq): UserResp {
     for (const existing of this.users.values()) {
+      if (existing.email === req.email) {
+        throw new ConflictException(`email ${req.email} already registered`);
+      }
+    }
+    const id = ++this.seq;
+    const user: StoredUser = { id, name: req.name, email: req.email };
+    this.users.set(id, user);
+    return { id: user.id, name: user.name, email: user.email };
+  }
+
+  deleteUser(req: DeleteUserReq): OkResp {
+    if (!this.users.delete(req.id)) {
+      throw new NotFoundException(`user ${req.id} not found`);
+    }
+    return { ok: 'deleted' };
+  }
+}
