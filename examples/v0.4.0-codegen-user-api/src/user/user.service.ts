@@ -35,3 +35,21 @@ export class UserService {
   private seq = 0;
 
   ping(): OkResp {
+    return { ok: 'pong' };
+  }
+
+  listUsers(req: ListUsersReq): UserPageResp {
+    // 分页参数已由 DTO 的 @Min/@Max 校验过，这里可以放心用
+    const start = (req.page - 1) * req.pageSize;
+    const items = [...this.users.values()].slice(start, start + req.pageSize);
+    return { total: this.users.size, page: items.length };
+  }
+
+  getUser(req: GetUserReq): UserResp {
+    const user = this.users.get(req.id);
+    if (!user) throw new NotFoundException(`user ${req.id} not found`);
+    return { id: user.id, name: user.name, email: user.email };
+  }
+
+  createUser(req: CreateUserReq): UserResp {
+    for (const existing of this.users.values()) {
