@@ -58,3 +58,11 @@ function inferType(designType: unknown): ColumnType {
   if (designType === Number) return 'int';
   if (designType === Boolean) return 'boolean';
   if (designType === Date) return 'date';
+  if (designType === Object || designType === Array) return 'json';
+  return 'string';
+}
+
+export function Entity(options: EntityOptions = {}): ClassDecorator {
+  return (target) => {
+    const meta = ensureMeta(target);
+    meta.table = options.table ?? toSnakeCase(target.name);
