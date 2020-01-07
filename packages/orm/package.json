@@ -18,3 +18,5 @@
   "publishConfig": {
     "access": "public"
   },
+  "dependencies": {
+    "@nofault/core": "workspace:*"
