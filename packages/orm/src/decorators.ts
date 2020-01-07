@@ -32,3 +32,12 @@ export interface EntityOptions {
 }
 
 export interface ColumnMeta extends ColumnOptions {
+  property: string;
+  name: string;
+  type: ColumnType;
+  nullable: boolean;
+}
+
+export interface EntityMeta {
+  target: Function;
+  table: string;
