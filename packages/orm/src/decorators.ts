@@ -15,3 +15,12 @@ export interface ColumnOptions {
   name?: string;
   type?: ColumnType;
   nullable?: boolean;
+  unique?: boolean;
+  /** 自增主键 */
+  primary?: boolean;
+  generated?: boolean;
+  /** 写入时自动填充 */
+  onCreate?: () => unknown;
+  onUpdate?: () => unknown;
+  comment?: string;
+}
