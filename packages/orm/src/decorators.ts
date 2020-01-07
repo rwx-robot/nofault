@@ -7,3 +7,11 @@
  */
 import 'reflect-metadata';
 import { ORM_METADATA } from './metadata';
+
+export type ColumnType = 'int' | 'bigint' | 'float' | 'string' | 'text' | 'boolean' | 'date' | 'json';
+
+export interface ColumnOptions {
+  /** 列名，默认取属性名的 snake_case */
+  name?: string;
+  type?: ColumnType;
+  nullable?: boolean;
