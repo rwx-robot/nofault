@@ -75,3 +75,11 @@ export function Column(options: ColumnOptions = {}): PropertyDecorator {
     const meta = ensureMeta(target.constructor);
     const property = String(propertyKey);
     const designType = Reflect.getMetadata('design:type', target, propertyKey) as unknown;
+    const column: ColumnMeta = {
+      property,
+      name: options.name ?? toSnakeCase(property),
+      type: options.type ?? inferType(designType),
+      nullable: options.nullable ?? false,
+      ...options,
+    };
+    meta.columns.set(property, column);
