@@ -83,3 +83,11 @@ export function Column(options: ColumnOptions = {}): PropertyDecorator {
       ...options,
     };
     meta.columns.set(property, column);
+    if (column.primary) meta.primaryColumn = property;
+  };
+}
+
+/** 自增主键的简写：`@PrimaryGeneratedColumn()` */
+export function PrimaryGeneratedColumn(options: ColumnOptions = {}): PropertyDecorator {
+  return Column({ type: 'int', primary: true, generated: true, ...options });
+}
