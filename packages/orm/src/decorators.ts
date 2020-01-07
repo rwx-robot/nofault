@@ -66,3 +66,12 @@ export function Entity(options: EntityOptions = {}): ClassDecorator {
   return (target) => {
     const meta = ensureMeta(target);
     meta.table = options.table ?? toSnakeCase(target.name);
+    if (options.comment) meta.comment = options.comment;
+  };
+}
+
+export function Column(options: ColumnOptions = {}): PropertyDecorator {
+  return (target, propertyKey) => {
+    const meta = ensureMeta(target.constructor);
+    const property = String(propertyKey);
+    const designType = Reflect.getMetadata('design:type', target, propertyKey) as unknown;
