@@ -91,3 +91,12 @@ export function Column(options: ColumnOptions = {}): PropertyDecorator {
 export function PrimaryGeneratedColumn(options: ColumnOptions = {}): PropertyDecorator {
   return Column({ type: 'int', primary: true, generated: true, ...options });
 }
+
+/** 创建时间：插入时自动填当前时间 */
+export function CreateDateColumn(options: ColumnOptions = {}): PropertyDecorator {
+  return Column({ type: 'date', onCreate: () => new Date(), ...options });
+}
+
+export function UpdateDateColumn(options: ColumnOptions = {}): PropertyDecorator {
+  return Column({ type: 'date', onCreate: () => new Date(), onUpdate: () => new Date(), ...options });
+}
