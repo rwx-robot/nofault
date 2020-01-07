@@ -41,3 +41,11 @@ export interface ColumnMeta extends ColumnOptions {
 export interface EntityMeta {
   target: Function;
   table: string;
+  columns: Map<string, ColumnMeta>;
+  primaryColumn?: string;
+  comment?: string;
+}
+
+function toSnakeCase(value: string): string {
+  return value
+    .replace(/([a-z0-9])([A-Z])/g, '$1_$2')
