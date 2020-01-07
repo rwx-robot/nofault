@@ -24,3 +24,11 @@ export interface ColumnOptions {
   onUpdate?: () => unknown;
   comment?: string;
 }
+
+export interface EntityOptions {
+  /** 表名，默认取类名的 snake_case */
+  table?: string;
+  comment?: string;
+}
+
+export interface ColumnMeta extends ColumnOptions {
