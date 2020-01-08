@@ -2,3 +2,4 @@
 export const ORM_METADATA = {
   ENTITY: 'nofault:orm:entity',
   COLUMN: 'nofault:orm:column',
+} as const;
