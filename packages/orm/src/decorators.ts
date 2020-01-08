@@ -100,3 +100,12 @@ export function CreateDateColumn(options: ColumnOptions = {}): PropertyDecorator
 export function UpdateDateColumn(options: ColumnOptions = {}): PropertyDecorator {
   return Column({ type: 'date', onCreate: () => new Date(), onUpdate: () => new Date(), ...options });
 }
+
+function ensureMeta(target: Function): EntityMeta {
+  let meta = Reflect.getMetadata(ORM_METADATA.ENTITY, target) as EntityMeta | undefined;
+  if (!meta) {
+    meta = { target, table: toSnakeCase(target.name), columns: new Map() };
+    Reflect.defineMetadata(ORM_METADATA.ENTITY, meta, target);
+  }
+  return meta;
+}
