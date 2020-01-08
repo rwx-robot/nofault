@@ -117,3 +117,10 @@ export function getEntityMeta(target: Function): EntityMeta {
     throw new Error(`${target.name} is not an entity; did you forget @Entity()?`);
   }
   return meta;
+}
+
+export function isEntity(target: Function): boolean {
+  return Reflect.hasMetadata(ORM_METADATA.ENTITY, target);
+}
+
+export { toSnakeCase };
