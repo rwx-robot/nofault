@@ -109,3 +109,11 @@ function ensureMeta(target: Function): EntityMeta {
   }
   return meta;
 }
+
+/** 读取实体元数据；没有 `@Entity()` 就抛错——静默当作"没有映射"会让排查变成噩梦 */
+export function getEntityMeta(target: Function): EntityMeta {
+  const meta = Reflect.getMetadata(ORM_METADATA.ENTITY, target) as EntityMeta | undefined;
+  if (!meta) {
+    throw new Error(`${target.name} is not an entity; did you forget @Entity()?`);
+  }
+  return meta;
