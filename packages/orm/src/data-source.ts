@@ -11,3 +11,15 @@
  */
 import type { EntityMeta, ColumnMeta } from './decorators';
 import { getEntityMeta } from './decorators';
+import { AnsiDialect, type Dialect, type SelectOptions, type WhereClause } from './dialect';
+import type { Condition } from './dialect';
+import { createSchema, executeRaw, type MemorySchema } from './memory-sql';
+
+export type Row = Record<string, unknown>;
+
+export interface QueryResult {
+  rows: Row[];
+  /** INSERT 时回填的自增 id（如果存储支持） */
+  insertId?: number;
+  affectedRows: number;
+}
