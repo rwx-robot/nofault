@@ -224,3 +224,16 @@ function matchCondition(row: Row, condition: Condition, meta: EntityMeta): boole
       const values = (Array.isArray(condition.value) ? condition.value : [condition.value]) as unknown[];
       return values.some((candidate) => sameValue(candidate, value));
     }
+    case 'IS NULL':
+      return value === null || value === undefined;
+    case 'IS NOT NULL':
+      return value !== null && value !== undefined;
+    default:
+      return false;
+  }
+}
+
+function columnNameFor(meta: EntityMeta, column: string): string {
+  for (const col of meta.columns.values()) {
+    if (col.name === column || col.property === column) return col.name;
+  }
