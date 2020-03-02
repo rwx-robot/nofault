@@ -49,3 +49,15 @@ interface Table {
   rows: Row[];
   sequence: number;
 }
+
+export class MemoryDataSource implements DataSource {
+  readonly name = 'memory';
+  private readonly tables = new Map<string, Table>();
+  private readonly schema: MemorySchema = createSchema();
+  private depth = 0;
+  private snapshot = new Map<string, Row[]>();
+  private schemaSnapshot = new Map<string, Row[]>();
+
+  async createTable(meta: EntityMeta): Promise<void> {
+    if (!this.tables.has(meta.table)) this.tables.set(meta.table, { rows: [], sequence: 0 });
+    this.raw(
