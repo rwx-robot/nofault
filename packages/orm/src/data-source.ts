@@ -124,3 +124,15 @@ export class MemoryDataSource implements DataSource {
     }
     this.depth++;
     try {
+      const result = await fn();
+      this.depth--;
+      if (this.depth === 0) {
+        this.snapshot = new Map();
+        this.schemaSnapshot = new Map();
+      }
+      return result;
+    } catch (err) {
+      this.depth = 0;
+      for (const [name, rows] of this.snapshot) {
+        const table = this.tables.get(name);
+        if (table) table.rows = rows;
