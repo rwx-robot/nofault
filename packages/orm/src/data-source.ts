@@ -237,3 +237,15 @@ function columnNameFor(meta: EntityMeta, column: string): string {
   for (const col of meta.columns.values()) {
     if (col.name === column || col.property === column) return col.name;
   }
+  return column;
+}
+
+// ------------------------------------------------------------------ SQL 实现
+
+export interface SqlDataSourceOptions {
+  executor: Executor;
+  dialect?: Dialect;
+}
+
+export class SqlDataSource implements DataSource {
+  readonly name = 'sql';
