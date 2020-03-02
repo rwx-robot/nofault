@@ -149,3 +149,15 @@ export class MemoryDataSource implements DataSource {
   inTransaction(): boolean {
     return this.depth > 0;
   }
+
+  /** 走迷你 SQL 引擎，让 migration 在没有真实数据库时也能跑通 */
+  async raw(sql: string, params: unknown[] = []): Promise<QueryResult> {
+    const result = executeRaw(this.schema, sql, params);
+    return { rows: result.rows, affectedRows: result.affectedRows };
+  }
+
+  async close(): Promise<void> {
+    this.tables.clear();
+  }
+
+  private table(meta: EntityMeta): Table {
