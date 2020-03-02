@@ -174,3 +174,16 @@ function compare(a: unknown, b: unknown, direction: 'ASC' | 'DESC'): number {
   const order = sameValue(a, b) ? 0 : (a as number) > (b as number) ? 1 : -1;
   return direction === 'ASC' ? order : -order;
 }
+
+/**
+ * 存储层的值比较。
+ *
+ * 布尔在落库时被写成 1/0（SQL 没有 boolean），而实体上的字段是 true/false。
+ * 若直接用 `===` 比，`active = true` 永远查不到东西——
+ * 这类"能存进去却查不出来"的 bug 极难察觉，所以统一在这里归一化。
+ */
+function sameValue(a: unknown, b: unknown): boolean {
+  return normalizeValue(a) === normalizeValue(b);
+}
+
+function normalizeValue(value: unknown): unknown {
