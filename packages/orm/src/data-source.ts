@@ -99,3 +99,15 @@ export class MemoryDataSource implements DataSource {
   }
 
   async select(meta: EntityMeta, options: SelectOptions): Promise<Row[]> {
+    const table = this.table(meta);
+    let rows = table.rows.filter((row) => matches(row, options.where, meta));
+    if (options.orderBy?.length) {
+      const [first] = options.orderBy;
+      rows = [...rows].sort((a, b) => compare(a[first!.column], b[first!.column], first!.direction));
+    }
+    const offset = options.offset ?? 0;
+    const limit = options.limit ?? rows.length;
+    return rows.slice(offset, offset + limit).map((row) => ({ ...row }));
+  }
+
+  async count(meta: EntityMeta, where?: WhereClause): Promise<number> {
