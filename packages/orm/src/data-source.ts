@@ -198,3 +198,17 @@ function matches(row: Row, where: WhereClause | undefined, meta: EntityMeta): bo
   const results = where.conditions.map((condition) => matchCondition(row, condition, meta));
   return where.op === 'OR' ? results.some(Boolean) : results.every(Boolean);
 }
+
+function matchCondition(row: Row, condition: Condition, meta: EntityMeta): boolean {
+  if ('group' in condition) return matches(row, condition.group, meta);
+  const column = columnNameFor(meta, condition.column);
+  const value = row[column];
+  switch (condition.operator) {
+    case '=':
+      return sameValue(value, condition.value);
+    case '!=':
+      return !sameValue(value, condition.value);
+    case '>':
+      return (value as number) > (condition.value as number);
+    case '>=':
+      return (value as number) >= (condition.value as number);
