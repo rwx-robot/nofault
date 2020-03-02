@@ -86,3 +86,16 @@ export class MemoryDataSource implements DataSource {
         Object.assign(row, patch);
         affected++;
       }
+    }
+    return { rows: [], affectedRows: affected };
+  }
+
+  async delete(meta: EntityMeta, id: unknown): Promise<QueryResult> {
+    const table = this.table(meta);
+    const primary = requirePrimary(meta);
+    const before = table.rows.length;
+    table.rows = table.rows.filter((row) => row[primary.name] !== id);
+    return { rows: [], affectedRows: before - table.rows.length };
+  }
+
+  async select(meta: EntityMeta, options: SelectOptions): Promise<Row[]> {
