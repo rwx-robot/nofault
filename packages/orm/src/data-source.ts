@@ -136,3 +136,16 @@ export class MemoryDataSource implements DataSource {
       for (const [name, rows] of this.snapshot) {
         const table = this.tables.get(name);
         if (table) table.rows = rows;
+      }
+      for (const [name, rows] of this.schemaSnapshot) {
+        this.schema.rows.set(name, rows);
+      }
+      this.snapshot = new Map();
+      this.schemaSnapshot = new Map();
+      throw err;
+    }
+  }
+
+  inTransaction(): boolean {
+    return this.depth > 0;
+  }
