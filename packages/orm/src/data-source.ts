@@ -61,3 +61,16 @@ export class MemoryDataSource implements DataSource {
   async createTable(meta: EntityMeta): Promise<void> {
     if (!this.tables.has(meta.table)) this.tables.set(meta.table, { rows: [], sequence: 0 });
     this.raw(
+      `CREATE TABLE IF NOT EXISTS ${meta.table} (${[...meta.columns.values()].map((c) => c.name).join(', ')})`,
+    );
+  }
+
+  async insert(meta: EntityMeta, row: Row): Promise<QueryResult> {
+    const table = this.table(meta);
+    const stored = { ...row };
+    const primary = meta.primaryColumn ? meta.columns.get(meta.primaryColumn) : undefined;
+    if (primary?.generated && (stored[primary.name] === undefined || stored[primary.name] === null)) {
+      table.sequence += 1;
+      stored[primary.name] = table.sequence;
+    }
+    table.rows.push(stored);
