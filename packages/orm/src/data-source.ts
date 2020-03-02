@@ -74,3 +74,15 @@ export class MemoryDataSource implements DataSource {
       stored[primary.name] = table.sequence;
     }
     table.rows.push(stored);
+    return { rows: [stored], insertId: primary ? (stored[primary.name] as number) : undefined, affectedRows: 1 };
+  }
+
+  async update(meta: EntityMeta, id: unknown, patch: Row): Promise<QueryResult> {
+    const table = this.table(meta);
+    const primary = requirePrimary(meta);
+    let affected = 0;
+    for (const row of table.rows) {
+      if (row[primary.name] === id) {
+        Object.assign(row, patch);
+        affected++;
+      }
