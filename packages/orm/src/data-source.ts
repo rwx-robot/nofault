@@ -23,3 +23,16 @@ export interface QueryResult {
   insertId?: number;
   affectedRows: number;
 }
+
+export interface Executor {
+  (sql: string, params: unknown[]): Promise<QueryResult>;
+}
+
+export interface DataSource {
+  readonly name: string;
+  createTable(meta: EntityMeta): Promise<void>;
+  insert(meta: EntityMeta, row: Row): Promise<QueryResult>;
+  update(meta: EntityMeta, id: unknown, patch: Row): Promise<QueryResult>;
+  delete(meta: EntityMeta, id: unknown): Promise<QueryResult>;
+  select(meta: EntityMeta, options: SelectOptions): Promise<Row[]>;
+  count(meta: EntityMeta, where?: WhereClause): Promise<number>;
