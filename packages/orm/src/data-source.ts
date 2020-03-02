@@ -212,3 +212,15 @@ function matchCondition(row: Row, condition: Condition, meta: EntityMeta): boole
       return (value as number) > (condition.value as number);
     case '>=':
       return (value as number) >= (condition.value as number);
+    case '<':
+      return (value as number) < (condition.value as number);
+    case '<=':
+      return (value as number) <= (condition.value as number);
+    case 'LIKE': {
+      const pattern = String(condition.value).replace(/%/g, '.*').replace(/_/g, '.');
+      return new RegExp(`^${pattern}$`).test(String(value));
+    }
+    case 'IN': {
+      const values = (Array.isArray(condition.value) ? condition.value : [condition.value]) as unknown[];
+      return values.some((candidate) => sameValue(candidate, value));
+    }
