@@ -36,3 +36,16 @@ export interface DataSource {
   delete(meta: EntityMeta, id: unknown): Promise<QueryResult>;
   select(meta: EntityMeta, options: SelectOptions): Promise<Row[]>;
   count(meta: EntityMeta, where?: WhereClause): Promise<number>;
+  /** 开启事务：回调内所有写操作进入事务，抛错自动回滚 */
+  transaction<T>(fn: () => Promise<T>): Promise<T>;
+  inTransaction(): boolean;
+  raw(sql: string, params?: unknown[]): Promise<QueryResult>;
+  close(): Promise<void>;
+}
+
+// ------------------------------------------------------------------ 内存实现
+
+interface Table {
+  rows: Row[];
+  sequence: number;
+}
