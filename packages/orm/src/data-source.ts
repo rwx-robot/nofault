@@ -161,3 +161,16 @@ export class MemoryDataSource implements DataSource {
   }
 
   private table(meta: EntityMeta): Table {
+    let table = this.tables.get(meta.table);
+    if (!table) {
+      table = { rows: [], sequence: 0 };
+      this.tables.set(meta.table, table);
+    }
+    return table;
+  }
+}
+
+function compare(a: unknown, b: unknown, direction: 'ASC' | 'DESC'): number {
+  const order = sameValue(a, b) ? 0 : (a as number) > (b as number) ? 1 : -1;
+  return direction === 'ASC' ? order : -order;
+}
