@@ -187,3 +187,14 @@ function sameValue(a: unknown, b: unknown): boolean {
 }
 
 function normalizeValue(value: unknown): unknown {
+  if (typeof value === 'boolean') return value ? 1 : 0;
+  if (value instanceof Date) return value.getTime();
+  return value;
+}
+
+/** 内存端的条件求值：与方言生成的 SQL 语义保持一致，这是"两种实现可互换"的前提 */
+function matches(row: Row, where: WhereClause | undefined, meta: EntityMeta): boolean {
+  if (!where || where.conditions.length === 0) return true;
+  const results = where.conditions.map((condition) => matchCondition(row, condition, meta));
+  return where.op === 'OR' ? results.some(Boolean) : results.every(Boolean);
+}
