@@ -111,3 +111,16 @@ export class MemoryDataSource implements DataSource {
   }
 
   async count(meta: EntityMeta, where?: WhereClause): Promise<number> {
+    return this.table(meta).rows.filter((row) => matches(row, where, meta)).length;
+  }
+
+  async transaction<T>(fn: () => Promise<T>): Promise<T> {
+    if (this.depth === 0) {
+      // 只在最外层打快照：嵌套事务（Savepoint 语义）共享同一份回滚点。
+      // 快照**必须包含 raw 写入的表**（如 schema_migrations），
+      // 否则迁移失败时版本号已落库、结构却回滚了，下次永远不会重试。
+      this.snapshot = new Map([...this.tables].map(([name, t]) => [name, t.rows.map((r) => ({ ...r }))]));
+      this.schemaSnapshot = new Map([...this.schema.rows].map(([name, rows]) => [name, rows.map((r) => ({ ...r }))]));
+    }
+    this.depth++;
+    try {
