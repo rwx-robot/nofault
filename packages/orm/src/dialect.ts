@@ -95,3 +95,10 @@ export class AnsiDialect implements Dialect {
     const columns = entries.map(([name]) => this.quote(name)).join(', ');
     const values = entries.map(() => this.placeholder(0)).join(', ');
     return {
+      text: `INSERT INTO ${this.quote(meta.table)} (${columns}) VALUES (${values})`,
+      params: entries.map(([, value]) => value),
+    };
+  }
+
+  update(meta: EntityMeta, id: unknown, patch: Record<string, unknown>): Sql {
+    const primary = requirePrimary(meta);
