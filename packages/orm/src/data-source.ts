@@ -299,3 +299,16 @@ export class SqlDataSource implements DataSource {
     } catch (err) {
       await this.executor('ROLLBACK', []);
       throw err;
+    }
+  }
+
+  inTransaction(): boolean {
+    return false;
+  }
+
+  raw(sql: string, params: unknown[] = []): Promise<QueryResult> {
+    return this.executor(sql, params);
+  }
+
+  async close(): Promise<void> {
+    // 连接由调用方提供，这里不越权关闭
