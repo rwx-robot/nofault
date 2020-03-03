@@ -261,3 +261,16 @@ export class SqlDataSource implements DataSource {
     const sql = this.dialect.createTable(meta);
     await this.executor(sql.text, sql.params);
   }
+
+  insert(meta: EntityMeta, row: Row): Promise<QueryResult> {
+    const sql = this.dialect.insert(meta, row);
+    return this.executor(sql.text, sql.params);
+  }
+
+  update(meta: EntityMeta, id: unknown, patch: Row): Promise<QueryResult> {
+    const sql = this.dialect.update(meta, id, patch);
+    return this.executor(sql.text, sql.params);
+  }
+
+  delete(meta: EntityMeta, id: unknown): Promise<QueryResult> {
+    const sql = this.dialect.deleteById(meta, id);
