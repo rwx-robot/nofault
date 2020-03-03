@@ -12,3 +12,9 @@ export interface Sql {
 }
 
 export interface SelectOptions {
+  where?: WhereClause;
+  orderBy?: Array<{ column: string; direction: 'ASC' | 'DESC' }>;
+  limit?: number;
+  offset?: number;
+  columns?: string[];
+}
