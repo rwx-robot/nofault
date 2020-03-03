@@ -40,3 +40,10 @@ export type CompareOperator =
   | 'IN'
   | 'IS NULL'
   | 'IS NOT NULL';
+
+export interface Dialect {
+  placeholder(index: number): string;
+  quote(name: string): string;
+  columnType(column: ColumnMeta): string;
+  createTable(meta: EntityMeta): Sql;
+  insert(meta: EntityMeta, row: Record<string, unknown>): Sql;
