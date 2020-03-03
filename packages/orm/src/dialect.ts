@@ -54,3 +54,10 @@ export interface Dialect {
 
 /** 通用 ANSI 风格方言（MySQL / SQLite 直接可用） */
 export class AnsiDialect implements Dialect {
+  placeholder(_index?: number): string {
+    return '?';
+  }
+
+  quote(name: string): string {
+    return ['`', name.replace(/`/g, '``'), '`'].join('');
+  }
