@@ -18,3 +18,11 @@ export interface SelectOptions {
   offset?: number;
   columns?: string[];
 }
+
+export interface WhereClause {
+  /** 组合方式，默认 AND */
+  op?: 'AND' | 'OR';
+  conditions: Condition[];
+}
+
+export type Condition =
