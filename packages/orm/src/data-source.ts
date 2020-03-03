@@ -312,3 +312,14 @@ export class SqlDataSource implements DataSource {
 
   async close(): Promise<void> {
     // 连接由调用方提供，这里不越权关闭
+  }
+}
+
+function requirePrimary(meta: EntityMeta): ColumnMeta {
+  if (!meta.primaryColumn) {
+    throw new Error(`entity ${meta.table} has no primary column; add @PrimaryGeneratedColumn()`);
+  }
+  return meta.columns.get(meta.primaryColumn)!;
+}
+
+export { getEntityMeta };
