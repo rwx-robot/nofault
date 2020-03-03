@@ -82,3 +82,9 @@ export class AnsiDialect implements Dialect {
       let def = `${this.quote(column.name)} ${this.columnType(column)}`;
       if (column.primary) def += ' PRIMARY KEY';
       if (column.generated && column.type === 'int') def += ' AUTOINCREMENT';
+      else if (!column.nullable) def += ' NOT NULL';
+      if (column.unique && !column.primary) def += ' UNIQUE';
+      parts.push(def);
+    }
+    const body = parts.join(',\n  ');
+    return { text: `CREATE TABLE IF NOT EXISTS ${this.quote(meta.table)} (\n  ${body}\n)`, params: [] };
