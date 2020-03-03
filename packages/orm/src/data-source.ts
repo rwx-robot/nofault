@@ -249,3 +249,15 @@ export interface SqlDataSourceOptions {
 
 export class SqlDataSource implements DataSource {
   readonly name = 'sql';
+  private readonly executor: Executor;
+  private readonly dialect: Dialect;
+
+  constructor(options: SqlDataSourceOptions) {
+    this.executor = options.executor;
+    this.dialect = options.dialect ?? new AnsiDialect();
+  }
+
+  async createTable(meta: EntityMeta): Promise<void> {
+    const sql = this.dialect.createTable(meta);
+    await this.executor(sql.text, sql.params);
+  }
