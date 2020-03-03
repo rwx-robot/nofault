@@ -287,3 +287,15 @@ export class SqlDataSource implements DataSource {
     const sql = this.dialect.select(meta, { where, columns: ['COUNT(*) AS total'] });
     const result = await this.executor(sql.text, sql.params);
     const total = (result.rows[0]?.total as number | undefined) ?? 0;
+    return Number(total);
+  }
+
+  async transaction<T>(fn: () => Promise<T>): Promise<T> {
+    await this.executor('BEGIN', []);
+    try {
+      const result = await fn();
+      await this.executor('COMMIT', []);
+      return result;
+    } catch (err) {
+      await this.executor('ROLLBACK', []);
+      throw err;
