@@ -75,3 +75,10 @@ export class AnsiDialect implements Dialect {
     };
     return map[column.type];
   }
+
+  createTable(meta: EntityMeta): Sql {
+    const parts: string[] = [];
+    for (const column of meta.columns.values()) {
+      let def = `${this.quote(column.name)} ${this.columnType(column)}`;
+      if (column.primary) def += ' PRIMARY KEY';
+      if (column.generated && column.type === 'int') def += ' AUTOINCREMENT';
