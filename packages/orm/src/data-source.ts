@@ -274,3 +274,16 @@ export class SqlDataSource implements DataSource {
 
   delete(meta: EntityMeta, id: unknown): Promise<QueryResult> {
     const sql = this.dialect.deleteById(meta, id);
+    return this.executor(sql.text, sql.params);
+  }
+
+  async select(meta: EntityMeta, options: SelectOptions): Promise<Row[]> {
+    const sql = this.dialect.select(meta, options);
+    const result = await this.executor(sql.text, sql.params);
+    return result.rows;
+  }
+
+  async count(meta: EntityMeta, where?: WhereClause): Promise<number> {
+    const sql = this.dialect.select(meta, { where, columns: ['COUNT(*) AS total'] });
+    const result = await this.executor(sql.text, sql.params);
+    const total = (result.rows[0]?.total as number | undefined) ?? 0;
