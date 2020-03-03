@@ -47,3 +47,10 @@ export interface Dialect {
   columnType(column: ColumnMeta): string;
   createTable(meta: EntityMeta): Sql;
   insert(meta: EntityMeta, row: Record<string, unknown>): Sql;
+  update(meta: EntityMeta, id: unknown, patch: Record<string, unknown>): Sql;
+  deleteById(meta: EntityMeta, id: unknown): Sql;
+  select(meta: EntityMeta, options: SelectOptions): Sql;
+}
+
+/** 通用 ANSI 风格方言（MySQL / SQLite 直接可用） */
+export class AnsiDialect implements Dialect {
