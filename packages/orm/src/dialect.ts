@@ -33,3 +33,10 @@ export type CompareOperator =
   | '='
   | '!='
   | '>'
+  | '>='
+  | '<'
+  | '<='
+  | 'LIKE'
+  | 'IN'
+  | 'IS NULL'
+  | 'IS NOT NULL';
