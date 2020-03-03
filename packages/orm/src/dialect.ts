@@ -88,3 +88,10 @@ export class AnsiDialect implements Dialect {
     }
     const body = parts.join(',\n  ');
     return { text: `CREATE TABLE IF NOT EXISTS ${this.quote(meta.table)} (\n  ${body}\n)`, params: [] };
+  }
+
+  insert(meta: EntityMeta, row: Record<string, unknown>): Sql {
+    const entries = Object.entries(row);
+    const columns = entries.map(([name]) => this.quote(name)).join(', ');
+    const values = entries.map(() => this.placeholder(0)).join(', ');
+    return {
