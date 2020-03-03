@@ -5,3 +5,10 @@
  * **不碰连接、不做 IO** —— 这样方言可以单测，也能被任何驱动复用。
  */
 import type { ColumnMeta, ColumnType, EntityMeta } from './decorators';
+
+export interface Sql {
+  text: string;
+  params: unknown[];
+}
+
+export interface SelectOptions {
