@@ -26,3 +26,10 @@ export interface WhereClause {
 }
 
 export type Condition =
+  | { column: string; operator: CompareOperator; value: unknown }
+  | { group: WhereClause };
+
+export type CompareOperator =
+  | '='
+  | '!='
+  | '>'
