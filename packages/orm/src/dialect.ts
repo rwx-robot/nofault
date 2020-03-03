@@ -61,3 +61,10 @@ export class AnsiDialect implements Dialect {
   quote(name: string): string {
     return ['`', name.replace(/`/g, '``'), '`'].join('');
   }
+
+  columnType(column: ColumnMeta): string {
+    const map: Record<ColumnType, string> = {
+      int: 'INTEGER',
+      bigint: 'BIGINT',
+      float: 'REAL',
+      string: 'VARCHAR(255)',
