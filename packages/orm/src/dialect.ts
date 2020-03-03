@@ -68,3 +68,10 @@ export class AnsiDialect implements Dialect {
       bigint: 'BIGINT',
       float: 'REAL',
       string: 'VARCHAR(255)',
+      text: 'TEXT',
+      boolean: 'TINYINT(1)',
+      date: 'DATETIME',
+      json: 'TEXT',
+    };
+    return map[column.type];
+  }
