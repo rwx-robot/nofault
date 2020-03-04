@@ -116,3 +116,10 @@ export class AnsiDialect implements Dialect {
       text: `DELETE FROM ${this.quote(meta.table)} WHERE ${this.quote(primary.name)} = ${this.placeholder(0)}`,
       params: [id],
     };
+  }
+
+  select(meta: EntityMeta, options: SelectOptions): Sql {
+    const params: unknown[] = [];
+    const projection = options.columns?.length
+      ? options.columns.map((c) => this.quote(c)).join(', ')
+      : [...meta.columns.values()].map((c) => this.quote(c.name)).join(', ');
