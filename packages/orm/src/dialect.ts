@@ -137,3 +137,10 @@ export class AnsiDialect implements Dialect {
       text += ` ORDER BY ${options.orderBy.map((o) => `${this.quote(o.column)} ${o.direction}`).join(', ')}`;
     }
     if (options.limit !== undefined) {
+      text += ` LIMIT ${this.placeholder(0)}`;
+      params.push(options.limit);
+    }
+    if (options.offset !== undefined) {
+      text += ` OFFSET ${this.placeholder(0)}`;
+      params.push(options.offset);
+    }
