@@ -47,3 +47,10 @@ export function executeRaw(schema: MemorySchema, sql: string, params: unknown[] 
     case 'DELETE':
       return remove(schema, text, params);
     default:
+      throw new Error(`MemoryDataSource does not support SQL: ${sql}`);
+  }
+}
+
+function unquote(name: string): string {
+  return name.replace(/^`|`$/g, '').replace(/^"|"$/g, '');
+}
