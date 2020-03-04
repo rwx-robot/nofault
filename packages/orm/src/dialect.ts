@@ -165,3 +165,10 @@ export function renderWhere(clause: WhereClause, dialect: Dialect, push: (value:
       if (values.length === 0) return '1 = 0';
       return `${column} IN (${values.map((v) => push(v)).join(', ')})`;
     }
+    return `${column} ${condition.operator} ${push(condition.value)}`;
+  });
+  const joiner = clause.op === 'OR' ? ' OR ' : ' AND ';
+  return parts.filter((p) => p.length > 0).join(joiner);
+}
+
+function requirePrimary(meta: EntityMeta): ColumnMeta {
