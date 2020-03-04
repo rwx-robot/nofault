@@ -31,3 +31,11 @@ export function executeRaw(schema: MemorySchema, sql: string, params: unknown[] 
 
   switch (head) {
     case 'BEGIN':
+    case 'COMMIT':
+    case 'ROLLBACK':
+      return { rows: [], affectedRows: 0 };
+    case 'CREATE':
+      return createTable(schema, text);
+    case 'DROP':
+      return dropTable(schema, text);
+    case 'INSERT':
