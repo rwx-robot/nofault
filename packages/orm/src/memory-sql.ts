@@ -71,3 +71,11 @@ function createTable(schema: MemorySchema, sql: string): RawResult {
     schema.rows.set(table, []);
   }
   return { rows: [], affectedRows: 0 };
+}
+
+function dropTable(schema: MemorySchema, sql: string): RawResult {
+  const match = /^DROP\s+TABLE\s+(?:IF\s+EXISTS\s+)?(\S+)$/i.exec(sql);
+  if (!match) throw new Error(`cannot parse DROP TABLE: ${sql}`);
+  const table = unquote(match[1]!);
+  schema.tables.delete(table);
+  schema.rows.delete(table);
