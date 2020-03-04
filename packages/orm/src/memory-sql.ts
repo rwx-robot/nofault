@@ -39,3 +39,11 @@ export function executeRaw(schema: MemorySchema, sql: string, params: unknown[] 
     case 'DROP':
       return dropTable(schema, text);
     case 'INSERT':
+      return insert(schema, text, params);
+    case 'SELECT':
+      return select(schema, text, params);
+    case 'UPDATE':
+      return update(schema, text, params);
+    case 'DELETE':
+      return remove(schema, text, params);
+    default:
