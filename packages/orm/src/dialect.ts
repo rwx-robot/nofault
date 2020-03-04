@@ -109,3 +109,10 @@ export class AnsiDialect implements Dialect {
       params: [...entries.map(([, v]) => v), id],
     };
   }
+
+  deleteById(meta: EntityMeta, id: unknown): Sql {
+    const primary = requirePrimary(meta);
+    return {
+      text: `DELETE FROM ${this.quote(meta.table)} WHERE ${this.quote(primary.name)} = ${this.placeholder(0)}`,
+      params: [id],
+    };
