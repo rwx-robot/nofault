@@ -102,3 +102,10 @@ export class AnsiDialect implements Dialect {
 
   update(meta: EntityMeta, id: unknown, patch: Record<string, unknown>): Sql {
     const primary = requirePrimary(meta);
+    const entries = Object.entries(patch);
+    const set = entries.map(([name]) => `${this.quote(name)} = ${this.placeholder(0)}`).join(', ');
+    return {
+      text: `UPDATE ${this.quote(meta.table)} SET ${set} WHERE ${this.quote(primary.name)} = ${this.placeholder(0)}`,
+      params: [...entries.map(([, v]) => v), id],
+    };
+  }
