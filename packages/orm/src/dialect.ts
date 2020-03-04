@@ -144,3 +144,10 @@ export class AnsiDialect implements Dialect {
       text += ` OFFSET ${this.placeholder(0)}`;
       params.push(options.offset);
     }
+    return { text, params };
+  }
+}
+
+export function renderWhere(clause: WhereClause, dialect: Dialect, push: (value: unknown) => string): string {
+  if (clause.conditions.length === 0) return '';
+  const parts = clause.conditions.map((condition) => {
