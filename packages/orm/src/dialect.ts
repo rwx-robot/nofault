@@ -172,3 +172,8 @@ export function renderWhere(clause: WhereClause, dialect: Dialect, push: (value:
 }
 
 function requirePrimary(meta: EntityMeta): ColumnMeta {
+  if (!meta.primaryColumn) {
+    throw new Error(`entity ${meta.table} has no primary column; add @PrimaryGeneratedColumn()`);
+  }
+  return meta.columns.get(meta.primaryColumn)!;
+}
