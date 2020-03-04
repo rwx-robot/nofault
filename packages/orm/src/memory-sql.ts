@@ -23,3 +23,11 @@ export function createSchema(): MemorySchema {
 export interface RawResult {
   rows: Row[];
   affectedRows: number;
+}
+
+export function executeRaw(schema: MemorySchema, sql: string, params: unknown[] = []): RawResult {
+  const text = sql.trim().replace(/;$/, '');
+  const head = text.split(/\s+/)[0]?.toUpperCase();
+
+  switch (head) {
+    case 'BEGIN':
