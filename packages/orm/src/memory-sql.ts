@@ -54,3 +54,12 @@ export function executeRaw(schema: MemorySchema, sql: string, params: unknown[] 
 function unquote(name: string): string {
   return name.replace(/^`|`$/g, '').replace(/^"|"$/g, '');
 }
+
+function createTable(schema: MemorySchema, sql: string): RawResult {
+  const match = /^CREATE\s+TABLE\s+(?:IF\s+NOT\s+EXISTS\s+)?(\S+)\s*\(([\s\S]*)\)$/i.exec(sql);
+  if (!match) throw new Error(`cannot parse CREATE TABLE: ${sql}`);
+  const table = unquote(match[1]!);
+  const columns = new Set(
+    match[2]!
+      .split(',')
+      .map((part) => part.trim().split(/\s+/)[0])
