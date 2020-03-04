@@ -63,3 +63,11 @@ function createTable(schema: MemorySchema, sql: string): RawResult {
     match[2]!
       .split(',')
       .map((part) => part.trim().split(/\s+/)[0])
+      .filter((name) => name && !/^(PRIMARY|UNIQUE|KEY|CONSTRAINT|FOREIGN|INDEX)$/i.test(name))
+      .map(unquote),
+  );
+  if (!schema.tables.has(table)) {
+    schema.tables.set(table, columns);
+    schema.rows.set(table, []);
+  }
+  return { rows: [], affectedRows: 0 };
