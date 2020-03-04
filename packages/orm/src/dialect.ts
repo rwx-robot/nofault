@@ -158,3 +158,10 @@ export function renderWhere(clause: WhereClause, dialect: Dialect, push: (value:
     const column = dialect.quote(condition.column);
     if (condition.operator === 'IS NULL' || condition.operator === 'IS NOT NULL') {
       return `${column} ${condition.operator}`;
+    }
+    if (condition.operator === 'IN') {
+      const values = Array.isArray(condition.value) ? condition.value : [condition.value];
+      // 空 IN () 不是合法 SQL；写成恒假更诚实，也让调用方立刻看到"什么都不会命中"
+      if (values.length === 0) return '1 = 0';
+      return `${column} IN (${values.map((v) => push(v)).join(', ')})`;
+    }
