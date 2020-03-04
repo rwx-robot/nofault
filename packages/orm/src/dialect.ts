@@ -130,3 +130,10 @@ export class AnsiDialect implements Dialect {
         params.push(value);
         return this.placeholder(params.length - 1);
       };
+      const rendered = renderWhere(options.where, this, push);
+      if (rendered) text += ` WHERE ${rendered}`;
+    }
+    if (options.orderBy?.length) {
+      text += ` ORDER BY ${options.orderBy.map((o) => `${this.quote(o.column)} ${o.direction}`).join(', ')}`;
+    }
+    if (options.limit !== undefined) {
