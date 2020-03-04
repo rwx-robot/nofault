@@ -15,3 +15,11 @@ export interface MemorySchema {
   tables: Map<string, Set<string>>;
   rows: Map<string, Row[]>;
 }
+
+export function createSchema(): MemorySchema {
+  return { tables: new Map(), rows: new Map() };
+}
+
+export interface RawResult {
+  rows: Row[];
+  affectedRows: number;
