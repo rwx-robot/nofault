@@ -151,3 +151,10 @@ export class AnsiDialect implements Dialect {
 export function renderWhere(clause: WhereClause, dialect: Dialect, push: (value: unknown) => string): string {
   if (clause.conditions.length === 0) return '';
   const parts = clause.conditions.map((condition) => {
+    if ('group' in condition) {
+      const inner = renderWhere(condition.group, dialect, push);
+      return inner ? `(${inner})` : '';
+    }
+    const column = dialect.quote(condition.column);
+    if (condition.operator === 'IS NULL' || condition.operator === 'IS NOT NULL') {
+      return `${column} ${condition.operator}`;
