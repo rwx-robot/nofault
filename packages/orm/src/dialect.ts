@@ -123,3 +123,10 @@ export class AnsiDialect implements Dialect {
     const projection = options.columns?.length
       ? options.columns.map((c) => this.quote(c)).join(', ')
       : [...meta.columns.values()].map((c) => this.quote(c.name)).join(', ');
+
+    let text = `SELECT ${projection} FROM ${this.quote(meta.table)}`;
+    if (options.where) {
+      const push = (value: unknown): string => {
+        params.push(value);
+        return this.placeholder(params.length - 1);
+      };
