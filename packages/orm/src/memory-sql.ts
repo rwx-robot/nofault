@@ -199,3 +199,10 @@ function pick(row: Row, columns: string[]): Row {
 
 function tableOf(schema: MemorySchema, table: string): Row[] {
   let rows = schema.rows.get(table);
+  if (!rows) {
+    rows = [];
+    schema.rows.set(table, rows);
+    schema.tables.set(table, new Set());
+  }
+  return rows;
+}
