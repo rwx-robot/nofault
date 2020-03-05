@@ -190,3 +190,12 @@ function matches(row: Row, whereSql: string | undefined, params: unknown[]): boo
 function countPlaceholders(sql: string): number {
   return (sql.match(/\?/g) ?? []).length;
 }
+
+function pick(row: Row, columns: string[]): Row {
+  const out: Row = {};
+  for (const column of columns) out[column] = row[column];
+  return out;
+}
+
+function tableOf(schema: MemorySchema, table: string): Row[] {
+  let rows = schema.rows.get(table);
