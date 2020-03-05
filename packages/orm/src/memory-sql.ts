@@ -102,3 +102,12 @@ function select(schema: MemorySchema, sql: string, params: unknown[]): RawResult
   const table = unquote(match[2]!);
   const whereSql = match[3];
   const rows = tableOf(schema, table).filter((row) => matches(row, whereSql, params));
+
+  if (/COUNT\(\*\)/i.test(projection)) {
+    const alias = /AS\s+(\w+)/i.exec(projection)?.[1] ?? 'total';
+    return { rows: [{ [alias]: rows.length }], affectedRows: 0 };
+  }
+  const columns = projection === '*' ? null : projection.split(',').map((c) => unquote(c.trim()));
+  const projected = rows.map((row) => (columns ? pick(row, columns) : { ...row }));
+  return { rows: projected, affectedRows: projected.length };
+}
