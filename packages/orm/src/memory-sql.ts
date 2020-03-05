@@ -143,3 +143,11 @@ function remove(schema: MemorySchema, sql: string, params: unknown[]): RawResult
   schema.rows.set(table, kept);
   return { rows: [], affectedRows: before - kept.length };
 }
+
+/** 只支持 `col = ?`（AND 连接）的简易 WHERE，够迁移用 */
+function matches(row: Row, whereSql: string | undefined, params: unknown[]): boolean {
+  if (!whereSql) return true;
+  const clauses = whereSql.split(/\s+AND\s+/i);
+  let index = 0;
+  for (const clause of clauses) {
+    const m = /^(\S+)\s*(=|!=|>|<|>=|<=)\s*(\?|\S+)$/.exec(clause.trim());
