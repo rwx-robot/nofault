@@ -167,3 +167,11 @@ function matches(row: Row, whereSql: string | undefined, params: unknown[]): boo
         break;
       case '!=':
         if (actual === value) return false;
+        break;
+      case '>':
+        if (!((actual as number) > (value as number))) return false;
+        break;
+      case '<':
+        if (!((actual as number) < (value as number))) return false;
+        break;
+      case '>=':
