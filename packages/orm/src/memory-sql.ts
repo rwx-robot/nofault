@@ -94,3 +94,11 @@ function insert(schema: MemorySchema, sql: string, params: unknown[]): RawResult
   tableOf(schema, table).push(row);
   return { rows: [{ ...row }], affectedRows: 1 };
 }
+
+function select(schema: MemorySchema, sql: string, params: unknown[]): RawResult {
+  const match = /^SELECT\s+([\s\S]+?)\s+FROM\s+(\S+)(?:\s+WHERE\s+([\s\S]+?))?(?:\s+ORDER\s+BY\s+(\S+))?$/i.exec(sql);
+  if (!match) throw new Error(`cannot parse SELECT: ${sql}`);
+  const projection = match[1]!.trim();
+  const table = unquote(match[2]!);
+  const whereSql = match[3];
+  const rows = tableOf(schema, table).filter((row) => matches(row, whereSql, params));
