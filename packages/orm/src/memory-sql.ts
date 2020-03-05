@@ -183,3 +183,10 @@ function matches(row: Row, whereSql: string | undefined, params: unknown[]): boo
       default:
         break;
     }
+  }
+  return true;
+}
+
+function countPlaceholders(sql: string): number {
+  return (sql.match(/\?/g) ?? []).length;
+}
