@@ -79,3 +79,11 @@ function dropTable(schema: MemorySchema, sql: string): RawResult {
   const table = unquote(match[1]!);
   schema.tables.delete(table);
   schema.rows.delete(table);
+  return { rows: [], affectedRows: 0 };
+}
+
+function insert(schema: MemorySchema, sql: string, params: unknown[]): RawResult {
+  const match = /^INSERT\s+INTO\s+(\S+)\s*\(([^)]*)\)\s*VALUES\s*\(([^)]*)\)$/i.exec(sql);
+  if (!match) throw new Error(`cannot parse INSERT: ${sql}`);
+  const table = unquote(match[1]!);
+  const columns = match[2]!.split(',').map((c) => unquote(c.trim()));
