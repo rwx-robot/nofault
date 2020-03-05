@@ -151,3 +151,11 @@ function matches(row: Row, whereSql: string | undefined, params: unknown[]): boo
   let index = 0;
   for (const clause of clauses) {
     const m = /^(\S+)\s*(=|!=|>|<|>=|<=)\s*(\?|\S+)$/.exec(clause.trim());
+    if (!m) continue;
+    const [, column, operator, raw] = m;
+    let value: unknown;
+    if (raw === '?') {
+      value = params[index];
+      index++;
+    } else {
+      value = unquote(raw!);
