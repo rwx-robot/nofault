@@ -159,3 +159,11 @@ function matches(row: Row, whereSql: string | undefined, params: unknown[]): boo
       index++;
     } else {
       value = unquote(raw!);
+    }
+    const actual = row[unquote(column!)];
+    switch (operator) {
+      case '=':
+        if (actual !== value) return false;
+        break;
+      case '!=':
+        if (actual === value) return false;
