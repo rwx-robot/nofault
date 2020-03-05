@@ -135,3 +135,11 @@ function update(schema: MemorySchema, sql: string, params: unknown[]): RawResult
 
 function remove(schema: MemorySchema, sql: string, params: unknown[]): RawResult {
   const match = /^DELETE\s+FROM\s+(\S+)(?:\s+WHERE\s+([\s\S]+))?$/i.exec(sql);
+  if (!match) throw new Error(`cannot parse DELETE: ${sql}`);
+  const table = unquote(match[1]!);
+  const rows = tableOf(schema, table);
+  const before = rows.length;
+  const kept = rows.filter((row) => !matches(row, match[2], params));
+  schema.rows.set(table, kept);
+  return { rows: [], affectedRows: before - kept.length };
+}
