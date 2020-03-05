@@ -111,3 +111,11 @@ function select(schema: MemorySchema, sql: string, params: unknown[]): RawResult
   const projected = rows.map((row) => (columns ? pick(row, columns) : { ...row }));
   return { rows: projected, affectedRows: projected.length };
 }
+
+function update(schema: MemorySchema, sql: string, params: unknown[]): RawResult {
+  const match = /^UPDATE\s+(\S+)\s+SET\s+([\s\S]+?)(?:\s+WHERE\s+([\s\S]+))?$/i.exec(sql);
+  if (!match) throw new Error(`cannot parse UPDATE: ${sql}`);
+  const rows = tableOf(schema, unquote(match[1]!));
+  const sets = match[2]!.split(',').map((part) => part.split('=').map((s) => s.trim()));
+  const whereParams = countPlaceholders(match[3] ?? '');
+  const setParams = params.slice(0, sets.length);
