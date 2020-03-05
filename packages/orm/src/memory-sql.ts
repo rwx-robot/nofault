@@ -87,3 +87,10 @@ function insert(schema: MemorySchema, sql: string, params: unknown[]): RawResult
   if (!match) throw new Error(`cannot parse INSERT: ${sql}`);
   const table = unquote(match[1]!);
   const columns = match[2]!.split(',').map((c) => unquote(c.trim()));
+  const row: Row = {};
+  columns.forEach((column, i) => {
+    row[column] = params[i];
+  });
+  tableOf(schema, table).push(row);
+  return { rows: [{ ...row }], affectedRows: 1 };
+}
