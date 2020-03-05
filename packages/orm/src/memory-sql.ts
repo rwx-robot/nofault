@@ -119,3 +119,11 @@ function update(schema: MemorySchema, sql: string, params: unknown[]): RawResult
   const sets = match[2]!.split(',').map((part) => part.split('=').map((s) => s.trim()));
   const whereParams = countPlaceholders(match[3] ?? '');
   const setParams = params.slice(0, sets.length);
+  const rest = params.slice(sets.length);
+
+  let affected = 0;
+  for (const row of rows) {
+    if (!matches(row, match[3], rest)) continue;
+    sets.forEach(([column], i) => {
+      row[unquote(column!)] = setParams[i];
+    });
