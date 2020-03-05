@@ -127,3 +127,11 @@ function update(schema: MemorySchema, sql: string, params: unknown[]): RawResult
     sets.forEach(([column], i) => {
       row[unquote(column!)] = setParams[i];
     });
+    affected++;
+  }
+  void whereParams;
+  return { rows: [], affectedRows: affected };
+}
+
+function remove(schema: MemorySchema, sql: string, params: unknown[]): RawResult {
+  const match = /^DELETE\s+FROM\s+(\S+)(?:\s+WHERE\s+([\s\S]+))?$/i.exec(sql);
