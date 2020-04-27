@@ -28,3 +28,5 @@ export type { DataSource, Executor, QueryResult, Row, SqlDataSourceOptions } fro
 
 export { Repository, QueryBuilder } from './repository';
 export type { Page, OrderBy } from './repository';
+
+export { Migrator } from './migration';
