@@ -31,3 +31,6 @@ export type { Page, OrderBy } from './repository';
 
 export { Migrator } from './migration';
 export type { Migration, MigrationContext, MigrationRecord } from './migration';
+
+export { OrmModule, getRepositoryToken, InjectRepository, DATA_SOURCE } from './orm.module';
+export type { OrmModuleOptions } from './orm.module';
