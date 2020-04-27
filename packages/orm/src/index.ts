@@ -14,3 +14,4 @@ export {
   isEntity,
   toSnakeCase,
 } from './decorators';
+export type { ColumnOptions, ColumnType, ColumnMeta, EntityMeta, EntityOptions } from './decorators';
