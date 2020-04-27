@@ -13,3 +13,4 @@ export {
   getEntityMeta,
   isEntity,
   toSnakeCase,
+} from './decorators';
