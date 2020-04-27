@@ -9,3 +9,5 @@ export {
   Column,
   PrimaryGeneratedColumn,
   CreateDateColumn,
+  UpdateDateColumn,
+  getEntityMeta,
