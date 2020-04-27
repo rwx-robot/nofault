@@ -15,3 +15,5 @@ export {
   toSnakeCase,
 } from './decorators';
 export type { ColumnOptions, ColumnType, ColumnMeta, EntityMeta, EntityOptions } from './decorators';
+
+export { ORM_METADATA } from './metadata';
