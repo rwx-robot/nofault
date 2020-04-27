@@ -30,3 +30,4 @@ export { Repository, QueryBuilder } from './repository';
 export type { Page, OrderBy } from './repository';
 
 export { Migrator } from './migration';
+export type { Migration, MigrationContext, MigrationRecord } from './migration';
