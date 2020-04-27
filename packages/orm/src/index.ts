@@ -27,3 +27,4 @@ export type { DataSource, Executor, QueryResult, Row, SqlDataSourceOptions } fro
 // [history] omitted at this version (not yet introduced): export type { ReadWriteSplitOptions } from './read-write-split';
 
 export { Repository, QueryBuilder } from './repository';
+export type { Page, OrderBy } from './repository';
