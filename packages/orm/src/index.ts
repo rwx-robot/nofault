@@ -25,3 +25,5 @@ export { MemoryDataSource, SqlDataSource } from './data-source';
 export type { DataSource, Executor, QueryResult, Row, SqlDataSourceOptions } from './data-source';
 // [history] omitted at this version (not yet introduced): export { ReadWriteSplitDataSource } from './read-write-split';
 // [history] omitted at this version (not yet introduced): export type { ReadWriteSplitOptions } from './read-write-split';
+
+export { Repository, QueryBuilder } from './repository';
