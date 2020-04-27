@@ -20,3 +20,6 @@ export { ORM_METADATA } from './metadata';
 
 export { AnsiDialect, renderWhere } from './dialect';
 export type { Dialect, Sql, SelectOptions, WhereClause, Condition, CompareOperator } from './dialect';
+
+export { MemoryDataSource, SqlDataSource } from './data-source';
+export type { DataSource, Executor, QueryResult, Row, SqlDataSourceOptions } from './data-source';
