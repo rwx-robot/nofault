@@ -17,3 +17,6 @@ export {
 export type { ColumnOptions, ColumnType, ColumnMeta, EntityMeta, EntityOptions } from './decorators';
 
 export { ORM_METADATA } from './metadata';
+
+export { AnsiDialect, renderWhere } from './dialect';
+export type { Dialect, Sql, SelectOptions, WhereClause, Condition, CompareOperator } from './dialect';
