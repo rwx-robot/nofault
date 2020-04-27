@@ -6,3 +6,4 @@
  */
 export {
   Entity,
+  Column,
