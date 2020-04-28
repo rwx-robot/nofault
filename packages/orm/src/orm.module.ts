@@ -43,3 +43,7 @@ class RepositoryRegistry {
     const token = getRepositoryToken(entity);
     let repo = this.cache.get(token) as Repository<T> | undefined;
     if (!repo) {
+      repo = new Repository<T>(entity, this.source);
+      this.cache.set(token, repo);
+    }
+    return repo;
