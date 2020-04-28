@@ -35,3 +35,6 @@ class RepositoryFactory {
 
 @Injectable()
 class RepositoryRegistry {
+  private readonly cache = new Map<string, unknown>();
+
+  constructor(@Inject(DATA_SOURCE as never) private readonly source: DataSource) {}
