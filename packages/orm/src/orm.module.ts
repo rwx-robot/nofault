@@ -19,3 +19,7 @@ export const DATA_SOURCE = Symbol('NOFAULT_DATA_SOURCE');
 export function getRepositoryToken(entity: Function): string {
   return `${getEntityMeta(entity).table}Repository`;
 }
+
+/** 构造函数参数注入用：`constructor(@InjectRepository(User) private users: Repository<User>)` */
+export function InjectRepository(entity: Function): ParameterDecorator {
+  return Inject(getRepositoryToken(entity) as never);
