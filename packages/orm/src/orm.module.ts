@@ -51,3 +51,7 @@ class RepositoryRegistry {
 }
 
 export interface OrmModuleOptions {
+  dataSource: DataSource;
+}
+
+export class OrmModule {
