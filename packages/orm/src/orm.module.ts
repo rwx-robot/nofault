@@ -11,3 +11,7 @@
 import { Inject, Injectable, Module, type DynamicModule, type Provider } from '@nofault/core';
 import type { Type } from '@nofault/core';
 import type { DataSource } from './data-source';
+import { getEntityMeta } from './decorators';
+import { Repository } from './repository';
+
+export const DATA_SOURCE = Symbol('NOFAULT_DATA_SOURCE');
