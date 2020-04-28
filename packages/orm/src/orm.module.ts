@@ -67,3 +67,7 @@ export class OrmModule {
       exports: [DATA_SOURCE, RepositoryRegistry],
       global: true,
     };
+  }
+
+  /** 为每个实体注册 Repository */
+  static forFeature(entities: Array<Function>): DynamicModule {
