@@ -38,3 +38,8 @@ class RepositoryRegistry {
   private readonly cache = new Map<string, unknown>();
 
   constructor(@Inject(DATA_SOURCE as never) private readonly source: DataSource) {}
+
+  get<T extends object>(entity: Type<T>): Repository<T> {
+    const token = getRepositoryToken(entity);
+    let repo = this.cache.get(token) as Repository<T> | undefined;
+    if (!repo) {
