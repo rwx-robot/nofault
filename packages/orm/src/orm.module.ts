@@ -59,3 +59,7 @@ export class OrmModule {
     const providers: Provider[] = [
       { provide: DATA_SOURCE, useValue: options.dataSource },
       RepositoryRegistry,
+    ];
+    // exports 只接受 token / 类，不接受 Provider 定义本身
+    return {
+      module: OrmModule,
