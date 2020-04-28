@@ -63,3 +63,7 @@ export class OrmModule {
     // exports 只接受 token / 类，不接受 Provider 定义本身
     return {
       module: OrmModule,
+      providers,
+      exports: [DATA_SOURCE, RepositoryRegistry],
+      global: true,
+    };
