@@ -75,3 +75,7 @@ export class OrmModule {
       provide: getRepositoryToken(entity),
       inject: [RepositoryRegistry],
       useFactory: (registry: RepositoryRegistry) => registry.get(entity as Type<object>),
+    }));
+    return { module: OrmModule, providers, exports: entities.map((e) => getRepositoryToken(e)) };
+  }
+}
