@@ -47,3 +47,7 @@ class RepositoryRegistry {
       this.cache.set(token, repo);
     }
     return repo;
+  }
+}
+
+export interface OrmModuleOptions {
