@@ -31,3 +31,7 @@ class RepositoryFactory {
   create<T extends object>(entity: Type<T>): Repository<T> {
     return new Repository<T>(entity, this.source);
   }
+}
+
+@Injectable()
+class RepositoryRegistry {
