@@ -55,3 +55,7 @@ export interface OrmModuleOptions {
 }
 
 export class OrmModule {
+  static forRoot(options: OrmModuleOptions): DynamicModule {
+    const providers: Provider[] = [
+      { provide: DATA_SOURCE, useValue: options.dataSource },
+      RepositoryRegistry,
