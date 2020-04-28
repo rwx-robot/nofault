@@ -23,3 +23,7 @@ export function getRepositoryToken(entity: Function): string {
 /** 构造函数参数注入用：`constructor(@InjectRepository(User) private users: Repository<User>)` */
 export function InjectRepository(entity: Function): ParameterDecorator {
   return Inject(getRepositoryToken(entity) as never);
+}
+
+class RepositoryFactory {
+  constructor(private readonly source: DataSource) {}
