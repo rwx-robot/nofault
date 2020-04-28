@@ -27,3 +27,7 @@ export function InjectRepository(entity: Function): ParameterDecorator {
 
 class RepositoryFactory {
   constructor(private readonly source: DataSource) {}
+
+  create<T extends object>(entity: Type<T>): Repository<T> {
+    return new Repository<T>(entity, this.source);
+  }
