@@ -71,3 +71,7 @@ export class OrmModule {
 
   /** 为每个实体注册 Repository */
   static forFeature(entities: Array<Function>): DynamicModule {
+    const providers: Provider[] = entities.map((entity) => ({
+      provide: getRepositoryToken(entity),
+      inject: [RepositoryRegistry],
+      useFactory: (registry: RepositoryRegistry) => registry.get(entity as Type<object>),
