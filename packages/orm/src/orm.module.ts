@@ -15,3 +15,7 @@ import { getEntityMeta } from './decorators';
 import { Repository } from './repository';
 
 export const DATA_SOURCE = Symbol('NOFAULT_DATA_SOURCE');
+
+export function getRepositoryToken(entity: Function): string {
+  return `${getEntityMeta(entity).table}Repository`;
+}
