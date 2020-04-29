@@ -162,3 +162,17 @@ export class Repository<T extends object> {
     await this.source.update(this.meta, id, row);
     Object.assign(entity, patch);
     return entity;
+  }
+
+  /** upsert：有主键就更新，没有就插入 */
+  async persist(entity: T): Promise<T> {
+    const primary = this.meta.primaryColumn ? this.meta.columns.get(this.meta.primaryColumn) : undefined;
+    const id = primary ? (entity as Row)[primary.property] : undefined;
+    return id === undefined || id === null ? this.save(entity) : this.update(entity);
+  }
+
+  async delete(entity: T | T[keyof T]): Promise<boolean> {
+    const primary = this.primaryColumnOrThrow();
+    const id = typeof entity === 'object' && entity !== null ? (entity as Row)[primary.property] : entity;
+    const result = await this.source.delete(this.meta, id);
+    return result.affectedRows > 0;
