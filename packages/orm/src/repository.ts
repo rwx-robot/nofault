@@ -94,3 +94,17 @@ export class QueryBuilder<T extends object> {
   async getCount(): Promise<number> {
     return this.source.count(this.meta, this.where);
   }
+
+  async getManyAndCount(): Promise<[T[], number]> {
+    const [items, total] = await Promise.all([this.getMany(), this.getCount()]);
+    return [items, total];
+  }
+}
+
+export class Repository<T extends object> {
+  readonly meta: EntityMeta;
+
+  constructor(
+    private readonly target: Type<T>,
+    private readonly source: DataSource,
+  ) {
