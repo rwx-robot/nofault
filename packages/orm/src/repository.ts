@@ -108,3 +108,16 @@ export class Repository<T extends object> {
     private readonly target: Type<T>,
     private readonly source: DataSource,
   ) {
+    this.meta = getEntityMeta(target);
+  }
+
+  get tableName(): string {
+    return this.meta.table;
+  }
+
+  /** 建表（幂等）。生产环境请交给 migration，这里是为了让示例和测试能直接跑 */
+  async sync(): Promise<void> {
+    await this.source.createTable(this.meta);
+  }
+
+  createQueryBuilder(): QueryBuilder<T> {
