@@ -121,3 +121,17 @@ export class Repository<T extends object> {
   }
 
   createQueryBuilder(): QueryBuilder<T> {
+    return new QueryBuilder<T>(this.meta, this.source);
+  }
+
+  async save(entity: T): Promise<T> {
+    // 自增主键上的 0 一定是"占位"而不是真实值：
+    // TS 里 `const u = new User(); u.id` 恒为 0，若照原样写入，
+    // 第二条记录就会撞主键、或者拿到一个永远不存在的 id=0。
+    const generated = this.meta.primaryColumn ? this.meta.columns.get(this.meta.primaryColumn) : undefined;
+    if (generated?.generated) {
+      const value = (entity as Row)[generated.property];
+      if (value === 0 || value === undefined || value === null) {
+        delete (entity as Row)[generated.property];
+      }
+    }
