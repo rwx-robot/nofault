@@ -149,3 +149,16 @@ export class Repository<T extends object> {
       }
     }
     const primary = this.meta.primaryColumn ? this.meta.columns.get(this.meta.primaryColumn) : undefined;
+    if (primary && result.insertId !== undefined) {
+      (entity as Row)[primary.property] = result.insertId;
+    }
+    return entity;
+  }
+
+  async update(entity: T, patch: Partial<T> = entity): Promise<T> {
+    const primary = this.primaryColumnOrThrow();
+    const id = (entity as Row)[primary.property];
+    const row = toRow(this.meta, patch as T, 'update');
+    await this.source.update(this.meta, id, row);
+    Object.assign(entity, patch);
+    return entity;
