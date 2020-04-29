@@ -176,3 +176,17 @@ export class Repository<T extends object> {
     const id = typeof entity === 'object' && entity !== null ? (entity as Row)[primary.property] : entity;
     const result = await this.source.delete(this.meta, id);
     return result.affectedRows > 0;
+  }
+
+  async findAll(): Promise<T[]> {
+    const rows = await this.source.select(this.meta, {});
+    return rows.map((row) => toEntity<T>(this.meta, row));
+  }
+
+  async findById(id: unknown): Promise<T | undefined> {
+    const primary = this.primaryColumnOrThrow();
+    const rows = await this.source.select(this.meta, {
+      where: { conditions: [{ column: primary.name, operator: '=', value: id }] },
+      limit: 1,
+    });
+    return rows[0] ? toEntity<T>(this.meta, rows[0]) : undefined;
