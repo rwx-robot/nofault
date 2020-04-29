@@ -258,3 +258,16 @@ function toRow<T extends object>(meta: EntityMeta, entity: T, mode: 'insert' | '
 
 function toEntity<T>(meta: EntityMeta, row: Row): T {
   const entity = new (meta.target as new () => T)();
+  for (const column of meta.columns.values()) {
+    const value = row[column.name];
+    (entity as Row)[column.property] = denormalize(value, column.type);
+  }
+  return entity;
+}
+
+function normalize(value: unknown, type: string): unknown {
+  if (type === 'json') return JSON.stringify(value);
+  if (type === 'boolean') return value ? 1 : 0;
+  if (type === 'date' && value instanceof Date) return value;
+  return value;
+}
