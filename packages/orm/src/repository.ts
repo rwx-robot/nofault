@@ -190,3 +190,16 @@ export class Repository<T extends object> {
       limit: 1,
     });
     return rows[0] ? toEntity<T>(this.meta, rows[0]) : undefined;
+  }
+
+  async findOne(where: Partial<T>): Promise<T | undefined> {
+    const qb = this.createQueryBuilder();
+    for (const [key, value] of Object.entries(where)) {
+      qb.andWhere(key as keyof T & string, '=', value);
+    }
+    return qb.getOne();
+  }
+
+  async find(where: Partial<T>): Promise<T[]> {
+    const qb = this.createQueryBuilder();
+    for (const [key, value] of Object.entries(where)) {
