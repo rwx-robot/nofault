@@ -79,3 +79,6 @@ export class OrmModule {
     return { module: OrmModule, providers, exports: entities.map((e) => getRepositoryToken(e)) };
   }
 }
+
+export { RepositoryRegistry, RepositoryFactory };
+export { Module };
