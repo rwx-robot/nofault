@@ -231,3 +231,16 @@ export class Repository<T extends object> {
     if (!primary) {
       throw new Error(`entity ${this.meta.table} has no primary column; add @PrimaryGeneratedColumn()`);
     }
+    return primary;
+  }
+}
+
+// ------------------------------------------------------------------ 映射
+
+function columnName(meta: EntityMeta, property: string): string {
+  return meta.columns.get(property)?.name ?? property;
+}
+
+function toRow<T extends object>(meta: EntityMeta, entity: T, mode: 'insert' | 'update'): Row {
+  const source = entity as Row;
+  const out: Row = {};
