@@ -80,3 +80,17 @@ export class QueryBuilder<T extends object> {
     const rows = await this.source.select(this.meta, {
       where: this.where,
       orderBy: this.orders.map((o) => ({ column: columnName(this.meta, o.column), direction: o.direction ?? 'ASC' })),
+      limit: this.take,
+      offset: this.skip,
+    });
+    return rows.map((row) => toEntity<T>(this.meta, row));
+  }
+
+  async getOne(): Promise<T | undefined> {
+    const many = await this.limit(1).getMany();
+    return many[0];
+  }
+
+  async getCount(): Promise<number> {
+    return this.source.count(this.meta, this.where);
+  }
