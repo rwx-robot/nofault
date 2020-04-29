@@ -38,3 +38,18 @@ export class QueryBuilder<T extends object> {
     this.where.conditions.push({ column, operator, value });
     return this;
   }
+
+  orWhere(column: keyof T & string, operator: CompareOperator, value: unknown): this {
+    this.where.op = 'OR';
+    this.where.conditions.push({ column, operator, value });
+    return this;
+  }
+
+  whereIn(column: keyof T & string, values: unknown[]): this {
+    this.where.conditions.push({ column, operator: 'IN', value: values });
+    return this;
+  }
+
+  whereGroup(clause: (qb: QueryBuilder<T>) => void): this {
+    const nested = new QueryBuilder<T>(this.meta, this.source);
+    clause(nested);
