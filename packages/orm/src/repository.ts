@@ -12,3 +12,17 @@ import type { DataSource, Row } from './data-source';
 import type { CompareOperator, WhereClause } from './dialect';
 
 export interface Page<T> {
+  items: T[];
+  total: number;
+  page: number;
+  pageSize: number;
+}
+
+export interface OrderBy {
+  column: string;
+  direction?: 'ASC' | 'DESC';
+}
+
+export class QueryBuilder<T extends object> {
+  private readonly where: WhereClause = { op: 'AND', conditions: [] };
+  private orders: OrderBy[] = [];
