@@ -244,3 +244,17 @@ function columnName(meta: EntityMeta, property: string): string {
 function toRow<T extends object>(meta: EntityMeta, entity: T, mode: 'insert' | 'update'): Row {
   const source = entity as Row;
   const out: Row = {};
+  for (const column of meta.columns.values()) {
+    let value = source[column.property];
+    if (value === undefined) {
+      if (mode === 'insert' && column.onCreate) value = column.onCreate();
+      if (mode === 'update' && column.onUpdate) value = column.onUpdate();
+    }
+    if (value === undefined) continue;
+    out[column.name] = normalize(value, column.type);
+  }
+  return out;
+}
+
+function toEntity<T>(meta: EntityMeta, row: Row): T {
+  const entity = new (meta.target as new () => T)();
