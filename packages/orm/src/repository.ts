@@ -135,3 +135,17 @@ export class Repository<T extends object> {
         delete (entity as Row)[generated.property];
       }
     }
+
+    const row = toRow(this.meta, entity, 'insert');
+    const result = await this.source.insert(this.meta, row);
+
+    // 回写数据库侧产生的值：自增 id、onCreate 填充的时间戳。
+    // 不回写的话，调用方拿到的是一个"库里有、对象上没有"的半截实体。
+    for (const column of this.meta.columns.values()) {
+      if (column.generated && row[column.name] !== undefined) {
+        (entity as Row)[column.property] = row[column.name];
+      } else if ((entity as Row)[column.property] === undefined && row[column.name] !== undefined) {
+        (entity as Row)[column.property] = row[column.name];
+      }
+    }
+    const primary = this.meta.primaryColumn ? this.meta.columns.get(this.meta.primaryColumn) : undefined;
