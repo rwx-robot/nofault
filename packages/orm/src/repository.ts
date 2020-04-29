@@ -66,3 +66,17 @@ export class QueryBuilder<T extends object> {
     this.take = n;
     return this;
   }
+
+  offset(n: number): this {
+    this.skip = n;
+    return this;
+  }
+
+  buildWhere(): WhereClause {
+    return this.where;
+  }
+
+  async getMany(): Promise<T[]> {
+    const rows = await this.source.select(this.meta, {
+      where: this.where,
+      orderBy: this.orders.map((o) => ({ column: columnName(this.meta, o.column), direction: o.direction ?? 'ASC' })),
