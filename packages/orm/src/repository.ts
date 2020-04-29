@@ -217,3 +217,17 @@ export class Repository<T extends object> {
     const safePage = Math.max(1, Math.floor(page));
     const safeSize = Math.max(1, Math.floor(pageSize));
     const [items, total] = await Promise.all([
+      this.createQueryBuilder()
+        .limit(safeSize)
+        .offset((safePage - 1) * safeSize)
+        .getMany(),
+      this.count(),
+    ]);
+    return { items, total, page: safePage, pageSize: safeSize };
+  }
+
+  private primaryColumnOrThrow() {
+    const primary = this.meta.primaryColumn ? this.meta.columns.get(this.meta.primaryColumn) : undefined;
+    if (!primary) {
+      throw new Error(`entity ${this.meta.table} has no primary column; add @PrimaryGeneratedColumn()`);
+    }
