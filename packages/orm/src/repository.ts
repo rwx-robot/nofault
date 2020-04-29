@@ -53,3 +53,16 @@ export class QueryBuilder<T extends object> {
   whereGroup(clause: (qb: QueryBuilder<T>) => void): this {
     const nested = new QueryBuilder<T>(this.meta, this.source);
     clause(nested);
+    this.where.conditions.push({ group: nested.buildWhere() });
+    return this;
+  }
+
+  orderBy(column: keyof T & string, direction: 'ASC' | 'DESC' = 'ASC'): this {
+    this.orders.push({ column, direction });
+    return this;
+  }
+
+  limit(n: number): this {
+    this.take = n;
+    return this;
+  }
