@@ -203,3 +203,17 @@ export class Repository<T extends object> {
   async find(where: Partial<T>): Promise<T[]> {
     const qb = this.createQueryBuilder();
     for (const [key, value] of Object.entries(where)) {
+      qb.andWhere(key as keyof T & string, '=', value);
+    }
+    return qb.getMany();
+  }
+
+  async count(): Promise<number> {
+    return this.source.count(this.meta);
+  }
+
+  /** 分页。page 从 1 开始——API 层直接把它暴露给前端时，1-based 不容易出错 */
+  async paginate(page: number, pageSize: number): Promise<Page<T>> {
+    const safePage = Math.max(1, Math.floor(page));
+    const safeSize = Math.max(1, Math.floor(pageSize));
+    const [items, total] = await Promise.all([
