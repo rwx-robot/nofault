@@ -26,3 +26,15 @@ export interface OrderBy {
 export class QueryBuilder<T extends object> {
   private readonly where: WhereClause = { op: 'AND', conditions: [] };
   private orders: OrderBy[] = [];
+  private take?: number;
+  private skip?: number;
+
+  constructor(
+    private readonly meta: EntityMeta,
+    private readonly source: DataSource,
+  ) {}
+
+  andWhere(column: keyof T & string, operator: CompareOperator, value: unknown): this {
+    this.where.conditions.push({ column, operator, value });
+    return this;
+  }
