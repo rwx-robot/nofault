@@ -47,3 +47,16 @@ describe('entity mapping', () => {
       'created_at',
     ]);
   });
+
+  it('infers column types from the TS design:type', () => {
+    const meta = getEntityMeta(User);
+    expect(meta.columns.get('name')!.type).toBe('string');
+    expect(meta.columns.get('active')!.type).toBe('boolean');
+    expect(meta.columns.get('createdAt')!.type).toBe('date');
+  });
+
+  it('refuses to work with a class that has no @Entity()', () => {
+    class Plain {}
+    expect(() => getEntityMeta(Plain)).toThrow(/not an entity/);
+  });
+});
