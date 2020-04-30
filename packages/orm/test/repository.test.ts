@@ -193,3 +193,17 @@ describe('transactions', () => {
     expect(await repo.count()).toBe(1);
     expect(await repo.findOne({ name: 'frank' })).toBeUndefined();
   });
+
+  it('reports whether it is inside a transaction', async () => {
+    const source = new MemoryDataSource();
+    expect(source.inTransaction()).toBe(false);
+    await source.transaction(async () => {
+      expect(source.inTransaction()).toBe(true);
+    });
+    expect(source.inTransaction()).toBe(false);
+  });
+});
+
+describe('migrations', () => {
+  const makeMigration = (version: string): Migration => ({
+    version,
