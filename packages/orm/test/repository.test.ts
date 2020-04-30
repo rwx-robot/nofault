@@ -121,3 +121,14 @@ describe('repository', () => {
     user.name = 'dave2';
     await repo.persist(user);
     expect(await repo.count()).toBe(1);
+    expect(user.id).toBe(id);
+  });
+
+  it('supports the query builder with where / order / limit', async () => {
+    for (const [name, age] of [['a', 10], ['b', 30], ['c', 20]] as const) {
+      const user = new User();
+      user.name = name;
+      user.email = `${name}@example.com`;
+      user.age = age;
+      await repo.save(user);
+    }
