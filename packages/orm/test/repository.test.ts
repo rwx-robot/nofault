@@ -231,3 +231,15 @@ describe('migrations', () => {
     await migrator.up();
 
     expect(await migrator.down()).toEqual(['002']);
+    expect(await migrator.applied()).toEqual(['001']);
+  });
+
+  it('keeps already committed migrations and stops at the broken one', async () => {
+    const source = new MemoryDataSource();
+    const migrator = new Migrator(source, [
+      makeMigration('001'),
+      {
+        version: '002',
+        up: async () => {
+          throw new Error('bad migration');
+        },
