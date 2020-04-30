@@ -132,3 +132,16 @@ describe('repository', () => {
       user.age = age;
       await repo.save(user);
     }
+
+    const older = await repo.createQueryBuilder().andWhere('age', '>=', 20).orderBy('age', 'DESC').getMany();
+    expect(older.map((u) => u.name)).toEqual(['b', 'c']);
+
+    const [items, total] = await repo
+      .createQueryBuilder()
+      .andWhere('active', '=', true)
+      .limit(2)
+      .getManyAndCount();
+    expect(items).toHaveLength(2);
+    expect(total).toBe(3);
+
+    const page = await repo.paginate(2, 2);
