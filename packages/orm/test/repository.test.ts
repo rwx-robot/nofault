@@ -218,3 +218,16 @@ describe('migrations', () => {
   it('applies pending migrations once and records them', async () => {
     const source = new MemoryDataSource();
     const migrator = new Migrator(source, [makeMigration('001'), makeMigration('002')]);
+
+    expect(await migrator.up()).toEqual(['001', '002']);
+    // 幂等：第二次执行什么也不做
+    expect(await migrator.up()).toEqual([]);
+    expect(await migrator.applied()).toEqual(['001', '002']);
+  });
+
+  it('rolls back the last migration', async () => {
+    const source = new MemoryDataSource();
+    const migrator = new Migrator(source, [makeMigration('001'), makeMigration('002')]);
+    await migrator.up();
+
+    expect(await migrator.down()).toEqual(['002']);
