@@ -84,3 +84,14 @@ describe('repository', () => {
     const a = new User();
     a.name = 'alice';
     a.email = 'a@example.com';
+    const b = new User();
+    b.name = 'bob';
+    b.email = 'b@example.com';
+    await repo.save(a);
+    await repo.save(b);
+
+    expect((await repo.findById(1))?.name).toBe('alice');
+    expect((await repo.findOne({ name: 'bob' }))?.email).toBe('b@example.com');
+    expect(await repo.findAll()).toHaveLength(2);
+    expect(await repo.count()).toBe(2);
+  });
