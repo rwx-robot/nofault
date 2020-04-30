@@ -145,3 +145,16 @@ describe('repository', () => {
     expect(total).toBe(3);
 
     const page = await repo.paginate(2, 2);
+    expect(page.items).toHaveLength(1);
+    expect(page.total).toBe(3);
+    expect(page.page).toBe(2);
+  });
+
+  it('supports grouped conditions', async () => {
+    for (const [name, age] of [['a', 10], ['b', 30], ['c', 40]] as const) {
+      const user = new User();
+      user.name = name;
+      user.email = `${name}@example.com`;
+      user.age = age;
+      await repo.save(user);
+    }
