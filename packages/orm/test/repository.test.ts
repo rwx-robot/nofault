@@ -158,3 +158,15 @@ describe('repository', () => {
       user.age = age;
       await repo.save(user);
     }
+    const found = await repo
+      .createQueryBuilder()
+      .whereGroup((qb) => {
+        qb.andWhere('name', '=', 'a').orWhere('name', '=', 'c');
+      })
+      .getMany();
+    expect(found.map((u) => u.name).sort()).toEqual(['a', 'c']);
+  });
+});
+
+describe('transactions', () => {
+  it('rolls back every write when the callback throws', async () => {
