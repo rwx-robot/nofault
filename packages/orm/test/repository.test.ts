@@ -60,3 +60,15 @@ describe('entity mapping', () => {
     expect(() => getEntityMeta(Plain)).toThrow(/not an entity/);
   });
 });
+
+describe('repository', () => {
+  let repo: Repository<User>;
+  let source: MemoryDataSource;
+
+  beforeEach(async () => {
+    source = new MemoryDataSource();
+    repo = new Repository(User, source);
+    await repo.sync();
+  });
+
+  it('saves and backfills the generated id', async () => {
