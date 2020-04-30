@@ -35,3 +35,15 @@ class User {
 
 describe('entity mapping', () => {
   it('derives the table name and column names', () => {
+    const meta = getEntityMeta(User);
+    expect(meta.table).toBe('users');
+    expect(meta.primaryColumn).toBe('id');
+    expect([...meta.columns.values()].map((c) => c.name)).toEqual([
+      'id',
+      'name',
+      'age',
+      'email',
+      'active',
+      'created_at',
+    ]);
+  });
