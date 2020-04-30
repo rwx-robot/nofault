@@ -95,3 +95,17 @@ describe('repository', () => {
     expect(await repo.findAll()).toHaveLength(2);
     expect(await repo.count()).toBe(2);
   });
+
+  it('updates then deletes', async () => {
+    const user = new User();
+    user.name = 'carol';
+    user.email = 'c@example.com';
+    await repo.save(user);
+
+    await repo.update(user, { name: 'carol2' } as Partial<User>);
+    expect((await repo.findById(user.id))?.name).toBe('carol2');
+
+    expect(await repo.delete(user)).toBe(true);
+    expect(await repo.findById(user.id)).toBeUndefined();
+    // 重复删除要安静地返回 false，而不是抛错
+    expect(await repo.delete(user.id)).toBe(false);
