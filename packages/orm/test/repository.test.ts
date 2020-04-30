@@ -207,3 +207,14 @@ describe('transactions', () => {
 describe('migrations', () => {
   const makeMigration = (version: string): Migration => ({
     version,
+    up: async (ctx) => {
+      await ctx.execute(`CREATE TABLE IF NOT EXISTS t_${version} (id INTEGER)`);
+    },
+    down: async (ctx) => {
+      await ctx.execute(`DROP TABLE IF EXISTS t_${version}`);
+    },
+  });
+
+  it('applies pending migrations once and records them', async () => {
+    const source = new MemoryDataSource();
+    const migrator = new Migrator(source, [makeMigration('001'), makeMigration('002')]);
