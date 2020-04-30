@@ -271,3 +271,16 @@ function normalize(value: unknown, type: string): unknown {
   if (type === 'date' && value instanceof Date) return value;
   return value;
 }
+
+function denormalize(value: unknown, type: string): unknown {
+  if (type === 'json' && typeof value === 'string') {
+    try {
+      return JSON.parse(value);
+    } catch {
+      return value;
+    }
+  }
+  if (type === 'boolean') return Boolean(value);
+  if (type === 'date' && typeof value === 'string') return new Date(value);
+  return value;
+}
