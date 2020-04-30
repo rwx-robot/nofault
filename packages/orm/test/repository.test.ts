@@ -182,3 +182,14 @@ describe('transactions', () => {
     await expect(
       source.transaction(async () => {
         const another = new User();
+        another.name = 'frank';
+        another.email = 'f@example.com';
+        await repo.save(another);
+        throw new Error('boom');
+      }),
+    ).rejects.toThrow('boom');
+
+    // 回滚必须干净：既不能留下 frank，也不能误删 eve
+    expect(await repo.count()).toBe(1);
+    expect(await repo.findOne({ name: 'frank' })).toBeUndefined();
+  });
