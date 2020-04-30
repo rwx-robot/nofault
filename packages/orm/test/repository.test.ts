@@ -11,3 +11,14 @@ import {
   Migrator,
   type Migration,
 } from '../src/index';
+
+@Entity({ table: 'users' })
+class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  @Column({ name: 'name', type: 'string' })
+  name!: string;
+
+  @Column({ name: 'age', type: 'int', nullable: true })
+  age?: number;
