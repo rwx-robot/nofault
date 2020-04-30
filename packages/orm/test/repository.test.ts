@@ -109,3 +109,15 @@ describe('repository', () => {
     expect(await repo.findById(user.id)).toBeUndefined();
     // 重复删除要安静地返回 false，而不是抛错
     expect(await repo.delete(user.id)).toBe(false);
+  });
+
+  it('persist() inserts or updates depending on the primary key', async () => {
+    const user = new User();
+    user.name = 'dave';
+    user.email = 'd@example.com';
+    await repo.persist(user);
+    const id = user.id;
+
+    user.name = 'dave2';
+    await repo.persist(user);
+    expect(await repo.count()).toBe(1);
