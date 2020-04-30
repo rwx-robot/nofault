@@ -72,3 +72,15 @@ describe('repository', () => {
   });
 
   it('saves and backfills the generated id', async () => {
+    const user = new User();
+    user.name = 'alice';
+    user.email = 'a@example.com';
+    await repo.save(user);
+    expect(user.id).toBe(1);
+    expect(user.createdAt).toBeInstanceOf(Date);
+  });
+
+  it('finds by id and by column', async () => {
+    const a = new User();
+    a.name = 'alice';
+    a.email = 'a@example.com';
