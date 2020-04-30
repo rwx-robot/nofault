@@ -170,3 +170,15 @@ describe('repository', () => {
 
 describe('transactions', () => {
   it('rolls back every write when the callback throws', async () => {
+    const source = new MemoryDataSource();
+    const repo = new Repository(User, source);
+    await repo.sync();
+
+    const user = new User();
+    user.name = 'eve';
+    user.email = 'e@example.com';
+    await repo.save(user);
+
+    await expect(
+      source.transaction(async () => {
+        const another = new User();
