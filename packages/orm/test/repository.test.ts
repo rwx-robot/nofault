@@ -243,3 +243,14 @@ describe('migrations', () => {
         up: async () => {
           throw new Error('bad migration');
         },
+        down: async () => {},
+      },
+    ]);
+
+    // 每个迁移各自一个事务：001 已提交，002 失败回滚。
+    // 这才是想要的行为——已成功的部分不回退，失败的也不留下版本号，
+    // 于是修好 002 之后可以直接重跑，不会"以为已经跑过"。
+    await expect(migrator.up()).rejects.toThrow('bad migration');
+    expect(await migrator.applied()).toEqual(['001']);
+  });
+});
