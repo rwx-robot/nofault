@@ -10,3 +10,4 @@ import type { DataSource } from './data-source';
 import { getEntityMeta } from './decorators';
 
 export interface Migration {
+  /** 版本号，建议用时间戳如 `20200101_add_users` */
