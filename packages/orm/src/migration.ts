@@ -15,3 +15,6 @@ export interface Migration {
   up(ctx: MigrationContext): Promise<void>;
   down(ctx: MigrationContext): Promise<void>;
 }
+
+export interface MigrationContext {
+  /** 执行原始 SQL */
