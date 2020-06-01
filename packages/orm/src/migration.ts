@@ -7,3 +7,4 @@
  * 3. up 失败即中止，后面的版本不执行（顺序是有依赖的）
  */
 import type { DataSource } from './data-source';
+import { getEntityMeta } from './decorators';
