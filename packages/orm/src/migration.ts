@@ -23,3 +23,4 @@ export interface MigrationContext {
   createTable(entity: Function): Promise<void>;
   dropTable(entity: Function): Promise<void>;
   logger?: { info(message: string): void };
+}
