@@ -24,3 +24,5 @@ export interface MigrationContext {
   dropTable(entity: Function): Promise<void>;
   logger?: { info(message: string): void };
 }
+
+export interface MigrationRecord {
