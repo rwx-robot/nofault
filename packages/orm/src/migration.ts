@@ -26,3 +26,5 @@ export interface MigrationContext {
 }
 
 export interface MigrationRecord {
+  version: string;
+  appliedAt: Date;
