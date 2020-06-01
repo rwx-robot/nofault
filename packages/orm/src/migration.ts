@@ -21,3 +21,5 @@ export interface MigrationContext {
   execute(sql: string, params?: unknown[]): Promise<unknown>;
   /** 建表（复用实体的映射定义，避免手写一遍列名） */
   createTable(entity: Function): Promise<void>;
+  dropTable(entity: Function): Promise<void>;
+  logger?: { info(message: string): void };
