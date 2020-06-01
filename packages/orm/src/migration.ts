@@ -8,3 +8,5 @@
  */
 import type { DataSource } from './data-source';
 import { getEntityMeta } from './decorators';
+
+export interface Migration {
