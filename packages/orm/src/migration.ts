@@ -18,3 +18,5 @@ export interface Migration {
 
 export interface MigrationContext {
   /** 执行原始 SQL */
+  execute(sql: string, params?: unknown[]): Promise<unknown>;
+  /** 建表（复用实体的映射定义，避免手写一遍列名） */
