@@ -29,3 +29,5 @@ export interface MigrationRecord {
   version: string;
   appliedAt: Date;
 }
+
+const TABLE = 'schema_migrations';
