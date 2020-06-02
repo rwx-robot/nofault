@@ -33,3 +33,4 @@ export interface MigrationRecord {
 const TABLE = 'schema_migrations';
 
 export class Migrator {
+  constructor(
