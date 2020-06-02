@@ -49,3 +49,6 @@ export class Migrator {
     const applied = await this.applied();
     const pending = this.sorted().filter((m) => !applied.includes(m.version));
     const done: string[] = [];
+
+    for (const migration of pending) {
+      await this.source.transaction(async () => {
