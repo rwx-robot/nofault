@@ -55,3 +55,5 @@ export class Migrator {
         await migration.up(this.context());
         await this.record(migration.version);
       });
+      done.push(migration.version);
+    }
