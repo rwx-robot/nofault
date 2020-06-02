@@ -47,3 +47,5 @@ export class Migrator {
   async up(): Promise<string[]> {
     await this.ensureTable();
     const applied = await this.applied();
+    const pending = this.sorted().filter((m) => !applied.includes(m.version));
+    const done: string[] = [];
