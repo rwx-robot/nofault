@@ -52,3 +52,5 @@ export class Migrator {
 
     for (const migration of pending) {
       await this.source.transaction(async () => {
+        await migration.up(this.context());
+        await this.record(migration.version);
