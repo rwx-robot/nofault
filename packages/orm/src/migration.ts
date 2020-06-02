@@ -34,3 +34,5 @@ const TABLE = 'schema_migrations';
 
 export class Migrator {
   constructor(
+    private readonly source: DataSource,
+    private readonly migrations: Migration[] = [],
