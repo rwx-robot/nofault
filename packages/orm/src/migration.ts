@@ -54,3 +54,4 @@ export class Migrator {
       await this.source.transaction(async () => {
         await migration.up(this.context());
         await this.record(migration.version);
+      });
