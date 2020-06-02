@@ -59,3 +59,6 @@ export class Migrator {
     }
     return done;
   }
+
+  /** 回滚最后 n 个版本，默认 1 个 */
+  async down(steps = 1): Promise<string[]> {
