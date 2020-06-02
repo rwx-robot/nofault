@@ -39,3 +39,5 @@ export class Migrator {
   ) {}
 
   add(migration: Migration): this {
+    this.migrations.push(migration);
+    return this;
