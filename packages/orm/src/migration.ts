@@ -42,3 +42,5 @@ export class Migrator {
     this.migrations.push(migration);
     return this;
   }
+
+  /** 执行所有未应用的迁移，返回本次执行的版本号 */
