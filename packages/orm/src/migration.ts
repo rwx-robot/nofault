@@ -44,3 +44,5 @@ export class Migrator {
   }
 
   /** 执行所有未应用的迁移，返回本次执行的版本号 */
+  async up(): Promise<string[]> {
+    await this.ensureTable();
