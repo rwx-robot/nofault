@@ -37,3 +37,5 @@ export class Migrator {
     private readonly source: DataSource,
     private readonly migrations: Migration[] = [],
   ) {}
+
+  add(migration: Migration): this {
