@@ -76,3 +76,5 @@ export class Migrator {
         await this.forget(migration.version);
       });
       done.push(migration.version);
+    }
+    return done;
