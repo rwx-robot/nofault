@@ -68,3 +68,5 @@ export class Migrator {
       .filter((m) => applied.includes(m.version))
       .slice(-steps)
       .reverse();
+
+    const done: string[] = [];
