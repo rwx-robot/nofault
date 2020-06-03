@@ -75,3 +75,4 @@ export class Migrator {
         await migration.down(this.context());
         await this.forget(migration.version);
       });
+      done.push(migration.version);
