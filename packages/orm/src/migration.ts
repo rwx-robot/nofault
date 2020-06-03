@@ -65,3 +65,5 @@ export class Migrator {
     await this.ensureTable();
     const applied = await this.applied();
     const targets = this.sorted()
+      .filter((m) => applied.includes(m.version))
+      .slice(-steps)
