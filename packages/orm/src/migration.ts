@@ -89,3 +89,4 @@ export class Migrator {
       `SELECT version, applied_at FROM ${TABLE} ORDER BY version`,
     );
     return rows.map((row) => ({ version: row.version, appliedAt: new Date(row.applied_at) }));
+  }
