@@ -90,3 +90,6 @@ export class Migrator {
     );
     return rows.map((row) => ({ version: row.version, appliedAt: new Date(row.applied_at) }));
   }
+
+  private async ensureTable(): Promise<void> {
+    await this.raw(
