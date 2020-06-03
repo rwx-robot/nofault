@@ -79,3 +79,5 @@ export class Migrator {
     }
     return done;
   }
+
+  async applied(): Promise<string[]> {
