@@ -86,3 +86,5 @@ export class Migrator {
 
   private async records(): Promise<MigrationRecord[]> {
     const rows = await this.raw<{ version: string; applied_at: string }>(
+      `SELECT version, applied_at FROM ${TABLE} ORDER BY version`,
+    );
