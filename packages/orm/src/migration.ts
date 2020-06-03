@@ -73,3 +73,5 @@ export class Migrator {
     for (const migration of targets) {
       await this.source.transaction(async () => {
         await migration.down(this.context());
+        await this.forget(migration.version);
+      });
