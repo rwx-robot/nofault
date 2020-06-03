@@ -83,3 +83,5 @@ export class Migrator {
   async applied(): Promise<string[]> {
     return (await this.records()).map((r) => r.version);
   }
+
+  private async records(): Promise<MigrationRecord[]> {
