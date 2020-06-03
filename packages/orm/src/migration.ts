@@ -72,3 +72,4 @@ export class Migrator {
     const done: string[] = [];
     for (const migration of targets) {
       await this.source.transaction(async () => {
+        await migration.down(this.context());
