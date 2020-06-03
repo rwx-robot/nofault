@@ -78,3 +78,4 @@ export class Migrator {
       done.push(migration.version);
     }
     return done;
+  }
