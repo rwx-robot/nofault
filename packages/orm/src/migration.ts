@@ -85,3 +85,4 @@ export class Migrator {
   }
 
   private async records(): Promise<MigrationRecord[]> {
+    const rows = await this.raw<{ version: string; applied_at: string }>(
