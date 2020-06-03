@@ -94,3 +94,5 @@ export class Migrator {
   private async ensureTable(): Promise<void> {
     await this.raw(
       `CREATE TABLE IF NOT EXISTS ${TABLE} (version VARCHAR(255) PRIMARY KEY, applied_at DATETIME NOT NULL)`,
+    );
+  }
