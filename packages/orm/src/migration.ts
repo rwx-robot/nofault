@@ -107,3 +107,5 @@ export class Migrator {
 
   private async raw<T = Record<string, unknown>>(sql: string, params: unknown[] = []): Promise<T[]> {
     const result = await this.source.raw(sql, params);
+    return result.rows as unknown as T[];
+  }
