@@ -117,3 +117,5 @@ export class Migrator {
   private context(): MigrationContext {
     const source = this.source;
     return {
+      execute: async (sql, params) => {
+        await source.raw(sql, params ?? []);
