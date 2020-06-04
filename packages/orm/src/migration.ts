@@ -109,3 +109,5 @@ export class Migrator {
     const result = await this.source.raw(sql, params);
     return result.rows as unknown as T[];
   }
+
+  private sorted(): Migration[] {
