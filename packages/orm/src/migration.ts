@@ -111,3 +111,4 @@ export class Migrator {
   }
 
   private sorted(): Migration[] {
+    return [...this.migrations].sort((a, b) => (a.version < b.version ? -1 : a.version > b.version ? 1 : 0));
