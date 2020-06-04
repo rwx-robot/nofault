@@ -100,3 +100,5 @@ export class Migrator {
   private async record(version: string): Promise<void> {
     await this.raw(`INSERT INTO ${TABLE} (version, applied_at) VALUES (?, ?)`, [version, new Date().toISOString()]);
   }
+
+  private async forget(version: string): Promise<void> {
