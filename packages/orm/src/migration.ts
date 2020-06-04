@@ -119,3 +119,4 @@ export class Migrator {
     return {
       execute: async (sql, params) => {
         await source.raw(sql, params ?? []);
+      },
