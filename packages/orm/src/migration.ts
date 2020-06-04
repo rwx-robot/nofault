@@ -115,3 +115,5 @@ export class Migrator {
   }
 
   private context(): MigrationContext {
+    const source = this.source;
+    return {
