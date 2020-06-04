@@ -96,3 +96,5 @@ export class Migrator {
       `CREATE TABLE IF NOT EXISTS ${TABLE} (version VARCHAR(255) PRIMARY KEY, applied_at DATETIME NOT NULL)`,
     );
   }
+
+  private async record(version: string): Promise<void> {
