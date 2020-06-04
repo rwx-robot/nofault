@@ -124,3 +124,4 @@ export class Migrator {
       dropTable: async (entity) => {
         await source.raw(`DROP TABLE IF EXISTS ${getEntityMeta(entity).table}`);
       },
+    };
