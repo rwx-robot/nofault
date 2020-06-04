@@ -120,3 +120,5 @@ export class Migrator {
       execute: async (sql, params) => {
         await source.raw(sql, params ?? []);
       },
+      createTable: (entity) => source.createTable(getEntityMeta(entity)),
+      dropTable: async (entity) => {
