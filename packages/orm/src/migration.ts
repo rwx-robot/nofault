@@ -104,3 +104,5 @@ export class Migrator {
   private async forget(version: string): Promise<void> {
     await this.raw(`DELETE FROM ${TABLE} WHERE version = ?`, [version]);
   }
+
+  private async raw<T = Record<string, unknown>>(sql: string, params: unknown[] = []): Promise<T[]> {
