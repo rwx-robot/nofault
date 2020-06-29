@@ -35,3 +35,7 @@ export class CacheModule {
 
 /** 拼缓存键：把非字符串参数序列化，保证不同参数不会撞键 */
 export function cacheKey(parts: Array<string | number | boolean | object>): string {
+  return parts
+    .map((part) => (typeof part === 'object' ? JSON.stringify(part) : String(part)))
+    .join(':');
+}
