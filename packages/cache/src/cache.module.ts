@@ -19,3 +19,8 @@ export interface CacheModuleOptions {
   cache?: Cache;
   /** 或者给参数，由框架造一个 MemoryCache */
   memory?: MemoryCacheOptions;
+}
+
+export class CacheModule {
+  static forRoot(options: CacheModuleOptions = {}): DynamicModule {
+    const providers: Provider[] = [
