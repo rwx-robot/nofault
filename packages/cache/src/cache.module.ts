@@ -24,3 +24,8 @@ export interface CacheModuleOptions {
 export class CacheModule {
   static forRoot(options: CacheModuleOptions = {}): DynamicModule {
     const providers: Provider[] = [
+      {
+        provide: CACHE,
+        useFactory: () => options.cache ?? new MemoryCache(options.memory ?? {}),
+      },
+    ];
