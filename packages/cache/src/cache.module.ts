@@ -39,3 +39,9 @@ export function cacheKey(parts: Array<string | number | boolean | object>): stri
     .map((part) => (typeof part === 'object' ? JSON.stringify(part) : String(part)))
     .join(':');
 }
+
+/**
+ * 把一个函数包成"带缓存的函数"。
+ *
+ * 与 `cache.getOrSet()` 的差别只是省掉手写 key；
+ * 语义（single-flight、不固化 undefined）完全一致。
