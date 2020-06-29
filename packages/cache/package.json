@@ -11,3 +11,5 @@
       "default": "./dist/index.js"
     }
   },
+  "files": ["dist", "README.md"],
+  "engines": {
