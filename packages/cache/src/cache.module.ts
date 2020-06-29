@@ -9,3 +9,7 @@ import type { Cache } from './cache';
 import { MemoryCache, type MemoryCacheOptions } from './memory-cache';
 
 export const CACHE = Symbol('NOFAULT_CACHE');
+
+export function InjectCache(): ParameterDecorator {
+  return Inject(CACHE as never);
+}
