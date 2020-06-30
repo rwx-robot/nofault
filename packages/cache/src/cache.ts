@@ -64,3 +64,8 @@ export class NullCache implements Cache {
   ): Promise<T | undefined> {
     this.counters.misses++;
     return loader();
+  }
+  stats(): CacheStats {
+    return { ...this.counters };
+  }
+}
