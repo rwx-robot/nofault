@@ -16,3 +16,9 @@ export interface CacheStats {
 export interface SetOptions {
   /** 生存时间（毫秒） */
   ttl?: number;
+}
+
+export interface Cache {
+  readonly name: string;
+  get<T = unknown>(key: string): Promise<T | undefined>;
+  set(key: string, value: unknown, options?: SetOptions): Promise<void>;
