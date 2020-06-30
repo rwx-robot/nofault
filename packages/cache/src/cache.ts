@@ -10,3 +10,9 @@ export interface CacheStats {
   misses: number;
   sets: number;
   deletes: number;
+  evictions: number;
+}
+
+export interface SetOptions {
+  /** 生存时间（毫秒） */
+  ttl?: number;
