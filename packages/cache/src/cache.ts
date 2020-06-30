@@ -46,3 +46,9 @@ export class NullCache implements Cache {
     return undefined;
   }
   async set(_key: string, _value: unknown, _options?: SetOptions): Promise<void> {
+    this.counters.sets++;
+  }
+  async delete(_key: string): Promise<boolean> {
+    return false;
+  }
+  async has(_key: string): Promise<boolean> {
