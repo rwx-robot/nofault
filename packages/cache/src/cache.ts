@@ -40,3 +40,9 @@ export interface Cache {
 export class NullCache implements Cache {
   readonly name = 'null';
   private readonly counters: CacheStats = { hits: 0, misses: 0, sets: 0, deletes: 0, evictions: 0 };
+
+  async get(_key: string): Promise<undefined> {
+    this.counters.misses++;
+    return undefined;
+  }
+  async set(_key: string, _value: unknown, _options?: SetOptions): Promise<void> {
