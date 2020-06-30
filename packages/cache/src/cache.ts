@@ -22,3 +22,9 @@ export interface Cache {
   readonly name: string;
   get<T = unknown>(key: string): Promise<T | undefined>;
   set(key: string, value: unknown, options?: SetOptions): Promise<void>;
+  delete(key: string): Promise<boolean>;
+  has(key: string): Promise<boolean>;
+  clear(): Promise<void>;
+  /**
+   * 取值；未命中时调用 loader 回源并写入。
+   *
