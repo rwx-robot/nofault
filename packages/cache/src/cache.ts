@@ -52,3 +52,9 @@ export class NullCache implements Cache {
     return false;
   }
   async has(_key: string): Promise<boolean> {
+    return false;
+  }
+  async clear(): Promise<void> {
+    /* 无状态 */
+  }
+  async getOrSet<T>(
