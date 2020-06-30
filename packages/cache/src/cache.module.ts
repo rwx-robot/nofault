@@ -50,3 +50,8 @@ export function cached<A extends unknown[], R>(
   cache: Cache,
   prefix: string,
   fn: (...args: A) => Promise<R | undefined>,
+  options: { ttl?: number; keyOf?: (...args: A) => string } = {},
+): (...args: A) => Promise<R | undefined> {
+  return (...args: A) => {
+    const key = options.keyOf
+      ? `${prefix}:${options.keyOf(...args)}`
