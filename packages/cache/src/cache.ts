@@ -28,3 +28,9 @@ export interface Cache {
   /**
    * 取值；未命中时调用 loader 回源并写入。
    *
+   * 语义保证：
+   * - **并发下同一 key 只回源一次**（single-flight），避免缓存击穿
+   * - loader 返回 undefined 时**不写缓存**（否则会把"没有结果"固化成"永远查不到"）
+   * - loader 抛错会向所有等待者传播，不会留下半截状态
+   */
+  getOrSet<T>(key: string, loader: () => Promise<T | undefined>, options?: SetOptions): Promise<T | undefined>;
