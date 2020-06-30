@@ -45,3 +45,8 @@ export function cacheKey(parts: Array<string | number | boolean | object>): stri
  *
  * 与 `cache.getOrSet()` 的差别只是省掉手写 key；
  * 语义（single-flight、不固化 undefined）完全一致。
+ */
+export function cached<A extends unknown[], R>(
+  cache: Cache,
+  prefix: string,
+  fn: (...args: A) => Promise<R | undefined>,
