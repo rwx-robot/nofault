@@ -34,3 +34,9 @@ export interface Cache {
    * - loader 抛错会向所有等待者传播，不会留下半截状态
    */
   getOrSet<T>(key: string, loader: () => Promise<T | undefined>, options?: SetOptions): Promise<T | undefined>;
+  stats(): CacheStats;
+}
+
+export class NullCache implements Cache {
+  readonly name = 'null';
+  private readonly counters: CacheStats = { hits: 0, misses: 0, sets: 0, deletes: 0, evictions: 0 };
