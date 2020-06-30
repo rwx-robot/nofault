@@ -55,3 +55,7 @@ export function cached<A extends unknown[], R>(
   return (...args: A) => {
     const key = options.keyOf
       ? `${prefix}:${options.keyOf(...args)}`
+      : cacheKey([prefix, ...(args as Array<string | number | boolean | object>)]);
+    return cache.getOrSet<R>(key, () => fn(...args), { ttl: options.ttl });
+  };
+}
