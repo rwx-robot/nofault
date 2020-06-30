@@ -58,3 +58,9 @@ export class NullCache implements Cache {
     /* 无状态 */
   }
   async getOrSet<T>(
+    _key: string,
+    loader: () => Promise<T | undefined>,
+    _options?: SetOptions,
+  ): Promise<T | undefined> {
+    this.counters.misses++;
+    return loader();
