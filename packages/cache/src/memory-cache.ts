@@ -85,3 +85,20 @@ export class MemoryCache implements Cache {
     /**
      * 空值的 TTL 必须**永远有界**。
      *
+     * 若沿用普通默认值：当 ttl 配置为 0（"永不过期"，很常见）时，
+     * "查不到"这个结果会被写成 expiresAt = Infinity ——
+     * 之后数据库里真的插入了这条记录，业务也会永远读到"没有"，
+     * 只能靠重启进程恢复。所以空值走 nullTtl，且兜底 60s。
+     */
+    const effectiveTtl = isNullValue
+      ? (options.ttl ?? this.options.nullTtl ?? DEFAULT_NULL_TTL_MS) || DEFAULT_NULL_TTL_MS
+      : (options.ttl ?? this.options.ttl ?? 0);
+
+    this.store.set(key, {
+      value: isNullValue ? EMPTY : value,
+      expiresAt:
+        effectiveTtl > 0 ? Date.now() + withJitter(effectiveTtl, this.options.jitter ?? 0.1) : Number.POSITIVE_INFINITY,
+      touchedAt: ++this.clock,
+    });
+    this.counters.sets++;
+    this.evictIfNeeded();
