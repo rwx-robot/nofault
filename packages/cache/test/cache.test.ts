@@ -35,3 +35,21 @@ describe('MemoryCache', () => {
     await cache.set('a', 1);
     await cache.set('b', 2);
     // 访问 a，让 b 变成最久未用
+    await cache.get('a');
+    await cache.set('c', 3);
+    expect(await cache.get('b')).toBeUndefined();
+    expect(await cache.get('a')).toBe(1);
+    expect(cache.stats().evictions).toBe(1);
+  });
+
+  it('evicts the truly oldest entry, not an arbitrary one', async () => {
+    const cache = new MemoryCache({ max: 3 });
+    await cache.set('a', 1);
+    await cache.set('b', 2);
+    await cache.set('c', 3);
+    // 重新访问 a、b，让 c 成为最久未用的那个
+    await cache.get('a');
+    await cache.get('b');
+    await cache.set('d', 4);
+    expect(await cache.get('c')).toBeUndefined();
+    expect(await cache.get('a')).toBe(1);
