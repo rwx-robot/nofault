@@ -102,3 +102,20 @@ export class MemoryCache implements Cache {
     });
     this.counters.sets++;
     this.evictIfNeeded();
+  }
+
+  async delete(key: string): Promise<boolean> {
+    this.counters.deletes++;
+    return this.store.delete(key);
+  }
+
+  async has(key: string): Promise<boolean> {
+    const entry = this.store.get(key);
+    return entry !== undefined && !this.isExpired(entry);
+  }
+
+  async clear(): Promise<void> {
+    this.store.clear();
+  }
+
+  async getOrSet<T>(key: string, loader: () => Promise<T | undefined>, options: SetOptions = {}): Promise<T | undefined> {
