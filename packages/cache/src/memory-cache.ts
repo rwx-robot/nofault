@@ -50,3 +50,20 @@ export class MemoryCache implements Cache {
       return undefined;
     }
     this.counters.hits++;
+    return (hit.value === EMPTY ? undefined : hit.value) as T;
+  }
+
+  /**
+   * 取值并告知"到底命中没有"。
+   *
+   * 与 `get()` 的差别很关键：缓存里可能存着一个**空值标记**（防穿透），
+   * 此时 `get()` 返回 undefined，但语义是"命中了，结果是空"。
+   * 只有区分二者，空值缓存才不会退化成"每次都回源"。
+   */
+  private lookup(key: string): Entry | undefined {
+    const entry = this.store.get(key);
+    if (!entry) return undefined;
+    if (this.isExpired(entry)) {
+      this.store.delete(key);
+      return undefined;
+    }
