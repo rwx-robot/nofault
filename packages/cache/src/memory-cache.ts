@@ -154,3 +154,20 @@ export class MemoryCache implements Cache {
   }
 
   /** 测试用：把时钟往前推，避免真的 sleep */
+  size(): number {
+    return this.store.size;
+  }
+
+  private isExpired(entry: Entry): boolean {
+    return entry.expiresAt <= Date.now();
+  }
+
+  private evictIfNeeded(): void {
+    const max = this.options.max ?? 0;
+    if (max <= 0 || this.store.size <= max) return;
+    const excess = this.store.size - max;
+    if (excess <= 0) return;
+
+    /**
+     * 只淘汰 touchedAt 最小的 excess 个，不做全量排序。
+     *
