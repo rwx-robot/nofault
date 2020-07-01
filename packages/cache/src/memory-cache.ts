@@ -171,3 +171,20 @@ export class MemoryCache implements Cache {
     /**
      * 只淘汰 touchedAt 最小的 excess 个，不做全量排序。
      *
+     * set() 是热路径：原先每次写入都把全部条目物化成数组再 sort，
+     * 是 O(n log n)；max 配得越大越明显。
+     * 实际场景下 excess 通常就是 1（写入后立刻淘汰），
+     * 这里用一次线性扫描维护"待淘汰的 excess 个"，退化为 O(n)。
+     */
+    const victims: Array<{ key: string; touchedAt: number }> = [];
+    for (const [key, entry] of this.store) {
+      if (victims.length < excess) {
+        victims.push({ key, touchedAt: entry.touchedAt });
+        continue;
+      }
+      // victims 里 touchedAt 最大的那个是"最不该被淘汰的"，用更旧的替换它
+      let worstIdx = 0;
+      for (let i = 1; i < victims.length; i++) {
+        if (victims[i]!.touchedAt > victims[worstIdx]!.touchedAt) worstIdx = i;
+      }
+      if (entry.touchedAt < victims[worstIdx]!.touchedAt) {
