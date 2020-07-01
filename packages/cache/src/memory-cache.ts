@@ -119,3 +119,20 @@ export class MemoryCache implements Cache {
   }
 
   async getOrSet<T>(key: string, loader: () => Promise<T | undefined>, options: SetOptions = {}): Promise<T | undefined> {
+    // 命中（包括"命中了空值"）就直接返回，不再回源
+    const hit = this.lookup(key);
+    if (hit) {
+      this.counters.hits++;
+      return (hit.value === EMPTY ? undefined : hit.value) as T;
+    }
+    this.counters.misses++;
+
+    // 已有同 key 的回源在飞：直接复用它的 Promise，不再打一次数据库
+    const pending = this.inflight.get(key) as Promise<T | undefined> | undefined;
+    if (pending) return pending;
+
+    const task = (async () => {
+      try {
+        const value = await loader();
+        if (value === undefined && this.options.cacheNullValue) {
+          await this.set(key, EMPTY, { ttl: this.options.nullTtl ?? DEFAULT_NULL_TTL_MS });
