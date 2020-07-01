@@ -71,3 +71,21 @@ describe('getOrSet', () => {
   it('loads once on a miss', async () => {
     const cache = new MemoryCache();
     const loader = vi.fn(async () => 'value');
+    expect(await cache.getOrSet('k', loader)).toBe('value');
+    expect(loader).toHaveBeenCalledTimes(1);
+    // 第二次走缓存
+    expect(await cache.getOrSet('k', loader)).toBe('value');
+    expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it('reuses one in-flight load for concurrent callers (stampede protection)', async () => {
+    const cache = new MemoryCache();
+    // gate 先建好：loader 是异步函数，若等它被调用时才拿到 resolve，
+    // 这里会先执行到 resolve('done')，而那时 resolve 还是空实现
+    let release!: (v: string) => void;
+    const gate = new Promise<string>((r) => {
+      release = r;
+    });
+    const loader = vi.fn(() => gate);
+
+    const first = cache.getOrSet('k', loader);
