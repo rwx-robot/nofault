@@ -33,3 +33,20 @@ const EMPTY = Symbol('cache:empty');
 
 /** 空值（防穿透标记）的兜底 TTL：空值缓存**永远**要有界，否则"查不到"会被永久固化 */
 const DEFAULT_NULL_TTL_MS = 60_000;
+
+export class MemoryCache implements Cache {
+  readonly name = 'memory';
+  private readonly store = new Map<string, Entry>();
+  private readonly inflight = new Map<string, Promise<unknown>>();
+  private readonly counters: CacheStats = { hits: 0, misses: 0, sets: 0, deletes: 0, evictions: 0 };
+  private clock = 0;
+
+  constructor(private readonly options: MemoryCacheOptions = {}) {}
+
+  async get<T = unknown>(key: string): Promise<T | undefined> {
+    const hit = this.lookup(key);
+    if (!hit) {
+      this.counters.misses++;
+      return undefined;
+    }
+    this.counters.hits++;
