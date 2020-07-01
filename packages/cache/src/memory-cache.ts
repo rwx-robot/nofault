@@ -16,3 +16,20 @@ export interface MemoryCacheOptions {
   max?: number;
   /** TTL 抖动比例，0~1；默认 0.1（±10%） */
   jitter?: number;
+  /** 是否缓存"查不到"这个结果（默认 false） */
+  cacheNullValue?: boolean;
+  /** 空值的 TTL，默认 60s */
+  nullTtl?: number;
+}
+
+interface Entry {
+  value: unknown;
+  expiresAt: number;
+  /** LRU：最近一次访问时间 */
+  touchedAt: number;
+}
+
+const EMPTY = Symbol('cache:empty');
+
+/** 空值（防穿透标记）的兜底 TTL：空值缓存**永远**要有界，否则"查不到"会被永久固化 */
+const DEFAULT_NULL_TTL_MS = 60_000;
