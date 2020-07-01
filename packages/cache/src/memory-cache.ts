@@ -188,3 +188,19 @@ export class MemoryCache implements Cache {
         if (victims[i]!.touchedAt > victims[worstIdx]!.touchedAt) worstIdx = i;
       }
       if (entry.touchedAt < victims[worstIdx]!.touchedAt) {
+        victims[worstIdx] = { key, touchedAt: entry.touchedAt };
+      }
+    }
+
+    for (const v of victims) {
+      if (this.store.delete(v.key)) this.counters.evictions++;
+    }
+  }
+}
+
+/** TTL 抖动：把过期时间打散，避免"同一秒创建的一批 key 集体失效" */
+export function withJitter(ttl: number, ratio: number): number {
+  if (ratio <= 0) return ttl;
+  const delta = ttl * Math.min(ratio, 1);
+  return Math.round(ttl - delta + Math.random() * delta * 2);
+}
