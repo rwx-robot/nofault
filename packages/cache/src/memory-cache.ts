@@ -67,3 +67,21 @@ export class MemoryCache implements Cache {
       this.store.delete(key);
       return undefined;
     }
+    entry.touchedAt = ++this.clock;
+    return entry;
+  }
+
+  async set(key: string, value: unknown, options: SetOptions = {}): Promise<void> {
+    // 空值有两种形态：调用方传入的 undefined，以及内部用的 EMPTY 哨兵
+    const isNullValue = value === undefined || value === EMPTY;
+
+    if (isNullValue && !this.options.cacheNullValue) {
+      // 不固化"没有结果"：让下一次请求有机会重新回源
+      this.store.delete(key);
+      this.counters.sets++;
+      return;
+    }
+
+    /**
+     * 空值的 TTL 必须**永远有界**。
+     *
