@@ -53,3 +53,21 @@ describe('MemoryCache', () => {
     await cache.set('d', 4);
     expect(await cache.get('c')).toBeUndefined();
     expect(await cache.get('a')).toBe(1);
+    expect(await cache.get('b')).toBe(2);
+    expect(await cache.get('d')).toBe(4);
+    expect(cache.stats().evictions).toBe(1);
+  });
+
+  it('counts hits and misses', async () => {
+    const cache = new MemoryCache();
+    await cache.get('nope');
+    await cache.set('a', 1);
+    await cache.get('a');
+    expect(cache.stats()).toMatchObject({ hits: 1, misses: 1, sets: 1 });
+  });
+});
+
+describe('getOrSet', () => {
+  it('loads once on a miss', async () => {
+    const cache = new MemoryCache();
+    const loader = vi.fn(async () => 'value');
