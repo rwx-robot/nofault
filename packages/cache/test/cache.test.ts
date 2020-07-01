@@ -17,3 +17,21 @@ describe('MemoryCache', () => {
     expect(await cache.get('a')).toBe(1);
     await sleep(40);
     expect(await cache.get('a')).toBeUndefined();
+    expect(await cache.has('a')).toBe(false);
+  });
+
+  it('deletes and clears', async () => {
+    const cache = new MemoryCache();
+    await cache.set('a', 1);
+    await cache.set('b', 2);
+    expect(await cache.delete('a')).toBe(true);
+    expect(await cache.delete('missing')).toBe(false);
+    await cache.clear();
+    expect(await cache.get('b')).toBeUndefined();
+  });
+
+  it('evicts least recently used entries when max is reached', async () => {
+    const cache = new MemoryCache({ max: 2 });
+    await cache.set('a', 1);
+    await cache.set('b', 2);
+    // 访问 a，让 b 变成最久未用
