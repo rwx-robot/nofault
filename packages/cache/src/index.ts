@@ -4,3 +4,4 @@
 export { MemoryCache, withJitter } from './memory-cache';
 export type { MemoryCacheOptions } from './memory-cache';
 export { NullCache } from './cache';
+export type { Cache, CacheStats, SetOptions } from './cache';
