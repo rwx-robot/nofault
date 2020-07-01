@@ -136,3 +136,21 @@ export class MemoryCache implements Cache {
         const value = await loader();
         if (value === undefined && this.options.cacheNullValue) {
           await this.set(key, EMPTY, { ttl: this.options.nullTtl ?? DEFAULT_NULL_TTL_MS });
+        } else {
+          await this.set(key, value, options);
+        }
+        return value;
+      } finally {
+        this.inflight.delete(key);
+      }
+    })();
+
+    this.inflight.set(key, task as Promise<unknown>);
+    return task;
+  }
+
+  stats(): CacheStats {
+    return { ...this.counters };
+  }
+
+  /** 测试用：把时钟往前推，避免真的 sleep */
