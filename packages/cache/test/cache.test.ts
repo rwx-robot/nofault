@@ -124,3 +124,22 @@ describe('getOrSet', () => {
       const loader = vi.fn(async () => undefined);
       await cache.getOrSet('k', loader);
       expect(await cache.has('k')).toBe(true);
+
+      // 空值 TTL 兜底 60s，带 ±10% 抖动（上界 66s），推进 70s 必然过期
+      vi.setSystemTime(Date.now() + 70_000);
+      expect(await cache.has('k')).toBe(false);
+
+      await cache.getOrSet('k', loader);
+      expect(loader).toHaveBeenCalledTimes(2);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('bounds the ttl when a null value is written directly through set()', async () => {
+    vi.useFakeTimers();
+    try {
+      // 与上面的用例差别：这条走 set() 且**不**显式传 ttl，
+      // 正是"空值沿用普通默认 TTL"这条老路径，也是缺陷真正发生的地方
+      const cache = new MemoryCache({ cacheNullValue: true, ttl: 0 });
+      await cache.set('k', undefined);
