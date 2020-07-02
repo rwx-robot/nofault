@@ -106,3 +106,21 @@ describe('getOrSet', () => {
     // 固化"查不到"会让数据一旦写入就永远读不到，默认必须关闭
     expect(loader).toHaveBeenCalledTimes(2);
   });
+
+  it('can cache null results when explicitly asked (penetration protection)', async () => {
+    const cache = new MemoryCache({ cacheNullValue: true, nullTtl: 1000 });
+    const loader = vi.fn(async () => undefined);
+    await cache.getOrSet('k', loader);
+    await cache.getOrSet('k', loader);
+    expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it('bounds the ttl of cached null values even when ttl means "never expire"', async () => {
+    vi.useFakeTimers();
+    try {
+      // ttl=0 表示"永不过期"。若空值沿用这个默认值，"查不到"会被永久固化：
+      // 之后数据库里真的插入了这条记录，业务也永远读不到，只能重启进程。
+      const cache = new MemoryCache({ cacheNullValue: true, ttl: 0 });
+      const loader = vi.fn(async () => undefined);
+      await cache.getOrSet('k', loader);
+      expect(await cache.has('k')).toBe(true);
