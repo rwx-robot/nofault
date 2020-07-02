@@ -161,3 +161,21 @@ describe('getOrSet', () => {
       vi.setSystemTime(Date.now() + 1_500);
       expect(await cache.has('k')).toBe(false);
     } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('propagates loader errors to every waiter', async () => {
+    const cache = new MemoryCache();
+    const loader = async () => {
+      throw new Error('db down');
+    };
+    await expect(cache.getOrSet('k', loader)).rejects.toThrow('db down');
+    // 失败后不能留下"锁"，否则后续请求永远拿不到数据
+    expect(await cache.getOrSet('k', async () => 'ok')).toBe('ok');
+  });
+});
+
+describe('ttl jitter', () => {
+  it('spreads expiry around the base ttl', () => {
+    for (let i = 0; i < 50; i++) {
