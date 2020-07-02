@@ -143,3 +143,21 @@ describe('getOrSet', () => {
       // 正是"空值沿用普通默认 TTL"这条老路径，也是缺陷真正发生的地方
       const cache = new MemoryCache({ cacheNullValue: true, ttl: 0 });
       await cache.set('k', undefined);
+      expect(await cache.has('k')).toBe(true);
+      vi.setSystemTime(Date.now() + 70_000);
+      expect(await cache.has('k')).toBe(false);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it('honours an explicit nullTtl for cached null values', async () => {
+    vi.useFakeTimers();
+    try {
+      const cache = new MemoryCache({ cacheNullValue: true, ttl: 0, nullTtl: 1000 });
+      const loader = vi.fn(async () => undefined);
+      await cache.getOrSet('k', loader);
+      expect(await cache.has('k')).toBe(true);
+      vi.setSystemTime(Date.now() + 1_500);
+      expect(await cache.has('k')).toBe(false);
+    } finally {
