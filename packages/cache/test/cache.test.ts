@@ -89,3 +89,20 @@ describe('getOrSet', () => {
     const loader = vi.fn(() => gate);
 
     const first = cache.getOrSet('k', loader);
+    const second = cache.getOrSet('k', loader);
+    const third = cache.getOrSet('k', loader);
+
+    release('done');
+    expect(await Promise.all([first, second, third])).toEqual(['done', 'done', 'done']);
+    // 三个并发调用只回源一次——这正是缓存击穿的防线
+    expect(loader).toHaveBeenCalledTimes(1);
+  });
+
+  it('does not cache undefined results by default', async () => {
+    const cache = new MemoryCache();
+    const loader = vi.fn(async () => undefined);
+    await cache.getOrSet('k', loader);
+    await cache.getOrSet('k', loader);
+    // 固化"查不到"会让数据一旦写入就永远读不到，默认必须关闭
+    expect(loader).toHaveBeenCalledTimes(2);
+  });
