@@ -179,3 +179,21 @@ describe('getOrSet', () => {
 describe('ttl jitter', () => {
   it('spreads expiry around the base ttl', () => {
     for (let i = 0; i < 50; i++) {
+      const value = withJitter(1000, 0.1);
+      expect(value).toBeGreaterThanOrEqual(900);
+      expect(value).toBeLessThanOrEqual(1100);
+    }
+  });
+
+  it('returns the exact ttl when jitter is disabled', () => {
+    expect(withJitter(1000, 0)).toBe(1000);
+  });
+});
+
+describe('NullCache', () => {
+  it('never stores anything but still calls the loader', async () => {
+    const cache = new NullCache();
+    await cache.set('a', 1);
+    expect(await cache.get('a')).toBeUndefined();
+    expect(await cache.getOrSet('a', async () => 'fresh')).toBe('fresh');
+  });
