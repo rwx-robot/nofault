@@ -197,3 +197,20 @@ describe('NullCache', () => {
     expect(await cache.get('a')).toBeUndefined();
     expect(await cache.getOrSet('a', async () => 'fresh')).toBe('fresh');
   });
+});
+
+describe('helpers', () => {
+  it('builds stable cache keys from mixed parts', () => {
+    expect(cacheKey(['user', 1, { page: 2 }])).toBe('user:1:{"page":2}');
+  });
+
+  it('wraps a function with caching', async () => {
+    const cache = new MemoryCache();
+    const calls = vi.fn(async (id: number) => `user-${id}`);
+    const getUser = cached(cache, 'user', calls);
+    expect(await getUser(1)).toBe('user-1');
+    expect(await getUser(1)).toBe('user-1');
+    expect(await getUser(2)).toBe('user-2');
+    expect(calls).toHaveBeenCalledTimes(2);
+  });
+});
