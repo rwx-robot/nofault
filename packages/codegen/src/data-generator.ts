@@ -22,3 +22,15 @@ export interface DataLayerOptions {
 
 /**
  * 挑出"该建表"的类型。
+ *
+ * 判据是**被当作响应类型使用过**：请求 DTO 是传输对象（`CreateUserReq`），
+ * 给它建一张表毫无意义；而响应对象（`UserResp`）通常就对应领域实体。
+ * 一开始就选对，比事后删掉六个没用的 entity 文件省事得多。
+ */
+function entityTypes(spec: ApiSpec, only?: string[]): TypeSpec[] {
+  if (only) return spec.types.filter((t) => only.includes(t.name));
+  const referenced = new Set<string>();
+  for (const service of spec.services) {
+    for (const route of service.routes) {
+      if (route.responseType) referenced.add(route.responseType.replace(/\[\]$/, '').trim());
+    }
