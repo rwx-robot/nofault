@@ -130,3 +130,15 @@ function tableName(type: TypeSpec): string {
 function propertyName(field: FieldSpec): string {
   return field.key || field.name;
 }
+
+function mapColumnType(type: string): string {
+  const base = type.replace(/\[\]$/, '').trim();
+  switch (base) {
+    case 'string':
+      return 'string';
+    case 'number':
+      return 'int';
+    case 'boolean':
+      return 'boolean';
+    case 'Date':
+      return 'date';
