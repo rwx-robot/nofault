@@ -10,3 +10,15 @@
  * 数组与自定义类型 → `json`（不生成关联，关联要人来定，猜错代价太大）
  */
 import type { ApiSpec, TypeSpec, FieldSpec } from '@nofault/dsl';
+import { kebabCase, pascalCase } from '@nofault/dsl';
+import type { GeneratedFile } from './generate';
+
+export interface DataLayerOptions {
+  /** 目录前缀，默认 `data` */
+  dir?: string;
+  /** 只生成这些类型；不传则全部生成 */
+  only?: string[];
+}
+
+/**
+ * 挑出"该建表"的类型。
