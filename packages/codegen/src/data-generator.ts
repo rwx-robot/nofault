@@ -118,3 +118,15 @@ function renderRepository(type: TypeSpec): string {
     `  async create(entity: ${className}): Promise<${className}> {`,
     '    return this.repo.save(entity);',
     '  }',
+    '}',
+    '',
+  ].join('\n');
+}
+
+function tableName(type: TypeSpec): string {
+  return kebabCase(type.name).replace(/-/g, '_');
+}
+
+function propertyName(field: FieldSpec): string {
+  return field.key || field.name;
+}
