@@ -81,3 +81,15 @@ function renderEntity(type: TypeSpec): string {
     '',
   ].join('\n');
 }
+
+function renderField(field: FieldSpec): string {
+  const columnType = mapColumnType(field.type);
+  const options = [`name: '${field.key || field.name}'`, `type: '${columnType}'`];
+  if (field.optional || columnType === 'json') options.push('nullable: true');
+  const decl = field.optional ? `${propertyName(field)}?` : `${propertyName(field)}!`;
+  return [
+    `  @Column({ ${options.join(', ')} })`,
+    `  ${decl}: ${tsTypeOf(field, columnType)};`,
+    '',
+  ].join('\n');
+}
