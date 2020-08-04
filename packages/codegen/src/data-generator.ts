@@ -142,3 +142,13 @@ function mapColumnType(type: string): string {
       return 'boolean';
     case 'Date':
       return 'date';
+    default:
+      // 数组、嵌套对象、未知自定义类型一律存 JSON —— 不猜关联
+      return 'json';
+  }
+}
+
+function tsTypeOf(field: FieldSpec, columnType: string): string {
+  if (columnType === 'json') return field.type;
+  return field.type;
+}
