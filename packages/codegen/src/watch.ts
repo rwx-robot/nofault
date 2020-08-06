@@ -29,3 +29,8 @@ export function watchFile(
 
   const fire = (): void => {
     if (timer) clearTimeout(timer);
+    timer = setTimeout(() => {
+      timer = undefined;
+      try {
+        void onChange(file);
+      } catch (err) {
