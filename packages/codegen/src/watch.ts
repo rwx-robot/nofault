@@ -44,3 +44,7 @@ export function watchFile(
   return {
     close(): void {
       if (timer) clearTimeout(timer);
+      watcher?.close();
+    },
+  };
+}
