@@ -18,3 +18,9 @@ export interface WatchOptions {
 export interface WatchHandle {
   close(): void;
 }
+
+export function watchFile(
+  file: string,
+  onChange: (file: string) => void | Promise<void>,
+  options: WatchOptions = {},
+): WatchHandle {
