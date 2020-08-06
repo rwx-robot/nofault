@@ -39,3 +39,8 @@ export function watchFile(
     }, debounceMs);
     timer.unref?.();
   };
+
+  const watcher = watch(file, fire);
+  return {
+    close(): void {
+      if (timer) clearTimeout(timer);
