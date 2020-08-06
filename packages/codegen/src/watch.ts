@@ -14,3 +14,7 @@ export interface WatchOptions {
   /** 出错时回调（不中断监听） */
   onError?: (err: unknown) => void;
 }
+
+export interface WatchHandle {
+  close(): void;
+}
