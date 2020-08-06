@@ -34,3 +34,8 @@ export function watchFile(
       try {
         void onChange(file);
       } catch (err) {
+        options.onError?.(err);
+      }
+    }, debounceMs);
+    timer.unref?.();
+  };
