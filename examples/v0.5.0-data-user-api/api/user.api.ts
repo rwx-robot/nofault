@@ -17,3 +17,22 @@ import {
   IsString,
   IsInt,
   IsEmail,
+  MinLength,
+  MaxLength,
+  Min,
+  Optional,
+} from '@nofault/dsl';
+
+export class CreateUserReq {
+  @Body('name') @IsString() @MinLength(2) @MaxLength(32)
+  name!: string;
+
+  @Body('email') @IsString() @IsEmail()
+  email!: string;
+
+  @Body('age') @IsInt() @Min(0) @Optional()
+  age?: number;
+}
+
+export class ListUsersReq {
+  @Query('page') @IsInt() @Min(1)
