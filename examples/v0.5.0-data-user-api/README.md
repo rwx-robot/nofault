@@ -49,3 +49,18 @@ curl -s "http://127.0.0.1:3000/api/user/users?page=0&pageSize=10"    # 422
 1. **一份契约产出六类文件** —— controller / service / module / dto / entity / repository
 2. **迁移先跑、服务后起** —— 避免半初始化的实例开始接流量
 3. **事务真的回滚** —— 邮箱冲突时不会留下半条记录
+4. **缓存失效是显式的** —— 删除后立刻失效，不会读到幽灵数据
+5. **接管机制可用** —— 重新生成只更新仍带标记的文件，手改过的原样保留
+
+## 重新生成
+
+```bash
+node ../../packages/cli/bin/nofaultctl.js generate api api/user.api.ts --out src --with-orm
+# 加 --watch 可在改契约时自动重跑
+```
+
+## 测试
+
+```bash
+pnpm vitest run tests/integration/v0.5.0
+```
