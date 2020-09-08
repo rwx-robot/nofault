@@ -7,3 +7,7 @@
  * 为什么要这一层手写模块：哪些实体需要 Repository 是部署/业务决策，
  * 生成器只能给出骨架，装配顺序得由人定。
  */
+import { Module } from '@nofault/core';
+import { OrmModule } from '@nofault/orm';
+import { UserRespRepository } from './repositories/user-resp.repository';
+import { UserResp } from './entities/user-resp.entity';
