@@ -73,3 +73,20 @@ export class OkResp {
 
 @Api('user')
 @Prefix('/api')
+export class UserService {
+  @Get('/ping')
+  @Handler('ping')
+  ping(): OkResp { throw new Error('not implemented'); }
+
+  @Get('/users')
+  listUsers(_req: ListUsersReq): UserPageResp { throw new Error('not implemented'); }
+
+  @Get('/users/:id')
+  getUser(_req: GetUserReq): UserResp { throw new Error('not implemented'); }
+
+  @Post('/users')
+  createUser(_req: CreateUserReq): UserResp { throw new Error('not implemented'); }
+
+  @Delete('/users/:id')
+  deleteUser(_req: GetUserReq): OkResp { throw new Error('not implemented'); }
+}
