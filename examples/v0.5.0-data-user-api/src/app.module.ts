@@ -13,3 +13,12 @@ import { CacheModule } from '@nofault/cache';
 import { MemoryDataSource } from '@nofault/orm';
 import { DataModule } from './data/data.module';
 import { UserModule } from './user/user.module';
+
+/** 导出给 main.ts 跑迁移用：迁移必须与运行时共用同一个数据源实例 */
+export const dataSource = new MemoryDataSource();
+
+@Module({
+  imports: [
+    // 全局提供 DataSource 与 Cache
+    OrmModule.forRoot({ dataSource }),
+    CacheModule.forRoot({ memory: { ttl: 10_000, max: 1000, jitter: 0.1 } }),
