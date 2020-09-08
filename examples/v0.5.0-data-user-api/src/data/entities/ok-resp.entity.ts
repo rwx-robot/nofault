@@ -8,3 +8,5 @@ export class OkResp {
 
   @Column({ name: 'ok', type: 'string' })
   ok!: string;
+
+}
