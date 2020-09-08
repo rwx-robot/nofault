@@ -15,3 +15,6 @@ import { UserResp } from './entities/user-resp.entity';
 @Module({
   imports: [OrmModule.forFeature([UserResp])],
   providers: [UserRespRepository],
+  exports: [UserRespRepository],
+})
+export class DataModule {}
