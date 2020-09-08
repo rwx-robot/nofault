@@ -5,3 +5,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from '@nofault/orm';
 export class UserPageResp {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ name: 'total', type: 'int' })
+  total!: number;
+
+  @Column({ name: 'page', type: 'int' })
