@@ -36,3 +36,20 @@ export class CreateUserReq {
 
 export class ListUsersReq {
   @Query('page') @IsInt() @Min(1)
+  page!: number;
+
+  @Query('pageSize') @IsInt() @Min(1)
+  pageSize!: number;
+}
+
+export class GetUserReq {
+  @Path('id') @IsInt()
+  id!: number;
+}
+
+export class UserResp {
+  @Body('id') @IsInt()
+  id!: number;
+
+  @Body('name') @IsString()
+  name!: string;
