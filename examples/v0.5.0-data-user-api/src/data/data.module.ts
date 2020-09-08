@@ -11,3 +11,7 @@ import { Module } from '@nofault/core';
 import { OrmModule } from '@nofault/orm';
 import { UserRespRepository } from './repositories/user-resp.repository';
 import { UserResp } from './entities/user-resp.entity';
+
+@Module({
+  imports: [OrmModule.forFeature([UserResp])],
+  providers: [UserRespRepository],
