@@ -32,3 +32,20 @@ curl -s "http://127.0.0.1:3000/api/user/users?page=0&pageSize=10"    # 422
 ```
 
 ## 文件说明
+
+| 文件 | 谁维护 | 说明 |
+| --- | --- | --- |
+| `api/user.api.ts` | 人 | 契约 |
+| `src/dto/*`、`src/user/user.controller.ts` | 生成器 | 传输对象与路由 |
+| `src/data/entities/*`、`src/data/repositories/*` | 生成器（骨架） | entity / repository |
+| `src/data/repositories/user-resp.repository.ts` | **已接管** | 补了 `findByEmail` / `remove` |
+| `src/user/user.service.ts` | **已接管** | 事务 + 缓存 |
+| `src/user/user.module.ts` | **已接管** | 加了 `imports: [DataModule]` |
+| `src/app.module.ts`、`src/data/data.module.ts` | 人 | 选数据源与缓存实现 |
+| `src/main.ts` | 人 | 迁移 + 启动 |
+
+## 这个示例证明了什么
+
+1. **一份契约产出六类文件** —— controller / service / module / dto / entity / repository
+2. **迁移先跑、服务后起** —— 避免半初始化的实例开始接流量
+3. **事务真的回滚** —— 邮箱冲突时不会留下半条记录
