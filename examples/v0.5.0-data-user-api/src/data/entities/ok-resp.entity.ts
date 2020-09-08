@@ -5,3 +5,6 @@ import { Entity, Column, PrimaryGeneratedColumn } from '@nofault/orm';
 export class OkResp {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ name: 'ok', type: 'string' })
+  ok!: string;
