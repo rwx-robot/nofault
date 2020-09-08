@@ -3,3 +3,7 @@
  *
  * `OrmModule.forFeature([UserResp])` 为每个实体注册 Repository Provider，
  * 生成的 `UserRespRepository` 再用 `@InjectRepository` 把它注入进来。
+ *
+ * 为什么要这一层手写模块：哪些实体需要 Repository 是部署/业务决策，
+ * 生成器只能给出骨架，装配顺序得由人定。
+ */
