@@ -2,3 +2,6 @@
 import { Entity, Column, PrimaryGeneratedColumn } from '@nofault/orm';
 
 @Entity({ table: 'user_page_resp' })
+export class UserPageResp {
+  @PrimaryGeneratedColumn()
+  id!: number;
