@@ -22,3 +22,10 @@ export const dataSource = new MemoryDataSource();
     // 全局提供 DataSource 与 Cache
     OrmModule.forRoot({ dataSource }),
     CacheModule.forRoot({ memory: { ttl: 10_000, max: 1000, jitter: 0.1 } }),
+    // 数据层：注册生成的 Repository
+    DataModule,
+    // 业务层：生成的 controller / module
+    UserModule,
+  ],
+})
+export class AppModule {}
