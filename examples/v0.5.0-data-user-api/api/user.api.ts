@@ -53,3 +53,23 @@ export class UserResp {
 
   @Body('name') @IsString()
   name!: string;
+
+  @Body('email') @IsString()
+  email!: string;
+}
+
+export class UserPageResp {
+  @Body('total') @IsInt()
+  total!: number;
+
+  @Body('page') @IsInt()
+  page!: number;
+}
+
+export class OkResp {
+  @Body('ok') @IsString()
+  ok!: string;
+}
+
+@Api('user')
+@Prefix('/api')
