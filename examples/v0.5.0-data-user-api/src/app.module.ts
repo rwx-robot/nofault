@@ -6,3 +6,10 @@
  *
  * 于是 `app.module.ts` 与 `data.module.ts` 都是手写的，
  * 而 controller / dto / entity / repository 由契约生成。
+ */
+import { Module } from '@nofault/core';
+import { OrmModule } from '@nofault/orm';
+import { CacheModule } from '@nofault/cache';
+import { MemoryDataSource } from '@nofault/orm';
+import { DataModule } from './data/data.module';
+import { UserModule } from './user/user.module';
