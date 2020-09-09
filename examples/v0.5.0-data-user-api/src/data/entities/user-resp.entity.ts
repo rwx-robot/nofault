@@ -5,3 +5,8 @@ import { Entity, Column, PrimaryGeneratedColumn } from '@nofault/orm';
 export class UserResp {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ name: 'name', type: 'string' })
+  name!: string;
+
+  @Column({ name: 'email', type: 'string' })
