@@ -12,3 +12,8 @@ export class OkRespRepository {
   }
 
   /** 分页查询；业务需要的复杂条件请自己加方法 */
+  paginate(page: number, pageSize: number) {
+    return this.repo.paginate(page, pageSize);
+  }
+
+  async create(entity: OkResp): Promise<OkResp> {
