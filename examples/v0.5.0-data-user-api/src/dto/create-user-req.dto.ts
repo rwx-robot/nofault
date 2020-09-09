@@ -11,3 +11,5 @@ export class CreateUserReq {
   @IsOptional()
   @IsInt()
   @Min(0)
+  age!: number;
+}
