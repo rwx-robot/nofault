@@ -15,3 +15,8 @@ export class UserPageRespRepository {
   paginate(page: number, pageSize: number) {
     return this.repo.paginate(page, pageSize);
   }
+
+  async create(entity: UserPageResp): Promise<UserPageResp> {
+    return this.repo.save(entity);
+  }
+}
