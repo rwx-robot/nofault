@@ -28,3 +28,11 @@ export class UserRespRepository {
   /** 唯一性检查：创建用户前先按邮箱查一遍 */
   findByEmail(email: string): Promise<UserResp | undefined> {
     return this.repo.findOne({ email } as Partial<UserResp>);
+  }
+
+  async remove(id: number): Promise<boolean> {
+    const entity = await this.repo.findById(id);
+    if (!entity) return false;
+    return this.repo.delete(entity);
+  }
+}

@@ -2,14 +2,3 @@
 import { IsEmail, IsInt, IsOptional, IsString, MaxLength, Min, MinLength } from '@nofault/rest';
 export class CreateUserReq {
   @IsString()
-  @MinLength(2)
-  @MaxLength(32)
-  name!: string;
-  @IsString()
-  @IsEmail()
-  email!: string;
-  @IsOptional()
-  @IsInt()
-  @Min(0)
-  age!: number;
-}
