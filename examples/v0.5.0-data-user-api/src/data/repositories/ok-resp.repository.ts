@@ -8,3 +8,7 @@ export class OkRespRepository {
   constructor(@InjectRepository(OkResp) private readonly repo: Repository<OkResp>) {}
 
   findById(id: number): Promise<OkResp | undefined> {
+    return this.repo.findById(id);
+  }
+
+  /** 分页查询；业务需要的复杂条件请自己加方法 */
