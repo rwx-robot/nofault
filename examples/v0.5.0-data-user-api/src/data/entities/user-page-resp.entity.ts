@@ -10,3 +10,6 @@ export class UserPageResp {
   total!: number;
 
   @Column({ name: 'page', type: 'int' })
+  page!: number;
+
+}
