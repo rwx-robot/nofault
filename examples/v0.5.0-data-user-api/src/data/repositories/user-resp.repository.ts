@@ -8,3 +8,13 @@
 import { Injectable } from '@nofault/core';
 import { InjectRepository, Repository } from '@nofault/orm';
 import { UserResp } from '../entities/user-resp.entity';
+
+@Injectable()
+export class UserRespRepository {
+  constructor(@InjectRepository(UserResp) private readonly repo: Repository<UserResp>) {}
+
+  findById(id: number): Promise<UserResp | undefined> {
+    return this.repo.findById(id);
+  }
+
+  paginate(page: number, pageSize: number) {
