@@ -10,3 +10,8 @@ export class UserPageRespRepository {
   findById(id: number): Promise<UserPageResp | undefined> {
     return this.repo.findById(id);
   }
+
+  /** 分页查询；业务需要的复杂条件请自己加方法 */
+  paginate(page: number, pageSize: number) {
+    return this.repo.paginate(page, pageSize);
+  }
