@@ -18,3 +18,13 @@ export class UserRespRepository {
   }
 
   paginate(page: number, pageSize: number) {
+    return this.repo.paginate(page, pageSize);
+  }
+
+  async create(entity: UserResp): Promise<UserResp> {
+    return this.repo.save(entity);
+  }
+
+  /** 唯一性检查：创建用户前先按邮箱查一遍 */
+  findByEmail(email: string): Promise<UserResp | undefined> {
+    return this.repo.findOne({ email } as Partial<UserResp>);
