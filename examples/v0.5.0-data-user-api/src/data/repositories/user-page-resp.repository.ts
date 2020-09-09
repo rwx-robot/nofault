@@ -4,3 +4,9 @@ import { InjectRepository, Repository } from '@nofault/orm';
 import { UserPageResp } from '../entities/user-page-resp.entity';
 
 @Injectable()
+export class UserPageRespRepository {
+  constructor(@InjectRepository(UserPageResp) private readonly repo: Repository<UserPageResp>) {}
+
+  findById(id: number): Promise<UserPageResp | undefined> {
+    return this.repo.findById(id);
+  }
