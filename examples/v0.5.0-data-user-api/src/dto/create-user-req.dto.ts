@@ -8,3 +8,6 @@ export class CreateUserReq {
   @IsString()
   @IsEmail()
   email!: string;
+  @IsOptional()
+  @IsInt()
+  @Min(0)
