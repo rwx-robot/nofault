@@ -2,3 +2,9 @@
 import { Injectable } from '@nofault/core';
 import { InjectRepository, Repository } from '@nofault/orm';
 import { OkResp } from '../entities/ok-resp.entity';
+
+@Injectable()
+export class OkRespRepository {
+  constructor(@InjectRepository(OkResp) private readonly repo: Repository<OkResp>) {}
+
+  findById(id: number): Promise<OkResp | undefined> {
