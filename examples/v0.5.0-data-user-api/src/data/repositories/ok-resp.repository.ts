@@ -2,21 +2,3 @@
 import { Injectable } from '@nofault/core';
 import { InjectRepository, Repository } from '@nofault/orm';
 import { OkResp } from '../entities/ok-resp.entity';
-
-@Injectable()
-export class OkRespRepository {
-  constructor(@InjectRepository(OkResp) private readonly repo: Repository<OkResp>) {}
-
-  findById(id: number): Promise<OkResp | undefined> {
-    return this.repo.findById(id);
-  }
-
-  /** 分页查询；业务需要的复杂条件请自己加方法 */
-  paginate(page: number, pageSize: number) {
-    return this.repo.paginate(page, pageSize);
-  }
-
-  async create(entity: OkResp): Promise<OkResp> {
-    return this.repo.save(entity);
-  }
-}

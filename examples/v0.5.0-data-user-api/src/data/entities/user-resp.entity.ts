@@ -10,3 +10,6 @@ export class UserResp {
   name!: string;
 
   @Column({ name: 'email', type: 'string' })
+  email!: string;
+
+}
