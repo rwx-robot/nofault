@@ -17,3 +17,6 @@ export class OkRespRepository {
   }
 
   async create(entity: OkResp): Promise<OkResp> {
+    return this.repo.save(entity);
+  }
+}
