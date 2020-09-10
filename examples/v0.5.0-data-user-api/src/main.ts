@@ -25,3 +25,16 @@ const createUsers: Migration = {
 
 async function bootstrap(): Promise<void> {
   // 迁移在**接流量之前**跑完：避免半初始化的实例开始服务
+  const migrator = new Migrator(dataSource, [createUsers]);
+  const applied = await migrator.up();
+  logger.info('migrations', applied.length > 0 ? { applied } : { applied: 'up to date' });
+
+  const app = await RestApplication.create(AppModule, {
+    name: 'data-user-api',
+    logger,
+    middleware: [requestContext(), cors(), securityHeaders(), bodyParser()],
+  });
+
+  app.enableShutdownHooks();
+  const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
+  app.markReady();
