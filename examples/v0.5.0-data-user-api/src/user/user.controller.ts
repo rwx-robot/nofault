@@ -14,3 +14,12 @@ export class UserController {
   async ping(): Promise<OkResp> {
     return this.service.ping();
   }
+
+  @Validate(ListUsersReq)
+  @Get('/users')
+  async listUsers(@Query() listUsersReq: ListUsersReq): Promise<UserPageResp> {
+    return this.service.listUsers(listUsersReq);
+  }
+
+  @Get('/users/:id')
+  async getUser(@Param('id') id: number): Promise<UserResp> {
