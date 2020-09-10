@@ -4,3 +4,6 @@ export class UserResp {
   @IsInt()
   id!: number;
   @IsString()
+  name!: string;
+  @IsString()
+  email!: string;
