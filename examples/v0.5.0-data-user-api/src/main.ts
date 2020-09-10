@@ -38,3 +38,15 @@ async function bootstrap(): Promise<void> {
   app.enableShutdownHooks();
   const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
   app.markReady();
+
+  logger.info('ready — try these:', { port });
+  for (const route of app.getRoutes()) {
+    logger.info(`  ${route.method.padEnd(6)} ${route.path}`);
+  }
+}
+
+void bootstrap().catch((err: unknown) => {
+  logger.error('bootstrap failed', undefined, err);
+  if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+  process.exit(1);
+});
