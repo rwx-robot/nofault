@@ -7,3 +7,10 @@ import { UserPageResp } from '../dto/user-page-resp.dto';
 import { UserResp } from '../dto/user-resp.dto';
 import { Body, Controller, Delete, Get, Param, Post, Query, Validate } from '@nofault/rest';
 @Controller({ path: '/api/user' })
+export class UserController {
+  constructor(private readonly service: UserService) {}
+
+  @Get('/ping')
+  async ping(): Promise<OkResp> {
+    return this.service.ping();
+  }
