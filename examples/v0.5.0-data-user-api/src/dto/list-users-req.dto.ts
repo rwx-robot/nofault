@@ -7,3 +7,4 @@ export class ListUsersReq {
   @IsInt()
   @Min(1)
   pageSize!: number;
+}
