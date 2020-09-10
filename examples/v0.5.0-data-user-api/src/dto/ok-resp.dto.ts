@@ -2,3 +2,5 @@
 import { IsString } from '@nofault/rest';
 export class OkResp {
   @IsString()
+  ok!: string;
+}
