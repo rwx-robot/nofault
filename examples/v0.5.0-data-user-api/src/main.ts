@@ -12,3 +12,16 @@ const logger = createLogger({ context: 'data-user-api', level: LogLevel.INFO });
  *
  * 示例里只有一条；真实项目会不断追加。
  * `down()` 必须写——没有回滚路径的迁移等于埋雷。
+ */
+const createUsers: Migration = {
+  version: '20200101_create_users',
+  up: async (ctx) => {
+    await ctx.createTable(UserResp);
+  },
+  down: async (ctx) => {
+    await ctx.dropTable(UserResp);
+  },
+};
+
+async function bootstrap(): Promise<void> {
+  // 迁移在**接流量之前**跑完：避免半初始化的实例开始服务
