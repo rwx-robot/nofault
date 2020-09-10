@@ -31,3 +31,10 @@ export class UserController {
   async createUser(@Body() createUserReq: CreateUserReq): Promise<UserResp> {
     return this.service.createUser(createUserReq);
   }
+
+  @Delete('/users/:id')
+  async deleteUser(@Param('id') id: number): Promise<OkResp> {
+    return this.service.deleteUser({ id });
+  }
+
+}
