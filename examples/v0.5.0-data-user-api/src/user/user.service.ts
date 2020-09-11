@@ -52,3 +52,20 @@ export class UserService {
   }
 
   async createUser(req: CreateUserReq): Promise<UserResp> {
+    // 事务：唯一性检查与写入必须原子，否则并发下会插入两条同样的邮箱
+    return dataSource.transaction(async () => {
+      const existing = await this.users.findByEmail(req.email);
+      if (existing) throw new ConflictException(`email ${req.email} already registered`);
+      const created = await this.users.create({ id: 0, name: req.name, email: req.email });
+      return { id: created.id, name: created.name, email: created.email };
+    });
+  }
+
+  async deleteUser(req: GetUserReq): Promise<OkResp> {
+    const removed = await this.users.remove(req.id);
+    if (!removed) throw new NotFoundException(`user ${req.id} not found`);
+    // 删掉之后立刻让缓存失效，否则会读到幽灵数据
+    await this.cache.delete(`user:${req.id}`);
+    return { ok: 'deleted' };
+  }
+}
