@@ -16,3 +16,21 @@ import { GetUserReq } from '../dto/get-user-req.dto';
 import { ListUsersReq } from '../dto/list-users-req.dto';
 import { OkResp } from '../dto/ok-resp.dto';
 import { UserPageResp } from '../dto/user-page-resp.dto';
+import { UserResp } from '../dto/user-resp.dto';
+import { UserRespRepository } from '../data/repositories/user-resp.repository';
+import { dataSource } from '../app.module';
+
+@Injectable()
+export class UserService {
+  constructor(
+    private readonly users: UserRespRepository,
+    @Inject(CACHE as never) private readonly cache: Cache,
+  ) {}
+
+  async ping(): Promise<OkResp> {
+    return { ok: 'pong' };
+  }
+
+  async listUsers(req: ListUsersReq): Promise<UserPageResp> {
+    const page = await this.users.paginate(req.page, req.pageSize);
+    return { total: page.total, page: page.items.length };
