@@ -34,3 +34,21 @@ export class UserService {
   async listUsers(req: ListUsersReq): Promise<UserPageResp> {
     const page = await this.users.paginate(req.page, req.pageSize);
     return { total: page.total, page: page.items.length };
+  }
+
+  /**
+   * 带缓存的单条查询。
+   *
+   * 命中缓存时不查库；未命中时 `getOrSet` 保证**并发只回源一次**。
+   * 回源返回 undefined 时不会写缓存，所以"用户被删了"能立刻反映出来。
+   */
+  async getUser(req: GetUserReq): Promise<UserResp> {
+    const found = await this.cache.getOrSet<UserResp>(`user:${req.id}`, async () => {
+      const user = await this.users.findById(req.id);
+      return user ? { id: user.id, name: user.name, email: user.email } : undefined;
+    });
+    if (!found) throw new NotFoundException(`user ${req.id} not found`);
+    return found;
+  }
+
+  async createUser(req: CreateUserReq): Promise<UserResp> {
