@@ -13,3 +13,7 @@ import { DataModule } from '../data/data.module';
 @Module({
   imports: [DataModule],
   controllers: [UserController],
+  providers: [UserService],
+  exports: [UserService],
+})
+export class UserModule {}
