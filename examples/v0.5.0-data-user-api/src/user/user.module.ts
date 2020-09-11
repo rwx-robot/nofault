@@ -8,3 +8,8 @@
 import { Module } from '@nofault/core';
 import { UserController } from './user.controller';
 import { UserService } from './user.service';
+import { DataModule } from '../data/data.module';
+
+@Module({
+  imports: [DataModule],
+  controllers: [UserController],
