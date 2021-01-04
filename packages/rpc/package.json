@@ -1,3 +1,5 @@
 {
   "name": "@nofault/rpc",
   "version": "0.6.0",
+  "description": "nofault RPC: length-prefixed framing, service registry, connection pool, timeout, retry and interceptors",
+  "license": "MIT",
