@@ -2,7 +2,7 @@
 
 > 严格遵循 **Node.js / NestJS 生态规范**的 Node.js 微服务框架，参考行业最佳实践设计。
 
-**当前版本：v0.5.0（数据访问层）**
+**当前版本：v0.6.0（RPC 框架）**
 
 ---
 
@@ -10,11 +10,11 @@
 
 nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约定优于配置、内置服务治理。
 
-补齐 ORM 与缓存：实体映射、Repository、事务、迁移；TTL / LRU / 防击穿。
+补齐 RPC：长度前缀分帧、连接池、超时重试、注册发现与加权轮询、拦截器。
 
 ## 架构概览
 
-**方言只生成字符串，Repository 不碰 SQL，DataSource 是唯一的 IO 边界。** 于是 ORM 可以不装数据库就跑起来，也能接任何驱动。
+**TCP 是字节流，没有消息边界**——所以自己分帧； **一条连接上可以同时有多个在途调用**——所以每个请求要有 id。 这两条决定了 RPC 协议的全部设计。
 
 ## 快速开始
 
@@ -22,13 +22,13 @@ nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约�
 pnpm install
 pnpm build
 pnpm test
-pnpm example v0.5.0-data-user-api
+pnpm example v0.6.0-rpc-gateway
 ```
 
-- 运行/使用说明 → [`docs/v0.5.0/RUNNING.md`](./docs/v0.5.0/RUNNING.md)
-- 架构说明 → [`docs/v0.5.0/ARCHITECTURE.md`](./docs/v0.5.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.5.0/CHANGELOG.md`](./docs/v0.5.0/CHANGELOG.md)
-- 压测报告 → [`benchmarks/v0.5.0/REPORT.md`](./benchmarks/v0.5.0/REPORT.md)
+- 运行/使用说明 → [`docs/v0.6.0/RUNNING.md`](./docs/v0.6.0/RUNNING.md)
+- 架构说明 → [`docs/v0.6.0/ARCHITECTURE.md`](./docs/v0.6.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.6.0/CHANGELOG.md`](./docs/v0.6.0/CHANGELOG.md)
+- 压测报告 → [`benchmarks/v0.6.0/REPORT.md`](./benchmarks/v0.6.0/REPORT.md)
 
 
 ## 已发布的包
@@ -47,6 +47,7 @@ pnpm example v0.5.0-data-user-api
 | `@nofault/cli` | v0.4.0 | `nofaultctl` |
 | `@nofault/orm` | v0.5.0 | 实体映射、Repository、事务、迁移 |
 | `@nofault/cache` | v0.5.0 | TTL / LRU / 防击穿 |
+| `@nofault/rpc` | v0.6.0 | 分帧、连接池、超时重试、注册发现 |
 
 ## 版本路线
 
@@ -57,8 +58,8 @@ pnpm example v0.5.0-data-user-api
 | v0.3.0 | 2018 | 运行时基座 | ✅ |
 | v0.4.0 | 2019 | 代码生成 v1 | ✅ |
 | v0.5.0 | 2020 | 数据访问层 | ✅ |
+| v0.6.0 | 2021 | RPC 框架 | ✅ |
 | v0.10.0 | 2025 | 工程化工具链 | ✅ |
-| v0.6.0 | 2021 | RPC 框架 | 计划 |
 | v0.7.0 | 2022 | 服务治理 | 计划 |
 | v0.8.0 | 2023 | 可观测性 | 计划 |
 | v0.9.0 | 2024 | 微服务全家桶 | 计划 |
