@@ -1,0 +1,24 @@
+{
+  "name": "@nofault/rpc",
+  "version": "0.6.0",
+  "description": "nofault RPC: length-prefixed framing, service registry, connection pool, timeout, retry and interceptors",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
+  },
+  "files": ["dist", "README.md"],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "dependencies": {
+    "@nofault/core": "workspace:*"
+  }
+}
