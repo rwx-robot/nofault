@@ -13,3 +13,10 @@ export interface RpcRequest {
   /** 请求 ID，用于把响应对回请求（同一个连接上会并发多个调用） */
   id: string;
   service: string;
+  method: string;
+  payload: unknown;
+  /** 链路追踪透传（v0.3.0 的 traceId 在这里接续） */
+  traceId?: string;
+}
+
+export interface RpcResponse {
