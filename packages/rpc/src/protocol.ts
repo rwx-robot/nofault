@@ -6,3 +6,10 @@
  * 而且只在负载稍大时才复现，是最难查的一类网络 bug。
  *
  * 帧格式：`[4 字节大端长度][JSON body]`。
+ * 长度前缀还带来一个副作用：可以在读满整帧**之前**就知道要分配多少内存，
+ * 顺便挡住"超大帧把内存打爆"（`maxFrameBytes`）。
+ */
+export interface RpcRequest {
+  /** 请求 ID，用于把响应对回请求（同一个连接上会并发多个调用） */
+  id: string;
+  service: string;
