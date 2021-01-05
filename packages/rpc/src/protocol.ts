@@ -34,3 +34,10 @@ export interface RpcResponse {
 /** 服务端流判定：只有 AsyncIterable 触发流式（数组等普通 Iterable 保持一元语义） */
 export function isAsyncIterable(value: unknown): value is AsyncIterable<unknown> {
   return (
+    typeof value === 'object' &&
+    value !== null &&
+    typeof (value as { [Symbol.asyncIterator]?: unknown })[Symbol.asyncIterator] === 'function'
+  );
+}
+
+export const DEFAULT_MAX_FRAME_BYTES = 8 * 1024 * 1024;
