@@ -41,3 +41,9 @@ export function isAsyncIterable(value: unknown): value is AsyncIterable<unknown>
 }
 
 export const DEFAULT_MAX_FRAME_BYTES = 8 * 1024 * 1024;
+
+export interface Codec {
+  encodeRequest(req: RpcRequest): Buffer;
+  encodeResponse(res: RpcResponse): Buffer;
+  decode(chunk: Buffer): unknown;
+}
