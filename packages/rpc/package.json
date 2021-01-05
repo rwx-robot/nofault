@@ -21,3 +21,4 @@
   "dependencies": {
     "@nofault/core": "workspace:*"
   }
+}
