@@ -4,3 +4,4 @@
   "description": "nofault RPC: length-prefixed framing, service registry, connection pool, timeout, retry and interceptors",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
