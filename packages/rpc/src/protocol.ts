@@ -20,3 +20,10 @@ export interface RpcRequest {
 }
 
 export interface RpcResponse {
+  id: string;
+  ok: boolean;
+  result?: unknown;
+  error?: { code: number; message: string };
+  /**
+   * 流式中间帧（服务端流）：带 `chunk` 的帧逐条推送，
+   * 末帧仍是不带 `result` 的正常响应。一元调用的 JSON 里不会出现这个键
