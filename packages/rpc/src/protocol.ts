@@ -62,3 +62,10 @@ export const RPC_ERROR = {
   PARSE: -32700,
   BAD_REQUEST: -32600,
   METHOD_NOT_FOUND: -32601,
+  HANDLER: -32000,
+  TIMEOUT: -32001,
+  UNREACHABLE: -32002,
+} as const;
+
+export class JsonCodec implements Codec {
+  constructor(private readonly maxFrameBytes: number = DEFAULT_MAX_FRAME_BYTES) {}
