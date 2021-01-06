@@ -55,3 +55,10 @@ export class RpcError extends Error {
   ) {
     super(message);
     this.name = 'RpcError';
+  }
+}
+
+export const RPC_ERROR = {
+  PARSE: -32700,
+  BAD_REQUEST: -32600,
+  METHOD_NOT_FOUND: -32601,
