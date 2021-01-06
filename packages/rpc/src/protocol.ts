@@ -69,3 +69,11 @@ export const RPC_ERROR = {
 
 export class JsonCodec implements Codec {
   constructor(private readonly maxFrameBytes: number = DEFAULT_MAX_FRAME_BYTES) {}
+
+  encodeRequest(req: RpcRequest): Buffer {
+    return this.frame(req);
+  }
+
+  encodeResponse(res: RpcResponse): Buffer {
+    return this.frame(res);
+  }
