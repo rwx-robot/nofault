@@ -98,3 +98,10 @@ export class JsonCodec implements Codec {
  *
  * keep 一个内部缓冲区：收到半帧时什么都不吐，等下一块数据补齐。
  */
+export class FrameReader {
+  private buffer = Buffer.alloc(0);
+
+  constructor(private readonly maxFrameBytes: number = DEFAULT_MAX_FRAME_BYTES) {}
+
+  push(chunk: Buffer): Buffer[] {
+    this.buffer = Buffer.concat([this.buffer, chunk]);
