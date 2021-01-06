@@ -47,3 +47,11 @@ export interface Codec {
   encodeResponse(res: RpcResponse): Buffer;
   decode(chunk: Buffer): unknown;
 }
+
+export class RpcError extends Error {
+  constructor(
+    public readonly code: number,
+    message: string,
+  ) {
+    super(message);
+    this.name = 'RpcError';
