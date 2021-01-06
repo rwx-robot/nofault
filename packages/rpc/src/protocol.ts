@@ -112,3 +112,10 @@ export class FrameReader {
       if (length > this.maxFrameBytes) {
         // 非法长度：丢掉缓冲区，避免后续全部错位
         this.buffer = Buffer.alloc(0);
+        throw new RpcError(RPC_ERROR.PARSE, `frame too large: ${length} bytes`);
+      }
+      if (this.buffer.length < 4 + length) break;
+      frames.push(this.buffer.subarray(4, 4 + length));
+      this.buffer = this.buffer.subarray(4 + length);
+    }
+    return frames;
