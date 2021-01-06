@@ -84,3 +84,10 @@ export class JsonCodec implements Codec {
 
   private frame(value: unknown): Buffer {
     const body = Buffer.from(JSON.stringify(value), 'utf8');
+    if (body.length > this.maxFrameBytes) {
+      throw new RpcError(RPC_ERROR.BAD_REQUEST, `frame too large: ${body.length} bytes`);
+    }
+    const header = Buffer.alloc(4);
+    header.writeUInt32BE(body.length, 0);
+    return Buffer.concat([header, body]);
+  }
