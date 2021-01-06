@@ -119,3 +119,9 @@ export class FrameReader {
       this.buffer = this.buffer.subarray(4 + length);
     }
     return frames;
+  }
+
+  get pendingBytes(): number {
+    return this.buffer.length;
+  }
+}
