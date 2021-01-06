@@ -91,3 +91,10 @@ export class JsonCodec implements Codec {
     header.writeUInt32BE(body.length, 0);
     return Buffer.concat([header, body]);
   }
+}
+
+/**
+ * 把字节流还原成一条条完整消息。
+ *
+ * keep 一个内部缓冲区：收到半帧时什么都不吐，等下一块数据补齐。
+ */
