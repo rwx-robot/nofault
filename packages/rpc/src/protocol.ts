@@ -105,3 +105,10 @@ export class FrameReader {
 
   push(chunk: Buffer): Buffer[] {
     this.buffer = Buffer.concat([this.buffer, chunk]);
+    const frames: Buffer[] = [];
+
+    while (this.buffer.length >= 4) {
+      const length = this.buffer.readUInt32BE(0);
+      if (length > this.maxFrameBytes) {
+        // 非法长度：丢掉缓冲区，避免后续全部错位
+        this.buffer = Buffer.alloc(0);
