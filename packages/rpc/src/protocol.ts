@@ -77,3 +77,10 @@ export class JsonCodec implements Codec {
   encodeResponse(res: RpcResponse): Buffer {
     return this.frame(res);
   }
+
+  decode(chunk: Buffer): unknown {
+    return JSON.parse(chunk.toString('utf8')) as unknown;
+  }
+
+  private frame(value: unknown): Buffer {
+    const body = Buffer.from(JSON.stringify(value), 'utf8');
