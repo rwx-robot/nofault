@@ -25,3 +25,5 @@ export type Interceptor = (payload: unknown, ctx: InterceptorContext, next: Invo
  */
 export function composeInterceptors(interceptors: Interceptor[], ctx: InterceptorContext, final: Invoker): Invoker {
   const dispatch = (index: number): Invoker => {
+    const interceptor = interceptors[index];
+    if (!interceptor) return final;
