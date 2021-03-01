@@ -14,3 +14,5 @@ export interface InterceptorContext {
 }
 
 export type Invoker = (payload: unknown) => Promise<unknown>;
+
+export type Interceptor = (payload: unknown, ctx: InterceptorContext, next: Invoker) => Promise<unknown>;
