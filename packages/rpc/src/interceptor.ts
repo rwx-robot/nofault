@@ -12,3 +12,5 @@ import type { RpcRequest } from './protocol';
 export interface InterceptorContext {
   request: RpcRequest;
 }
+
+export type Invoker = (payload: unknown) => Promise<unknown>;
