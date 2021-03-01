@@ -23,3 +23,5 @@ export type Interceptor = (payload: unknown, ctx: InterceptorContext, next: Invo
  * @param ctx 本次调用的上下文，逐层传给每个拦截器
  * @param final 真正的 handler
  */
+export function composeInterceptors(interceptors: Interceptor[], ctx: InterceptorContext, final: Invoker): Invoker {
+  const dispatch = (index: number): Invoker => {
