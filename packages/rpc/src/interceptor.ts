@@ -7,3 +7,4 @@
  * ctx 在**组合时**就传进去（而不是靠模块级变量偷偷取），
  * 因为同一个 server 上会有多个并发调用在飞——全局当前上下文必然串号。
  */
+import type { RpcRequest } from './protocol';
