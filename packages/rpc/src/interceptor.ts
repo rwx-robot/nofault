@@ -31,3 +31,6 @@ export function composeInterceptors(interceptors: Interceptor[], ctx: Intercepto
   };
   return dispatch(0);
 }
+
+/** 常用拦截器：记录调用耗时 */
+export function loggingInterceptor(logger: {
