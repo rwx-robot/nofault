@@ -8,3 +8,6 @@
  * 因为同一个 server 上会有多个并发调用在飞——全局当前上下文必然串号。
  */
 import type { RpcRequest } from './protocol';
+
+export interface InterceptorContext {
+  request: RpcRequest;
