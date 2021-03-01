@@ -28,3 +28,5 @@ export function composeInterceptors(interceptors: Interceptor[], ctx: Intercepto
     const interceptor = interceptors[index];
     if (!interceptor) return final;
     return (current) => interceptor(current, ctx, (nextPayload) => dispatch(index + 1)(nextPayload));
+  };
+  return dispatch(0);
