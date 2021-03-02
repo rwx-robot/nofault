@@ -39,3 +39,5 @@ export function loggingInterceptor(logger: {
   return async (payload, ctx, next) => {
     const started = Date.now();
     try {
+      return await next(payload);
+    } finally {
