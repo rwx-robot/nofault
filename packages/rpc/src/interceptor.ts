@@ -46,3 +46,5 @@ export function loggingInterceptor(logger: {
         traceId: ctx.request.traceId,
         ms: Date.now() - started,
       });
+    }
+  };
