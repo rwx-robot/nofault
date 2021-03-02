@@ -34,3 +34,5 @@ export function composeInterceptors(interceptors: Interceptor[], ctx: Intercepto
 
 /** 常用拦截器：记录调用耗时 */
 export function loggingInterceptor(logger: {
+  info(message: string, fields?: Record<string, unknown>): void;
+}): Interceptor {
