@@ -36,3 +36,4 @@ export function composeInterceptors(interceptors: Interceptor[], ctx: Intercepto
 export function loggingInterceptor(logger: {
   info(message: string, fields?: Record<string, unknown>): void;
 }): Interceptor {
+  return async (payload, ctx, next) => {
