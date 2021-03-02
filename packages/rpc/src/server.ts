@@ -14,3 +14,9 @@ import type { RpcRequest, RpcResponse } from './protocol';
 import { FrameReader, JsonCodec, RPC_ERROR, RpcError, DEFAULT_MAX_FRAME_BYTES, isAsyncIterable } from './protocol';
 import type { Interceptor } from './interceptor';
 import { composeInterceptors } from './interceptor';
+
+export interface RpcContext {
+  request: RpcRequest;
+  /** 远端地址（日志与审计用） */
+  remote?: string;
+}
