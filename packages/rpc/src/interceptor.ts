@@ -37,3 +37,5 @@ export function loggingInterceptor(logger: {
   info(message: string, fields?: Record<string, unknown>): void;
 }): Interceptor {
   return async (payload, ctx, next) => {
+    const started = Date.now();
+    try {
