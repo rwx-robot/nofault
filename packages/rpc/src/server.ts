@@ -30,3 +30,9 @@ export interface RpcServerOptions {
   maxFrameBytes?: number;
   logger?: { info(message: string, fields?: Record<string, unknown>): void; error(message: string, fields?: Record<string, unknown>): void };
 }
+
+export class RpcServer {
+  private readonly handlers = new Map<string, Handler>();
+  private readonly codec: JsonCodec;
+  private readonly interceptors: Interceptor[];
+  private readonly maxFrameBytes: number;
