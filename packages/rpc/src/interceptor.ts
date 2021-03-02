@@ -51,3 +51,5 @@ export function loggingInterceptor(logger: {
 }
 
 /** 常用拦截器：把上游 traceId 接到本地日志上下文里 */
+export function traceInterceptor(onTrace: (traceId: string | undefined) => void): Interceptor {
+  return async (payload, ctx, next) => {
