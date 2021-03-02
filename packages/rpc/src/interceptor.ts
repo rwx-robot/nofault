@@ -43,3 +43,4 @@ export function loggingInterceptor(logger: {
     } finally {
       logger.info('rpc call', {
         method: `${ctx.request.service}.${ctx.request.method}`,
+        traceId: ctx.request.traceId,
