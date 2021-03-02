@@ -25,3 +25,8 @@ export type Handler = (payload: unknown, ctx: RpcContext) => unknown | Promise<u
 
 export interface RpcServerOptions {
   host?: string;
+  port?: number;
+  interceptors?: Interceptor[];
+  maxFrameBytes?: number;
+  logger?: { info(message: string, fields?: Record<string, unknown>): void; error(message: string, fields?: Record<string, unknown>): void };
+}
