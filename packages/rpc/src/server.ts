@@ -9,3 +9,8 @@
  * 2. handler 抛错必须回一个带 error 的响应，而不是断开连接；
  *    断连会让客户端分不清"服务挂了"和"业务报错"
  */
+import { createServer, type Server, type Socket } from 'node:net';
+import type { RpcRequest, RpcResponse } from './protocol';
+import { FrameReader, JsonCodec, RPC_ERROR, RpcError, DEFAULT_MAX_FRAME_BYTES, isAsyncIterable } from './protocol';
+import type { Interceptor } from './interceptor';
+import { composeInterceptors } from './interceptor';
