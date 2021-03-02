@@ -55,3 +55,5 @@ export function traceInterceptor(onTrace: (traceId: string | undefined) => void)
   return async (payload, ctx, next) => {
     onTrace(ctx.request.traceId);
     return next(payload);
+  };
+}
