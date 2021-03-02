@@ -20,3 +20,8 @@ export interface RpcContext {
   /** 远端地址（日志与审计用） */
   remote?: string;
 }
+
+export type Handler = (payload: unknown, ctx: RpcContext) => unknown | Promise<unknown>;
+
+export interface RpcServerOptions {
+  host?: string;
