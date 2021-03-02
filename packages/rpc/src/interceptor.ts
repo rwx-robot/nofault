@@ -41,3 +41,5 @@ export function loggingInterceptor(logger: {
     try {
       return await next(payload);
     } finally {
+      logger.info('rpc call', {
+        method: `${ctx.request.service}.${ctx.request.method}`,
