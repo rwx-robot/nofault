@@ -111,3 +111,8 @@ export class RpcServer {
       }
       for (const frame of frames) void this.handleFrame(frame, socket, remote);
     });
+
+    socket.on('error', () => {
+      /* 连接断开是常态，记日志即可，不该抛 */
+    });
+  }
