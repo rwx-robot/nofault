@@ -132,3 +132,9 @@ export class RpcServer {
         ok: false,
         error: { code: RPC_ERROR.BAD_REQUEST, message: 'malformed request' },
       });
+      return;
+    }
+
+    const key = `${request.service}.${request.method}`;
+    const handler = this.handlers.get(key);
+    if (!handler) {
