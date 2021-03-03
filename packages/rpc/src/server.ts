@@ -99,3 +99,10 @@ export class RpcServer {
     // 每个连接一个 FrameReader：帧状态绝不能跨连接共享
     const reader = new FrameReader(this.maxFrameBytes);
     const remote = `${socket.remoteAddress}:${socket.remotePort}`;
+
+    socket.on('data', (chunk) => {
+      let frames: Buffer[];
+      try {
+        frames = reader.push(chunk);
+      } catch (err) {
+        this.options.logger?.error('bad frame', { remote, message: String(err) });
