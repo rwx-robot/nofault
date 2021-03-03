@@ -79,3 +79,8 @@ export class RpcServer {
     await new Promise<void>((resolve, reject) => {
       this.server!.once('error', reject);
       this.server!.listen(port, host, () => resolve());
+    });
+    this.listening = true;
+    const address = this.server.address();
+    const actualPort = typeof address === 'object' && address ? address.port : port;
+    this.options.logger?.info('rpc server listening', { port: actualPort, host });
