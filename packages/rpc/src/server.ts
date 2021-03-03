@@ -52,3 +52,8 @@ export class RpcServer {
   }
 
   /** 注册整个服务对象（方法名即 RPC 方法名） */
+  registerService(name: string, instance: object, methods?: string[]): this {
+    const proto = Object.getPrototypeOf(instance) as object;
+    const names =
+      methods ??
+      Object.getOwnPropertyNames(proto).filter(
