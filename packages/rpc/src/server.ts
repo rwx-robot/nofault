@@ -94,3 +94,8 @@ export class RpcServer {
     });
     this.listening = false;
   }
+
+  private onConnection(socket: Socket): void {
+    // 每个连接一个 FrameReader：帧状态绝不能跨连接共享
+    const reader = new FrameReader(this.maxFrameBytes);
+    const remote = `${socket.remoteAddress}:${socket.remotePort}`;
