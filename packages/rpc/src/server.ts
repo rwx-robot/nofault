@@ -36,3 +36,8 @@ export class RpcServer {
   private readonly codec: JsonCodec;
   private readonly interceptors: Interceptor[];
   private readonly maxFrameBytes: number;
+  private server?: Server;
+  private listening = false;
+
+  constructor(private readonly options: RpcServerOptions = {}) {
+    this.codec = new JsonCodec(options.maxFrameBytes ?? DEFAULT_MAX_FRAME_BYTES);
