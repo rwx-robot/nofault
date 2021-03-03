@@ -41,3 +41,9 @@ export class RpcServer {
 
   constructor(private readonly options: RpcServerOptions = {}) {
     this.codec = new JsonCodec(options.maxFrameBytes ?? DEFAULT_MAX_FRAME_BYTES);
+    this.interceptors = options.interceptors ?? [];
+    this.maxFrameBytes = options.maxFrameBytes ?? DEFAULT_MAX_FRAME_BYTES;
+  }
+
+  /** 注册一个方法；key 是 `service.method` */
+  register(service: string, method: string, handler: Handler): this {
