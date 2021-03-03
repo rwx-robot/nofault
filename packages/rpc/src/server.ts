@@ -89,3 +89,8 @@ export class RpcServer {
 
   async close(): Promise<void> {
     if (!this.server || !this.listening) return;
+    await new Promise<void>((resolve) => {
+      this.server!.close(() => resolve());
+    });
+    this.listening = false;
+  }
