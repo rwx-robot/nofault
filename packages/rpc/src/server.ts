@@ -122,3 +122,8 @@ export class RpcServer {
     try {
       request = this.codec.decode(frame) as RpcRequest;
     } catch {
+      this.reply(socket, { id: '', ok: false, error: { code: RPC_ERROR.PARSE, message: 'invalid JSON' } });
+      return;
+    }
+
+    if (!request || typeof request.service !== 'string' || typeof request.method !== 'string') {
