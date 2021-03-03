@@ -106,3 +106,8 @@ export class RpcServer {
         frames = reader.push(chunk);
       } catch (err) {
         this.options.logger?.error('bad frame', { remote, message: String(err) });
+        socket.destroy();
+        return;
+      }
+      for (const frame of frames) void this.handleFrame(frame, socket, remote);
+    });
