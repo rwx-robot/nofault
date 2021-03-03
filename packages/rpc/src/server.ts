@@ -138,3 +138,8 @@ export class RpcServer {
     const key = `${request.service}.${request.method}`;
     const handler = this.handlers.get(key);
     if (!handler) {
+      this.reply(socket, {
+        id: request.id,
+        ok: false,
+        error: { code: RPC_ERROR.METHOD_NOT_FOUND, message: `no handler for ${key}` },
+      });
