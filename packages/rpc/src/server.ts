@@ -57,3 +57,9 @@ export class RpcServer {
     const names =
       methods ??
       Object.getOwnPropertyNames(proto).filter(
+        (key) => key !== 'constructor' && typeof (instance as Record<string, unknown>)[key] === 'function',
+      );
+    for (const method of names) {
+      const fn = (instance as Record<string, unknown>)[method];
+      if (typeof fn !== 'function') continue;
+      this.register(name, method, (payload, ctx) =>
