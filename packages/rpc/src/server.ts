@@ -68,3 +68,7 @@ export class RpcServer {
     }
     return this;
   }
+
+  get methodNames(): string[] {
+    return [...this.handlers.keys()];
+  }
