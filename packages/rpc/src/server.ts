@@ -63,3 +63,8 @@ export class RpcServer {
       const fn = (instance as Record<string, unknown>)[method];
       if (typeof fn !== 'function') continue;
       this.register(name, method, (payload, ctx) =>
+        Promise.resolve((fn as Handler).call(instance, payload, ctx)),
+      );
+    }
+    return this;
+  }
