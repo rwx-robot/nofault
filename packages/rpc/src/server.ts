@@ -84,3 +84,8 @@ export class RpcServer {
     const address = this.server.address();
     const actualPort = typeof address === 'object' && address ? address.port : port;
     this.options.logger?.info('rpc server listening', { port: actualPort, host });
+    return { port: actualPort };
+  }
+
+  async close(): Promise<void> {
+    if (!this.server || !this.listening) return;
