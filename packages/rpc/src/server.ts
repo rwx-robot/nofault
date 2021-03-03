@@ -47,3 +47,8 @@ export class RpcServer {
 
   /** 注册一个方法；key 是 `service.method` */
   register(service: string, method: string, handler: Handler): this {
+    this.handlers.set(`${service}.${method}`, handler);
+    return this;
+  }
+
+  /** 注册整个服务对象（方法名即 RPC 方法名） */
