@@ -72,3 +72,10 @@ export class RpcServer {
   get methodNames(): string[] {
     return [...this.handlers.keys()];
   }
+
+  async listen(port = this.options.port ?? 0, host = this.options.host ?? '127.0.0.1'): Promise<{ port: number }> {
+    if (this.listening) throw new Error('RpcServer is already listening');
+    this.server = createServer((socket) => this.onConnection(socket));
+    await new Promise<void>((resolve, reject) => {
+      this.server!.once('error', reject);
+      this.server!.listen(port, host, () => resolve());
