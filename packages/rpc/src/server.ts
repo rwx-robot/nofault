@@ -116,3 +116,9 @@ export class RpcServer {
       /* 连接断开是常态，记日志即可，不该抛 */
     });
   }
+
+  private async handleFrame(frame: Buffer, socket: Socket, remote: string): Promise<void> {
+    let request: RpcRequest;
+    try {
+      request = this.codec.decode(frame) as RpcRequest;
+    } catch {
