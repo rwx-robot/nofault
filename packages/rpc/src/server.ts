@@ -127,3 +127,8 @@ export class RpcServer {
     }
 
     if (!request || typeof request.service !== 'string' || typeof request.method !== 'string') {
+      this.reply(socket, {
+        id: request?.id ?? '',
+        ok: false,
+        error: { code: RPC_ERROR.BAD_REQUEST, message: 'malformed request' },
+      });
