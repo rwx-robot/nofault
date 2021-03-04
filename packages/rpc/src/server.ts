@@ -159,3 +159,8 @@ export class RpcServer {
         // 中途出错仍走统一 catch 回错误帧（已发出的 chunk 无法撤回，客户端会拿到已收部分 + 抛错）。
         // 注意：不在这里做背压，socket.write 的缓冲即天然队列；超大吞吐场景应自行分批
         for await (const item of result) {
+          this.reply(socket, { id: request.id, ok: true, chunk: item });
+        }
+        this.reply(socket, { id: request.id, ok: true });
+        return;
+      }
