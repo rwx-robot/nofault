@@ -170,3 +170,8 @@ export class RpcServer {
         err instanceof RpcError
           ? err
           : new RpcError(RPC_ERROR.HANDLER, err instanceof Error ? err.message : String(err));
+      this.reply(socket, { id: request.id, ok: false, error: { code: rpcErr.code, message: rpcErr.message } });
+    }
+  }
+
+  private reply(socket: Socket, response: RpcResponse): void {
