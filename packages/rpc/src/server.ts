@@ -143,3 +143,8 @@ export class RpcServer {
         ok: false,
         error: { code: RPC_ERROR.METHOD_NOT_FOUND, message: `no handler for ${key}` },
       });
+      return;
+    }
+
+    const ctx: RpcContext = { request, remote };
+    // ctx 在组合时传入：并发调用共享同一条拦截器链，但各有各的 ctx
