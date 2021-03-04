@@ -148,3 +148,9 @@ export class RpcServer {
 
     const ctx: RpcContext = { request, remote };
     // ctx 在组合时传入：并发调用共享同一条拦截器链，但各有各的 ctx
+    const invoke = composeInterceptors(this.interceptors, ctx, (payload) =>
+      Promise.resolve(handler(payload, ctx)),
+    );
+
+    try {
+      const result = await invoke(request.payload);
