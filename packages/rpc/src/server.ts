@@ -154,3 +154,8 @@ export class RpcServer {
 
     try {
       const result = await invoke(request.payload);
+      if (isAsyncIterable(result)) {
+        // 服务端流：handler 返回 AsyncIterable → 逐帧推送 chunk，末帧是不带 result 的正常响应。
+        // 中途出错仍走统一 catch 回错误帧（已发出的 chunk 无法撤回，客户端会拿到已收部分 + 抛错）。
+        // 注意：不在这里做背压，socket.write 的缓冲即天然队列；超大吞吐场景应自行分批
+        for await (const item of result) {
