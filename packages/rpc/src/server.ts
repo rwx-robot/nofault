@@ -164,3 +164,9 @@ export class RpcServer {
         this.reply(socket, { id: request.id, ok: true });
         return;
       }
+      this.reply(socket, { id: request.id, ok: true, result });
+    } catch (err) {
+      const rpcErr =
+        err instanceof RpcError
+          ? err
+          : new RpcError(RPC_ERROR.HANDLER, err instanceof Error ? err.message : String(err));
