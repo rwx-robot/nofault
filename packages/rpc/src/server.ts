@@ -175,3 +175,7 @@ export class RpcServer {
   }
 
   private reply(socket: Socket, response: RpcResponse): void {
+    if (socket.destroyed) return;
+    socket.write(this.codec.encodeResponse(response));
+  }
+}
