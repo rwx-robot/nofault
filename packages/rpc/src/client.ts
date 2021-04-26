@@ -48,3 +48,6 @@ export class RpcClient {
    * 在建连接（按 `host:port` 去重）。
    *
    * 没有它，N 个并发首调会同时发现"池是空的"，于是各建一条连接——
+   * 池化在最需要它的那一刻（突发并发）失效了。
+   */
+  private readonly connecting = new Map<string, Promise<PooledConnection>>();
