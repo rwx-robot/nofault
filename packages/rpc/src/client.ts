@@ -42,3 +42,6 @@ interface PooledConnection {
 export class RpcClient {
   private readonly options: Required<Pick<RpcClientOptions, 'timeoutMs' | 'retries' | 'retryDelayMs' | 'poolSize' | 'maxFrameBytes'>> &
     RpcClientOptions;
+  private readonly codec: JsonCodec;
+  private readonly pool: PooledConnection[] = [];
+  /**
