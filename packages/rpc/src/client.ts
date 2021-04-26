@@ -14,3 +14,6 @@ import type { Registry, ServiceInstance } from './registry';
 import { RoundRobinBalancer } from './registry';
 
 export interface RpcClientOptions {
+  host?: string;
+  port?: number;
+  /** 通过注册中心寻址（与 host/port 二选一） */
