@@ -35,3 +35,6 @@ interface PooledConnection {
   reader: FrameReader;
   pending: Map<string, { resolve: (res: RpcResponse) => void; reject: (err: unknown) => void }>;
   /** 流式调用：按 id 收集 chunk 帧，不与一元调用的 pending 混用 */
+  streams: Map<string, { resolve: (res: RpcResponse) => void; reject: (err: unknown) => void }>;
+  busy: number;
+}
