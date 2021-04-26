@@ -51,3 +51,5 @@ export class RpcClient {
    * 池化在最需要它的那一刻（突发并发）失效了。
    */
   private readonly connecting = new Map<string, Promise<PooledConnection>>();
+  private readonly balancer = new RoundRobinBalancer();
+  private closed = false;
