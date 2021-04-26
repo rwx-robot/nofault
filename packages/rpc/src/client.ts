@@ -38,3 +38,7 @@ interface PooledConnection {
   streams: Map<string, { resolve: (res: RpcResponse) => void; reject: (err: unknown) => void }>;
   busy: number;
 }
+
+export class RpcClient {
+  private readonly options: Required<Pick<RpcClientOptions, 'timeoutMs' | 'retries' | 'retryDelayMs' | 'poolSize' | 'maxFrameBytes'>> &
+    RpcClientOptions;
