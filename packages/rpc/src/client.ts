@@ -23,3 +23,6 @@ export interface RpcClientOptions {
   timeoutMs?: number;
   /** 最多重试次数（不含首次） */
   retries?: number;
+  /** 重试间隔（毫秒） */
+  retryDelayMs?: number;
+  /** 连接池上限 */
