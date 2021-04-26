@@ -26,3 +26,6 @@ export interface RpcClientOptions {
   /** 重试间隔（毫秒） */
   retryDelayMs?: number;
   /** 连接池上限 */
+  poolSize?: number;
+  maxFrameBytes?: number;
+}
