@@ -11,3 +11,6 @@ import { connect, type Socket } from 'node:net';
 import type { RpcRequest, RpcResponse } from './protocol';
 import { FrameReader, JsonCodec, RPC_ERROR, RpcError, DEFAULT_MAX_FRAME_BYTES } from './protocol';
 import type { Registry, ServiceInstance } from './registry';
+import { RoundRobinBalancer } from './registry';
+
+export interface RpcClientOptions {
