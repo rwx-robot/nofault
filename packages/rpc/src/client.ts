@@ -53,3 +53,7 @@ export class RpcClient {
   private readonly connecting = new Map<string, Promise<PooledConnection>>();
   private readonly balancer = new RoundRobinBalancer();
   private closed = false;
+
+  constructor(options: RpcClientOptions = {}) {
+    this.options = {
+      timeoutMs: 3000,
