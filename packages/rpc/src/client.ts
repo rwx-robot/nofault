@@ -8,3 +8,6 @@
  *        业务错误（method not found、参数错误）重试毫无意义，只会放大故障
  */
 import { connect, type Socket } from 'node:net';
+import type { RpcRequest, RpcResponse } from './protocol';
+import { FrameReader, JsonCodec, RPC_ERROR, RpcError, DEFAULT_MAX_FRAME_BYTES } from './protocol';
+import type { Registry, ServiceInstance } from './registry';
