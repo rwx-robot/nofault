@@ -20,3 +20,6 @@ export interface RpcClientOptions {
   registry?: Registry;
   service?: string;
   /** 单次调用超时（毫秒） */
+  timeoutMs?: number;
+  /** 最多重试次数（不含首次） */
+  retries?: number;
