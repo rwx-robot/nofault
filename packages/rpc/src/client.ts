@@ -29,3 +29,6 @@ export interface RpcClientOptions {
   poolSize?: number;
   maxFrameBytes?: number;
 }
+
+interface PooledConnection {
+  socket: Socket;
