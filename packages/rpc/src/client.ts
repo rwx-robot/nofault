@@ -17,3 +17,6 @@ export interface RpcClientOptions {
   host?: string;
   port?: number;
   /** 通过注册中心寻址（与 host/port 二选一） */
+  registry?: Registry;
+  service?: string;
+  /** 单次调用超时（毫秒） */
