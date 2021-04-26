@@ -57,3 +57,6 @@ export class RpcClient {
   constructor(options: RpcClientOptions = {}) {
     this.options = {
       timeoutMs: 3000,
+      retries: 0,
+      retryDelayMs: 50,
+      poolSize: 4,
