@@ -65,3 +65,7 @@ export class RpcClient {
     };
     this.codec = new JsonCodec(this.options.maxFrameBytes);
   }
+
+  get poolStats(): { size: number; inFlight: number } {
+    return { size: this.pool.length, inFlight: this.pool.reduce((n, c) => n + c.pending.size, 0) };
+  }
