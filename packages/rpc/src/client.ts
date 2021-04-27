@@ -97,3 +97,6 @@ export class RpcClient {
     const id = nextId();
 
     const response = await new Promise<RpcResponse>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        connection.pending.delete(id);
+        // 超时后这条连接上的响应可能稍后才到，不能复用它等待后续调用
