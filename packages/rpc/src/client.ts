@@ -69,3 +69,6 @@ export class RpcClient {
   get poolStats(): { size: number; inFlight: number } {
     return { size: this.pool.length, inFlight: this.pool.reduce((n, c) => n + c.pending.size, 0) };
   }
+
+  /**
+   * 发起一次调用。
