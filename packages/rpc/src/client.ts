@@ -112,3 +112,6 @@ export class RpcClient {
         },
         reject: (err) => {
           clearTimeout(timer);
+          reject(err);
+        },
+      });
