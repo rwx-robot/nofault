@@ -94,3 +94,6 @@ export class RpcClient {
 
   private async once<T>(service: string, method: string, payload: unknown, traceId?: string): Promise<T> {
     const connection = await this.acquire();
+    const id = nextId();
+
+    const response = await new Promise<RpcResponse>((resolve, reject) => {
