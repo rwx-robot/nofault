@@ -100,3 +100,6 @@ export class RpcClient {
       const timer = setTimeout(() => {
         connection.pending.delete(id);
         // 超时后这条连接上的响应可能稍后才到，不能复用它等待后续调用
+        this.discard(connection);
+        reject(new RpcError(RPC_ERROR.TIMEOUT, `call ${service}.${method} timed out after ${this.options.timeoutMs}ms`));
+      }, this.options.timeoutMs);
