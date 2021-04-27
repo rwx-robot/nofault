@@ -63,3 +63,5 @@ export class RpcClient {
       maxFrameBytes: DEFAULT_MAX_FRAME_BYTES,
       ...options,
     };
+    this.codec = new JsonCodec(this.options.maxFrameBytes);
+  }
