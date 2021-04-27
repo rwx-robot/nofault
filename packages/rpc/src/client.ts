@@ -72,3 +72,6 @@ export class RpcClient {
 
   /**
    * 发起一次调用。
+   *
+   * 返回的 Promise 在**响应帧到达且 id 匹配**时才 resolve——
+   * id 匹配是必须的：同一个连接上会并发多个调用，靠顺序对不上。
