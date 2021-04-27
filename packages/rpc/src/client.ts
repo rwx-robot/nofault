@@ -109,3 +109,6 @@ export class RpcClient {
         resolve: (res) => {
           clearTimeout(timer);
           resolve(res);
+        },
+        reject: (err) => {
+          clearTimeout(timer);
