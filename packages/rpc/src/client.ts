@@ -75,3 +75,7 @@ export class RpcClient {
    *
    * 返回的 Promise 在**响应帧到达且 id 匹配**时才 resolve——
    * id 匹配是必须的：同一个连接上会并发多个调用，靠顺序对不上。
+   */
+  async call<T = unknown>(service: string, method: string, payload?: unknown, traceId?: string): Promise<T> {
+    let lastError: unknown;
+    for (let attempt = 0; attempt <= this.options.retries; attempt++) {
