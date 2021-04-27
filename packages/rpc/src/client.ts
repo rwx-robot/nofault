@@ -106,3 +106,6 @@ export class RpcClient {
       timer.unref?.();
 
       connection.pending.set(id, {
+        resolve: (res) => {
+          clearTimeout(timer);
+          resolve(res);
