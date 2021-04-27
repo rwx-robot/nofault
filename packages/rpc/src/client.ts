@@ -103,3 +103,6 @@ export class RpcClient {
         this.discard(connection);
         reject(new RpcError(RPC_ERROR.TIMEOUT, `call ${service}.${method} timed out after ${this.options.timeoutMs}ms`));
       }, this.options.timeoutMs);
+      timer.unref?.();
+
+      connection.pending.set(id, {
