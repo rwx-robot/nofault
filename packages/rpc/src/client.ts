@@ -88,3 +88,6 @@ export class RpcClient {
         // 业务类错误不重试：重试只会让下游更痛，且错误是确定的
         if (!isRetryable(err)) throw err;
       }
+    }
+    throw lastError instanceof Error ? lastError : new RpcError(RPC_ERROR.UNREACHABLE, String(lastError));
+  }
