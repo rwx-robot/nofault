@@ -79,3 +79,6 @@ export class RpcClient {
   async call<T = unknown>(service: string, method: string, payload?: unknown, traceId?: string): Promise<T> {
     let lastError: unknown;
     for (let attempt = 0; attempt <= this.options.retries; attempt++) {
+      if (this.closed) throw new RpcError(RPC_ERROR.UNREACHABLE, 'client is closed');
+      if (attempt > 0) await sleep(this.options.retryDelayMs);
+      try {
