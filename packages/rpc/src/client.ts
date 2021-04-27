@@ -82,3 +82,6 @@ export class RpcClient {
       if (this.closed) throw new RpcError(RPC_ERROR.UNREACHABLE, 'client is closed');
       if (attempt > 0) await sleep(this.options.retryDelayMs);
       try {
+        return await this.once<T>(service, method, payload, traceId);
+      } catch (err) {
+        lastError = err;
