@@ -85,3 +85,6 @@ export class RpcClient {
         return await this.once<T>(service, method, payload, traceId);
       } catch (err) {
         lastError = err;
+        // 业务类错误不重试：重试只会让下游更痛，且错误是确定的
+        if (!isRetryable(err)) throw err;
+      }
