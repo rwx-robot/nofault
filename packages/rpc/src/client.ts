@@ -60,3 +60,6 @@ export class RpcClient {
       retries: 0,
       retryDelayMs: 50,
       poolSize: 4,
+      maxFrameBytes: DEFAULT_MAX_FRAME_BYTES,
+      ...options,
+    };
