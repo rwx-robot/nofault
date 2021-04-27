@@ -119,3 +119,6 @@ export class RpcClient {
       const request: RpcRequest = { id, service, method, payload, traceId };
       connection.socket.write(this.codec.encodeRequest(request), (err) => {
         if (err) {
+          clearTimeout(timer);
+          connection.pending.delete(id);
+          this.discard(connection);
