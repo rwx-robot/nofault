@@ -91,3 +91,6 @@ export class RpcClient {
     }
     throw lastError instanceof Error ? lastError : new RpcError(RPC_ERROR.UNREACHABLE, String(lastError));
   }
+
+  private async once<T>(service: string, method: string, payload: unknown, traceId?: string): Promise<T> {
+    const connection = await this.acquire();
