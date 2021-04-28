@@ -146,3 +146,5 @@ export class RpcClient {
     const connection = await this.acquire();
     const id = nextId();
     const queue: RpcResponse[] = [];
+    let done: { err?: unknown } | undefined;
+    let notify: (() => void) | undefined;
