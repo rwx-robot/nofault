@@ -148,3 +148,7 @@ export class RpcClient {
     const queue: RpcResponse[] = [];
     let done: { err?: unknown } | undefined;
     let notify: (() => void) | undefined;
+
+    connection.streams.set(id, {
+      resolve: (res) => {
+        queue.push(res);
