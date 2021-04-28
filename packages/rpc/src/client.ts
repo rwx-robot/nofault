@@ -122,3 +122,6 @@ export class RpcClient {
           clearTimeout(timer);
           connection.pending.delete(id);
           this.discard(connection);
+          reject(err);
+        }
+      });
