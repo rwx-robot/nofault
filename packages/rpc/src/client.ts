@@ -174,3 +174,6 @@ export class RpcClient {
         while (queue.length > 0) {
           const res = queue.shift()!;
           if (!res.ok) throw new RpcError(res.error?.code ?? RPC_ERROR.HANDLER, res.error?.message ?? 'rpc failed');
+          if (res.chunk !== undefined) {
+            yield res.chunk as T;
+          } else {
