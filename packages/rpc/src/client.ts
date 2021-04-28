@@ -156,3 +156,6 @@ export class RpcClient {
       },
       reject: (err) => {
         done = { err };
+        notify?.();
+      },
+    });
