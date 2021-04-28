@@ -168,3 +168,6 @@ export class RpcClient {
         notify?.();
       }
     });
+
+    try {
+      while (true) {
