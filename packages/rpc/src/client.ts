@@ -152,3 +152,7 @@ export class RpcClient {
     connection.streams.set(id, {
       resolve: (res) => {
         queue.push(res);
+        notify?.();
+      },
+      reject: (err) => {
+        done = { err };
