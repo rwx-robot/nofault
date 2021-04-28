@@ -131,3 +131,6 @@ export class RpcClient {
       throw new RpcError(response.error?.code ?? RPC_ERROR.HANDLER, response.error?.message ?? 'rpc failed');
     }
     return response.result as T;
+  }
+
+  /**
