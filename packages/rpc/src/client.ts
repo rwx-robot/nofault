@@ -140,3 +140,6 @@ export class RpcClient {
    * - **不重试**：流是过程性的，重发等于让服务端把过程重放一遍；
    * - **无整体超时**：流的价值就是"多久发完由服务端决定"，节奏由调用方控制；
    * - 连接断开 → 迭代器抛 `UNREACHABLE`，已收到的部分不回吐。
+   */
+  async *callStream<T = unknown>(service: string, method: string, payload?: unknown, traceId?: string): AsyncIterable<T> {
+    if (this.closed) throw new RpcError(RPC_ERROR.UNREACHABLE, 'client is closed');
