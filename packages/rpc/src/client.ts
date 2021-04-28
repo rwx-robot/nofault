@@ -165,3 +165,6 @@ export class RpcClient {
       if (err) {
         connection.streams.delete(id);
         done = { err };
+        notify?.();
+      }
+    });
