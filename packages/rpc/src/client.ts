@@ -125,3 +125,6 @@ export class RpcClient {
           reject(err);
         }
       });
+    });
+
+    if (!response.ok) {
