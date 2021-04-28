@@ -180,3 +180,6 @@ export class RpcClient {
             return; // 末帧：正常收尾
           }
         }
+        if (done) {
+          if (done.err) throw done.err;
+          return;
