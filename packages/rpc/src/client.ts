@@ -134,3 +134,6 @@ export class RpcClient {
   }
 
   /**
+   * 服务端流调用：返回 AsyncIterable，逐条产出 chunk，末帧结束。
+   *
+   * 与 `call()` 的三条差异（都是刻意的）：
