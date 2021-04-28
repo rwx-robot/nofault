@@ -177,3 +177,6 @@ export class RpcClient {
           if (res.chunk !== undefined) {
             yield res.chunk as T;
           } else {
+            return; // 末帧：正常收尾
+          }
+        }
