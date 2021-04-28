@@ -143,3 +143,6 @@ export class RpcClient {
    */
   async *callStream<T = unknown>(service: string, method: string, payload?: unknown, traceId?: string): AsyncIterable<T> {
     if (this.closed) throw new RpcError(RPC_ERROR.UNREACHABLE, 'client is closed');
+    const connection = await this.acquire();
+    const id = nextId();
+    const queue: RpcResponse[] = [];
