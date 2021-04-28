@@ -159,3 +159,6 @@ export class RpcClient {
         notify?.();
       },
     });
+
+    const request: RpcRequest = { id, service, method, payload, traceId };
+    connection.socket.write(this.codec.encodeRequest(request), (err) => {
