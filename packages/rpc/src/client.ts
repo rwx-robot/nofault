@@ -205,3 +205,6 @@ export class RpcClient {
 
     const key = `${target.host}:${target.port}`;
     const inFlight = this.connecting.get(key);
+    if (inFlight) return inFlight;
+
+    const created = this.connect(target.host, target.port);
