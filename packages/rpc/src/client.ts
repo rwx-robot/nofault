@@ -228,3 +228,8 @@ export class RpcClient {
     }
     return { host: this.options.host, port: this.options.port };
   }
+
+  private connect(host: string, port: number): Promise<PooledConnection> {
+    return new Promise((resolve, reject) => {
+      const socket = connect({ host, port });
+      const reader = new FrameReader(this.options.maxFrameBytes);
