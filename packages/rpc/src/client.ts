@@ -236,3 +236,6 @@ export class RpcClient {
       const connection: PooledConnection = { socket, reader, pending: new Map(), streams: new Map(), busy: 0 };
 
       const settle = (err?: Error): void => {
+        for (const [, waiter] of connection.pending) waiter.reject(err ?? new RpcError(RPC_ERROR.UNREACHABLE, 'connection closed'));
+        connection.pending.clear();
+        for (const [, stream] of connection.streams) stream.reject(err ?? new RpcError(RPC_ERROR.UNREACHABLE, 'connection closed'));
