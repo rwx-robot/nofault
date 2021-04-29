@@ -189,3 +189,7 @@ export class RpcClient {
         });
         notify = undefined;
       }
+    } finally {
+      connection.streams.delete(id);
+    }
+  }
