@@ -186,3 +186,6 @@ export class RpcClient {
         }
         await new Promise<void>((wake) => {
           notify = wake;
+        });
+        notify = undefined;
+      }
