@@ -217,3 +217,6 @@ export class RpcClient {
   }
 
   private async resolveTarget(): Promise<{ host: string; port: number }> {
+    if (this.options.registry && this.options.service) {
+      const instances = await this.options.registry.discover(this.options.service);
+      const instance = this.balancer.pick(instances);
