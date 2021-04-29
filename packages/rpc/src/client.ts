@@ -193,3 +193,6 @@ export class RpcClient {
       connection.streams.delete(id);
     }
   }
+
+  private async acquire(): Promise<PooledConnection> {
+    const target = await this.resolveTarget();
