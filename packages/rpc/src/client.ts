@@ -202,3 +202,6 @@ export class RpcClient {
       // 池满：挑在途最少的那条复用（长尾比新建连接划算）
       return this.pool.reduce((a, b) => (a.pending.size <= b.pending.size ? a : b));
     }
+
+    const key = `${target.host}:${target.port}`;
+    const inFlight = this.connecting.get(key);
