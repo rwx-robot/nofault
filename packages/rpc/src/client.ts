@@ -208,3 +208,6 @@ export class RpcClient {
     if (inFlight) return inFlight;
 
     const created = this.connect(target.host, target.port);
+    this.connecting.set(key, created);
+    try {
+      return await created;
