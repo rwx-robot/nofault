@@ -226,3 +226,5 @@ export class RpcClient {
     if (!this.options.host || !this.options.port) {
       throw new RpcError(RPC_ERROR.UNREACHABLE, 'rpc client needs host/port or a registry');
     }
+    return { host: this.options.host, port: this.options.port };
+  }
