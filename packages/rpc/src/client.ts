@@ -223,3 +223,6 @@ export class RpcClient {
       if (!instance) throw new RpcError(RPC_ERROR.UNREACHABLE, `no instance for service ${this.options.service}`);
       return { host: instance.host, port: instance.port };
     }
+    if (!this.options.host || !this.options.port) {
+      throw new RpcError(RPC_ERROR.UNREACHABLE, 'rpc client needs host/port or a registry');
+    }
