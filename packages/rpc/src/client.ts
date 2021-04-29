@@ -199,3 +199,6 @@ export class RpcClient {
     const idle = this.pool.find((c) => !c.socket.destroyed && c.pending.size < 64);
     if (idle) return idle;
     if (this.pool.length >= this.options.poolSize) {
+      // 池满：挑在途最少的那条复用（长尾比新建连接划算）
+      return this.pool.reduce((a, b) => (a.pending.size <= b.pending.size ? a : b));
+    }
