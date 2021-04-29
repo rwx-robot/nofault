@@ -233,3 +233,6 @@ export class RpcClient {
     return new Promise((resolve, reject) => {
       const socket = connect({ host, port });
       const reader = new FrameReader(this.options.maxFrameBytes);
+      const connection: PooledConnection = { socket, reader, pending: new Map(), streams: new Map(), busy: 0 };
+
+      const settle = (err?: Error): void => {
