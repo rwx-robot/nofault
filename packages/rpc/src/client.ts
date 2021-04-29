@@ -214,3 +214,6 @@ export class RpcClient {
     } finally {
       this.connecting.delete(key);
     }
+  }
+
+  private async resolveTarget(): Promise<{ host: string; port: number }> {
