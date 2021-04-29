@@ -183,3 +183,6 @@ export class RpcClient {
         if (done) {
           if (done.err) throw done.err;
           return;
+        }
+        await new Promise<void>((wake) => {
+          notify = wake;
