@@ -242,3 +242,6 @@ export class RpcClient {
         connection.streams.clear();
         const index = this.pool.indexOf(connection);
         if (index >= 0) this.pool.splice(index, 1);
+      };
+
+      socket.once('connect', () => {
