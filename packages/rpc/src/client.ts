@@ -196,3 +196,6 @@ export class RpcClient {
 
   private async acquire(): Promise<PooledConnection> {
     const target = await this.resolveTarget();
+    const idle = this.pool.find((c) => !c.socket.destroyed && c.pending.size < 64);
+    if (idle) return idle;
+    if (this.pool.length >= this.options.poolSize) {
