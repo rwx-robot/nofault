@@ -211,3 +211,6 @@ export class RpcClient {
     this.connecting.set(key, created);
     try {
       return await created;
+    } finally {
+      this.connecting.delete(key);
+    }
