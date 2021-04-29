@@ -220,3 +220,6 @@ export class RpcClient {
     if (this.options.registry && this.options.service) {
       const instances = await this.options.registry.discover(this.options.service);
       const instance = this.balancer.pick(instances);
+      if (!instance) throw new RpcError(RPC_ERROR.UNREACHABLE, `no instance for service ${this.options.service}`);
+      return { host: instance.host, port: instance.port };
+    }
