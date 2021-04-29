@@ -239,3 +239,6 @@ export class RpcClient {
         for (const [, waiter] of connection.pending) waiter.reject(err ?? new RpcError(RPC_ERROR.UNREACHABLE, 'connection closed'));
         connection.pending.clear();
         for (const [, stream] of connection.streams) stream.reject(err ?? new RpcError(RPC_ERROR.UNREACHABLE, 'connection closed'));
+        connection.streams.clear();
+        const index = this.pool.indexOf(connection);
+        if (index >= 0) this.pool.splice(index, 1);
