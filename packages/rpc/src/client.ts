@@ -297,3 +297,6 @@ function isRetryable(err: unknown): boolean {
 function sleep(ms: number): Promise<void> {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+let counter = 0;
+function nextId(): string {
