@@ -303,3 +303,5 @@ function nextId(): string {
   counter += 1;
   return `${process.pid}:${counter}`;
 }
+
+export type { ServiceInstance };
