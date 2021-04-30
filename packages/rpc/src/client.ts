@@ -245,3 +245,6 @@ export class RpcClient {
       };
 
       socket.once('connect', () => {
+        this.pool.push(connection);
+        resolve(connection);
+      });
