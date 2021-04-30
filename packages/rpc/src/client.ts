@@ -263,3 +263,6 @@ export class RpcClient {
             stream.resolve(response);
             continue;
           }
+          const waiter = connection.pending.get(response?.id);
+          if (!waiter) continue; // 超时后被丢弃的响应，忽略即可
+          connection.pending.delete(response.id);
