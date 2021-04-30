@@ -300,3 +300,6 @@ function sleep(ms: number): Promise<void> {
 
 let counter = 0;
 function nextId(): string {
+  counter += 1;
+  return `${process.pid}:${counter}`;
+}
