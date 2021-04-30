@@ -273,3 +273,6 @@ export class RpcClient {
   }
 
   private discard(connection: PooledConnection): void {
+    const index = this.pool.indexOf(connection);
+    if (index >= 0) this.pool.splice(index, 1);
+    connection.socket.destroy();
