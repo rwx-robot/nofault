@@ -260,3 +260,6 @@ export class RpcClient {
           const stream = connection.streams.get(response?.id);
           if (stream) {
             // 流式帧不消费 pending：chunk 与末帧都交给消费器
+            stream.resolve(response);
+            continue;
+          }
