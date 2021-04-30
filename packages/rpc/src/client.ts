@@ -276,3 +276,6 @@ export class RpcClient {
     const index = this.pool.indexOf(connection);
     if (index >= 0) this.pool.splice(index, 1);
     connection.socket.destroy();
+  }
+
+  async close(): Promise<void> {
