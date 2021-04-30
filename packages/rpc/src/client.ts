@@ -270,3 +270,6 @@ export class RpcClient {
         }
       });
     });
+  }
+
+  private discard(connection: PooledConnection): void {
