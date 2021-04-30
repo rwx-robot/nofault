@@ -248,3 +248,6 @@ export class RpcClient {
         this.pool.push(connection);
         resolve(connection);
       });
+      socket.once('error', (err) => {
+        settle(err);
+        reject(err);
