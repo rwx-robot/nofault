@@ -291,3 +291,5 @@ function isRetryable(err: unknown): boolean {
     // 连接层错误（ECONNREFUSED / ECONNRESET）值得重试
     return true;
   }
+  return err.code === RPC_ERROR.TIMEOUT || err.code === RPC_ERROR.UNREACHABLE || err.code === RPC_ERROR.PARSE;
+}
