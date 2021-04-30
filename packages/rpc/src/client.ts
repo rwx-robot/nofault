@@ -285,3 +285,6 @@ export class RpcClient {
     this.pool.length = 0;
   }
 }
+
+function isRetryable(err: unknown): boolean {
+  if (!(err instanceof RpcError)) {
