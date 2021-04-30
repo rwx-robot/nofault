@@ -251,3 +251,5 @@ export class RpcClient {
       socket.once('error', (err) => {
         settle(err);
         reject(err);
+      });
+      socket.once('close', () => settle());
