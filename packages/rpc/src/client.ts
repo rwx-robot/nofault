@@ -293,3 +293,7 @@ function isRetryable(err: unknown): boolean {
   }
   return err.code === RPC_ERROR.TIMEOUT || err.code === RPC_ERROR.UNREACHABLE || err.code === RPC_ERROR.PARSE;
 }
+
+function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
