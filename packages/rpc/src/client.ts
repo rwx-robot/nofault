@@ -282,3 +282,6 @@ export class RpcClient {
     this.closed = true;
     this.connecting.clear();
     for (const connection of [...this.pool]) connection.socket.destroy();
+    this.pool.length = 0;
+  }
+}
