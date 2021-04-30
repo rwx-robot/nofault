@@ -279,3 +279,6 @@ export class RpcClient {
   }
 
   async close(): Promise<void> {
+    this.closed = true;
+    this.connecting.clear();
+    for (const connection of [...this.pool]) connection.socket.destroy();
