@@ -257,3 +257,6 @@ export class RpcClient {
       socket.on('data', (chunk) => {
         for (const frame of reader.push(chunk)) {
           const response = this.codec.decode(frame) as RpcResponse;
+          const stream = connection.streams.get(response?.id);
+          if (stream) {
+            // 流式帧不消费 pending：chunk 与末帧都交给消费器
