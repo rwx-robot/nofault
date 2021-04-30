@@ -288,3 +288,6 @@ export class RpcClient {
 
 function isRetryable(err: unknown): boolean {
   if (!(err instanceof RpcError)) {
+    // 连接层错误（ECONNREFUSED / ECONNRESET）值得重试
+    return true;
+  }
