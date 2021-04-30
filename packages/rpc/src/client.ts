@@ -253,3 +253,7 @@ export class RpcClient {
         reject(err);
       });
       socket.once('close', () => settle());
+
+      socket.on('data', (chunk) => {
+        for (const frame of reader.push(chunk)) {
+          const response = this.codec.decode(frame) as RpcResponse;
