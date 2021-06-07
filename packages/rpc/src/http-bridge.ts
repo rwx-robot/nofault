@@ -33,3 +33,6 @@ export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
     case RPC_ERROR.PARSE:
       return { status: 502, message: err.message };
     case RPC_ERROR.METHOD_NOT_FOUND:
+    case RPC_ERROR.BAD_REQUEST:
+      return { status: 404, message: err.message };
+    default:
