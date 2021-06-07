@@ -21,3 +21,5 @@ export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
   }
 
   // 业务自定义码（4xx/5xx 段）原样透出：码是契约，不该被框架吃掉
+  if (err.code >= 400 && err.code < 600) {
+    return { status: err.code, message: err.message };
