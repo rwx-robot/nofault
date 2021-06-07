@@ -18,3 +18,6 @@ export interface HttpStatusMapping {
 export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
   if (!(err instanceof RpcError)) {
     return { status: 500, message: err instanceof Error ? err.message : String(err) };
+  }
+
+  // 业务自定义码（4xx/5xx 段）原样透出：码是契约，不该被框架吃掉
