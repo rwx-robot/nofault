@@ -16,3 +16,5 @@ export interface HttpStatusMapping {
 }
 
 export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
+  if (!(err instanceof RpcError)) {
+    return { status: 500, message: err instanceof Error ? err.message : String(err) };
