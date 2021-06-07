@@ -31,3 +31,5 @@ export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
       return { status: 504, message: err.message };
     case RPC_ERROR.UNREACHABLE:
     case RPC_ERROR.PARSE:
+      return { status: 502, message: err.message };
+    case RPC_ERROR.METHOD_NOT_FOUND:
