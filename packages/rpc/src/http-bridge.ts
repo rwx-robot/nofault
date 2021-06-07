@@ -28,3 +28,6 @@ export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
   switch (err.code) {
     case RPC_ERROR.TIMEOUT:
       // 504 才是"上游超时"的正确语义；502 表示"收到了无效响应"
+      return { status: 504, message: err.message };
+    case RPC_ERROR.UNREACHABLE:
+    case RPC_ERROR.PARSE:
