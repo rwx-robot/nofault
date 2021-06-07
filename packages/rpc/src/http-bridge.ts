@@ -36,3 +36,5 @@ export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
     case RPC_ERROR.BAD_REQUEST:
       return { status: 404, message: err.message };
     default:
+      return { status: 500, message: err.message };
+  }
