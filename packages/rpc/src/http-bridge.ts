@@ -38,3 +38,4 @@ export function rpcErrorToStatus(err: unknown): HttpStatusMapping {
     default:
       return { status: 500, message: err.message };
   }
+}
