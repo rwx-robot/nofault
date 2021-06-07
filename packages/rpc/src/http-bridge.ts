@@ -11,3 +11,5 @@
 import { RpcError, RPC_ERROR } from './protocol';
 
 export interface HttpStatusMapping {
+  status: number;
+  message: string;
