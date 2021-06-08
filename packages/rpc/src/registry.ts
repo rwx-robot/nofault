@@ -11,3 +11,9 @@
  */
 export interface ServiceInstance {
   id: string;
+  name: string;
+  host: string;
+  port: number;
+  /** 权重（简单负载均衡用） */
+  weight?: number;
+  metadata?: Record<string, string>;
