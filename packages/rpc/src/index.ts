@@ -13,3 +13,6 @@ export {
   isAsyncIterable,
 } from './protocol';
 export type { RpcRequest, RpcResponse, Codec } from './protocol';
+
+export { RpcServer } from './server';
+export type { RpcServerOptions, RpcContext, Handler } from './server';
