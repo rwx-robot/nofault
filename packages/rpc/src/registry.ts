@@ -24,3 +24,9 @@ export interface ServiceInstance {
 export interface Registry {
   register(instance: Omit<ServiceInstance, 'lastHeartbeat'>): Promise<void>;
   deregister(id: string): Promise<void>;
+  heartbeat(id: string): Promise<void>;
+  /** 返回当前存活的实例；过期实例会被顺带清理 */
+  discover(name: string): Promise<ServiceInstance[]>;
+  list(): Promise<ServiceInstance[]>;
+  close(): Promise<void>;
+}
