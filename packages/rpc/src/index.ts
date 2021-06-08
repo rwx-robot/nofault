@@ -12,3 +12,4 @@ export {
   DEFAULT_MAX_FRAME_BYTES,
   isAsyncIterable,
 } from './protocol';
+export type { RpcRequest, RpcResponse, Codec } from './protocol';
