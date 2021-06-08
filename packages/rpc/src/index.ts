@@ -19,3 +19,6 @@ export type { RpcServerOptions, RpcContext, Handler } from './server';
 
 export { RpcClient } from './client';
 export type { RpcClientOptions } from './client';
+
+export { InMemoryRegistry, RoundRobinBalancer } from './registry';
+export type { Registry, ServiceInstance, InMemoryRegistryOptions } from './registry';
