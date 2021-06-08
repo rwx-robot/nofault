@@ -22,3 +22,5 @@ export type { RpcClientOptions } from './client';
 
 export { InMemoryRegistry, RoundRobinBalancer } from './registry';
 export type { Registry, ServiceInstance, InMemoryRegistryOptions } from './registry';
+
+export { composeInterceptors, loggingInterceptor, traceInterceptor } from './interceptor';
