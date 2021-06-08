@@ -25,3 +25,5 @@ export type { Registry, ServiceInstance, InMemoryRegistryOptions } from './regis
 
 export { composeInterceptors, loggingInterceptor, traceInterceptor } from './interceptor';
 export type { Interceptor, InterceptorContext, Invoker } from './interceptor';
+
+export { RpcModule, RpcClientToken, InjectRpcClient } from './rpc.module';
