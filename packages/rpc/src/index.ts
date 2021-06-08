@@ -10,3 +10,5 @@ export {
   RpcError,
   RPC_ERROR,
   DEFAULT_MAX_FRAME_BYTES,
+  isAsyncIterable,
+} from './protocol';
