@@ -17,3 +17,10 @@ export interface ServiceInstance {
   /** 权重（简单负载均衡用） */
   weight?: number;
   metadata?: Record<string, string>;
+  /** 最后一次心跳时间（毫秒时间戳） */
+  lastHeartbeat?: number;
+}
+
+export interface Registry {
+  register(instance: Omit<ServiceInstance, 'lastHeartbeat'>): Promise<void>;
+  deregister(id: string): Promise<void>;
