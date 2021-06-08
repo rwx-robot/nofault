@@ -35,3 +35,11 @@ export interface InMemoryRegistryOptions {
   /** 超过这个时间没有心跳即视为下线（毫秒） */
   ttlMs?: number;
 }
+
+export class InMemoryRegistry implements Registry {
+  private readonly instances = new Map<string, ServiceInstance>();
+  private readonly ttlMs: number;
+
+  constructor(options: InMemoryRegistryOptions = {}) {
+    this.ttlMs = options.ttlMs ?? 30_000;
+  }
