@@ -8,3 +8,5 @@ export {
   JsonCodec,
   FrameReader,
   RpcError,
+  RPC_ERROR,
+  DEFAULT_MAX_FRAME_BYTES,
