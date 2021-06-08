@@ -18,3 +18,4 @@ export { RpcServer } from './server';
 export type { RpcServerOptions, RpcContext, Handler } from './server';
 
 export { RpcClient } from './client';
+export type { RpcClientOptions } from './client';
