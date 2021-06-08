@@ -43,3 +43,9 @@ export class InMemoryRegistry implements Registry {
   constructor(options: InMemoryRegistryOptions = {}) {
     this.ttlMs = options.ttlMs ?? 30_000;
   }
+
+  async register(instance: Omit<ServiceInstance, 'lastHeartbeat'>): Promise<void> {
+    this.instances.set(instance.id, { ...instance, lastHeartbeat: Date.now() });
+  }
+
+  async deregister(id: string): Promise<void> {
