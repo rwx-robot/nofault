@@ -6,3 +6,5 @@
  */
 export {
   JsonCodec,
+  FrameReader,
+  RpcError,
