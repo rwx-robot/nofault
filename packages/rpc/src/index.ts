@@ -27,3 +27,6 @@ export { composeInterceptors, loggingInterceptor, traceInterceptor } from './int
 export type { Interceptor, InterceptorContext, Invoker } from './interceptor';
 
 export { RpcModule, RpcClientToken, InjectRpcClient } from './rpc.module';
+
+export { rpcErrorToStatus } from './http-bridge';
+export type { HttpStatusMapping } from './http-bridge';
