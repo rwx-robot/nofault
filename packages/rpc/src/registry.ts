@@ -30,3 +30,8 @@ export interface Registry {
   list(): Promise<ServiceInstance[]>;
   close(): Promise<void>;
 }
+
+export interface InMemoryRegistryOptions {
+  /** 超过这个时间没有心跳即视为下线（毫秒） */
+  ttlMs?: number;
+}
