@@ -15,3 +15,5 @@ export function InjectRpcClient(): ParameterDecorator {
 }
 
 export class RpcModule {
+  static forClient(options: RpcClientOptions = {}): DynamicModule {
+    const providers: Provider[] = [
