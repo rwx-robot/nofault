@@ -7,3 +7,5 @@
  */
 import { Inject, type DynamicModule, type Provider } from '@nofault/core';
 import { RpcClient, type RpcClientOptions } from './client';
+
+export const RpcClientToken = Symbol('NOFAULT_RPC_CLIENT');
