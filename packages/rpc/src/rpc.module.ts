@@ -13,3 +13,5 @@ export const RpcClientToken = Symbol('NOFAULT_RPC_CLIENT');
 export function InjectRpcClient(): ParameterDecorator {
   return Inject(RpcClientToken as never);
 }
+
+export class RpcModule {
