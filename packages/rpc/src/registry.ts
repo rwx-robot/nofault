@@ -49,3 +49,9 @@ export class InMemoryRegistry implements Registry {
   }
 
   async deregister(id: string): Promise<void> {
+    this.instances.delete(id);
+  }
+
+  async heartbeat(id: string): Promise<void> {
+    const existing = this.instances.get(id);
+    if (existing) existing.lastHeartbeat = Date.now();
