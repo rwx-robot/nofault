@@ -61,3 +61,10 @@ export class InMemoryRegistry implements Registry {
     this.sweep();
     return [...this.instances.values()].filter((i) => i.name === name);
   }
+
+  async list(): Promise<ServiceInstance[]> {
+    this.sweep();
+    return [...this.instances.values()];
+  }
+
+  async close(): Promise<void> {
