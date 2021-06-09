@@ -93,3 +93,9 @@ export class RoundRobinBalancer {
 
   pick(instances: ServiceInstance[]): ServiceInstance | undefined {
     if (instances.length === 0) return undefined;
+    // 按权重展开：weight=2 的实例在一轮里出现两次
+    const expanded: ServiceInstance[] = [];
+    for (const instance of instances) {
+      const weight = Math.max(1, instance.weight ?? 1);
+      for (let i = 0; i < weight; i++) expanded.push(instance);
+    }
