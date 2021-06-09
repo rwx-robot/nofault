@@ -74,3 +74,9 @@ export class InMemoryRegistry implements Registry {
   /** 剔除心跳超时的实例 */
   private sweep(): void {
     const now = Date.now();
+    for (const [id, instance] of this.instances) {
+      if (now - (instance.lastHeartbeat ?? 0) > this.ttlMs) {
+        this.instances.delete(id);
+      }
+    }
+  }
