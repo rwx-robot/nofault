@@ -99,3 +99,8 @@ export class RoundRobinBalancer {
       const weight = Math.max(1, instance.weight ?? 1);
       for (let i = 0; i < weight; i++) expanded.push(instance);
     }
+    const picked = expanded[this.index % expanded.length]!;
+    this.index = (this.index + 1) % expanded.length;
+    return picked;
+  }
+}
