@@ -87,3 +87,9 @@ export class InMemoryRegistry implements Registry {
  *
  * 不用随机的原因：随机会在短时间内把流量打到同一实例（"热点"），
  * 而轮询的分布在任何窗口内都更均匀。
+ */
+export class RoundRobinBalancer {
+  private index = 0;
+
+  pick(instances: ServiceInstance[]): ServiceInstance | undefined {
+    if (instances.length === 0) return undefined;
