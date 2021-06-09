@@ -68,3 +68,9 @@ export class InMemoryRegistry implements Registry {
   }
 
   async close(): Promise<void> {
+    this.instances.clear();
+  }
+
+  /** 剔除心跳超时的实例 */
+  private sweep(): void {
+    const now = Date.now();
