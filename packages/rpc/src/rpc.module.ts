@@ -23,3 +23,5 @@ export class RpcModule {
       },
     ];
     return { module: RpcModule, providers, exports: [RpcClientToken], global: true };
+  }
+}
