@@ -20,3 +20,5 @@ export class RpcModule {
       {
         provide: RpcClientToken,
         useFactory: () => new RpcClient(options),
+      },
+    ];
