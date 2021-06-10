@@ -18,3 +18,5 @@ export class RpcModule {
   static forClient(options: RpcClientOptions = {}): DynamicModule {
     const providers: Provider[] = [
       {
+        provide: RpcClientToken,
+        useFactory: () => new RpcClient(options),
