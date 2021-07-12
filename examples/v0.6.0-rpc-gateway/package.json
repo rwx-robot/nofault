@@ -1,0 +1,19 @@
+{
+  "name": "@nofault/example-v060-rpc-gateway",
+  "version": "0.6.0",
+  "private": true,
+  "description": "v0.6.0 示例：HTTP 网关通过 RPC 调用后端服务（注册发现 + 超时 + 重试 + 拦截器）",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nofault/context": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "@nofault/rpc": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
+}
