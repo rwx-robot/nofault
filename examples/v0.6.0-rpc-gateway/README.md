@@ -8,3 +8,10 @@
 pnpm example v0.6.0-rpc-gateway
 pnpm example v0.6.0-rpc-gateway PORT=3360
 ```
+
+## 试一试
+
+```bash
+curl -s http://127.0.0.1:3000/api/ping                    # 经 RPC：{pong:true}
+curl -s -X POST http://127.0.0.1:3000/api/users \
+  -H 'content-type: application/json' -d '{"name":"alice"}'
