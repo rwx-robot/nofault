@@ -15,3 +15,7 @@ pnpm example v0.6.0-rpc-gateway PORT=3360
 curl -s http://127.0.0.1:3000/api/ping                    # 经 RPC：{pong:true}
 curl -s -X POST http://127.0.0.1:3000/api/users \
   -H 'content-type: application/json' -d '{"name":"alice"}'
+curl -s http://127.0.0.1:3000/api/users/1                 # {id:1,name:"alice"}
+curl -s http://127.0.0.1:3000/api/users/999               # 404（业务码 404）
+curl -s http://127.0.0.1:3000/api/slow/900                # 504（上游超时）
+```
