@@ -26,3 +26,8 @@ curl -s http://127.0.0.1:3000/api/slow/900                # 504（上游超时�
 | --- | --- |
 | `src/user-rpc.service.ts` | 后端服务：普通类，方法即 RPC 方法，**零框架依赖** |
 | `src/gateway.controller.ts` | HTTP 网关：透传 traceId、按错误码翻译状态 |
+| `src/main.ts` | 起后端 → 注册到注册中心 → 起网关 → 优雅退出 |
+
+## 这个示例证明了什么
+
+1. **traceId 穿过 RPC 边界** —— 后端日志能串到同一次用户请求
