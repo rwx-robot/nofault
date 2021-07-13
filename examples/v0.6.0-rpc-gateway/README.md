@@ -19,3 +19,10 @@ curl -s http://127.0.0.1:3000/api/users/1                 # {id:1,name:"alice"}
 curl -s http://127.0.0.1:3000/api/users/999               # 404（业务码 404）
 curl -s http://127.0.0.1:3000/api/slow/900                # 504（上游超时）
 ```
+
+## 文件说明
+
+| 文件 | 说明 |
+| --- | --- |
+| `src/user-rpc.service.ts` | 后端服务：普通类，方法即 RPC 方法，**零框架依赖** |
+| `src/gateway.controller.ts` | HTTP 网关：透传 traceId、按错误码翻译状态 |
