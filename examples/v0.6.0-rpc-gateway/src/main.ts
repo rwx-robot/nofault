@@ -54,3 +54,12 @@ async function bootstrap(): Promise<void> {
 
   logger.info('gateway ready', { port });
   for (const route of app.getRoutes()) {
+    logger.info(`  ${route.method.padEnd(6)} ${route.path}`);
+  }
+
+  const shutdown = async (): Promise<void> => {
+    await app.close();
+    await rpcServer.close();
+    await registry.close();
+  };
+  process.on('SIGTERM', () => void shutdown());
