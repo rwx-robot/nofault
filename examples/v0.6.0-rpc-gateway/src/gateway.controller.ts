@@ -36,3 +36,12 @@ export class GatewayController {
     const user = await this.call<UserDto>('user', 'get', { id: Number(id) });
     return user;
   }
+
+  @Get('/slow/:ms')
+  async slow(@Param('ms') ms: number): Promise<{ waited: number }> {
+    return this.call('user', 'slow', { ms: Number(ms) });
+  }
+
+  /**
+   * 统一的调用封装：透传 traceId + 把 RPC 错误翻译成 HTTP 语义。
+   *
