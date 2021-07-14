@@ -29,3 +29,10 @@ export class GatewayController {
   @Post('/users')
   async create(@Body() body: { name: string }): Promise<UserDto> {
     return this.call<UserDto>('user', 'create', body);
+  }
+
+  @Get('/users/:id')
+  async get(@Param('id') id: number): Promise<UserDto> {
+    const user = await this.call<UserDto>('user', 'get', { id: Number(id) });
+    return user;
+  }
