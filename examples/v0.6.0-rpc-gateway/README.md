@@ -37,3 +37,7 @@ curl -s http://127.0.0.1:3000/api/slow/900                # 504（上游超时�
 5. **拦截器生效** —— 每次 RPC 调用都打日志（含 traceId 与耗时）
 
 ## 测试
+
+```bash
+pnpm vitest run tests/integration/v0.6.0
+```
