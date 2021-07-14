@@ -11,3 +11,5 @@
   "dependencies": {
     "@nofault/context": "workspace:*",
     "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
