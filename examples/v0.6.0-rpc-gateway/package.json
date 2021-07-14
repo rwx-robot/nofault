@@ -3,3 +3,6 @@
   "version": "0.6.0",
   "private": true,
   "description": "v0.6.0 示例：HTTP 网关通过 RPC 调用后端服务（注册发现 + 超时 + 重试 + 拦截器）",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
