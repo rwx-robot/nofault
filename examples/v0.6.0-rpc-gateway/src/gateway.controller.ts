@@ -45,3 +45,11 @@ export class GatewayController {
   /**
    * 统一的调用封装：透传 traceId + 把 RPC 错误翻译成 HTTP 语义。
    *
+   * 错误翻译这一层不能省：直接把 RPC 的 -32xxx 抛给前端毫无意义，
+   * 而且会泄漏内部实现细节。
+   */
+  private async call<T>(service: string, method: string, payload: unknown): Promise<T> {
+    const traceId = currentContext()?.traceId;
+    try {
+      return await this.rpc.call<T>(service, method, payload, traceId);
+    } catch (err) {
