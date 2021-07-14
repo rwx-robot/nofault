@@ -26,3 +26,12 @@ const registry = new InMemoryRegistry({ ttlMs: 30_000 });
       retries: 1,
       retryDelayMs: 30,
       poolSize: 4,
+    }),
+  ],
+  controllers: [GatewayController],
+})
+class GatewayModule {}
+
+async function bootstrap(): Promise<void> {
+  // 1) 起后端 RPC 服务
+  const rpcServer = new RpcServer({ port: 0, interceptors: [loggingInterceptor(logger)], logger });
