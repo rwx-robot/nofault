@@ -13,3 +13,12 @@ import { Controller, Get, Post, Body, Param, HttpException } from '@nofault/rest
 
 import { InjectRpcClient, RpcClient, rpcErrorToStatus } from '@nofault/rpc';
 import type { UserDto } from './user-rpc.service';
+
+@Injectable()
+@Controller('/api')
+export class GatewayController {
+  // RPC 客户端以 token 提供（可以换成不同配置/不同实现），
+  // 所以注入时必须用 @InjectRpcClient()，而不是按类注入
+  constructor(@InjectRpcClient() private readonly rpc: RpcClient) {}
+
+  @Get('/ping')
