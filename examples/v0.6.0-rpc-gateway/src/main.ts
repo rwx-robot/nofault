@@ -16,3 +16,13 @@ const logger = createLogger({ context: 'rpc-gateway', level: LogLevel.INFO });
  * 放在后面会踩暂时性死区（TDZ）。
  */
 const registry = new InMemoryRegistry({ ttlMs: 30_000 });
+
+@Module({
+  imports: [
+    RpcModule.forClient({
+      registry,
+      service: 'user',
+      timeoutMs: 500,
+      retries: 1,
+      retryDelayMs: 30,
+      poolSize: 4,
