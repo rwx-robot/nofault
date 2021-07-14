@@ -45,3 +45,12 @@ async function bootstrap(): Promise<void> {
   // 3) 起 HTTP 网关
   const app = await RestApplication.create(GatewayModule, {
     name: 'rpc-gateway',
+    logger,
+    middleware: [requestContext(), bodyParser()],
+  });
+  app.enableShutdownHooks();
+  const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
+  app.markReady();
+
+  logger.info('gateway ready', { port });
+  for (const route of app.getRoutes()) {
