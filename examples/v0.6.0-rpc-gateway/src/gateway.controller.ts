@@ -22,3 +22,10 @@ export class GatewayController {
   constructor(@InjectRpcClient() private readonly rpc: RpcClient) {}
 
   @Get('/ping')
+  async ping(): Promise<{ pong: boolean }> {
+    return this.call('user', 'ping', {});
+  }
+
+  @Post('/users')
+  async create(@Body() body: { name: string }): Promise<UserDto> {
+    return this.call<UserDto>('user', 'create', body);
