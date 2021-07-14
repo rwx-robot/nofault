@@ -6,3 +6,10 @@
  *    于是后端日志能串到同一次用户请求上（v0.3.0 的上下文在这里续上）
  * 2. **超时必须有** —— 后端慢，网关不能跟着慢死，否则级联雪崩
  * 3. **只重试可重试的** —— 业务错误（用户不存在）重试毫无意义
+ */
+import { Injectable } from '@nofault/core';
+import { currentContext } from '@nofault/context';
+import { Controller, Get, Post, Body, Param, HttpException } from '@nofault/rest';
+
+import { InjectRpcClient, RpcClient, rpcErrorToStatus } from '@nofault/rpc';
+import type { UserDto } from './user-rpc.service';
