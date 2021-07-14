@@ -13,3 +13,6 @@
     "@nofault/core": "workspace:*",
     "@nofault/logger": "workspace:*",
     "@nofault/rest": "workspace:*",
+    "@nofault/rpc": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
