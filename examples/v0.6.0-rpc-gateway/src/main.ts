@@ -35,3 +35,13 @@ class GatewayModule {}
 async function bootstrap(): Promise<void> {
   // 1) 起后端 RPC 服务
   const rpcServer = new RpcServer({ port: 0, interceptors: [loggingInterceptor(logger)], logger });
+  rpcServer.registerService('user', new UserRpcService());
+  const { port: rpcPort } = await rpcServer.listen(0, '127.0.0.1');
+
+  // 2) 注册到注册中心（真实环境由心跳续租维持存活）
+  await registry.register({ id: 'user-1', name: 'user', host: '127.0.0.1', port: rpcPort });
+  logger.info('rpc service registered', { port: rpcPort, methods: rpcServer.methodNames });
+
+  // 3) 起 HTTP 网关
+  const app = await RestApplication.create(GatewayModule, {
+    name: 'rpc-gateway',
