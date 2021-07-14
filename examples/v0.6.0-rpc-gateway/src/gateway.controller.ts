@@ -53,3 +53,9 @@ export class GatewayController {
     try {
       return await this.rpc.call<T>(service, method, payload, traceId);
     } catch (err) {
+      // 统一按错误码翻译：文本会变，码才是契约
+      const mapped = rpcErrorToStatus(err);
+      throw new HttpException(mapped.status, mapped.message, mapped.status);
+    }
+  }
+}
