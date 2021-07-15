@@ -20,3 +20,9 @@ export class UserRpcService {
 
   async ping(): Promise<{ pong: boolean }> {
     return { pong: true };
+  }
+
+  async create(input: { name: string }): Promise<UserDto> {
+    this.seq += 1;
+    const user: UserDto = { id: this.seq, name: input.name };
+    this.users.set(user.id, user);
