@@ -31,3 +31,9 @@ export class UserRpcService {
 
   async get(input: { id: number }): Promise<UserDto> {
     const user = this.users.get(input.id);
+    if (!user) throw new RpcError(USER_NOT_FOUND, `user ${input.id} not found`);
+    return user;
+  }
+
+  /** 故意慢一点，用来演示网关侧的超时与重试 */
+  async slow(input: { ms: number }): Promise<{ waited: number }> {
