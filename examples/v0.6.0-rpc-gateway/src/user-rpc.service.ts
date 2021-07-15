@@ -8,3 +8,10 @@ import { RpcError } from '@nofault/rpc';
 
 /** 业务错误码：4xx 段留给调用方看得懂的错误，网关据此翻译成 HTTP 状态 */
 export const USER_NOT_FOUND = 404;
+
+export interface UserDto {
+  id: number;
+  name: string;
+}
+
+export class UserRpcService {
