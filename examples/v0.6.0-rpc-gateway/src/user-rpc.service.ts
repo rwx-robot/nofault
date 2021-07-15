@@ -26,3 +26,8 @@ export class UserRpcService {
     this.seq += 1;
     const user: UserDto = { id: this.seq, name: input.name };
     this.users.set(user.id, user);
+    return user;
+  }
+
+  async get(input: { id: number }): Promise<UserDto> {
+    const user = this.users.get(input.id);
