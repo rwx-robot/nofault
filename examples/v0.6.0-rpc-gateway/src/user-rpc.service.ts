@@ -37,3 +37,7 @@ export class UserRpcService {
 
   /** 故意慢一点，用来演示网关侧的超时与重试 */
   async slow(input: { ms: number }): Promise<{ waited: number }> {
+    await new Promise((resolve) => setTimeout(resolve, input.ms));
+    return { waited: input.ms };
+  }
+}
