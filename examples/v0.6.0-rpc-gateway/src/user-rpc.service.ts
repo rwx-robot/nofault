@@ -15,3 +15,8 @@ export interface UserDto {
 }
 
 export class UserRpcService {
+  private readonly users = new Map<number, UserDto>();
+  private seq = 0;
+
+  async ping(): Promise<{ pong: boolean }> {
+    return { pong: true };
