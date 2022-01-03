@@ -2,3 +2,4 @@
   "name": "@nofault/resilience",
   "version": "0.7.0",
   "description": "nofault resilience: token bucket rate limiter, circuit breaker, bulkhead and exponential backoff with jitter",
+  "license": "MIT",
