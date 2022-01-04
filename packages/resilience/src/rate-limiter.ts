@@ -17,3 +17,9 @@ export interface RateLimiterOptions {
 export interface RateLimitResult {
   allowed: boolean;
   /** 还剩下多少令牌（被拒时为 0） */
+  remaining: number;
+  /** 需要多久才能再拿到一个令牌（毫秒） */
+  retryAfterMs: number;
+}
+
+export class TokenBucket {
