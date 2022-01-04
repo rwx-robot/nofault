@@ -11,3 +11,9 @@ export interface RateLimiterOptions {
   /** 桶容量（允许的突发上限） */
   capacity: number;
   /** 每秒补充的令牌数 */
+  refillPerSecond: number;
+}
+
+export interface RateLimitResult {
+  allowed: boolean;
+  /** 还剩下多少令牌（被拒时为 0） */
