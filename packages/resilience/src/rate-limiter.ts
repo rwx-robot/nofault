@@ -29,3 +29,8 @@ export class TokenBucket {
   private readonly refillPerMs: number;
 
   constructor(options: RateLimiterOptions) {
+    this.capacity = options.capacity;
+    this.tokens = options.capacity;
+    this.refillPerMs = options.refillPerSecond / 1000;
+    this.lastRefill = Date.now();
+  }
