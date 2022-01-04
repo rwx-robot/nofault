@@ -23,3 +23,9 @@ export interface RateLimitResult {
 }
 
 export class TokenBucket {
+  private tokens: number;
+  private lastRefill: number;
+  private readonly capacity: number;
+  private readonly refillPerMs: number;
+
+  constructor(options: RateLimiterOptions) {
