@@ -34,3 +34,10 @@ export class TokenBucket {
     this.refillPerMs = options.refillPerSecond / 1000;
     this.lastRefill = Date.now();
   }
+
+  tryRemove(count = 1): RateLimitResult {
+    this.refill();
+    if (this.tokens >= count) {
+      this.tokens -= count;
+      return { allowed: true, remaining: Math.floor(this.tokens), retryAfterMs: 0 };
+    }
