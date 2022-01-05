@@ -96,3 +96,9 @@ export class KeyedRateLimiter {
   private sweepIfNeeded(): void {
     const now = Date.now();
     if (now - this.lastSweep < 60_000) return;
+    this.lastSweep = now;
+    // 简单的惰性清理：只在扫描周期里做一次，不遍历全部 key
+    if (this.buckets.size > 10_000) {
+      for (const [key] of this.buckets) {
+        if (this.buckets.size <= 10_000) break;
+        this.buckets.delete(key);
