@@ -4,3 +4,4 @@
     "outDir": "dist",
     "rootDir": "src",
     "baseUrl": ".",
+    "paths": {},
