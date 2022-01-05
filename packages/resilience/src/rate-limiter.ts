@@ -90,3 +90,9 @@ export class KeyedRateLimiter {
   }
 
   get size(): number {
+    return this.buckets.size;
+  }
+
+  private sweepIfNeeded(): void {
+    const now = Date.now();
+    if (now - this.lastSweep < 60_000) return;
