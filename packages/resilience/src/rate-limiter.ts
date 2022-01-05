@@ -41,3 +41,9 @@ export class TokenBucket {
       this.tokens -= count;
       return { allowed: true, remaining: Math.floor(this.tokens), retryAfterMs: 0 };
     }
+    const missing = count - this.tokens;
+    return {
+      allowed: false,
+      remaining: 0,
+      retryAfterMs: Math.ceil(missing / this.refillPerMs),
+    };
