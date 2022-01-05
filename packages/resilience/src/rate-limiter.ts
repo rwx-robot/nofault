@@ -47,3 +47,9 @@ export class TokenBucket {
       remaining: 0,
       retryAfterMs: Math.ceil(missing / this.refillPerMs),
     };
+  }
+
+  private refill(): void {
+    const now = Date.now();
+    const elapsed = now - this.lastRefill;
+    if (elapsed <= 0) return;
