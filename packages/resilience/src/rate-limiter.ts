@@ -66,3 +66,9 @@ export class TokenBucket {
  * 避免内存被无限增长。
  */
 export class KeyedRateLimiter {
+  private readonly buckets = new Map<string, TokenBucket>();
+  private lastSweep = Date.now();
+
+  constructor(
+    private readonly options: RateLimiterOptions,
+    /** 多久没被访问的桶会被清理（毫秒） */
