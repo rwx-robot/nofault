@@ -72,3 +72,9 @@ export class KeyedRateLimiter {
   constructor(
     private readonly options: RateLimiterOptions,
     /** 多久没被访问的桶会被清理（毫秒） */
+    private readonly idleTtlMs = 10 * 60 * 1000,
+  ) {}
+
+  check(key: string, count = 1): RateLimitResult {
+    let bucket = this.buckets.get(key);
+    if (!bucket) {
