@@ -78,3 +78,9 @@ export class KeyedRateLimiter {
   check(key: string, count = 1): RateLimitResult {
     let bucket = this.buckets.get(key);
     if (!bucket) {
+      bucket = new TokenBucket(this.options);
+      this.buckets.set(key, bucket);
+    }
+    this.sweepIfNeeded();
+    return bucket.tryRemove(count);
+  }
