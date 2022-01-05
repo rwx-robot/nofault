@@ -60,3 +60,9 @@ export class TokenBucket {
 
 /**
  * 按 key 限流（例如按 IP、按用户、按租户）。
+ *
+ * 每个 key 一个桶。key 数量可能无界（IP 就是），
+ * 所以这里做了**惰性清理**：扫描时顺手丢掉"已经满且很久没用"的桶，
+ * 避免内存被无限增长。
+ */
+export class KeyedRateLimiter {
