@@ -84,3 +84,9 @@ export class KeyedRateLimiter {
     this.sweepIfNeeded();
     return bucket.tryRemove(count);
   }
+
+  reset(key: string): void {
+    this.buckets.delete(key);
+  }
+
+  get size(): number {
