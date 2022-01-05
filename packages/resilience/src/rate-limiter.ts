@@ -53,3 +53,10 @@ export class TokenBucket {
     const now = Date.now();
     const elapsed = now - this.lastRefill;
     if (elapsed <= 0) return;
+    this.tokens = Math.min(this.capacity, this.tokens + elapsed * this.refillPerMs);
+    this.lastRefill = now;
+  }
+}
+
+/**
+ * 按 key 限流（例如按 IP、按用户、按租户）。
