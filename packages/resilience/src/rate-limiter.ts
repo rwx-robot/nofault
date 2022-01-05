@@ -102,3 +102,8 @@ export class KeyedRateLimiter {
       for (const [key] of this.buckets) {
         if (this.buckets.size <= 10_000) break;
         this.buckets.delete(key);
+      }
+    }
+    void this.idleTtlMs;
+  }
+}
