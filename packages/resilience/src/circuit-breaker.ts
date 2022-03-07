@@ -22,3 +22,5 @@ export interface CircuitBreakerOptions {
   isFailure?: (err: unknown) => boolean;
   now?: () => number;
 }
+
+export class CircuitOpenError extends Error {
