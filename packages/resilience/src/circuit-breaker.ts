@@ -18,3 +18,5 @@ export interface CircuitBreakerOptions {
   resetTimeoutMs: number;
   /** 半开状态允许同时放行的探针数 */
   halfOpenMaxCalls?: number;
+  /** 判定"失败"的标准；默认任何抛错都算 */
+  isFailure?: (err: unknown) => boolean;
