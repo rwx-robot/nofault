@@ -14,3 +14,4 @@ export type CircuitState = 'closed' | 'open' | 'half-open';
 export interface CircuitBreakerOptions {
   /** 连续失败多少次后熔断 */
   failureThreshold: number;
+  /** 熔断后多久进入半开（毫秒） */
