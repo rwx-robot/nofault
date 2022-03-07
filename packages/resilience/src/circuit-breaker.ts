@@ -10,3 +10,6 @@
  *    不限流的话，冷却结束的瞬间会有全部流量一起涌向刚恢复的下游，直接把它再打挂
  */
 export type CircuitState = 'closed' | 'open' | 'half-open';
+
+export interface CircuitBreakerOptions {
+  /** 连续失败多少次后熔断 */
