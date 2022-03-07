@@ -20,3 +20,4 @@ export interface CircuitBreakerOptions {
   halfOpenMaxCalls?: number;
   /** 判定"失败"的标准；默认任何抛错都算 */
   isFailure?: (err: unknown) => boolean;
+  now?: () => number;
