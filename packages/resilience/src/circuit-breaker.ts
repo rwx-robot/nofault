@@ -15,3 +15,5 @@ export interface CircuitBreakerOptions {
   /** 连续失败多少次后熔断 */
   failureThreshold: number;
   /** 熔断后多久进入半开（毫秒） */
+  resetTimeoutMs: number;
+  /** 半开状态允许同时放行的探针数 */
