@@ -17,3 +17,4 @@ export interface CircuitBreakerOptions {
   /** 熔断后多久进入半开（毫秒） */
   resetTimeoutMs: number;
   /** 半开状态允许同时放行的探针数 */
+  halfOpenMaxCalls?: number;
