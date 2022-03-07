@@ -24,3 +24,4 @@ export interface CircuitBreakerOptions {
 }
 
 export class CircuitOpenError extends Error {
+  constructor(
