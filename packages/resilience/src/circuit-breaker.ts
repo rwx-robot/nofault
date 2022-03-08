@@ -39,3 +39,5 @@ export interface CircuitStats {
   successes: number;
   rejected: number;
 }
+
+export class CircuitBreaker {
