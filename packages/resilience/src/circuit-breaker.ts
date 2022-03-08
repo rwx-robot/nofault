@@ -46,3 +46,5 @@ export class CircuitBreaker {
   private successes = 0;
   private rejected = 0;
   private openedAt = 0;
+  private halfOpenInFlight = 0;
+  private readonly halfOpenMaxCalls: number;
