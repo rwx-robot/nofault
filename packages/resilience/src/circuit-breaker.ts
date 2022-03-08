@@ -42,3 +42,5 @@ export interface CircuitStats {
 
 export class CircuitBreaker {
   private state: CircuitState = 'closed';
+  private failures = 0;
+  private successes = 0;
