@@ -49,3 +49,5 @@ export class CircuitBreaker {
   private halfOpenInFlight = 0;
   private readonly halfOpenMaxCalls: number;
   private readonly now: () => number;
+
+  constructor(private readonly options: CircuitBreakerOptions) {
