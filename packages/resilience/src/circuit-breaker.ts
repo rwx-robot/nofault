@@ -34,3 +34,4 @@ export class CircuitOpenError extends Error {
 }
 
 export interface CircuitStats {
+  state: CircuitState;
