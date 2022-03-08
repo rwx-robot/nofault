@@ -27,3 +27,4 @@ export class CircuitOpenError extends Error {
   constructor(
     public readonly retryAfterMs: number,
     message = 'circuit is open',
+  ) {
