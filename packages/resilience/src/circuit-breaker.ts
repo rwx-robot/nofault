@@ -37,3 +37,4 @@ export interface CircuitStats {
   state: CircuitState;
   failures: number;
   successes: number;
+  rejected: number;
