@@ -45,3 +45,4 @@ export class CircuitBreaker {
   private failures = 0;
   private successes = 0;
   private rejected = 0;
+  private openedAt = 0;
