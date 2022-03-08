@@ -52,3 +52,4 @@ export class CircuitBreaker {
 
   constructor(private readonly options: CircuitBreakerOptions) {
     this.halfOpenMaxCalls = options.halfOpenMaxCalls ?? 1;
+    this.now = options.now ?? Date.now;
