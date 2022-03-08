@@ -38,3 +38,4 @@ export interface CircuitStats {
   failures: number;
   successes: number;
   rejected: number;
+}
