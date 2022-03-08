@@ -30,3 +30,4 @@ export class CircuitOpenError extends Error {
   ) {
     super(message);
     this.name = 'CircuitOpenError';
+  }
