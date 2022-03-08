@@ -32,3 +32,5 @@ export class CircuitOpenError extends Error {
     this.name = 'CircuitOpenError';
   }
 }
+
+export interface CircuitStats {
