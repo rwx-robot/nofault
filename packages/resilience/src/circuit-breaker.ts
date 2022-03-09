@@ -72,3 +72,6 @@ export class CircuitBreaker {
       rejected: this.rejected,
     };
   }
+
+  /** 执行；熔断时抛 CircuitOpenError，不打下游 */
+  async run<T>(fn: () => Promise<T>): Promise<T> {
