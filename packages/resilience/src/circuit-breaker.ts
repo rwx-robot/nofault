@@ -81,3 +81,5 @@ export class CircuitBreaker {
       this.rejected++;
       throw new CircuitOpenError(this.options.resetTimeoutMs - (this.now() - this.openedAt));
     }
+
+    if (state === 'half-open') {
