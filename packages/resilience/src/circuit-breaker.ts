@@ -76,3 +76,6 @@ export class CircuitBreaker {
   /** 执行；熔断时抛 CircuitOpenError，不打下游 */
   async run<T>(fn: () => Promise<T>): Promise<T> {
     const state = this.currentState;
+
+    if (state === 'open') {
+      this.rejected++;
