@@ -63,3 +63,5 @@ export class CircuitBreaker {
     }
     return this.state;
   }
+
+  stats(): CircuitStats {
