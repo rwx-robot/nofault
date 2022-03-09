@@ -59,3 +59,5 @@ export class CircuitBreaker {
     // 冷却已过就从 open 转 half-open（惰性判断，不需要定时器）
     if (this.state === 'open' && this.now() - this.openedAt >= this.options.resetTimeoutMs) {
       this.state = 'half-open';
+      this.halfOpenInFlight = 0;
+    }
