@@ -65,3 +65,4 @@ export class CircuitBreaker {
   }
 
   stats(): CircuitStats {
+    return {
