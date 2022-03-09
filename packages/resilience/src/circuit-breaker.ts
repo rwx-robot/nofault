@@ -66,3 +66,5 @@ export class CircuitBreaker {
 
   stats(): CircuitStats {
     return {
+      state: this.currentState,
+      failures: this.failures,
