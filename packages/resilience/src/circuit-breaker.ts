@@ -68,3 +68,4 @@ export class CircuitBreaker {
     return {
       state: this.currentState,
       failures: this.failures,
+      successes: this.successes,
