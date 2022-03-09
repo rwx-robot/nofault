@@ -54,3 +54,5 @@ export class CircuitBreaker {
     this.halfOpenMaxCalls = options.halfOpenMaxCalls ?? 1;
     this.now = options.now ?? Date.now;
   }
+
+  get currentState(): CircuitState {
