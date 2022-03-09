@@ -80,3 +80,4 @@ export class CircuitBreaker {
     if (state === 'open') {
       this.rejected++;
       throw new CircuitOpenError(this.options.resetTimeoutMs - (this.now() - this.openedAt));
+    }
