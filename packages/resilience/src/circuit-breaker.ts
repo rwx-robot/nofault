@@ -61,3 +61,4 @@ export class CircuitBreaker {
       this.state = 'half-open';
       this.halfOpenInFlight = 0;
     }
+    return this.state;
