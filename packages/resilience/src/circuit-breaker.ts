@@ -70,3 +70,5 @@ export class CircuitBreaker {
       failures: this.failures,
       successes: this.successes,
       rejected: this.rejected,
+    };
+  }
