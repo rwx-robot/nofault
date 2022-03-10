@@ -110,3 +110,4 @@ export class CircuitBreaker {
     this.successes++;
     this.failures = 0;
     // 半开时只要有一个探针成功就闭合——说明下游确实恢复了
+    if (this.state === 'half-open' || this.state === 'open') {
