@@ -99,3 +99,4 @@ export class CircuitBreaker {
         this.onSuccess();
         throw err;
       }
+      this.onFailure();
