@@ -103,3 +103,4 @@ export class CircuitBreaker {
       throw err;
     } finally {
       if (state === 'half-open') this.halfOpenInFlight = Math.max(0, this.halfOpenInFlight - 1);
+    }
