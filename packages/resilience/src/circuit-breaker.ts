@@ -107,3 +107,4 @@ export class CircuitBreaker {
   }
 
   private onSuccess(): void {
+    this.successes++;
