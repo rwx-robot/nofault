@@ -93,3 +93,4 @@ export class CircuitBreaker {
     try {
       const result = await fn();
       this.onSuccess();
+      return result;
