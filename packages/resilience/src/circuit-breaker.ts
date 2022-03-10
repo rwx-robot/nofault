@@ -100,3 +100,4 @@ export class CircuitBreaker {
         throw err;
       }
       this.onFailure();
+      throw err;
