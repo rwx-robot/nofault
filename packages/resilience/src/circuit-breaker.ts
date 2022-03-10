@@ -94,3 +94,5 @@ export class CircuitBreaker {
       const result = await fn();
       this.onSuccess();
       return result;
+    } catch (err) {
+      if (this.options.isFailure?.(err) === false) {
