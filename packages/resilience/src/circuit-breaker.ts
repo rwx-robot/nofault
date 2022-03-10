@@ -87,3 +87,5 @@ export class CircuitBreaker {
         this.rejected++;
         throw new CircuitOpenError(0);
       }
+      this.halfOpenInFlight++;
+    }
