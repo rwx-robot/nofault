@@ -89,3 +89,6 @@ export class CircuitBreaker {
       }
       this.halfOpenInFlight++;
     }
+
+    try {
+      const result = await fn();
