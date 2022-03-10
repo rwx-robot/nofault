@@ -86,3 +86,4 @@ export class CircuitBreaker {
       if (this.halfOpenInFlight >= this.halfOpenMaxCalls) {
         this.rejected++;
         throw new CircuitOpenError(0);
+      }
