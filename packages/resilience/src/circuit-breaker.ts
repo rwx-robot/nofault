@@ -96,3 +96,4 @@ export class CircuitBreaker {
       return result;
     } catch (err) {
       if (this.options.isFailure?.(err) === false) {
+        this.onSuccess();
