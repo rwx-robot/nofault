@@ -115,3 +115,5 @@ export class CircuitBreaker {
       this.halfOpenInFlight = 0;
     }
   }
+
+  private onFailure(): void {
