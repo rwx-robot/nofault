@@ -134,3 +134,4 @@ export class CircuitBreaker {
 
   reset(): void {
     this.state = 'closed';
+    this.failures = 0;
