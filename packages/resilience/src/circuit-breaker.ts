@@ -120,3 +120,4 @@ export class CircuitBreaker {
     this.failures++;
     if (this.state === 'half-open') {
       // 半开阶段再次失败：立刻回到熔断，重新冷却
+      this.open();
