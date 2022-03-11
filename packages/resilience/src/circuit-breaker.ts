@@ -113,3 +113,4 @@ export class CircuitBreaker {
     if (this.state === 'half-open' || this.state === 'open') {
       this.state = 'closed';
       this.halfOpenInFlight = 0;
+    }
