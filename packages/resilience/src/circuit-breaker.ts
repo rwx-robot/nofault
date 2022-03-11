@@ -130,3 +130,4 @@ export class CircuitBreaker {
     this.state = 'open';
     this.openedAt = this.now();
     this.halfOpenInFlight = 0;
+  }
