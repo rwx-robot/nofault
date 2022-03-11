@@ -117,3 +117,4 @@ export class CircuitBreaker {
   }
 
   private onFailure(): void {
+    this.failures++;
