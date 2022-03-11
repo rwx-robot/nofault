@@ -125,3 +125,5 @@ export class CircuitBreaker {
     }
     if (this.failures >= this.options.failureThreshold) this.open();
   }
+
+  private open(): void {
