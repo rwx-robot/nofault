@@ -137,3 +137,4 @@ export class CircuitBreaker {
     this.failures = 0;
     this.halfOpenInFlight = 0;
   }
+}
