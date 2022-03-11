@@ -127,3 +127,4 @@ export class CircuitBreaker {
   }
 
   private open(): void {
+    this.state = 'open';
