@@ -21,3 +21,5 @@ export class BulkheadRejectedError extends Error {
     this.name = 'BulkheadRejectedError';
   }
 }
+
+export class Bulkhead {
