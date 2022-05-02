@@ -9,3 +9,5 @@
 export interface BulkheadOptions {
   /** 最大并发数 */
   concurrency: number;
+  /** 队列里最多排多少人；超出直接拒绝（有界队列，避免内存堆积） */
+  queueLimit?: number;
