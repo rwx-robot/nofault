@@ -7,3 +7,5 @@
  */
 
 export interface BulkheadOptions {
+  /** 最大并发数 */
+  concurrency: number;
