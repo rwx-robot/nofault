@@ -18,3 +18,5 @@ export interface BulkheadOptions {
 export class BulkheadRejectedError extends Error {
   constructor(message = 'bulkhead is full') {
     super(message);
+    this.name = 'BulkheadRejectedError';
+  }
