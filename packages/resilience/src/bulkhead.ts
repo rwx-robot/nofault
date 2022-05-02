@@ -30,3 +30,5 @@ export class Bulkhead {
   private readonly waitTimeoutMs: number;
 
   constructor(options: BulkheadOptions) {
+    this.concurrency = options.concurrency;
+    this.queueLimit = options.queueLimit ?? 0;
