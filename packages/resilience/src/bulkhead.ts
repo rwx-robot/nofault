@@ -11,3 +11,5 @@ export interface BulkheadOptions {
   concurrency: number;
   /** 队列里最多排多少人；超出直接拒绝（有界队列，避免内存堆积） */
   queueLimit?: number;
+  /** 等待配额的超时（毫秒） */
+  waitTimeoutMs?: number;
