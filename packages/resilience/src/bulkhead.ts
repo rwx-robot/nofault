@@ -13,3 +13,4 @@ export interface BulkheadOptions {
   queueLimit?: number;
   /** 等待配额的超时（毫秒） */
   waitTimeoutMs?: number;
+}
