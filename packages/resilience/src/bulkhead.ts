@@ -14,3 +14,5 @@ export interface BulkheadOptions {
   /** 等待配额的超时（毫秒） */
   waitTimeoutMs?: number;
 }
+
+export class BulkheadRejectedError extends Error {
