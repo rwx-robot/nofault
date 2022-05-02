@@ -25,3 +25,5 @@ export class BulkheadRejectedError extends Error {
 export class Bulkhead {
   private active = 0;
   private waiting = 0;
+  private readonly concurrency: number;
+  private readonly queueLimit: number;
