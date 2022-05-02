@@ -27,3 +27,4 @@ export class Bulkhead {
   private waiting = 0;
   private readonly concurrency: number;
   private readonly queueLimit: number;
+  private readonly waitTimeoutMs: number;
