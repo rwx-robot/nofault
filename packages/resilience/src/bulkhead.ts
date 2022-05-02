@@ -23,3 +23,5 @@ export class BulkheadRejectedError extends Error {
 }
 
 export class Bulkhead {
+  private active = 0;
+  private waiting = 0;
