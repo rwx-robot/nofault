@@ -20,3 +20,4 @@ export class BulkheadRejectedError extends Error {
     super(message);
     this.name = 'BulkheadRejectedError';
   }
+}
