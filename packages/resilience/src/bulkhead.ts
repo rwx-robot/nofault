@@ -48,3 +48,5 @@ export class Bulkhead {
       this.release();
     }
   }
+
+  private acquire(): Promise<void> {
