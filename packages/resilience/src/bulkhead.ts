@@ -44,3 +44,5 @@ export class Bulkhead {
     try {
       return await fn();
     } finally {
+      this.active--;
+      this.release();
