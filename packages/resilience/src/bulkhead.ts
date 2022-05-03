@@ -38,3 +38,6 @@ export class Bulkhead {
   get stats(): { active: number; waiting: number; limit: number } {
     return { active: this.active, waiting: this.waiting, limit: this.concurrency };
   }
+
+  async run<T>(fn: () => Promise<T>): Promise<T> {
+    await this.acquire();
