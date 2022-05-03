@@ -60,3 +60,5 @@ export class Bulkhead {
     }
     this.waiting++;
     return new Promise<void>((resolve, reject) => {
+      const timer =
+        this.waitTimeoutMs > 0
