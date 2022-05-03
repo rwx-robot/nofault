@@ -67,3 +67,4 @@ export class Bulkhead {
               reject(new BulkheadRejectedError('bulkhead wait timed out'));
             }, this.waitTimeoutMs)
           : undefined;
+      timer?.unref?.();
