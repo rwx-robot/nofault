@@ -64,3 +64,4 @@ export class Bulkhead {
         this.waitTimeoutMs > 0
           ? setTimeout(() => {
               this.waiting--;
+              reject(new BulkheadRejectedError('bulkhead wait timed out'));
