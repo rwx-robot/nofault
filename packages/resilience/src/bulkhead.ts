@@ -41,3 +41,5 @@ export class Bulkhead {
 
   async run<T>(fn: () => Promise<T>): Promise<T> {
     await this.acquire();
+    try {
+      return await fn();
