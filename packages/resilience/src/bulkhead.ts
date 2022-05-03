@@ -34,3 +34,5 @@ export class Bulkhead {
     this.queueLimit = options.queueLimit ?? 0;
     this.waitTimeoutMs = options.waitTimeoutMs ?? 0;
   }
+
+  get stats(): { active: number; waiting: number; limit: number } {
