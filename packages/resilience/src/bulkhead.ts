@@ -58,3 +58,5 @@ export class Bulkhead {
       // 有界队列：排满了就快速失败，而不是让请求无限堆积
       throw new BulkheadRejectedError();
     }
+    this.waiting++;
+    return new Promise<void>((resolve, reject) => {
