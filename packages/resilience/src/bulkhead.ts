@@ -43,3 +43,4 @@ export class Bulkhead {
     await this.acquire();
     try {
       return await fn();
+    } finally {
