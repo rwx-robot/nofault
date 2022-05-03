@@ -50,3 +50,4 @@ export class Bulkhead {
   }
 
   private acquire(): Promise<void> {
+    if (this.active < this.concurrency) {
