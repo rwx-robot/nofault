@@ -53,3 +53,5 @@ export class Bulkhead {
     if (this.active < this.concurrency) {
       this.active++;
       return Promise.resolve();
+    }
+    if (this.waiting >= this.queueLimit) {
