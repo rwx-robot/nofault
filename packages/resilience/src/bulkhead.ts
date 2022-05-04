@@ -87,3 +87,6 @@ export class Bulkhead {
     if (this.active < 0) this.active = 0;
   }
 }
+
+/**
+ * 指数退避 + 抖动。
