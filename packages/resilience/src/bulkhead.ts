@@ -76,3 +76,5 @@ export class Bulkhead {
           this.waiting--;
           this.active++;
           resolve();
+        }
+      }, 1);
