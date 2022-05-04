@@ -81,3 +81,5 @@ export class Bulkhead {
       poll.unref?.();
     });
   }
+
+  private release(): void {
