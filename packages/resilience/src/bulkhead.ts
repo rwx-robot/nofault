@@ -68,3 +68,6 @@ export class Bulkhead {
             }, this.waitTimeoutMs)
           : undefined;
       timer?.unref?.();
+
+      const poll = setInterval(() => {
+        if (this.active < this.concurrency) {
