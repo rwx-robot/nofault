@@ -74,3 +74,5 @@ export class Bulkhead {
           clearInterval(poll);
           if (timer) clearTimeout(timer);
           this.waiting--;
+          this.active++;
+          resolve();
