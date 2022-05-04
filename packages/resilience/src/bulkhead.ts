@@ -94,3 +94,4 @@ export class Bulkhead {
  * 为什么要抖动：所有调用方**同时**重试（"重试风暴"）会把刚恢复的服务再打挂。
  * 抖动把重试时间打散，是分布式系统里最便宜也最有效的保护。
  */
+export interface BackoffOptions {
