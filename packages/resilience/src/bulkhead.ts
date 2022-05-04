@@ -71,3 +71,5 @@ export class Bulkhead {
 
       const poll = setInterval(() => {
         if (this.active < this.concurrency) {
+          clearInterval(poll);
+          if (timer) clearTimeout(timer);
