@@ -101,3 +101,6 @@ export interface BackoffOptions {
   /** 抖动比例 0~1，默认 0.5（±50%） */
   jitter?: number;
 }
+
+export function backoffDelay(attempt: number, options: BackoffOptions = {}): number {
+  const base = options.baseMs ?? 50;
