@@ -99,3 +99,5 @@ export interface BackoffOptions {
   factor?: number;
   maxMs?: number;
   /** 抖动比例 0~1，默认 0.5（±50%） */
+  jitter?: number;
+}
