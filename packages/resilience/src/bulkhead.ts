@@ -83,3 +83,5 @@ export class Bulkhead {
   }
 
   private release(): void {
+    // 释放动作由 acquire 的轮询感知，这里只保证计数正确
+    if (this.active < 0) this.active = 0;
