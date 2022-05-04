@@ -78,3 +78,5 @@ export class Bulkhead {
           resolve();
         }
       }, 1);
+      poll.unref?.();
+    });
