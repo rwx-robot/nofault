@@ -95,3 +95,5 @@ export class Bulkhead {
  * 抖动把重试时间打散，是分布式系统里最便宜也最有效的保护。
  */
 export interface BackoffOptions {
+  baseMs?: number;
+  factor?: number;
