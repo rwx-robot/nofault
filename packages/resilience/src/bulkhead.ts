@@ -97,3 +97,5 @@ export class Bulkhead {
 export interface BackoffOptions {
   baseMs?: number;
   factor?: number;
+  maxMs?: number;
+  /** 抖动比例 0~1，默认 0.5（±50%） */
