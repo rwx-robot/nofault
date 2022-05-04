@@ -73,3 +73,4 @@ export class Bulkhead {
         if (this.active < this.concurrency) {
           clearInterval(poll);
           if (timer) clearTimeout(timer);
+          this.waiting--;
