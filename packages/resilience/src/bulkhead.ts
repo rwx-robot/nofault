@@ -106,3 +106,4 @@ export function backoffDelay(attempt: number, options: BackoffOptions = {}): num
   const base = options.baseMs ?? 50;
   const factor = options.factor ?? 2;
   const max = options.maxMs ?? 10_000;
+  const jitter = options.jitter ?? 0.5;
