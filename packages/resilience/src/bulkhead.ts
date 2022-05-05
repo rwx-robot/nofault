@@ -124,3 +124,4 @@ export async function retryWithBackoff<T>(
   for (let attempt = 0; attempt < options.attempts; attempt++) {
     try {
       return await fn(attempt);
+    } catch (err) {
