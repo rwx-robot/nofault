@@ -125,3 +125,5 @@ export async function retryWithBackoff<T>(
     try {
       return await fn(attempt);
     } catch (err) {
+      lastError = err;
+      if (options.shouldRetry && !options.shouldRetry(err)) throw err;
