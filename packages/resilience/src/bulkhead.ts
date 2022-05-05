@@ -117,3 +117,4 @@ export function backoffDelay(attempt: number, options: BackoffOptions = {}): num
 
 /** 带退避的重试执行器 */
 export async function retryWithBackoff<T>(
+  fn: (attempt: number) => Promise<T>,
