@@ -107,3 +107,6 @@ export function backoffDelay(attempt: number, options: BackoffOptions = {}): num
   const factor = options.factor ?? 2;
   const max = options.maxMs ?? 10_000;
   const jitter = options.jitter ?? 0.5;
+
+  const exponential = Math.min(max, base * Math.pow(factor, Math.max(0, attempt)));
+  if (jitter <= 0) return Math.round(exponential);
