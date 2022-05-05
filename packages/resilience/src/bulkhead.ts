@@ -113,3 +113,4 @@ export function backoffDelay(attempt: number, options: BackoffOptions = {}): num
   // 在 [1-j, 1+j] 区间内抖动，但不允许小于 base 的一半
   const spread = exponential * jitter;
   return Math.round(Math.max(base * 0.5, exponential - spread + Math.random() * spread * 2));
+}
