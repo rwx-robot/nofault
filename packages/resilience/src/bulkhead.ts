@@ -114,3 +114,6 @@ export function backoffDelay(attempt: number, options: BackoffOptions = {}): num
   const spread = exponential * jitter;
   return Math.round(Math.max(base * 0.5, exponential - spread + Math.random() * spread * 2));
 }
+
+/** 带退避的重试执行器 */
+export async function retryWithBackoff<T>(
