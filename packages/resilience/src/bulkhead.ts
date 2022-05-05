@@ -127,3 +127,5 @@ export async function retryWithBackoff<T>(
     } catch (err) {
       lastError = err;
       if (options.shouldRetry && !options.shouldRetry(err)) throw err;
+      if (attempt < options.attempts - 1) {
+        await sleep(backoffDelay(attempt, options.backoff));
