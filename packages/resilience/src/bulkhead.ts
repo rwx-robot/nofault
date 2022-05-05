@@ -120,3 +120,5 @@ export async function retryWithBackoff<T>(
   fn: (attempt: number) => Promise<T>,
   options: { attempts: number; backoff?: BackoffOptions; shouldRetry?: (err: unknown) => boolean } = { attempts: 3 },
 ): Promise<T> {
+  let lastError: unknown;
+  for (let attempt = 0; attempt < options.attempts; attempt++) {
