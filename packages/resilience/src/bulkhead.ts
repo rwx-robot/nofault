@@ -132,3 +132,5 @@ export async function retryWithBackoff<T>(
       }
     }
   }
+  throw lastError instanceof Error ? lastError : new Error(String(lastError));
+}
