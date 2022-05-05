@@ -122,3 +122,5 @@ export async function retryWithBackoff<T>(
 ): Promise<T> {
   let lastError: unknown;
   for (let attempt = 0; attempt < options.attempts; attempt++) {
+    try {
+      return await fn(attempt);
