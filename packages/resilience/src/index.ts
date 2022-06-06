@@ -7,3 +7,4 @@
  *   舱壁（Bulkhead）：别让一个依赖吃光所有并发
  *   退避（backoffDelay）：重试要打散，否则重试风暴会二次伤害
  */
+export { TokenBucket, KeyedRateLimiter } from './rate-limiter';
