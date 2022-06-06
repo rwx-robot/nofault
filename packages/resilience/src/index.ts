@@ -5,3 +5,4 @@
  *   限流（RateLimiter）：别让进来的人太多
  *   熔断（CircuitBreaker）：下游已经坏了，别再打了
  *   舱壁（Bulkhead）：别让一个依赖吃光所有并发
+ *   退避（backoffDelay）：重试要打散，否则重试风暴会二次伤害
