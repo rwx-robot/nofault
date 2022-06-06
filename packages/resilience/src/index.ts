@@ -9,3 +9,5 @@
  */
 export { TokenBucket, KeyedRateLimiter } from './rate-limiter';
 export type { RateLimiterOptions, RateLimitResult } from './rate-limiter';
+
+export { CircuitBreaker, CircuitOpenError } from './circuit-breaker';
