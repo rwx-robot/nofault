@@ -20,3 +20,6 @@ export interface HttpContext {
   response: {
     status(code: number): { header(name: string, value: string): { json(body: unknown): unknown; header(name: string, value: string): unknown } };
     header(name: string, value: string): unknown;
+    json(body: unknown): unknown;
+  };
+}
