@@ -5,3 +5,6 @@
  * 舱壁其次（限制并发），熔断在内层（保护具体依赖）。
  * 顺序反了就会"被限流的请求也占着舱壁配额"，白白浪费。
  */
+import { KeyedRateLimiter, type RateLimiterOptions } from './rate-limiter';
+import { CircuitBreaker, CircuitOpenError, type CircuitBreakerOptions } from './circuit-breaker';
+import { Bulkhead, BulkheadRejectedError, type BulkheadOptions } from './bulkhead';
