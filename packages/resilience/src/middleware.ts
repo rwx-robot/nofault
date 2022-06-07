@@ -23,3 +23,7 @@ export interface HttpContext {
     json(body: unknown): unknown;
   };
 }
+
+export interface RateLimitMiddlewareOptions extends RateLimiterOptions {
+  keyOf?: (ctx: HttpContext) => string;
+}
