@@ -39,3 +39,6 @@ export function rateLimit(options: RateLimitMiddlewareOptions) {
       // 429 必须带 Retry-After：否则客户端只能瞎重试
       ctx.response.status(429).header('retry-after', String(Math.ceil(result.retryAfterMs / 1000)));
       ctx.response.json({ code: 429, data: null, message: 'Too Many Requests' });
+      return;
+    }
+    ctx.response.header('x-ratelimit-remaining', String(result.remaining));
