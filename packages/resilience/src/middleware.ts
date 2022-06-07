@@ -11,3 +11,6 @@ import { Bulkhead, BulkheadRejectedError, type BulkheadOptions } from './bulkhea
 import { HttpException } from '@nofault/rest';
 
 /** 取限流 key 的默认策略：优先用真实 IP，退回 'anonymous' */
+function clientKey(ctx: { request: { header(name: string): string | undefined; ip?: string } }): string {
+  return ctx.request.header('x-forwarded-for') ?? ctx.request.ip ?? 'anonymous';
+}
