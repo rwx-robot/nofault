@@ -8,3 +8,6 @@
 import { KeyedRateLimiter, type RateLimiterOptions } from './rate-limiter';
 import { CircuitBreaker, CircuitOpenError, type CircuitBreakerOptions } from './circuit-breaker';
 import { Bulkhead, BulkheadRejectedError, type BulkheadOptions } from './bulkhead';
+import { HttpException } from '@nofault/rest';
+
+/** 取限流 key 的默认策略：优先用真实 IP，退回 'anonymous' */
