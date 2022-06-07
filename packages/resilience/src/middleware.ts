@@ -14,3 +14,6 @@ import { HttpException } from '@nofault/rest';
 function clientKey(ctx: { request: { header(name: string): string | undefined; ip?: string } }): string {
   return ctx.request.header('x-forwarded-for') ?? ctx.request.ip ?? 'anonymous';
 }
+
+export interface HttpContext {
+  request: { header(name: string): string | undefined; ip?: string };
