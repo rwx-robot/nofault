@@ -17,3 +17,6 @@ function clientKey(ctx: { request: { header(name: string): string | undefined; i
 
 export interface HttpContext {
   request: { header(name: string): string | undefined; ip?: string };
+  response: {
+    status(code: number): { header(name: string, value: string): { json(body: unknown): unknown; header(name: string, value: string): unknown } };
+    header(name: string, value: string): unknown;
