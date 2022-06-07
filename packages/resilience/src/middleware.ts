@@ -32,3 +32,7 @@ export interface RateLimitMiddlewareOptions extends RateLimiterOptions {
 export function rateLimit(options: RateLimitMiddlewareOptions) {
   const limiter = new KeyedRateLimiter({ capacity: options.capacity, refillPerSecond: options.refillPerSecond });
   const keyOf = options.keyOf ?? clientKey;
+
+  return async (ctx: HttpContext, next: () => Promise<void>): Promise<void> => {
+    const result = limiter.check(keyOf(ctx));
+    if (!result.allowed) {
