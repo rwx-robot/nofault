@@ -27,3 +27,6 @@ export interface HttpContext {
 export interface RateLimitMiddlewareOptions extends RateLimiterOptions {
   keyOf?: (ctx: HttpContext) => string;
 }
+
+/** 每 IP 限流：超限返回 429，并带上 Retry-After */
+export function rateLimit(options: RateLimitMiddlewareOptions) {
