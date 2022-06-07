@@ -15,3 +15,5 @@ export type { CircuitState, CircuitBreakerOptions, CircuitStats } from './circui
 
 export { Bulkhead, BulkheadRejectedError, backoffDelay, retryWithBackoff } from './bulkhead';
 export type { BulkheadOptions, BackoffOptions } from './bulkhead';
+
+export { rateLimit, circuitBreaker, bulkhead } from './middleware';
