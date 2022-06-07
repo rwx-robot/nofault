@@ -30,3 +30,5 @@ export interface RateLimitMiddlewareOptions extends RateLimiterOptions {
 
 /** 每 IP 限流：超限返回 429，并带上 Retry-After */
 export function rateLimit(options: RateLimitMiddlewareOptions) {
+  const limiter = new KeyedRateLimiter({ capacity: options.capacity, refillPerSecond: options.refillPerSecond });
+  const keyOf = options.keyOf ?? clientKey;
