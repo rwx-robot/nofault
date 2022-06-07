@@ -12,3 +12,5 @@ export type { RateLimiterOptions, RateLimitResult } from './rate-limiter';
 
 export { CircuitBreaker, CircuitOpenError } from './circuit-breaker';
 export type { CircuitState, CircuitBreakerOptions, CircuitStats } from './circuit-breaker';
+
+export { Bulkhead, BulkheadRejectedError, backoffDelay, retryWithBackoff } from './bulkhead';
