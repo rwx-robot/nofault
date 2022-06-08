@@ -55,3 +55,6 @@ export function circuitBreaker(options: CircuitBreakerOptions) {
       try {
         await breaker.run(async () => {
           await next();
+        });
+      } catch (err) {
+        if (err instanceof CircuitOpenError) {
