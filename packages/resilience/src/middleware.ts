@@ -68,3 +68,6 @@ export function circuitBreaker(options: CircuitBreakerOptions) {
 
 /** 舱壁：限制同时处理的请求数，超出返回 503 */
 export function bulkhead(options: BulkheadOptions) {
+  const guard = new Bulkhead(options);
+  return {
+    guard,
