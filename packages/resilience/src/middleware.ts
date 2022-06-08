@@ -42,3 +42,6 @@ export function rateLimit(options: RateLimitMiddlewareOptions) {
       return;
     }
     ctx.response.header('x-ratelimit-remaining', String(result.remaining));
+    return next();
+  };
+}
