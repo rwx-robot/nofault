@@ -71,3 +71,6 @@ export function bulkhead(options: BulkheadOptions) {
   const guard = new Bulkhead(options);
   return {
     guard,
+    use: async (_ctx: unknown, next: () => Promise<void>): Promise<void> => {
+      try {
+        await guard.run(async () => {
