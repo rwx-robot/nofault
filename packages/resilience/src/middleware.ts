@@ -77,3 +77,6 @@ export function bulkhead(options: BulkheadOptions) {
           await next();
         });
       } catch (err) {
+        if (err instanceof BulkheadRejectedError) {
+          throw new HttpException(503, 'Service Unavailable (overloaded)', 503);
+        }
