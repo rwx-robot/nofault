@@ -49,3 +49,6 @@ export function rateLimit(options: RateLimitMiddlewareOptions) {
 /** 熔断：下游持续失败时快速失败（503），不再打它 */
 export function circuitBreaker(options: CircuitBreakerOptions) {
   const breaker = new CircuitBreaker(options);
+  return {
+    breaker,
+    use: async (_ctx: unknown, next: () => Promise<void>): Promise<void> => {
