@@ -83,3 +83,5 @@ export function bulkhead(options: BulkheadOptions) {
         throw err;
       }
     },
+  };
+}
