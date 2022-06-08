@@ -58,3 +58,6 @@ export function circuitBreaker(options: CircuitBreakerOptions) {
         });
       } catch (err) {
         if (err instanceof CircuitOpenError) {
+          throw new HttpException(503, 'Service Unavailable (circuit open)', 503);
+        }
+        throw err;
