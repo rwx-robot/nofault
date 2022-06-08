@@ -74,3 +74,6 @@ export function bulkhead(options: BulkheadOptions) {
     use: async (_ctx: unknown, next: () => Promise<void>): Promise<void> => {
       try {
         await guard.run(async () => {
+          await next();
+        });
+      } catch (err) {
