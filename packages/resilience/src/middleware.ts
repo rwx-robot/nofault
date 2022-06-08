@@ -52,3 +52,6 @@ export function circuitBreaker(options: CircuitBreakerOptions) {
   return {
     breaker,
     use: async (_ctx: unknown, next: () => Promise<void>): Promise<void> => {
+      try {
+        await breaker.run(async () => {
+          await next();
