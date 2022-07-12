@@ -25,3 +25,10 @@ curl -s http://127.0.0.1:3000/faulty/state      # open，dependencyCalls 停止�
 
 # 恢复 → 冷却 3s → 半开探针
 curl -s "http://127.0.0.1:3000/faulty/break?mode=ok"
+sleep 3.2 && curl -s http://127.0.0.1:3000/faulty/call
+curl -s http://127.0.0.1:3000/faulty/state      # closed
+```
+
+## 文件说明
+
+| 文件 | 说明 |
