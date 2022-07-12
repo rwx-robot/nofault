@@ -32,3 +32,9 @@ curl -s http://127.0.0.1:3000/faulty/state      # closed
 ## 文件说明
 
 | 文件 | 说明 |
+| --- | --- |
+| `src/dependency.ts` | 会"按指令生病"的下游（可切换 down/ok） |
+| `src/faulty.controller.ts` | 熔断 + 退避重试；把 `CircuitOpenError` 翻译成 503 |
+| `src/main.ts` | 中间件顺序：限流 → 舱壁 |
+
+## 这个示例证明了什么
