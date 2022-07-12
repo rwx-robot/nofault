@@ -1,3 +1,6 @@
 {
   "name": "@nofault/example-v070-resilient-api",
   "version": "0.7.0",
+  "private": true,
+  "description": "v0.7.0 示例：限流 / 熔断 / 舱壁 / 退避重试 接进真实 HTTP 与 RPC 链路",
+  "main": "dist/main.js",
