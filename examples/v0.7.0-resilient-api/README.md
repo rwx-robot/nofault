@@ -17,3 +17,11 @@ pnpm example v0.7.0-resilient-api PORT=3370
 for i in $(seq 1 30); do curl -s -o /dev/null -w "%{http_code} " http://127.0.0.1:3000/faulty/state; done
 #  → 200×20 然后 429
 curl -s -D - -o /dev/null http://127.0.0.1:3000/faulty/state | grep -i retry-after
+
+# 熔断：打挂下游 → 连续失败 3 次 → 熔断
+curl -s "http://127.0.0.1:3000/faulty/break?mode=down"
+for i in 1 2 3 4; do curl -s -o /dev/null -w "%{http_code} " http://127.0.0.1:3000/faulty/call; done
+curl -s http://127.0.0.1:3000/faulty/state      # open，dependencyCalls 停止增长
+
+# 恢复 → 冷却 3s → 半开探针
+curl -s "http://127.0.0.1:3000/faulty/break?mode=ok"
