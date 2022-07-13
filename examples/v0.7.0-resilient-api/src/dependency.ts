@@ -15,3 +15,7 @@ class Dependency {
   get callCount(): number {
     return this.calls;
   }
+
+  async call(): Promise<{ ok: boolean; calls: number }> {
+    this.calls++;
+    if (this.mode === 'down') throw new Error('dependency is down');
