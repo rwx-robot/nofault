@@ -5,3 +5,7 @@
  * 通过 `GET /faulty/break?mode=down` 可以把它切成持续失败模式。
  */
 class Dependency {
+  private mode: 'ok' | 'down' = 'ok';
+  private calls = 0;
+
+  setMode(mode: 'ok' | 'down'): void {
