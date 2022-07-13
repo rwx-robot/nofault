@@ -11,3 +11,7 @@ class Dependency {
   setMode(mode: 'ok' | 'down'): void {
     this.mode = mode;
   }
+
+  get callCount(): number {
+    return this.calls;
+  }
