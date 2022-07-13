@@ -43,3 +43,12 @@ export class FaultyController {
         throw new HttpException(503, 'dependency circuit is open', 503);
       }
       if (err instanceof Error && err.message.includes('down')) {
+        throw new HttpException(503, `dependency unavailable (${err.message})`, 503);
+      }
+      throw err;
+    }
+  }
+
+  /** 人为切换下游健康状态：熔断必须能被**主动**验证，不能靠等线上出事 */
+  @Get('/break')
+  setMode(@Query('mode') mode: string): { mode: string } {
