@@ -61,3 +61,11 @@ export class FaultyController {
     const stats = breaker.stats();
     return {
       state: stats.state,
+      failures: stats.failures,
+      rejected: stats.rejected,
+      dependencyCalls: dependency.callCount,
+    };
+  }
+}
+
+export { breaker, dependency };
