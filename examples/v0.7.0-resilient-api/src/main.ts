@@ -4,3 +4,11 @@ import { createLogger, LogLevel } from '@nofault/logger';
 import { RestApplication, bodyParser, requestContext } from '@nofault/rest';
 import { rateLimit, bulkhead } from '@nofault/resilience';
 import { FaultyController, dependency } from './faulty.controller';
+
+const logger = createLogger({ context: 'resilient-api', level: LogLevel.INFO });
+
+@Module({ controllers: [FaultyController] })
+class AppModule {}
+
+async function bootstrap(): Promise<void> {
+  const app = await RestApplication.create(AppModule, {
