@@ -12,3 +12,10 @@ class AppModule {}
 
 async function bootstrap(): Promise<void> {
   const app = await RestApplication.create(AppModule, {
+    name: 'resilient-api',
+    logger,
+    middleware: [
+      requestContext(),
+      bodyParser(),
+      // 顺序很重要：限流在最外层，舱壁在内层
+      // 反过来的话，被限流的请求也会占着并发配额
