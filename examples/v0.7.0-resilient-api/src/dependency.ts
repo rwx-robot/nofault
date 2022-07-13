@@ -9,3 +9,5 @@ class Dependency {
   private calls = 0;
 
   setMode(mode: 'ok' | 'down'): void {
+    this.mode = mode;
+  }
