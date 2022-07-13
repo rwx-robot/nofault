@@ -22,3 +22,5 @@ class Dependency {
     return { ok: true, calls: this.calls };
   }
 }
+
+export const dependency = new Dependency();
