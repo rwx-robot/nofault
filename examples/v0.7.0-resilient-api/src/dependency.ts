@@ -19,3 +19,6 @@ class Dependency {
   async call(): Promise<{ ok: boolean; calls: number }> {
     this.calls++;
     if (this.mode === 'down') throw new Error('dependency is down');
+    return { ok: true, calls: this.calls };
+  }
+}
