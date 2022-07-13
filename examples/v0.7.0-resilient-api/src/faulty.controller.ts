@@ -34,3 +34,12 @@ export class FaultyController {
           },
           { attempts: 2, backoff: { baseMs: 10, maxMs: 50 } },
         ),
+      );
+      return { ...result, attempts };
+    } catch (err) {
+      // 熔断打开是一种**特定**的失败：必须翻译成 503，
+      // 否则框架会把不认识的错误一律按 500 处理，客户端分不清"我错了"和"下游坏了"
+      if (err instanceof CircuitOpenError) {
+        throw new HttpException(503, 'dependency circuit is open', 503);
+      }
+      if (err instanceof Error && err.message.includes('down')) {
