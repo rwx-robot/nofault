@@ -19,3 +19,10 @@ async function bootstrap(): Promise<void> {
       bodyParser(),
       // 顺序很重要：限流在最外层，舱壁在内层
       // 反过来的话，被限流的请求也会占着并发配额
+      rateLimit({ capacity: 20, refillPerSecond: 5 }),
+      bulkhead({ concurrency: 5, queueLimit: 10, waitTimeoutMs: 200 }).use,
+    ],
+  });
+
+  app.enableShutdownHooks();
+  const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
