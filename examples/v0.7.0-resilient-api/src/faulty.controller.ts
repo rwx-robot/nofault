@@ -16,3 +16,12 @@ import { dependency } from './dependency';
 const breaker = new CircuitBreaker({
   failureThreshold: 3,
   resetTimeoutMs: 3000,
+  halfOpenMaxCalls: 1,
+});
+
+@Controller('/faulty')
+export class FaultyController {
+  @Get('/call')
+  async call(): Promise<{ ok: boolean; calls: number; attempts: number }> {
+    let attempts = 0;
+    try {
