@@ -25,3 +25,12 @@ export class FaultyController {
   async call(): Promise<{ ok: boolean; calls: number; attempts: number }> {
     let attempts = 0;
     try {
+      // 外层熔断（下游坏了就不再打），内层退避重试（偶发抖动才重试）
+      const result = await breaker.run(() =>
+        retryWithBackoff(
+          async () => {
+            attempts++;
+            return dependency.call();
+          },
+          { attempts: 2, backoff: { baseMs: 10, maxMs: 50 } },
+        ),
