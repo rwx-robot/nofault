@@ -52,3 +52,12 @@ export class FaultyController {
   /** 人为切换下游健康状态：熔断必须能被**主动**验证，不能靠等线上出事 */
   @Get('/break')
   setMode(@Query('mode') mode: string): { mode: string } {
+    dependency.setMode(mode === 'down' ? 'down' : 'ok');
+    return { mode };
+  }
+
+  @Get('/state')
+  state(): { state: string; failures: number; rejected: number; dependencyCalls: number } {
+    const stats = breaker.stats();
+    return {
+      state: stats.state,
