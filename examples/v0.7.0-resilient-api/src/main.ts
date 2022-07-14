@@ -39,3 +39,9 @@ async function bootstrap(): Promise<void> {
     dependency.setMode('ok');
   }, 8000);
 }
+
+void bootstrap().catch((err: unknown) => {
+  logger.error('bootstrap failed', undefined, err);
+  if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+  process.exit(1);
+});
