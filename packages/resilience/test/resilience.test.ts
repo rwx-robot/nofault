@@ -174,3 +174,31 @@ describe('backoff', () => {
     const samples = Array.from({ length: 50 }, () => backoffDelay(3, { baseMs: 10, factor: 2, jitter: 0.5 }));
     const unique = new Set(samples);
     expect(unique.size).toBeGreaterThan(1);
+    for (const value of samples) {
+      expect(value).toBeGreaterThanOrEqual(5);
+      expect(value).toBeLessThanOrEqual(120);
+    }
+  });
+
+  it('retries until success and stops on non-retryable errors', async () => {
+    let attempts = 0;
+    const result = await retryWithBackoff(
+      async () => {
+        attempts++;
+        if (attempts < 3) throw new Error('transient');
+        return 'ok';
+      },
+      { attempts: 5, backoff: { baseMs: 1 } },
+    );
+    expect(result).toBe('ok');
+    expect(attempts).toBe(3);
+
+    const fatal = vi.fn(async () => {
+      throw new Error('fatal');
+    });
+    await expect(
+      retryWithBackoff(fatal, { attempts: 5, backoff: { baseMs: 1 }, shouldRetry: () => false }),
+    ).rejects.toThrow('fatal');
+    expect(fatal).toHaveBeenCalledTimes(1);
+  });
+});
