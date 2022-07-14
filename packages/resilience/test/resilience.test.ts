@@ -86,3 +86,32 @@ describe('CircuitBreaker', () => {
       breaker.run(async () => {
         throw new Error('down');
       }),
+    ).rejects.toThrow('down');
+    expect(breaker.currentState).toBe('open');
+
+    now = 500;
+    expect(breaker.currentState).toBe('half-open');
+
+    await expect(breaker.run(async () => 'ok')).resolves.toBe('ok');
+    expect(breaker.currentState).toBe('closed');
+  });
+
+  it('re-opens immediately when a half-open probe fails', async () => {
+    let now = 0;
+    const breaker = new CircuitBreaker({ failureThreshold: 1, resetTimeoutMs: 200, now: () => now });
+    await expect(
+      breaker.run(async () => {
+        throw new Error('down');
+      }),
+    ).rejects.toThrow();
+
+    now = 200;
+    expect(breaker.currentState).toBe('half-open');
+    await expect(
+      breaker.run(async () => {
+        throw new Error('still down');
+      }),
+    ).rejects.toThrow('still down');
+    // 半开阶段再失败 = 下游还没恢复，立刻回到熔断
+    expect(breaker.currentState).toBe('open');
+  });
