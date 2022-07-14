@@ -26,3 +26,9 @@ async function bootstrap(): Promise<void> {
 
   app.enableShutdownHooks();
   const { port } = await app.listen(Number(process.env.PORT ?? 3000), '127.0.0.1');
+  app.markReady();
+
+  logger.info('resilient api ready', { port, hint: 'curl /faulty/call, /faulty/state' });
+  for (const route of app.getRoutes()) {
+    logger.info(`  ${route.method.padEnd(6)} ${route.path}`);
+  }
