@@ -115,3 +115,33 @@ describe('CircuitBreaker', () => {
     // 半开阶段再失败 = 下游还没恢复，立刻回到熔断
     expect(breaker.currentState).toBe('open');
   });
+
+  it('lets a custom predicate ignore expected failures', async () => {
+    // 业务校验失败不算"依赖故障"，不该触发熔断
+    const breaker = new CircuitBreaker({
+      failureThreshold: 1,
+      resetTimeoutMs: 1000,
+      isFailure: (err) => !(err instanceof Error && err.message === 'bad request'),
+    });
+    await expect(
+      breaker.run(async () => {
+        throw new Error('bad request');
+      }),
+    ).rejects.toThrow('bad request');
+    expect(breaker.currentState).toBe('closed');
+  });
+});
+
+describe('Bulkhead', () => {
+  it('caps concurrent executions', async () => {
+    const guard = new Bulkhead({ concurrency: 2, queueLimit: 0 });
+    let running = 0;
+    let peak = 0;
+
+    const task = () =>
+      guard.run(async () => {
+        running++;
+        peak = Math.max(peak, running);
+        await sleep(20);
+        running--;
+        return 'done';
