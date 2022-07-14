@@ -145,3 +145,32 @@ describe('Bulkhead', () => {
         await sleep(20);
         running--;
         return 'done';
+      });
+
+    await Promise.all([task(), task(), task(), task()].map((p) => p.catch(() => 'rejected')));
+    expect(peak).toBeLessThanOrEqual(2);
+  });
+
+  it('rejects instead of queueing forever when the queue is full', async () => {
+    const guard = new Bulkhead({ concurrency: 1, queueLimit: 0 });
+    const first = guard.run(async () => {
+      await sleep(50);
+      return 1;
+    });
+    await expect(guard.run(async () => 2)).rejects.toBeInstanceOf(BulkheadRejectedError);
+    await first;
+  });
+});
+
+describe('backoff', () => {
+  it('grows exponentially and respects the ceiling', () => {
+    expect(backoffDelay(0, { baseMs: 10, factor: 2, jitter: 0 })).toBe(10);
+    expect(backoffDelay(1, { baseMs: 10, factor: 2, jitter: 0 })).toBe(20);
+    expect(backoffDelay(10, { baseMs: 10, factor: 2, maxMs: 100, jitter: 0 })).toBe(100);
+  });
+
+  it('jitters so that retries do not synchronise', () => {
+    // 没有抖动 = 所有调用方同时重试 = 重试风暴
+    const samples = Array.from({ length: 50 }, () => backoffDelay(3, { baseMs: 10, factor: 2, jitter: 0.5 }));
+    const unique = new Set(samples);
+    expect(unique.size).toBeGreaterThan(1);
