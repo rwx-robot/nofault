@@ -32,3 +32,10 @@ async function bootstrap(): Promise<void> {
   for (const route of app.getRoutes()) {
     logger.info(`  ${route.method.padEnd(6)} ${route.path}`);
   }
+
+  // 演示：让下游在前 8 秒处于故障状态，之后恢复
+  setTimeout(() => {
+    logger.info('dependency is now healthy again');
+    dependency.setMode('ok');
+  }, 8000);
+}
