@@ -57,3 +57,32 @@ describe('KeyedRateLimiter', () => {
     const limiter = new KeyedRateLimiter({ capacity: 1, refillPerSecond: 1 });
     limiter.check('a');
     limiter.reset('a');
+    expect(limiter.check('a').allowed).toBe(true);
+  });
+});
+
+describe('CircuitBreaker', () => {
+  it('opens after the failure threshold and fails fast while open', async () => {
+    const breaker = new CircuitBreaker({ failureThreshold: 2, resetTimeoutMs: 1000 });
+    const failing = vi.fn(async () => {
+      throw new Error('down');
+    });
+
+    await expect(breaker.run(failing)).rejects.toThrow('down');
+    await expect(breaker.run(failing)).rejects.toThrow('down');
+    expect(breaker.currentState).toBe('open');
+
+    // OPEN 期间**不能**再打下游：这是熔断的全部意义
+    const before = failing.mock.calls.length;
+    await expect(breaker.run(failing)).rejects.toBeInstanceOf(CircuitOpenError);
+    expect(failing.mock.calls.length).toBe(before);
+  });
+
+  it('goes half-open after the reset timeout, then closes on success', async () => {
+    let now = 0;
+    const breaker = new CircuitBreaker({ failureThreshold: 1, resetTimeoutMs: 500, now: () => now });
+
+    await expect(
+      breaker.run(async () => {
+        throw new Error('down');
+      }),
