@@ -2,3 +2,4 @@
   "name": "@nofault/telemetry",
   "version": "0.8.0",
   "description": "nofault observability: spans with sampling and exporters, metrics (counter/gauge/histogram) with Prometheus exposition",
+  "license": "MIT",
