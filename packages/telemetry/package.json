@@ -1,29 +1,2 @@
 {
   "name": "@nofault/telemetry",
-  "version": "0.8.0",
-  "description": "nofault observability: spans with sampling and exporters, metrics (counter/gauge/histogram) with Prometheus exposition",
-  "license": "MIT",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "default": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "engines": {
-    "node": ">=20.0.0"
-  },
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {
-    "@nofault/context": "workspace:*",
-    "@nofault/core": "workspace:*",
-    "@nofault/rest": "workspace:*"
-  }
-}
