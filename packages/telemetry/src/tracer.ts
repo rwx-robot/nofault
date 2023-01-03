@@ -42,3 +42,17 @@ export interface Exporter {
 }
 
 /** 采样器：返回 true 表示这条链路要记 */
+export interface Sampler {
+  (): boolean;
+}
+
+export const alwaysSample: Sampler = () => true;
+export const neverSample: Sampler = () => false;
+
+/** 按比例采样（0~1） */
+export function ratioSampler(ratio: number): Sampler {
+  const clamped = Math.max(0, Math.min(1, ratio));
+  return () => Math.random() < clamped;
+}
+
+export class Span {
