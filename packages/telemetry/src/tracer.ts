@@ -70,3 +70,18 @@ export class Span {
    */
   private readonly startedAt = performance.now();
   /**
+   * 墙上时钟起点（epoch 毫秒，带小数）。导出器要用它算绝对时间，
+   * 所以不能只留相对值；小数部分让 OTLP 的 nanos 换算不至于丢精度。
+   */
+  private readonly startedWallMs = performance.timeOrigin + this.startedAt;
+  private status: 'ok' | 'error' = 'ok';
+  private error?: string;
+  private readonly previousActive: Span | undefined;
+
+  constructor(
+    name: string,
+    private readonly tracer: Tracer,
+    readonly kind: SpanKind = 'internal',
+    context?: { traceId: string; spanId: string; parentSpanId?: string },
+  ) {
+    this.name = name;
