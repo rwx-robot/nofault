@@ -56,3 +56,17 @@ export function ratioSampler(ratio: number): Sampler {
 }
 
 export class Span {
+  readonly name: string;
+  readonly traceId: string;
+  readonly spanId: string;
+  readonly parentSpanId?: string;
+  readonly attributes: SpanAttributes = {};
+  private finished = false;
+  /**
+   * 计时用 `performance.now()` 而不是 `Date.now()`：
+   * - 它是**单调**的，不受系统时钟调整影响；
+   * - 它是**亚毫秒**精度的。`Date.now()` 只有毫秒，亚毫秒级的 Span
+   *   会被统统记成 0ms——缓存命中、本地方法调用这类正好是最该被观测的短 Span。
+   */
+  private readonly startedAt = performance.now();
+  /**
