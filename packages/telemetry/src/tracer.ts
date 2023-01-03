@@ -12,3 +12,18 @@
  * 3. 默认导出器是**内存**的：可观测性不该要求先装一套后端才跑得起来
  */
 import { currentContext } from '@nofault/context';
+
+/** 请求上下文里"当前正在进行的 Span"的键 */
+export const ACTIVE_SPAN = 'telemetry.activeSpan';
+
+export type SpanKind = 'server' | 'client' | 'internal';
+
+export interface SpanAttributes {
+  [key: string]: string | number | boolean | undefined;
+}
+
+export interface FinishedSpan {
+  traceId: string;
+  spanId: string;
+  parentSpanId?: string;
+  name: string;
