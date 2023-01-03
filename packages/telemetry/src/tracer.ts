@@ -27,3 +27,18 @@ export interface FinishedSpan {
   spanId: string;
   parentSpanId?: string;
   name: string;
+  kind: SpanKind;
+  /** 起点：epoch 毫秒，带小数（小数部分来自 `performance.now()`） */
+  startTimeMs: number;
+  /** 耗时：毫秒，带小数——亚毫秒的 Span 不会被抹平成 0 */
+  durationMs: number;
+  attributes: SpanAttributes;
+  status: 'ok' | 'error';
+  error?: string;
+}
+
+export interface Exporter {
+  export(spans: FinishedSpan[]): Promise<void> | void;
+}
+
+/** 采样器：返回 true 表示这条链路要记 */
