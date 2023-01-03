@@ -85,3 +85,17 @@ export class Span {
     context?: { traceId: string; spanId: string; parentSpanId?: string },
   ) {
     this.name = name;
+    // 优先复用 v0.3.0 请求上下文里的 traceId：HTTP → RPC → 日志 全串起来
+    const ctx = currentContext();
+    const active = ctx?.get<Span>(ACTIVE_SPAN);
+    const fromContext = context?.traceId ?? ctx?.traceId;
+    // 只有真的缺的时候才做随机填充：ID 生成是起一个 Span 最贵的部分（见 randomHex）
+    if (fromContext !== undefined && context?.spanId !== undefined) {
+      this.traceId = fromContext;
+      this.spanId = context.spanId;
+    } else {
+      const ids = tracer.newIds();
+      this.traceId = fromContext ?? ids.traceId;
+      this.spanId = context?.spanId ?? ids.spanId;
+    }
+    // 父 Span 的优先级：显式传入 > 上下文里正在进行的 Span > 上游传来的 parent
