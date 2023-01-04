@@ -186,3 +186,17 @@ export class Tracer {
    * 但它保证了不采样时**真的不花一点开销**。
    */
   startSpan(name: string, kind: SpanKind = 'internal', context?: { traceId: string; spanId: string; parentSpanId?: string }): Span | null {
+    if (!this.sampler()) return null;
+    return new Span(name, this, kind, context);
+  }
+
+  /** 包一层：自动 end，并在抛错时标记 error */
+  async trace<T>(name: string, fn: (span: Span | null) => Promise<T>, kind: SpanKind = 'internal'): Promise<T> {
+    const span = this.startSpan(name, kind);
+    try {
+      const result = await fn(span);
+      return result;
+    } catch (err) {
+      span?.setError(err);
+      throw err;
+    } finally {
