@@ -200,3 +200,17 @@ export class Tracer {
       span?.setError(err);
       throw err;
     } finally {
+      span?.end();
+    }
+  }
+
+  finish(span: FinishedSpan): void {
+    this.buffer.push(span);
+    if (this.buffer.length >= this.batchSize) void this.flush();
+  }
+
+  async flush(): Promise<void> {
+    if (this.buffer.length === 0) return;
+    const batch = this.buffer.splice(0, this.buffer.length);
+    await this.exporter.export(batch);
+  }
