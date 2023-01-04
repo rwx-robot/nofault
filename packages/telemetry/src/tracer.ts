@@ -229,3 +229,17 @@ export class InMemoryExporter implements Exporter {
   }
 
   reset(): void {
+    this.spans.length = 0;
+  }
+
+  byName(name: string): FinishedSpan[] {
+    return this.spans.filter((s) => s.name === name);
+  }
+}
+
+/** 0x00~0xff 的十六进制字符串。查表比 `toString(16).padStart(2,'0')` 快一倍多 */
+const HEX: readonly string[] = Array.from({ length: 256 }, (_, i) =>
+  i.toString(16).padStart(2, '0'),
+);
+
+function toHex(bytes: Uint8Array): string {
