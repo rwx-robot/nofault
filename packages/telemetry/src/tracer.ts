@@ -114,3 +114,17 @@ export class Span {
     const ctx = currentContext();
     if (ctx?.get(ACTIVE_SPAN) === this) {
       if (this.previousActive) ctx.set(ACTIVE_SPAN, this.previousActive);
+      else ctx.delete(ACTIVE_SPAN);
+    }
+    const finished: FinishedSpan = {
+      traceId: this.traceId,
+      spanId: this.spanId,
+      parentSpanId: this.parentSpanId,
+      name: this.name,
+      kind: this.kind,
+      startTimeMs: this.startedWallMs,
+      durationMs: performance.now() - this.startedAt,
+      attributes: this.attributes,
+      status: this.status,
+      error: this.error,
+    };
