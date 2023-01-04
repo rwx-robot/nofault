@@ -214,3 +214,18 @@ export class Tracer {
     const batch = this.buffer.splice(0, this.buffer.length);
     await this.exporter.export(batch);
   }
+
+  get pendingCount(): number {
+    return this.buffer.length;
+  }
+}
+
+/** 内存导出器：测试与示例用，也便于"先跑起来再接后端" */
+export class InMemoryExporter implements Exporter {
+  readonly spans: FinishedSpan[] = [];
+
+  export(spans: FinishedSpan[]): void {
+    this.spans.push(...spans);
+  }
+
+  reset(): void {
