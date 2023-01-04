@@ -128,3 +128,17 @@ export class Span {
       status: this.status,
       error: this.error,
     };
+    this.tracer.finish(finished);
+  }
+
+  setAttributes(attributes: SpanAttributes): this {
+    Object.assign(this.attributes, attributes);
+    return this;
+  }
+
+  setError(err: unknown): this {
+    this.status = 'error';
+    this.error = err instanceof Error ? err.message : String(err);
+    return this;
+  }
+}
