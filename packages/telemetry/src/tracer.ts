@@ -243,3 +243,16 @@ const HEX: readonly string[] = Array.from({ length: 256 }, (_, i) =>
 );
 
 function toHex(bytes: Uint8Array): string {
+  let out = '';
+  for (let i = 0; i < bytes.length; i++) out += HEX[bytes[i]!];
+  return out;
+}
+
+function randomFill(buffer: Uint8Array): void {
+  const cryptoObj = globalThis.crypto;
+  if (cryptoObj?.getRandomValues) {
+    cryptoObj.getRandomValues(buffer);
+    return;
+  }
+  for (let i = 0; i < buffer.length; i++) buffer[i] = Math.floor(Math.random() * 256);
+}
