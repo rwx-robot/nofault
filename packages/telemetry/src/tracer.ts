@@ -99,3 +99,18 @@ export class Span {
       this.spanId = context?.spanId ?? ids.spanId;
     }
     // 父 Span 的优先级：显式传入 > 上下文里正在进行的 Span > 上游传来的 parent
+    this.parentSpanId = context?.parentSpanId ?? active?.spanId ?? ctx?.parentSpanId;
+
+    // 把自己登记为"当前 Span"，并记下旧的以便结束时还原（Span 会嵌套）
+    this.previousActive = active;
+    ctx?.set(ACTIVE_SPAN, this);
+  }
+
+  /** 结束 Span 并交给导出器。重复调用会被忽略 */
+  end(): void {
+    if (this.finished) return;
+    this.finished = true;
+    // 还原"当前 Span"：嵌套结构下，父 Span 结束后必须回到它自己的父
+    const ctx = currentContext();
+    if (ctx?.get(ACTIVE_SPAN) === this) {
+      if (this.previousActive) ctx.set(ACTIVE_SPAN, this.previousActive);
