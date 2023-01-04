@@ -171,3 +171,18 @@ export class Tracer {
   }
 
   newTraceId(): string {
+    return this.newIds().traceId;
+  }
+
+  newSpanId(): string {
+    return this.newIds().spanId;
+  }
+
+  /**
+   * 起一个 Span。
+   *
+   * **不采样时返回 null**，调用方要用 `span?.end()` 的写法——
+   * 这看起来不如"返回一个空实现的 Span"优雅，
+   * 但它保证了不采样时**真的不花一点开销**。
+   */
+  startSpan(name: string, kind: SpanKind = 'internal', context?: { traceId: string; spanId: string; parentSpanId?: string }): Span | null {
