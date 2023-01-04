@@ -142,3 +142,18 @@ export class Span {
     return this;
   }
 }
+
+export class Tracer {
+  private readonly buffer: FinishedSpan[] = [];
+  private readonly idBuffer = new Uint8Array(24);
+  private idCounter = 0;
+
+  constructor(
+    private readonly exporter: Exporter,
+    private readonly sampler: Sampler = alwaysSample,
+    /** 缓冲多少条后批量导出 */
+    private readonly batchSize = 64,
+  ) {}
+
+  /**
+   * 一次随机填充同时产出 traceId 与 spanId。
