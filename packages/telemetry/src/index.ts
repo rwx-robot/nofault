@@ -10,3 +10,4 @@ export {
   InMemoryExporter,
   alwaysSample,
   neverSample,
+  ratioSampler,
