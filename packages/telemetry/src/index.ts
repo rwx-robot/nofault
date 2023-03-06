@@ -5,3 +5,4 @@
  * Metrics：Counter / Gauge / Histogram + Prometheus 文本导出。
  */
 export {
+  Tracer,
