@@ -13,3 +13,4 @@ export {
   ratioSampler,
   ACTIVE_SPAN,
 } from './tracer';
+export type { FinishedSpan, Exporter, Sampler, SpanKind, SpanAttributes } from './tracer';
