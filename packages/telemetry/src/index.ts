@@ -12,3 +12,4 @@ export {
   neverSample,
   ratioSampler,
   ACTIVE_SPAN,
+} from './tracer';
