@@ -14,3 +14,4 @@ export {
   ACTIVE_SPAN,
 } from './tracer';
 export type { FinishedSpan, Exporter, Sampler, SpanKind, SpanAttributes } from './tracer';
+// [history] omitted at this version (not yet introduced): export { OtlpExporter, toOtlpSpan, toOtlpRequest } from './otlp-exporter';
