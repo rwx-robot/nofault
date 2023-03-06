@@ -9,3 +9,4 @@ export {
   Span,
   InMemoryExporter,
   alwaysSample,
+  neverSample,
