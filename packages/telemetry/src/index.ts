@@ -6,3 +6,4 @@
  */
 export {
   Tracer,
+  Span,
