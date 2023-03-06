@@ -8,3 +8,4 @@ export {
   Tracer,
   Span,
   InMemoryExporter,
+  alwaysSample,
