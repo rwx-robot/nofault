@@ -11,3 +11,4 @@ export {
   alwaysSample,
   neverSample,
   ratioSampler,
+  ACTIVE_SPAN,
