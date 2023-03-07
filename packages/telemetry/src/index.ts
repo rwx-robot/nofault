@@ -18,3 +18,4 @@ export type { FinishedSpan, Exporter, Sampler, SpanKind, SpanAttributes } from '
 // [history] omitted at this version (not yet introduced): export type { OtlpExporterOptions } from './otlp-exporter';
 
 export { MetricRegistry, Counter, Gauge, Histogram, DEFAULT_BUCKETS } from './metrics';
+export type { Labels, Sample } from './metrics';
