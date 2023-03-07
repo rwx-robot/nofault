@@ -20,3 +20,4 @@ export type { FinishedSpan, Exporter, Sampler, SpanKind, SpanAttributes } from '
 export { MetricRegistry, Counter, Gauge, Histogram, DEFAULT_BUCKETS } from './metrics';
 export type { Labels, Sample } from './metrics';
 // [history] omitted at this version (not yet introduced): export { withTraceFields, traceFields } from './logging';
+// [history] omitted at this version (not yet introduced): export type { FieldLogger, TraceFields } from './logging';
