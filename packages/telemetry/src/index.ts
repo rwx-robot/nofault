@@ -23,3 +23,4 @@ export type { Labels, Sample } from './metrics';
 // [history] omitted at this version (not yet introduced): export type { FieldLogger, TraceFields } from './logging';
 
 export { observability } from './middleware';
+export type { ObservabilityOptions, ObservabilityContext } from './middleware';
