@@ -15,3 +15,5 @@ export type Labels = Record<string, string>;
 export interface Sample {
   name: string;
   labels: Labels;
+  value: number;
+}
