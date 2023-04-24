@@ -29,3 +29,6 @@ export class Counter {
   inc(labels: Labels = {}, by = 1): void {
     const key = keyOf(labels);
     this.values.set(key, (this.values.get(key) ?? 0) + by);
+  }
+
+  get(labels: Labels = {}): number {
