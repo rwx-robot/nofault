@@ -17,3 +17,6 @@ export interface Sample {
   labels: Labels;
   value: number;
 }
+
+export class Counter {
+  private readonly values = new Map<string, number>();
