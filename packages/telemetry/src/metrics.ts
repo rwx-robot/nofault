@@ -34,3 +34,5 @@ export class Counter {
   get(labels: Labels = {}): number {
     return this.values.get(keyOf(labels)) ?? 0;
   }
+
+  samples(): Sample[] {
