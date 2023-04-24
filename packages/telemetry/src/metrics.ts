@@ -41,3 +41,5 @@ export class Counter {
       labels: parseKey(key),
       value,
     }));
+  }
+}
