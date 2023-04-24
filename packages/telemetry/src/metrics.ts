@@ -43,3 +43,6 @@ export class Counter {
     }));
   }
 }
+
+export class Gauge {
+  private readonly values = new Map<string, number>();
