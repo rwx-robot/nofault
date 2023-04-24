@@ -39,3 +39,5 @@ export class Counter {
     return [...this.values.entries()].map(([key, value]) => ({
       name: this.name,
       labels: parseKey(key),
+      value,
+    }));
