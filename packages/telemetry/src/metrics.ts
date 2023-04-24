@@ -36,3 +36,6 @@ export class Counter {
   }
 
   samples(): Sample[] {
+    return [...this.values.entries()].map(([key, value]) => ({
+      name: this.name,
+      labels: parseKey(key),
