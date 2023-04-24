@@ -25,3 +25,5 @@ export class Counter {
     readonly name: string,
     readonly help = '',
   ) {}
+
+  inc(labels: Labels = {}, by = 1): void {
