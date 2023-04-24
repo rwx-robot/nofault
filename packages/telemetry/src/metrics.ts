@@ -10,3 +10,6 @@
  *    桶换来的是 O(1) 内存和足够用的分位数近似。
  * 3. 提供 **Prometheus 文本格式**导出，不自建采集协议。
  */
+export type Labels = Record<string, string>;
+
+export interface Sample {
