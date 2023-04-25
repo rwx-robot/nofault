@@ -84,3 +84,4 @@ export class Histogram {
     readonly name: string,
     readonly help = '',
     readonly boundaries: number[] = DEFAULT_BUCKETS,
+  ) {}
