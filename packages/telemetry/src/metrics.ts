@@ -81,3 +81,6 @@ export class Histogram {
   private readonly buckets = new Map<string, { counts: number[]; sum: number; count: number }>();
 
   constructor(
+    readonly name: string,
+    readonly help = '',
+    readonly boundaries: number[] = DEFAULT_BUCKETS,
