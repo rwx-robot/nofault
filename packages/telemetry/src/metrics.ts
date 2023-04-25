@@ -73,3 +73,6 @@ export class Gauge {
     }));
   }
 }
+
+/** 默认桶边界（毫秒）——覆盖 Web 服务的常见延迟区间 */
+export const DEFAULT_BUCKETS = [5, 10, 25, 50, 100, 250, 500, 1000, 2500, 5000];
