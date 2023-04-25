@@ -85,3 +85,7 @@ export class Histogram {
     readonly help = '',
     readonly boundaries: number[] = DEFAULT_BUCKETS,
   ) {}
+
+  observe(value: number, labels: Labels = {}): void {
+    const key = keyOf(labels);
+    let series = this.buckets.get(key);
