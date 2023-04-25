@@ -89,3 +89,5 @@ export class Histogram {
   observe(value: number, labels: Labels = {}): void {
     const key = keyOf(labels);
     let series = this.buckets.get(key);
+    if (!series) {
+      series = { counts: new Array(this.boundaries.length + 1).fill(0), sum: 0, count: 0 };
