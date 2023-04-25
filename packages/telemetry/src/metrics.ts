@@ -53,3 +53,5 @@ export class Gauge {
   ) {}
 
   set(value: number, labels: Labels = {}): void {
+    this.values.set(keyOf(labels), value);
+  }
