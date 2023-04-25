@@ -70,3 +70,5 @@ export class Gauge {
       name: this.name,
       labels: parseKey(key),
       value,
+    }));
+  }
