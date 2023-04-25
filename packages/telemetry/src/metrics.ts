@@ -62,3 +62,5 @@ export class Gauge {
   }
 
   get(labels: Labels = {}): number {
+    return this.values.get(keyOf(labels)) ?? 0;
+  }
