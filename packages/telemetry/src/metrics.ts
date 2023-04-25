@@ -58,3 +58,5 @@ export class Gauge {
 
   add(delta: number, labels: Labels = {}): void {
     const key = keyOf(labels);
+    this.values.set(key, (this.values.get(key) ?? 0) + delta);
+  }
