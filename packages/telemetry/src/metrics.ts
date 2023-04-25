@@ -51,3 +51,5 @@ export class Gauge {
     readonly name: string,
     readonly help = '',
   ) {}
+
+  set(value: number, labels: Labels = {}): void {
