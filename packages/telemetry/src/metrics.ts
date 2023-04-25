@@ -64,3 +64,6 @@ export class Gauge {
   get(labels: Labels = {}): number {
     return this.values.get(keyOf(labels)) ?? 0;
   }
+
+  samples(): Sample[] {
+    return [...this.values.entries()].map(([key, value]) => ({
