@@ -118,3 +118,7 @@ export class Histogram {
     }
     return this.boundaries[this.boundaries.length - 1];
   }
+
+  stats(labels: Labels = {}): { count: number; sum: number; avg: number } | undefined {
+    const series = this.buckets.get(keyOf(labels));
+    if (!series) return undefined;
