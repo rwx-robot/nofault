@@ -93,3 +93,6 @@ export class Histogram {
       series = { counts: new Array(this.boundaries.length + 1).fill(0), sum: 0, count: 0 };
       this.buckets.set(key, series);
     }
+    series.sum += value;
+    series.count += 1;
+    let index = this.boundaries.findIndex((b) => value <= b);
