@@ -110,3 +110,5 @@ export class Histogram {
   percentile(p: number, labels: Labels = {}): number | undefined {
     const series = this.buckets.get(keyOf(labels));
     if (!series || series.count === 0) return undefined;
+    const target = Math.ceil((p / 100) * series.count);
+    let cumulative = 0;
