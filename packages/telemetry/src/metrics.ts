@@ -136,3 +136,5 @@ export class Histogram {
       let cumulative = 0;
       this.boundaries.forEach((boundary, i) => {
         cumulative += series.counts[i] ?? 0;
+        out.push({ name: `${this.name}_bucket`, labels: { ...labels, le: String(boundary) }, value: cumulative });
+      });
