@@ -128,3 +128,6 @@ export class Histogram {
       avg: series.count ? Math.round((series.sum / series.count) * 1000) / 1000 : 0,
     };
   }
+
+  samples(): Sample[] {
+    const out: Sample[] = [];
