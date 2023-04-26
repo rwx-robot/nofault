@@ -138,3 +138,6 @@ export class Histogram {
         cumulative += series.counts[i] ?? 0;
         out.push({ name: `${this.name}_bucket`, labels: { ...labels, le: String(boundary) }, value: cumulative });
       });
+      out.push({ name: `${this.name}_bucket`, labels: { ...labels, le: '+Inf' }, value: series.count });
+      out.push({ name: `${this.name}_sum`, labels, value: series.sum });
+      out.push({ name: `${this.name}_count`, labels, value: series.count });
