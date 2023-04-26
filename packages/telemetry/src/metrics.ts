@@ -103,3 +103,5 @@ export class Histogram {
   /**
    * 分位数近似。
    *
+   * 返回的是**所在桶的上界**（与 Prometheus 的 histogram_quantile 同一思路）：
+   * 桶里只存计数，不存样本，因此给不出精确分位数。
