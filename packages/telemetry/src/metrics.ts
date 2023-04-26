@@ -115,3 +115,5 @@ export class Histogram {
     for (let i = 0; i < this.boundaries.length; i++) {
       cumulative += series.counts[i] ?? 0;
       if (cumulative >= target) return this.boundaries[i];
+    }
+    return this.boundaries[this.boundaries.length - 1];
