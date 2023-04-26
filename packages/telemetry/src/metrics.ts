@@ -108,3 +108,5 @@ export class Histogram {
    * 这是刻意的取舍——存全部样本在几千 QPS 下必然 OOM。
    */
   percentile(p: number, labels: Labels = {}): number | undefined {
+    const series = this.buckets.get(keyOf(labels));
+    if (!series || series.count === 0) return undefined;
