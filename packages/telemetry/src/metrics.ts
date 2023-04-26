@@ -112,3 +112,6 @@ export class Histogram {
     if (!series || series.count === 0) return undefined;
     const target = Math.ceil((p / 100) * series.count);
     let cumulative = 0;
+    for (let i = 0; i < this.boundaries.length; i++) {
+      cumulative += series.counts[i] ?? 0;
+      if (cumulative >= target) return this.boundaries[i];
