@@ -117,3 +117,4 @@ export class Histogram {
       if (cumulative >= target) return this.boundaries[i];
     }
     return this.boundaries[this.boundaries.length - 1];
+  }
