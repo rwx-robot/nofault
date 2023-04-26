@@ -131,3 +131,6 @@ export class Histogram {
 
   samples(): Sample[] {
     const out: Sample[] = [];
+    for (const [key, series] of this.buckets) {
+      const labels = parseKey(key);
+      let cumulative = 0;
