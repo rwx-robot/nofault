@@ -96,3 +96,5 @@ export class Histogram {
     series.sum += value;
     series.count += 1;
     let index = this.boundaries.findIndex((b) => value <= b);
+    if (index < 0) index = this.boundaries.length; // +Inf
+    series.counts[index] = (series.counts[index] ?? 0) + 1;
