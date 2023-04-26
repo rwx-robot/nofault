@@ -134,3 +134,5 @@ export class Histogram {
     for (const [key, series] of this.buckets) {
       const labels = parseKey(key);
       let cumulative = 0;
+      this.boundaries.forEach((boundary, i) => {
+        cumulative += series.counts[i] ?? 0;
