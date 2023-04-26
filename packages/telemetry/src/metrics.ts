@@ -126,3 +126,5 @@ export class Histogram {
       count: series.count,
       sum: Math.round(series.sum * 1000) / 1000,
       avg: series.count ? Math.round((series.sum / series.count) * 1000) / 1000 : 0,
+    };
+  }
