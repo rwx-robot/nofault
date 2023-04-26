@@ -122,3 +122,5 @@ export class Histogram {
   stats(labels: Labels = {}): { count: number; sum: number; avg: number } | undefined {
     const series = this.buckets.get(keyOf(labels));
     if (!series) return undefined;
+    return {
+      count: series.count,
