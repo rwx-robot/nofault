@@ -105,3 +105,6 @@ export class Histogram {
    *
    * 返回的是**所在桶的上界**（与 Prometheus 的 histogram_quantile 同一思路）：
    * 桶里只存计数，不存样本，因此给不出精确分位数。
+   * 这是刻意的取舍——存全部样本在几千 QPS 下必然 OOM。
+   */
+  percentile(p: number, labels: Labels = {}): number | undefined {
