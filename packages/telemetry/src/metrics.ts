@@ -99,3 +99,7 @@ export class Histogram {
     if (index < 0) index = this.boundaries.length; // +Inf
     series.counts[index] = (series.counts[index] ?? 0) + 1;
   }
+
+  /**
+   * 分位数近似。
+   *
