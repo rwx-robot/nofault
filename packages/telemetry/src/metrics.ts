@@ -168,3 +168,7 @@ export class MetricRegistry {
     }
     return metric;
   }
+
+  histogram(name: string, help = '', boundaries: number[] = DEFAULT_BUCKETS): Histogram {
+    let metric = this.histograms.get(name);
+    if (!metric) {
