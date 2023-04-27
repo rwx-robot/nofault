@@ -150,3 +150,6 @@ export class MetricRegistry {
   private readonly counters = new Map<string, Counter>();
   private readonly gauges = new Map<string, Gauge>();
   private readonly histograms = new Map<string, Histogram>();
+
+  counter(name: string, help = ''): Counter {
+    let metric = this.counters.get(name);
