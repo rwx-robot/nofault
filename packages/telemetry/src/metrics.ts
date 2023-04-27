@@ -145,3 +145,6 @@ export class Histogram {
     return out;
   }
 }
+
+export class MetricRegistry {
+  private readonly counters = new Map<string, Counter>();
