@@ -176,3 +176,6 @@ export class MetricRegistry {
       this.histograms.set(name, metric);
     }
     return metric;
+  }
+
+  /** Prometheus 文本格式（0.0.4 的子集） */
