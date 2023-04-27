@@ -153,3 +153,5 @@ export class MetricRegistry {
 
   counter(name: string, help = ''): Counter {
     let metric = this.counters.get(name);
+    if (!metric) {
+      metric = new Counter(name, help);
