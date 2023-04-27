@@ -157,3 +157,5 @@ export class MetricRegistry {
       metric = new Counter(name, help);
       this.counters.set(name, metric);
     }
+    return metric;
+  }
