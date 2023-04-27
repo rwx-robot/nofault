@@ -172,3 +172,5 @@ export class MetricRegistry {
   histogram(name: string, help = '', boundaries: number[] = DEFAULT_BUCKETS): Histogram {
     let metric = this.histograms.get(name);
     if (!metric) {
+      metric = new Histogram(name, help, boundaries);
+      this.histograms.set(name, metric);
