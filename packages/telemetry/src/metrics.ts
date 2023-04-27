@@ -162,3 +162,5 @@ export class MetricRegistry {
 
   gauge(name: string, help = ''): Gauge {
     let metric = this.gauges.get(name);
+    if (!metric) {
+      metric = new Gauge(name, help);
