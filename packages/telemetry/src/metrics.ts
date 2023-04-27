@@ -167,3 +167,4 @@ export class MetricRegistry {
       this.gauges.set(name, metric);
     }
     return metric;
+  }
