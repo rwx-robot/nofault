@@ -143,3 +143,5 @@ export class Histogram {
       out.push({ name: `${this.name}_count`, labels, value: series.count });
     }
     return out;
+  }
+}
