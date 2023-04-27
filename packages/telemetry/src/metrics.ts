@@ -164,3 +164,6 @@ export class MetricRegistry {
     let metric = this.gauges.get(name);
     if (!metric) {
       metric = new Gauge(name, help);
+      this.gauges.set(name, metric);
+    }
+    return metric;
