@@ -159,3 +159,6 @@ export class MetricRegistry {
     }
     return metric;
   }
+
+  gauge(name: string, help = ''): Gauge {
+    let metric = this.gauges.get(name);
