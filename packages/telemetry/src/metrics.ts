@@ -181,3 +181,5 @@ export class MetricRegistry {
   /** Prometheus 文本格式（0.0.4 的子集） */
   toPrometheus(): string {
     const lines: string[] = [];
+    for (const metric of this.counters.values()) {
+      if (metric.help) lines.push(`# HELP ${metric.name} ${metric.help}`);
