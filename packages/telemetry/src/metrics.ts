@@ -174,3 +174,5 @@ export class MetricRegistry {
     if (!metric) {
       metric = new Histogram(name, help, boundaries);
       this.histograms.set(name, metric);
+    }
+    return metric;
