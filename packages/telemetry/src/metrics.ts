@@ -200,3 +200,5 @@ export class MetricRegistry {
   }
 
   reset(): void {
+    this.counters.clear();
+    this.gauges.clear();
