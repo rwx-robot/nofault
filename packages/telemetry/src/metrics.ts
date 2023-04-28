@@ -205,3 +205,5 @@ export class MetricRegistry {
     this.histograms.clear();
   }
 }
+
+function renderSample(sample: Sample): string {
