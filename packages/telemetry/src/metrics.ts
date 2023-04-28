@@ -188,3 +188,5 @@ export class MetricRegistry {
     }
     for (const metric of this.gauges.values()) {
       if (metric.help) lines.push(`# HELP ${metric.name} ${metric.help}`);
+      lines.push(`# TYPE ${metric.name} gauge`);
+      for (const sample of metric.samples()) lines.push(renderSample(sample));
