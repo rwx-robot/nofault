@@ -217,3 +217,5 @@ function renderSample(sample: Sample): string {
 function escapeValue(value: string): string {
   return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
 }
+
+function keyOf(labels: Labels): string {
