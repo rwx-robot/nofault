@@ -226,3 +226,5 @@ function keyOf(labels: Labels): string {
 }
 
 function parseKey(key: string): Labels {
+  if (!key) return {};
+  const out: Labels = {};
