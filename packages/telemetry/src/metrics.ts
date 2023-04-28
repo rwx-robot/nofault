@@ -224,3 +224,5 @@ function keyOf(labels: Labels): string {
     .map(([key, value]) => `${key}=${value}`)
     .join(',');
 }
+
+function parseKey(key: string): Labels {
