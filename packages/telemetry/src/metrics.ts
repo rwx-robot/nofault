@@ -209,3 +209,6 @@ export class MetricRegistry {
 function renderSample(sample: Sample): string {
   const labels = Object.entries(sample.labels)
     .sort(([a], [b]) => (a < b ? -1 : 1))
+    .map(([key, value]) => `${key}="${escapeValue(value)}"`)
+    .join(',');
+  return labels ? `${sample.name}{${labels}} ${sample.value}` : `${sample.name} ${sample.value}`;
