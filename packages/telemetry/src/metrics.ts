@@ -231,3 +231,5 @@ function parseKey(key: string): Labels {
   for (const part of key.split(',')) {
     const [name, value] = part.split('=');
     if (name) out[name] = value ?? '';
+  }
+  return out;
