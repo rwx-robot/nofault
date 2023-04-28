@@ -198,3 +198,5 @@ export class MetricRegistry {
     }
     return lines.join('\n') + '\n';
   }
+
+  reset(): void {
