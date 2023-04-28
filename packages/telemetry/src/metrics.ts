@@ -193,3 +193,5 @@ export class MetricRegistry {
     }
     for (const metric of this.histograms.values()) {
       if (metric.help) lines.push(`# HELP ${metric.name} ${metric.help}`);
+      lines.push(`# TYPE ${metric.name} histogram`);
+      for (const sample of metric.samples()) lines.push(renderSample(sample));
