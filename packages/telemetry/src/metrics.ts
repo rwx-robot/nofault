@@ -207,3 +207,5 @@ export class MetricRegistry {
 }
 
 function renderSample(sample: Sample): string {
+  const labels = Object.entries(sample.labels)
+    .sort(([a], [b]) => (a < b ? -1 : 1))
