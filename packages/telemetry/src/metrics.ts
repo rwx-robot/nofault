@@ -195,3 +195,6 @@ export class MetricRegistry {
       if (metric.help) lines.push(`# HELP ${metric.name} ${metric.help}`);
       lines.push(`# TYPE ${metric.name} histogram`);
       for (const sample of metric.samples()) lines.push(renderSample(sample));
+    }
+    return lines.join('\n') + '\n';
+  }
