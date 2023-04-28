@@ -219,3 +219,5 @@ function escapeValue(value: string): string {
 }
 
 function keyOf(labels: Labels): string {
+  return Object.entries(labels)
+    .sort(([a], [b]) => (a < b ? -1 : 1))
