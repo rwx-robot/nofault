@@ -228,3 +228,6 @@ function keyOf(labels: Labels): string {
 function parseKey(key: string): Labels {
   if (!key) return {};
   const out: Labels = {};
+  for (const part of key.split(',')) {
+    const [name, value] = part.split('=');
+    if (name) out[name] = value ?? '';
