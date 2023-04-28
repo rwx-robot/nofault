@@ -213,3 +213,7 @@ function renderSample(sample: Sample): string {
     .join(',');
   return labels ? `${sample.name}{${labels}} ${sample.value}` : `${sample.name} ${sample.value}`;
 }
+
+function escapeValue(value: string): string {
+  return value.replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/\n/g, '\\n');
+}
