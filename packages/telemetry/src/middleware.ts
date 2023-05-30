@@ -11,3 +11,5 @@ import { HttpException } from '@nofault/rest';
 export interface ObservabilityContext {
   request: { method: string; path: string };
   response: {
+    statusCodeValue?: number;
+    statusCode?: number;
