@@ -25,3 +25,6 @@ export interface ObservabilityOptions {
   /** 路由标签要不要收敛：不收敛的话 /users/1 和 /users/2 是两个序列 */
   routeLabelOf?: (ctx: ObservabilityContext) => string;
 }
+
+export function observability(options: ObservabilityOptions = {}) {
+  const metrics = options.metrics ?? new MetricRegistry();
