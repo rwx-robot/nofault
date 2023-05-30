@@ -15,3 +15,6 @@ export interface ObservabilityContext {
     statusCode?: number;
     header(name: string, value: string): unknown;
   };
+}
+
+export interface ObservabilityOptions {
