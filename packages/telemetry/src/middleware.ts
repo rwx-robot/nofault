@@ -6,3 +6,4 @@
  */
 import type { Tracer } from './tracer';
 import { MetricRegistry } from './metrics';
+import { HttpException } from '@nofault/rest';
