@@ -28,3 +28,5 @@ export interface ObservabilityOptions {
 
 export function observability(options: ObservabilityOptions = {}) {
   const metrics = options.metrics ?? new MetricRegistry();
+  const requests = metrics.counter('http_requests_total', 'Total HTTP requests');
+  const duration = metrics.histogram('http_request_duration_ms', 'HTTP request duration in milliseconds');
