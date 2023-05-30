@@ -18,3 +18,5 @@ export interface ObservabilityContext {
 }
 
 export interface ObservabilityOptions {
+  tracer?: Tracer;
+  metrics?: MetricRegistry;
