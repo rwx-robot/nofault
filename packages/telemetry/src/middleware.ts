@@ -7,3 +7,7 @@
 import type { Tracer } from './tracer';
 import { MetricRegistry } from './metrics';
 import { HttpException } from '@nofault/rest';
+
+export interface ObservabilityContext {
+  request: { method: string; path: string };
+  response: {
