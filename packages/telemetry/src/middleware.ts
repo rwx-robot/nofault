@@ -23,3 +23,5 @@ export interface ObservabilityOptions {
   /** 是否把 traceId 回给客户端（便于对齐日志） */
   exposeTraceId?: boolean;
   /** 路由标签要不要收敛：不收敛的话 /users/1 和 /users/2 是两个序列 */
+  routeLabelOf?: (ctx: ObservabilityContext) => string;
+}
