@@ -52,3 +52,5 @@ export function observability(options: ObservabilityOptions = {}) {
         errors.inc({ route, status: String(errorStatus) });
         throw err;
       } finally {
+        const status = String(errorStatus ?? ctx.response.statusCodeValue ?? ctx.response.statusCode ?? 200);
+        const elapsed = Date.now() - started;
