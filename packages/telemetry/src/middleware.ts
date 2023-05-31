@@ -37,3 +37,6 @@ export function observability(options: ObservabilityOptions = {}) {
     use: async (ctx: ObservabilityContext, next: () => Promise<void>): Promise<void> => {
       const route = options.routeLabelOf?.(ctx) ?? ctx.request.path;
       const span = options.tracer?.startSpan(`${ctx.request.method} ${route}`, 'server');
+      span?.setAttributes({ method: ctx.request.method, route });
+      const started = Date.now();
+      // 错误状态码要在 catch 里记下来：
