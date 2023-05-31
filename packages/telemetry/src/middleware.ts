@@ -57,3 +57,5 @@ export function observability(options: ObservabilityOptions = {}) {
         requests.inc({ route, status });
         duration.observe(elapsed, { route, status });
         span?.setAttributes({ status, durationMs: elapsed });
+        span?.end();
+        if (options.exposeTraceId !== false && span) {
