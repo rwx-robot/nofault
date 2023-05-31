@@ -59,3 +59,6 @@ export function observability(options: ObservabilityOptions = {}) {
         span?.setAttributes({ status, durationMs: elapsed });
         span?.end();
         if (options.exposeTraceId !== false && span) {
+          ctx.response.header('x-trace-id', span.traceId);
+        }
+      }
