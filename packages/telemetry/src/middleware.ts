@@ -62,3 +62,5 @@ export function observability(options: ObservabilityOptions = {}) {
           ctx.response.header('x-trace-id', span.traceId);
         }
       }
+    },
+  };
