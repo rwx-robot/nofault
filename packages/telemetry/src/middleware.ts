@@ -47,3 +47,5 @@ export function observability(options: ObservabilityOptions = {}) {
       try {
         await next();
       } catch (err) {
+        span?.setError(err);
+        errorStatus = err instanceof HttpException ? err.status : 500;
