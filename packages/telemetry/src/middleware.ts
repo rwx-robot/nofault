@@ -40,3 +40,5 @@ export function observability(options: ObservabilityOptions = {}) {
       span?.setAttributes({ method: ctx.request.method, route });
       const started = Date.now();
       // 错误状态码要在 catch 里记下来：
+      // 此时框架还没把异常映射成响应状态码，finally 里读到的是默认的 200，
+      // 于是失败的请求会被统计成成功——监控上"零错误"，实际上全线 500。
