@@ -35,3 +35,5 @@ export function observability(options: ObservabilityOptions = {}) {
   return {
     metrics,
     use: async (ctx: ObservabilityContext, next: () => Promise<void>): Promise<void> => {
+      const route = options.routeLabelOf?.(ctx) ?? ctx.request.path;
+      const span = options.tracer?.startSpan(`${ctx.request.method} ${route}`, 'server');
