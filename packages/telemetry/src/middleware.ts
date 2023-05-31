@@ -54,3 +54,6 @@ export function observability(options: ObservabilityOptions = {}) {
       } finally {
         const status = String(errorStatus ?? ctx.response.statusCodeValue ?? ctx.response.statusCode ?? 200);
         const elapsed = Date.now() - started;
+        requests.inc({ route, status });
+        duration.observe(elapsed, { route, status });
+        span?.setAttributes({ status, durationMs: elapsed });
