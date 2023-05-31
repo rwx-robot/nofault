@@ -45,3 +45,5 @@ export function observability(options: ObservabilityOptions = {}) {
       let errorStatus: number | undefined;
 
       try {
+        await next();
+      } catch (err) {
