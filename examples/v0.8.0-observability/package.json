@@ -12,3 +12,6 @@
     "@nofault/context": "workspace:*",
     "@nofault/core": "workspace:*",
     "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "@nofault/telemetry": "workspace:*",
+    "reflect-metadata": "^0.2.2"
