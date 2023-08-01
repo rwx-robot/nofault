@@ -45,3 +45,9 @@ curl -s http://127.0.0.1:3000/ops/metrics | grep http_requests_total
 3. **失败请求记成 500** —— 不是默认的 200（这是最容易写错的一处）
 4. **路由标签已收敛** —— `/api/work/:id` 而不是 `/api/work/10`
 5. **Prometheus 文本可直接抓取** —— 桶是累积的
+
+## 测试
+
+```bash
+pnpm vitest run tests/integration/v0.8.0
+```
