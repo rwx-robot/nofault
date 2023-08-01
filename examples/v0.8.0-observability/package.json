@@ -2,3 +2,6 @@
   "name": "@nofault/example-v080-observability",
   "version": "0.8.0",
   "private": true,
+  "description": "v0.8.0 示例：每个请求一个 Span（含子调用）+ Prometheus 指标导出",
+  "main": "dist/main.js",
+  "scripts": {
