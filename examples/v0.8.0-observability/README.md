@@ -37,3 +37,11 @@ curl -s http://127.0.0.1:3000/ops/metrics | grep http_requests_total
 | `src/telemetry.setup.ts` | Tracer（内存导出器）与 MetricRegistry |
 | `src/ops.controller.ts` | `/ops/spans`（先 flush 再看）与 `/ops/metrics` |
 | `src/main.ts` | 挂 `observability()` 中间件，**路由标签收敛** |
+
+## 这个示例证明了什么
+
+1. **子 Span 自动挂到父 Span** —— 共享 traceId，`parentSpanId` 指向服务端 Span
+2. **traceId 回到客户端** —— 用户报障时可以据此对齐日志
+3. **失败请求记成 500** —— 不是默认的 200（这是最容易写错的一处）
+4. **路由标签已收敛** —— `/api/work/:id` 而不是 `/api/work/10`
+5. **Prometheus 文本可直接抓取** —— 桶是累积的
