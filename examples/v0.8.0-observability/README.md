@@ -22,3 +22,10 @@ curl -s -D - -o /dev/null http://127.0.0.1:3000/api/work/10 | grep -i x-trace-id
 # Span（注意 simulated-work 与 GET /api/work/:id 的 traceId 相同）
 curl -s http://127.0.0.1:3000/ops/spans
 # → {"name":"simulated-work",...,"traceId":"d8df1de7..."}
+#   {"name":"GET /api/work/:id",...,"traceId":"d8df1de7..."}
+
+# 指标（route 已收敛成 /api/work/:id）
+curl -s http://127.0.0.1:3000/ops/metrics | grep http_requests_total
+# → http_requests_total{route="/api/work/:id",status="200"} 2
+#   http_requests_total{route="/api/boom",status="500"} 1
+```
