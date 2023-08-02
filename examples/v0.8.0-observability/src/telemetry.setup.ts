@@ -5,3 +5,5 @@
  * 出现两份实例就等于"一半数据不见了"，而且查不出原因。
  */
 import { InMemoryExporter, MetricRegistry, Tracer } from '@nofault/telemetry';
+
+export const exporter = new InMemoryExporter();
