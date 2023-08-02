@@ -10,3 +10,5 @@ export const exporter = new InMemoryExporter();
 
 /** 采样率 100%：演示用。生产建议 1%~10%，否则 Span 量比请求量还大 */
 export const tracer = new Tracer(exporter, () => true, 8);
+
+export const registry = new MetricRegistry();
