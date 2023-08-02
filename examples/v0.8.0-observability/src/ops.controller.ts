@@ -21,3 +21,7 @@ export class OpsController {
     await tracer.flush();
     const recent = exporter.spans.slice(-20).map((span) => ({
       name: span.name,
+      durationMs: span.durationMs,
+      status: span.status,
+      traceId: span.traceId,
+    }));
