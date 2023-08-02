@@ -16,3 +16,8 @@ export class OpsController {
   }
 
   @Get('/spans')
+  async spans(): Promise<{ total: number; recent: Array<{ name: string; durationMs: number; status: string; traceId: string }> }> {
+    // 先看再 flush：否则缓冲区没满时看到的是空数据
+    await tracer.flush();
+    const recent = exporter.spans.slice(-20).map((span) => ({
+      name: span.name,
