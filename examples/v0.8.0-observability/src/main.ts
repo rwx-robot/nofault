@@ -36,3 +36,13 @@ async function bootstrap(): Promise<void> {
     name: 'observability-demo',
     logger,
     middleware: [
+      requestContext(),
+      bodyParser(),
+      observability({
+        tracer,
+        metrics: registry,
+        // 把路径里的数字段收敛成占位符：
+        // 不收敛的话 /api/work/1 和 /api/work/2 会是两个序列（基数爆炸）
+        routeLabelOf: (ctx) => ctx.request.path.replace(/\/\d+(?=\/|$)/g, '/:id'),
+      }).use,
+    ],
