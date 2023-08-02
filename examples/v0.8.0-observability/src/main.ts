@@ -27,3 +27,12 @@ class DemoController {
     throw new Error('intentional failure');
   }
 }
+
+@Module({ controllers: [DemoController, OpsController] })
+class AppModule {}
+
+async function bootstrap(): Promise<void> {
+  const app = await RestApplication.create(AppModule, {
+    name: 'observability-demo',
+    logger,
+    middleware: [
