@@ -55,3 +55,11 @@ async function bootstrap(): Promise<void> {
   logger.info('observability demo ready', { port });
   for (const route of app.getRoutes()) {
     logger.info(`  ${route.method.padEnd(6)} ${route.path}`);
+  }
+}
+
+void bootstrap().catch((err: unknown) => {
+  logger.error('bootstrap failed', undefined, err);
+  if (err instanceof Error && err.stack) process.stderr.write(`${err.stack}\n`);
+  process.exit(1);
+});
