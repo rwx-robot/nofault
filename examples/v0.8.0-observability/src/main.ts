@@ -17,3 +17,13 @@ class DemoController {
     await tracer.trace('simulated-work', async (span) => {
       span?.setAttributes({ delayMs: delay });
       await new Promise((resolve) => setTimeout(resolve, delay));
+    });
+    return { waited: delay };
+  }
+
+  @Get('/boom')
+  async boom(): Promise<never> {
+    // 会被 Span 记成 error，并在指标里计一次错误
+    throw new Error('intentional failure');
+  }
+}
