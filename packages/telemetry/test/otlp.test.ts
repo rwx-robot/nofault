@@ -31,3 +31,35 @@ interface OtlpSpan {
 
 interface OtlpRequest {
   resourceSpans: {
+    resource: { attributes: OtlpAttribute[] };
+    scopeSpans: { scope: { name: string }; spans: OtlpSpan[] }[];
+  }[];
+}
+
+interface CapturedRequest {
+  url: string;
+  headers: IncomingMessage['headers'];
+  body: OtlpRequest;
+}
+
+const servers: Server[] = [];
+
+afterAll(async () => {
+  await Promise.all(
+    servers.map(
+      (server) => new Promise<void>((resolve) => server.close(() => resolve())),
+    ),
+  );
+});
+
+/** 起一个把请求原样记录下来的假 OTLP collector */
+function startCollector(): Promise<{ url: string; requests: CapturedRequest[] }> {
+  const requests: CapturedRequest[] = [];
+  const server = createServer((req, res) => {
+    let raw = '';
+    req.on('data', (chunk) => (raw += chunk));
+    req.on('end', () => {
+      requests.push({ url: req.url ?? '', headers: req.headers, body: JSON.parse(raw) as OtlpRequest });
+      res.writeHead(200).end();
+    });
+  });
