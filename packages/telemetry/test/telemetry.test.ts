@@ -85,3 +85,32 @@ describe('tracer', () => {
   it('links child spans to the parent', async () => {
     const exporter = new InMemoryExporter();
     const tracer = new Tracer(exporter, undefined, 10);
+    const parent = tracer.startSpan('parent')!;
+    const child = tracer.startSpan('child', 'client', {
+      traceId: parent.traceId,
+      spanId: tracer.newSpanId(),
+      parentSpanId: parent.spanId,
+    })!;
+    child.end();
+    parent.end();
+    await tracer.flush();
+
+    const childSpan = exporter.spans.find((s) => s.name === 'child')!;
+    expect(childSpan.traceId).toBe(parent.traceId);
+    expect(childSpan.parentSpanId).toBe(parent.spanId);
+  });
+
+  it('does not allocate a span when the sampler declines', () => {
+    const tracer = new Tracer(new InMemoryExporter(), neverSample);
+    // 不采样时返回 null：不采样就必须真的不花开销
+    expect(tracer.startSpan('op')).toBeNull();
+  });
+
+  it('samples approximately at the configured ratio', () => {
+    const tracer = new Tracer(new InMemoryExporter(), ratioSampler(0.5));
+    let created = 0;
+    for (let i = 0; i < 2000; i++) {
+      if (tracer.startSpan('op')) created++;
+    }
+    expect(created).toBeGreaterThan(700);
+    expect(created).toBeLessThan(1300);
