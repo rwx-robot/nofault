@@ -56,3 +56,32 @@ describe('tracer', () => {
       tracer.startSpan('fast')!.end();
     }
     await tracer.flush();
+
+    const durations = exporter.spans.map((s) => s.durationMs);
+    expect(durations).toHaveLength(20);
+
+    /**
+     * 判据取"最快那个 Span"：毫秒粒度下耗时只能是整数（0、1、2…），
+     * 永远不可能落在 (0,1) 区间；高精度计时的亚毫秒值则必然落在这里。
+     * 只看"有没有大于 0 的"是不够的——偶尔跨过一次毫秒边界就能蒙混过关。
+     */
+    const fastest = Math.min(...durations);
+    expect(fastest).toBeGreaterThan(0);
+    expect(fastest).toBeLessThan(1);
+  });
+
+  it('keeps startTimeMs on the wall clock for exporters', async () => {
+    const exporter = new InMemoryExporter();
+    const tracer = new Tracer(exporter, undefined, 1);
+    const before = Date.now();
+    const span = tracer.startSpan('op')!;
+    span.end();
+    await tracer.flush();
+    // 导出器要拿它算绝对时间（OTLP 会换算成纳秒），必须仍是 epoch 毫秒量级
+    expect(exporter.spans[0]!.startTimeMs).toBeGreaterThanOrEqual(before - 5);
+    expect(exporter.spans[0]!.startTimeMs).toBeLessThanOrEqual(Date.now() + 5);
+  });
+
+  it('links child spans to the parent', async () => {
+    const exporter = new InMemoryExporter();
+    const tracer = new Tracer(exporter, undefined, 10);
