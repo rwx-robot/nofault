@@ -114,3 +114,32 @@ describe('tracer', () => {
     }
     expect(created).toBeGreaterThan(700);
     expect(created).toBeLessThan(1300);
+  });
+
+  it('batches exports and flushes on demand', async () => {
+    const exporter = new InMemoryExporter();
+    const tracer = new Tracer(exporter, undefined, 5);
+    for (let i = 0; i < 4; i++) tracer.startSpan(`op-${i}`)!.end();
+    expect(exporter.spans).toHaveLength(0); // 还没达到 batchSize
+
+    await tracer.flush();
+    expect(exporter.spans).toHaveLength(4);
+    expect(tracer.pendingCount).toBe(0);
+  });
+});
+
+describe('metrics', () => {
+  it('counts by label set', () => {
+    const counter = new Counter('requests_total');
+    counter.inc({ route: '/a' });
+    counter.inc({ route: '/a' });
+    counter.inc({ route: '/b' });
+    expect(counter.get({ route: '/a' })).toBe(2);
+    expect(counter.get({ route: '/b' })).toBe(1);
+  });
+
+  it('gauges can go up and down', () => {
+    const gauge = new Gauge('in_flight');
+    gauge.add(1);
+    gauge.add(1);
+    expect(gauge.get()).toBe(2);
