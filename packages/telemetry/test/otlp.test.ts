@@ -95,3 +95,36 @@ describe('otlp exporter', () => {
     const parent = tracer.startSpan('GET /users', 'server')!;
     parent.setAttributes({ route: '/users', status: 200, cached: true });
     const child = tracer.startSpan('db.query', 'client', {
+      traceId: parent.traceId,
+      spanId: tracer.newSpanId(),
+      parentSpanId: parent.spanId,
+    })!;
+    child.setAttributes({ attempts: 2 });
+    child.end();
+    parent.end();
+    await expect(
+      tracer.trace('failing', async () => {
+        throw new Error('boom');
+      }),
+    ).rejects.toThrow('boom');
+    await tracer.flush();
+
+    expect(collector.requests).toHaveLength(1);
+    const request = collector.requests[0]!;
+    expect(request.url).toBe('/v1/traces');
+    expect(request.headers['content-type']).toBe('application/json');
+
+    // resource：service.name 必须在，Jaeger/Tempo 靠它分组服务
+    const resourceAttributes = request.body.resourceSpans[0]!.resource.attributes;
+    expect(resourceAttributes).toContainEqual({
+      key: 'service.name',
+      value: { stringValue: 'demo-api' },
+    });
+    expect(request.body.resourceSpans[0]!.scopeSpans[0]!.scope.name).toBe('@nofault/telemetry');
+    expect(request.body.resourceSpans[0]!.scopeSpans[0]!.spans).toHaveLength(3);
+
+    // server span：kind=2，ID 是定长 hex，时间戳是纳秒字符串
+    const serverSpan = findSpan(request, 'GET /users');
+    expect(serverSpan.kind).toBe(2);
+    expect(serverSpan.traceId).toMatch(/^[0-9a-f]{32}$/);
+    expect(serverSpan.spanId).toMatch(/^[0-9a-f]{16}$/);
