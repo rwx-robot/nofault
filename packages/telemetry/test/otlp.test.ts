@@ -160,3 +160,34 @@ describe('otlp exporter', () => {
         errors.push({ error, dropped: batch.length });
       },
     });
+    const tracer = new Tracer(exporter, undefined, 10);
+    tracer.startSpan('op')!.end();
+
+    // 导出失败必须被吞掉——Tracer.finish 里是 void this.flush()，
+    // 这里若上抛就是一条未处理的 rejection，能直接弄崩宿主进程
+    await expect(tracer.flush()).resolves.toBeUndefined();
+    expect(errors).toHaveLength(1);
+    expect(errors[0]).toMatchObject({ dropped: 1 });
+  });
+
+  it('skips the request for an empty batch', async () => {
+    const collector = await startCollector();
+    const exporter = new OtlpExporter({ endpoint: collector.url });
+    await exporter.export([]);
+    expect(collector.requests).toHaveLength(0);
+  });
+
+  it('sends custom headers (auth)', async () => {
+    const collector = await startCollector();
+    const exporter = new OtlpExporter({
+      endpoint: collector.url,
+      headers: { authorization: 'Bearer token-1' },
+    });
+    const tracer = new Tracer(exporter, undefined, 10);
+    tracer.startSpan('op')!.end();
+    await tracer.flush();
+
+    expect(collector.requests).toHaveLength(1);
+    expect(collector.requests[0]!.headers.authorization).toBe('Bearer token-1');
+  });
+});
