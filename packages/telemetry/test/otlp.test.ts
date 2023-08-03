@@ -63,3 +63,35 @@ function startCollector(): Promise<{ url: string; requests: CapturedRequest[] }>
       res.writeHead(200).end();
     });
   });
+  servers.push(server);
+  return new Promise((resolve) => {
+    server.listen(0, '127.0.0.1', () => {
+      const { port } = server.address() as AddressInfo;
+      resolve({ url: `http://127.0.0.1:${port}/v1/traces`, requests });
+    });
+  });
+}
+
+function findSpan(request: CapturedRequest, name: string): OtlpSpan {
+  const span = request.body.resourceSpans[0]!.scopeSpans[0]!.spans.find((s) => s.name === name);
+  expect(span, `span ${name} should be exported`).toBeDefined();
+  return span!;
+}
+
+function attributeValue(span: OtlpSpan, key: string): Record<string, string | number | boolean> {
+  const attribute = span.attributes.find((a) => a.key === key);
+  expect(attribute, `attribute ${key} should exist`).toBeDefined();
+  return attribute!.value;
+}
+
+// ---------------------------------------------------------------- 用例
+
+describe('otlp exporter', () => {
+  it('posts spans as otlp/json to the endpoint', async () => {
+    const collector = await startCollector();
+    const exporter = new OtlpExporter({ endpoint: collector.url, serviceName: 'demo-api' });
+    const tracer = new Tracer(exporter, undefined, 10);
+
+    const parent = tracer.startSpan('GET /users', 'server')!;
+    parent.setAttributes({ route: '/users', status: 200, cached: true });
+    const child = tracer.startSpan('db.query', 'client', {
