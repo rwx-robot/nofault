@@ -128,3 +128,35 @@ describe('otlp exporter', () => {
     expect(serverSpan.kind).toBe(2);
     expect(serverSpan.traceId).toMatch(/^[0-9a-f]{32}$/);
     expect(serverSpan.spanId).toMatch(/^[0-9a-f]{16}$/);
+    expect(serverSpan.startTimeUnixNano).toMatch(/^\d+$/);
+    expect(BigInt(serverSpan.endTimeUnixNano)).toBeGreaterThanOrEqual(
+      BigInt(serverSpan.startTimeUnixNano),
+    );
+    // 属性类型映射：字符串 → stringValue，整数 → intValue（字符串承载），布尔 → boolValue
+    expect(attributeValue(serverSpan, 'route')).toEqual({ stringValue: '/users' });
+    expect(attributeValue(serverSpan, 'status')).toEqual({ intValue: '200' });
+    expect(attributeValue(serverSpan, 'cached')).toEqual({ boolValue: true });
+
+    // client span：kind=3，挂到父 Span 上
+    const clientSpan = findSpan(request, 'db.query');
+    expect(clientSpan.kind).toBe(3);
+    expect(clientSpan.parentSpanId).toBe(serverSpan.spanId);
+    expect(clientSpan.traceId).toBe(serverSpan.traceId);
+    expect(attributeValue(clientSpan, 'attempts')).toEqual({ intValue: '2' });
+
+    // 失败 span：默认 internal（kind=1），status.code=2 且带原因
+    const failing = findSpan(request, 'failing');
+    expect(failing.kind).toBe(1);
+    expect(failing.status.code).toBe(2);
+    expect(failing.status.message).toBe('boom');
+  });
+
+  it('never throws when the endpoint is down', async () => {
+    const errors: unknown[] = [];
+    const exporter = new OtlpExporter({
+      // 端口 1 不会有服务在听：连接被立刻拒绝
+      endpoint: 'http://127.0.0.1:1/v1/traces',
+      onError: (error, batch) => {
+        errors.push({ error, dropped: batch.length });
+      },
+    });
