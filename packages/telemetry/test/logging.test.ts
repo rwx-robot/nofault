@@ -42,3 +42,13 @@ describe('withTraceFields', () => {
   });
 
   it('lets the caller override the trace id explicitly', () => {
+    const { logger, calls } = capturingLogger();
+    const traced = withTraceFields(logger);
+
+    requestContextStore.run(new RequestContext({ traceparent: { traceId: 'auto', spanId: 's1' } as never }), () => {
+      traced.info('correlating another trace', { traceId: 'manual' });
+    });
+
+    // 显式传的字段优先：偶尔要记另一条链路时不应被覆盖
+    expect(calls.info?.fields?.traceId).toBe('manual');
+  });
