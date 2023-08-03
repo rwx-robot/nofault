@@ -52,3 +52,14 @@ describe('withTraceFields', () => {
     // 显式传的字段优先：偶尔要记另一条链路时不应被覆盖
     expect(calls.info?.fields?.traceId).toBe('manual');
   });
+
+  it('traces every level that the underlying logger supports', () => {
+    const { logger, calls } = capturingLogger();
+    const traced = withTraceFields(logger);
+
+    requestContextStore.run(new RequestContext({ traceparent: { traceId: 't', spanId: 's1' } as never }), () => {
+      traced.info('a');
+      traced.warn('b');
+      traced.error('c');
+      traced.debug?.('d');
+    });
