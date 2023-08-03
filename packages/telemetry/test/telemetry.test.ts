@@ -143,3 +143,31 @@ describe('metrics', () => {
     gauge.add(1);
     gauge.add(1);
     expect(gauge.get()).toBe(2);
+    gauge.add(-1);
+    expect(gauge.get()).toBe(1);
+    gauge.set(10);
+    expect(gauge.get()).toBe(10);
+  });
+
+  it('histogram buckets and percentiles', () => {
+    const histogram = new Histogram('latency_ms', '', [10, 50, 100]);
+    for (const value of [1, 5, 20, 60, 300]) histogram.observe(value);
+
+    // 桶式直方图只能给出**所在桶的上界**（与 Prometheus 一致），是近似值：
+    // 样本 [1,5,20,60,300] 的 p50 落在 le=50 这个桶里，因此返回 50 而不是 20
+    expect(histogram.percentile(50)).toBe(50);
+    expect(histogram.percentile(100)).toBe(100);
+    const stats = histogram.stats()!;
+    expect(stats.count).toBe(5);
+    expect(stats.sum).toBe(386);
+  });
+
+  it('returns undefined for percentiles without samples', () => {
+    expect(new Histogram('empty').percentile(95)).toBeUndefined();
+  });
+
+  it('exports prometheus text format', () => {
+    const registry = new MetricRegistry();
+    registry.counter('http_requests_total', 'Total requests').inc({ route: '/api', status: '200' }, 3);
+    registry.gauge('in_flight', 'In flight').set(2);
+    registry.histogram('http_request_duration_ms', 'Duration', [50, 100]).observe(42);
