@@ -63,3 +63,13 @@ describe('withTraceFields', () => {
       traced.error('c');
       traced.debug?.('d');
     });
+
+    for (const key of ['info', 'warn', 'error', 'debug']) {
+      expect(calls[key]?.fields).toMatchObject({ traceId: 't' });
+    }
+  });
+
+  it('reports empty fields when there is nothing to correlate', () => {
+    expect(traceFields()).toEqual({});
+  });
+});
