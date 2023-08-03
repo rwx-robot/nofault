@@ -171,3 +171,31 @@ describe('metrics', () => {
     registry.counter('http_requests_total', 'Total requests').inc({ route: '/api', status: '200' }, 3);
     registry.gauge('in_flight', 'In flight').set(2);
     registry.histogram('http_request_duration_ms', 'Duration', [50, 100]).observe(42);
+
+    const text = registry.toPrometheus();
+    expect(text).toContain('# TYPE http_requests_total counter');
+    expect(text).toContain('http_requests_total{route="/api",status="200"} 3');
+    expect(text).toContain('# TYPE in_flight gauge');
+    expect(text).toContain('# TYPE http_request_duration_ms histogram');
+    // 累积桶：42ms 落在 le=50 这个桶里
+    expect(text).toContain('http_request_duration_ms_bucket{le="50"} 1');
+    expect(text).toContain('http_request_duration_ms_count 1');
+  });
+
+  it('escapes label values so the output stays parsable', () => {
+    const registry = new MetricRegistry();
+    registry.counter('c').inc({ path: 'a"b\nc' });
+    expect(registry.toPrometheus()).toContain('path="a\\"b\\nc"');
+  });
+
+  it('reuses the same metric instance for the same name', () => {
+    const registry = new MetricRegistry();
+    registry.counter('x').inc();
+    registry.counter('x').inc();
+    expect(registry.counter('x').get()).toBe(2);
+  });
+
+  it('uses sane default buckets', () => {
+    expect(DEFAULT_BUCKETS[0]).toBeLessThan(DEFAULT_BUCKETS[DEFAULT_BUCKETS.length - 1]!);
+  });
+});
