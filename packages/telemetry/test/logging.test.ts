@@ -31,3 +31,14 @@ describe('withTraceFields', () => {
     });
 
     expect(calls.info?.fields).toMatchObject({ traceId: 'trace-123' });
+  });
+
+  it('keeps working (without fields) outside a request context', () => {
+    const { logger, calls } = capturingLogger();
+    const traced = withTraceFields(logger);
+    traced.info('no request here');
+    expect(calls.info?.message).toBe('no request here');
+    expect(calls.info?.fields?.traceId).toBeUndefined();
+  });
+
+  it('lets the caller override the trace id explicitly', () => {
