@@ -9,3 +9,14 @@ import { RequestContext, requestContextStore } from '@nofault/context';
 import { traceFields, withTraceFields, type FieldLogger } from '../src/logging';
 
 function capturingLogger() {
+  const calls: Record<string, { message: string; fields?: Record<string, unknown> }> = {};
+  const logger: FieldLogger = {
+    debug: (m, f) => (calls.debug = { message: m, fields: f }),
+    info: (m, f) => (calls.info = { message: m, fields: f }),
+    warn: (m, f) => (calls.warn = { message: m, fields: f }),
+    error: (m, f) => (calls.error = { message: m, fields: f }),
+  };
+  return { logger, calls };
+}
+
+describe('withTraceFields', () => {
