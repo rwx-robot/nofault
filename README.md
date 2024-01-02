@@ -2,7 +2,7 @@
 
 > 严格遵循 **Node.js / NestJS 生态规范**的 Node.js 微服务框架，参考行业最佳实践设计。
 
-**当前版本：v0.8.0（可观测性）**
+**当前版本：v0.9.0（微服务全家桶）**
 
 ---
 
@@ -10,11 +10,11 @@
 
 nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约定优于配置、内置服务治理。
 
-补齐可观测性：Span（采样/批量导出）与指标（Counter / Gauge / Histogram + Prometheus）。
+补齐分布式原语与一键装配：Snowflake ID、分布式锁、cron 调度、事件总线、`Microservice.bootstrap()`。
 
 ## 架构概览
 
-**Metrics 告诉你"出问题了"，Trace 告诉你"是哪一步出的问题"，日志告诉你"当时发生了什么"**—— 三者各管一段，缺一个排查就要靠猜。 v0.3.0 只做了 traceId **透传**（日志能串起来）； 这一版补上 **Span 上报**（时长、属性、状态、采样）与 **Metrics**（Counter / Gauge / Histogram）。
+前八个版本交付的是**能力**；这一版负责把它们**接起来**， 并补上微服务必需、但单进程时代可以糊弄过去的四样东西。
 
 ## 快速开始
 
@@ -22,13 +22,13 @@ nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约�
 pnpm install
 pnpm build
 pnpm test
-pnpm example v0.8.0-observability
+pnpm example v0.9.0-microservice-kit
 ```
 
-- 运行/使用说明 → [`docs/v0.8.0/RUNNING.md`](./docs/v0.8.0/RUNNING.md)
-- 架构说明 → [`docs/v0.8.0/ARCHITECTURE.md`](./docs/v0.8.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.8.0/CHANGELOG.md`](./docs/v0.8.0/CHANGELOG.md)
-- 压测报告 → [`benchmarks/v0.8.0/REPORT.md`](./benchmarks/v0.8.0/REPORT.md)
+- 运行/使用说明 → [`docs/v0.9.0/RUNNING.md`](./docs/v0.9.0/RUNNING.md)
+- 架构说明 → [`docs/v0.9.0/ARCHITECTURE.md`](./docs/v0.9.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.9.0/CHANGELOG.md`](./docs/v0.9.0/CHANGELOG.md)
+- 压测报告 → [`benchmarks/v0.9.0/REPORT.md`](./benchmarks/v0.9.0/REPORT.md)
 
 
 ## 已发布的包
@@ -50,6 +50,7 @@ pnpm example v0.8.0-observability
 | `@nofault/rpc` | v0.6.0 | 分帧、连接池、超时重试、注册发现 |
 | `@nofault/resilience` | v0.7.0 | 限流、熔断、舱壁、退避 |
 | `@nofault/telemetry` | v0.8.0 | Span / 采样 / Prometheus 指标 |
+| `@nofault/micro` | v0.9.0 | 分布式 ID / 锁 / 调度 / 事件总线 / 一键装配 |
 
 ## 版本路线
 
@@ -63,8 +64,8 @@ pnpm example v0.8.0-observability
 | v0.6.0 | 2021 | RPC 框架 | ✅ |
 | v0.7.0 | 2022 | 服务治理 | ✅ |
 | v0.8.0 | 2023 | 可观测性 | ✅ |
+| v0.9.0 | 2024 | 微服务全家桶 | ✅ |
 | v0.10.0 | 2025 | 工程化工具链 | ✅ |
-| v0.9.0 | 2024 | 微服务全家桶 | 计划 |
 | v1.0.0 | 2026 | 全量对齐 + 生产增强 | 计划 |
 
 ## 规范红线
