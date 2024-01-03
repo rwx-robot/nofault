@@ -27,3 +27,13 @@ export interface SnowflakeOptions {
    * 时钟回拨容忍（毫秒）。
    * 小幅度回拨（NTP 微调）直接等过去；超过这个数就抛错——
    * 说明有人改了系统时间，此时产出的 ID 不可信。
+   */
+  clockRollbackToleranceMs?: number;
+}
+
+/** 默认 epoch：2020-01-01T00:00:00Z */
+export const DEFAULT_EPOCH = 1577836800000;
+
+const WORKER_BITS = 5n;
+const DATACENTER_BITS = 5n;
+const SEQUENCE_BITS = 12n;
