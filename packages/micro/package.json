@@ -19,3 +19,5 @@
     "access": "public"
   },
   "dependencies": {
+    "@nofault/context": "workspace:*",
+    "@nofault/core": "workspace:*",
