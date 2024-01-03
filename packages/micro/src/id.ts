@@ -18,3 +18,12 @@
  */
 export interface SnowflakeOptions {
   /** 机器 ID，0~31 */
+  workerId?: number;
+  /** 数据中心 ID，0~31 */
+  datacenterId?: number;
+  /** 起始时间戳（毫秒）。调大它可以延长可用年限 */
+  epoch?: number;
+  /**
+   * 时钟回拨容忍（毫秒）。
+   * 小幅度回拨（NTP 微调）直接等过去；超过这个数就抛错——
+   * 说明有人改了系统时间，此时产出的 ID 不可信。
