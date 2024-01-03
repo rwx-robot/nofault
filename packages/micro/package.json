@@ -4,3 +4,5 @@
   "description": "nofault microservice kit: snowflake ids, distributed locks, scheduling, event bus and one-call bootstrap",
   "license": "MIT",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
