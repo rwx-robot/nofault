@@ -56,3 +56,13 @@ export interface SnowflakeParts {
 export class ClockMovedBackError extends Error {
   constructor(
     readonly lastTimestamp: number,
+    readonly now: number,
+  ) {
+    super(`clock moved backwards by ${lastTimestamp - now}ms; refusing to generate ids`);
+    this.name = 'ClockMovedBackError';
+  }
+}
+
+export class Snowflake {
+  private readonly workerId: bigint;
+  private readonly datacenterId: bigint;
