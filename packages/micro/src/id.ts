@@ -47,3 +47,12 @@ const DATACENTER_SHIFT = SEQUENCE_BITS + WORKER_BITS;
 const TIMESTAMP_SHIFT = SEQUENCE_BITS + WORKER_BITS + DATACENTER_BITS;
 
 export interface SnowflakeParts {
+  timestamp: number;
+  datacenterId: number;
+  workerId: number;
+  sequence: number;
+}
+
+export class ClockMovedBackError extends Error {
+  constructor(
+    readonly lastTimestamp: number,
