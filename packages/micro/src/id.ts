@@ -66,3 +66,12 @@ export class ClockMovedBackError extends Error {
 export class Snowflake {
   private readonly workerId: bigint;
   private readonly datacenterId: bigint;
+  private readonly epoch: number;
+  private readonly tolerance: number;
+
+  private sequence = 0n;
+  private lastTimestamp = -1;
+
+  constructor(options: SnowflakeOptions = {}) {
+    const workerId = BigInt(options.workerId ?? 0);
+    const datacenterId = BigInt(options.datacenterId ?? 0);
