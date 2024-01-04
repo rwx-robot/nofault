@@ -85,3 +85,13 @@ export class Snowflake {
     this.datacenterId = datacenterId;
     this.epoch = options.epoch ?? DEFAULT_EPOCH;
     this.tolerance = options.clockRollbackToleranceMs ?? 1000;
+  }
+
+  /**
+   * 取下一个 ID，返回 `bigint`。
+   *
+   * **为什么不返回 `number`**：一个 Snowflake ID 是 63 位，远超
+   * `Number.MAX_SAFE_INTEGER`（53 位）。转成 number 后末尾几位会被静默抹掉——
+   * 两个不同的 ID 会变成同一个。这个 bug 不会报错，只会让数据悄悄错乱。
+   * 要放进 JSON 就用 `nextIdString()`。
+   */
