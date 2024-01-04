@@ -123,3 +123,12 @@ export class Snowflake {
       (this.datacenterId << DATACENTER_SHIFT) |
       (this.workerId << WORKER_SHIFT) |
       sequence
+    );
+  }
+
+  /** 自旋到下一毫秒。这一毫秒的名额已经用完了，没有别的选择 */
+  private spinToNextMillis(): void {
+    while (this.now() <= this.lastTimestamp) {
+      // 空转
+    }
+  }
