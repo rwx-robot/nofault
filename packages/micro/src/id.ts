@@ -114,3 +114,12 @@ export class Snowflake {
       }
 
       this.spinToNextMillis();
+    }
+  }
+
+  private compose(timestamp: number, sequence: bigint): bigint {
+    return (
+      (BigInt(timestamp - this.epoch) << TIMESTAMP_SHIFT) |
+      (this.datacenterId << DATACENTER_SHIFT) |
+      (this.workerId << WORKER_SHIFT) |
+      sequence
