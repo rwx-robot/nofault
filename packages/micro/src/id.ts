@@ -104,3 +104,13 @@ export class Snowflake {
         this.lastTimestamp = timestamp;
         return this.compose(timestamp, this.sequence);
       }
+
+      // 同一毫秒内最多只能有 4096 个（12 位序列号）。
+      // 名额用完了必须**等到下一毫秒**：回绕会产出重复 ID，
+      // 而 ID 重复要等到几个月后某个对账任务才会被发现
+      if (this.sequence < MAX_SEQUENCE) {
+        this.sequence += 1n;
+        return this.compose(timestamp, this.sequence);
+      }
+
+      this.spinToNextMillis();
