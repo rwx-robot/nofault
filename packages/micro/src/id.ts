@@ -143,3 +143,12 @@ export class Snowflake {
     const value = typeof id === 'string' ? BigInt(id) : id;
     return {
       timestamp: Number(value >> TIMESTAMP_SHIFT) + this.epoch,
+      datacenterId: Number((value >> DATACENTER_SHIFT) & MAX_DATACENTER),
+      workerId: Number((value >> WORKER_SHIFT) & MAX_WORKER),
+      sequence: Number(value & MAX_SEQUENCE),
+    };
+  }
+
+  private now(): number {
+    return Date.now();
+  }
