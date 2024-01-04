@@ -152,3 +152,12 @@ export class Snowflake {
   private now(): number {
     return Date.now();
   }
+
+  /**
+   * 对齐时钟：回拨在容忍范围内就自旋等过去，超出则抛错。
+   *
+   * 自旋而不是 sleep：小回拨通常只有几毫秒，自旋的代价远小于
+   * 引入一次异步等待（会把 `nextId()` 整个变成异步 API）。
+   */
+  private waitForNextMillis(timestamp: number): number {
+    if (timestamp >= this.lastTimestamp) return timestamp;
