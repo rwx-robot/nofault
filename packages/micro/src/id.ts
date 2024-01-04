@@ -132,3 +132,14 @@ export class Snowflake {
       // 空转
     }
   }
+
+  /** 字符串形式，可安全放进 JSON 与数据库 BIGINT */
+  nextIdString(): string {
+    return this.nextId().toString();
+  }
+
+  /** 反解出一个 ID 的各段（排查问题时很有用：能直接看出是哪台机器、什么时候发的） */
+  parse(id: bigint | string): SnowflakeParts {
+    const value = typeof id === 'string' ? BigInt(id) : id;
+    return {
+      timestamp: Number(value >> TIMESTAMP_SHIFT) + this.epoch,
