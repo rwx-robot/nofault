@@ -95,3 +95,12 @@ export class Snowflake {
    * 两个不同的 ID 会变成同一个。这个 bug 不会报错，只会让数据悄悄错乱。
    * 要放进 JSON 就用 `nextIdString()`。
    */
+  nextId(): bigint {
+    for (;;) {
+      const timestamp = this.waitForNextMillis(this.now());
+
+      if (timestamp !== this.lastTimestamp) {
+        this.sequence = 0n;
+        this.lastTimestamp = timestamp;
+        return this.compose(timestamp, this.sequence);
+      }
