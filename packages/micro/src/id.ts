@@ -75,3 +75,13 @@ export class Snowflake {
   constructor(options: SnowflakeOptions = {}) {
     const workerId = BigInt(options.workerId ?? 0);
     const datacenterId = BigInt(options.datacenterId ?? 0);
+    if (workerId < 0n || workerId > MAX_WORKER) {
+      throw new RangeError(`workerId must be 0..${MAX_WORKER}, got ${options.workerId}`);
+    }
+    if (datacenterId < 0n || datacenterId > MAX_DATACENTER) {
+      throw new RangeError(`datacenterId must be 0..${MAX_DATACENTER}, got ${options.datacenterId}`);
+    }
+    this.workerId = workerId;
+    this.datacenterId = datacenterId;
+    this.epoch = options.epoch ?? DEFAULT_EPOCH;
+    this.tolerance = options.clockRollbackToleranceMs ?? 1000;
