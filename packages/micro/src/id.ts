@@ -161,3 +161,12 @@ export class Snowflake {
    */
   private waitForNextMillis(timestamp: number): number {
     if (timestamp >= this.lastTimestamp) return timestamp;
+
+    const back = this.lastTimestamp - timestamp;
+    if (back > this.tolerance) throw new ClockMovedBackError(this.lastTimestamp, timestamp);
+
+    let current = timestamp;
+    while (current < this.lastTimestamp) current = this.now();
+    return this.waitForNextMillis(current);
+  }
+}
