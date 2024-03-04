@@ -17,3 +17,6 @@ export interface LockBackend {
   /** 续期到新的 TTL，token 不匹配返回 false */
   extend(key: string, token: string, ttlMs: number): Promise<boolean>;
 }
+
+/** 内存后端：单进程内的互斥，也方便测试锁本身的语义 */
+export class MemoryLockBackend implements LockBackend {
