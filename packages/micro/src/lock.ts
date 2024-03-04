@@ -21,3 +21,5 @@ export interface LockBackend {
 /** 内存后端：单进程内的互斥，也方便测试锁本身的语义 */
 export class MemoryLockBackend implements LockBackend {
   private readonly held = new Map<string, { token: string; expiresAt: number }>();
+
+  async acquire(key: string, token: string, ttlMs: number): Promise<boolean> {
