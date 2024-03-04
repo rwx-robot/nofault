@@ -13,3 +13,5 @@ export interface LockBackend {
   /** 拿不到就返回 false，不要阻塞 */
   acquire(key: string, token: string, ttlMs: number): Promise<boolean>;
   /** 只有 token 匹配才删除 */
+  release(key: string, token: string): Promise<void>;
+  /** 续期到新的 TTL，token 不匹配返回 false */
