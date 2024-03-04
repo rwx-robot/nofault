@@ -25,3 +25,5 @@ export class MemoryLockBackend implements LockBackend {
   async acquire(key: string, token: string, ttlMs: number): Promise<boolean> {
     const current = this.held.get(key);
     const now = Date.now();
+    if (current && current.expiresAt > now) return false;
+    this.held.set(key, { token, expiresAt: now + ttlMs });
