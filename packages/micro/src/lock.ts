@@ -23,3 +23,5 @@ export class MemoryLockBackend implements LockBackend {
   private readonly held = new Map<string, { token: string; expiresAt: number }>();
 
   async acquire(key: string, token: string, ttlMs: number): Promise<boolean> {
+    const current = this.held.get(key);
+    const now = Date.now();
