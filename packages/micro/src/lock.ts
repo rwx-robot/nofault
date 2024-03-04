@@ -27,3 +27,4 @@ export class MemoryLockBackend implements LockBackend {
     const now = Date.now();
     if (current && current.expiresAt > now) return false;
     this.held.set(key, { token, expiresAt: now + ttlMs });
+    return true;
