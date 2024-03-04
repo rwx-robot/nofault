@@ -8,3 +8,5 @@
  *
  * 后端是可插拔的：内存实现用于单进程与测试，
  * 换成 Redis 只要实现 `LockBackend` 三个方法（对应 SET NX PX / Lua 释放 / Lua 续期）。
+ */
+export interface LockBackend {
