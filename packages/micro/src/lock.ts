@@ -10,3 +10,5 @@
  * 换成 Redis 只要实现 `LockBackend` 三个方法（对应 SET NX PX / Lua 释放 / Lua 续期）。
  */
 export interface LockBackend {
+  /** 拿不到就返回 false，不要阻塞 */
+  acquire(key: string, token: string, ttlMs: number): Promise<boolean>;
