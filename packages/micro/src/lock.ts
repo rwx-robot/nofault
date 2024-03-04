@@ -29,3 +29,6 @@ export class MemoryLockBackend implements LockBackend {
     this.held.set(key, { token, expiresAt: now + ttlMs });
     return true;
   }
+
+  async release(key: string, token: string): Promise<void> {
+    const current = this.held.get(key);
