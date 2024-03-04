@@ -28,3 +28,4 @@ export class MemoryLockBackend implements LockBackend {
     if (current && current.expiresAt > now) return false;
     this.held.set(key, { token, expiresAt: now + ttlMs });
     return true;
+  }
