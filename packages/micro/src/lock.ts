@@ -63,3 +63,5 @@ export interface LockOptions {
   ttlMs?: number;
   /** 拿不到锁时的等待时间；0 表示立即失败 */
   waitMs?: number;
+  /** 等待期间的重试间隔 */
+  retryMs?: number;
