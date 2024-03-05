@@ -36,3 +36,5 @@ export class MemoryLockBackend implements LockBackend {
     if (!current || current.token !== token) return;
     this.held.delete(key);
   }
+
+  async extend(key: string, token: string, ttlMs: number): Promise<boolean> {
