@@ -57,3 +57,6 @@ export interface LockHandle {
   /** 是否已经停止自动续期 */
   readonly released: boolean;
 }
+
+export interface LockOptions {
+  /** 锁的过期时间。必须大于单次业务的最坏耗时 */
