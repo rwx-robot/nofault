@@ -35,3 +35,4 @@ export class MemoryLockBackend implements LockBackend {
     // 不匹配就不动：这把锁已经不属于我了
     if (!current || current.token !== token) return;
     this.held.delete(key);
+  }
