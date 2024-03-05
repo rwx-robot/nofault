@@ -47,3 +47,4 @@ export class MemoryLockBackend implements LockBackend {
   /** 测试用：清掉所有锁 */
   reset(): void {
     this.held.clear();
+  }
