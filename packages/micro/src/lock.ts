@@ -43,3 +43,5 @@ export class MemoryLockBackend implements LockBackend {
     current.expiresAt = Date.now() + ttlMs;
     return true;
   }
+
+  /** 测试用：清掉所有锁 */
