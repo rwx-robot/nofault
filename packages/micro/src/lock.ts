@@ -49,3 +49,6 @@ export class MemoryLockBackend implements LockBackend {
     this.held.clear();
   }
 }
+
+export interface LockHandle {
+  readonly token: string;
