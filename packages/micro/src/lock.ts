@@ -60,3 +60,5 @@ export interface LockHandle {
 
 export interface LockOptions {
   /** 锁的过期时间。必须大于单次业务的最坏耗时 */
+  ttlMs?: number;
+  /** 拿不到锁时的等待时间；0 表示立即失败 */
