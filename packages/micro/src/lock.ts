@@ -53,3 +53,5 @@ export class MemoryLockBackend implements LockBackend {
 export interface LockHandle {
   readonly token: string;
   /** 主动释放；重复调用无害 */
+  release(): Promise<void>;
+  /** 是否已经停止自动续期 */
