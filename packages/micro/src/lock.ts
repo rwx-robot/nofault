@@ -42,3 +42,4 @@ export class MemoryLockBackend implements LockBackend {
     if (!current || current.token !== token) return false;
     current.expiresAt = Date.now() + ttlMs;
     return true;
+  }
