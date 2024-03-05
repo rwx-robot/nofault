@@ -33,3 +33,5 @@ export class MemoryLockBackend implements LockBackend {
   async release(key: string, token: string): Promise<void> {
     const current = this.held.get(key);
     // 不匹配就不动：这把锁已经不属于我了
+    if (!current || current.token !== token) return;
+    this.held.delete(key);
