@@ -55,3 +55,5 @@ export interface LockHandle {
   /** 主动释放；重复调用无害 */
   release(): Promise<void>;
   /** 是否已经停止自动续期 */
+  readonly released: boolean;
+}
