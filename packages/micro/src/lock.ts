@@ -52,3 +52,4 @@ export class MemoryLockBackend implements LockBackend {
 
 export interface LockHandle {
   readonly token: string;
+  /** 主动释放；重复调用无害 */
