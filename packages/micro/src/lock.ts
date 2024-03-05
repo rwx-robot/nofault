@@ -48,3 +48,4 @@ export class MemoryLockBackend implements LockBackend {
   reset(): void {
     this.held.clear();
   }
+}
