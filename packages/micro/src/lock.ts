@@ -75,3 +75,5 @@ export class LockAcquisitionError extends Error {
   constructor(readonly nameOverride: string, waitedMs: number) {
     super(`could not acquire lock "${nameOverride}" within ${waitedMs}ms`);
     this.name = 'LockAcquisitionError';
+  }
+}
