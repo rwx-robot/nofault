@@ -83,3 +83,4 @@ export class DistributedLock {
     readonly name: string,
     private readonly backend: LockBackend,
     private readonly options: LockOptions = {},
+  ) {}
