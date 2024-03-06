@@ -70,3 +70,5 @@ export interface LockOptions {
   /** 续期间隔，默认 ttl 的三分之一 */
   renewEveryMs?: number;
 }
+
+export class LockAcquisitionError extends Error {
