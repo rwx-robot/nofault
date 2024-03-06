@@ -84,3 +84,5 @@ export class DistributedLock {
     private readonly backend: LockBackend,
     private readonly options: LockOptions = {},
   ) {}
+
+  /** 尝试拿锁，拿到返回句柄，拿不到返回 null */
