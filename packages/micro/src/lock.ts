@@ -65,3 +65,5 @@ export interface LockOptions {
   waitMs?: number;
   /** 等待期间的重试间隔 */
   retryMs?: number;
+  /** 是否自动续期（watchdog）。执行时间不可控时应该开 */
+  autoRenew?: boolean;
