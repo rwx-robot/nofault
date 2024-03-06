@@ -72,3 +72,4 @@ export interface LockOptions {
 }
 
 export class LockAcquisitionError extends Error {
+  constructor(readonly nameOverride: string, waitedMs: number) {
