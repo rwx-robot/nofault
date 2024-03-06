@@ -91,3 +91,5 @@ export class DistributedLock {
     const token = newToken();
     const ok = await this.backend.acquire(this.name, token, ttl);
     if (!ok) return null;
+    return this.watch(token, ttl);
+  }
