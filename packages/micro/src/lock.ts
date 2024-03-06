@@ -77,3 +77,6 @@ export class LockAcquisitionError extends Error {
     this.name = 'LockAcquisitionError';
   }
 }
+
+export class DistributedLock {
+  constructor(
