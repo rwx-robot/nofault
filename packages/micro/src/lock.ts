@@ -90,3 +90,4 @@ export class DistributedLock {
     const ttl = this.options.ttlMs ?? 30_000;
     const token = newToken();
     const ok = await this.backend.acquire(this.name, token, ttl);
+    if (!ok) return null;
