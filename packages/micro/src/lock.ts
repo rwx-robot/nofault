@@ -86,3 +86,5 @@ export class DistributedLock {
   ) {}
 
   /** 尝试拿锁，拿到返回句柄，拿不到返回 null */
+  async tryAcquire(): Promise<LockHandle | null> {
+    const ttl = this.options.ttlMs ?? 30_000;
