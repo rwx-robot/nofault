@@ -67,3 +67,4 @@ export interface LockOptions {
   retryMs?: number;
   /** 是否自动续期（watchdog）。执行时间不可控时应该开 */
   autoRenew?: boolean;
+  /** 续期间隔，默认 ttl 的三分之一 */
