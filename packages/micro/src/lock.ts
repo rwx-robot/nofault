@@ -95,3 +95,4 @@ export class DistributedLock {
   }
 
   /** 一直等到拿到锁为止（受 waitMs 限制） */
+  async acquire(): Promise<LockHandle> {
