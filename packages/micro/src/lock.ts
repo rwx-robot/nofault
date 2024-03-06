@@ -81,3 +81,5 @@ export class LockAcquisitionError extends Error {
 export class DistributedLock {
   constructor(
     readonly name: string,
+    private readonly backend: LockBackend,
+    private readonly options: LockOptions = {},
