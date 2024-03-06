@@ -93,3 +93,5 @@ export class DistributedLock {
     if (!ok) return null;
     return this.watch(token, ttl);
   }
+
+  /** 一直等到拿到锁为止（受 waitMs 限制） */
