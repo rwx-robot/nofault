@@ -96,3 +96,5 @@ export class DistributedLock {
 
   /** 一直等到拿到锁为止（受 waitMs 限制） */
   async acquire(): Promise<LockHandle> {
+    const waitMs = this.options.waitMs ?? 0;
+    const retryMs = this.options.retryMs ?? 50;
