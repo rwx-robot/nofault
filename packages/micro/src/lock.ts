@@ -123,3 +123,5 @@ export class DistributedLock {
 
   /** 包一张写着 token 的句柄，并按需要起 watchdog */
   private watch(token: string, ttl: number): LockHandle {
+    const renewEvery = this.options.renewEveryMs ?? Math.max(100, Math.floor(ttl / 3));
+    let timer: NodeJS.Timeout | undefined;
