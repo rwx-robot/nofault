@@ -118,3 +118,5 @@ export class DistributedLock {
       return await fn(handle);
     } finally {
       await handle.release();
+    }
+  }
