@@ -103,3 +103,5 @@ export class DistributedLock {
     for (;;) {
       const handle = await this.tryAcquire();
       if (handle) return handle;
+      if (Date.now() >= deadline) throw new LockAcquisitionError(this.name, waitMs);
+      await sleep(Math.min(retryMs, Math.max(1, deadline - Date.now())));
