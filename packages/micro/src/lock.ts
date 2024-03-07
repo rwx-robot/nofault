@@ -101,3 +101,5 @@ export class DistributedLock {
     const deadline = Date.now() + waitMs;
 
     for (;;) {
+      const handle = await this.tryAcquire();
+      if (handle) return handle;
