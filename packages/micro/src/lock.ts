@@ -128,3 +128,5 @@ export class DistributedLock {
     let released = false;
 
     const stop = (): void => {
+      if (timer) clearInterval(timer);
+      timer = undefined;
