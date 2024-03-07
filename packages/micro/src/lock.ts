@@ -130,3 +130,4 @@ export class DistributedLock {
     const stop = (): void => {
       if (timer) clearInterval(timer);
       timer = undefined;
+    };
