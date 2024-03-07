@@ -99,3 +99,5 @@ export class DistributedLock {
     const waitMs = this.options.waitMs ?? 0;
     const retryMs = this.options.retryMs ?? 50;
     const deadline = Date.now() + waitMs;
+
+    for (;;) {
