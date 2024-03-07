@@ -107,3 +107,6 @@ export class DistributedLock {
       await sleep(Math.min(retryMs, Math.max(1, deadline - Date.now())));
     }
   }
+
+  /**
+   * 持锁执行。无论成功还是抛错都会释放——
