@@ -120,3 +120,6 @@ export class DistributedLock {
       await handle.release();
     }
   }
+
+  /** 包一张写着 token 的句柄，并按需要起 watchdog */
+  private watch(token: string, ttl: number): LockHandle {
