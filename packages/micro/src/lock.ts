@@ -111,3 +111,5 @@ export class DistributedLock {
   /**
    * 持锁执行。无论成功还是抛错都会释放——
    * 忘了释放的锁会一直挂到 TTL 到期，这段时间整个功能都是停的。
+   */
+  async run<T>(fn: (handle: LockHandle) => Promise<T> | T): Promise<T> {
