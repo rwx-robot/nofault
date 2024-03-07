@@ -126,3 +126,5 @@ export class DistributedLock {
     const renewEvery = this.options.renewEveryMs ?? Math.max(100, Math.floor(ttl / 3));
     let timer: NodeJS.Timeout | undefined;
     let released = false;
+
+    const stop = (): void => {
