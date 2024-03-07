@@ -106,3 +106,4 @@ export class DistributedLock {
       if (Date.now() >= deadline) throw new LockAcquisitionError(this.name, waitMs);
       await sleep(Math.min(retryMs, Math.max(1, deadline - Date.now())));
     }
+  }
