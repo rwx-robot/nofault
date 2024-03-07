@@ -115,3 +115,4 @@ export class DistributedLock {
   async run<T>(fn: (handle: LockHandle) => Promise<T> | T): Promise<T> {
     const handle = await this.acquire();
     try {
+      return await fn(handle);
