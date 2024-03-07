@@ -116,3 +116,5 @@ export class DistributedLock {
     const handle = await this.acquire();
     try {
       return await fn(handle);
+    } finally {
+      await handle.release();
