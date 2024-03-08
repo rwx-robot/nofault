@@ -133,3 +133,5 @@ export class DistributedLock {
     };
 
     if (this.options.autoRenew !== false) {
+      timer = setInterval(() => {
+        // 续期失败（锁已被别人拿走）就停掉 watchdog，
