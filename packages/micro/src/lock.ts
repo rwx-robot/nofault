@@ -136,3 +136,5 @@ export class DistributedLock {
       timer = setInterval(() => {
         // 续期失败（锁已被别人拿走）就停掉 watchdog，
         // 否则它会一直对着一把不属于自己的锁做无用续期
+        void this.backend.extend(this.name, token, ttl).then((ok) => {
+          if (!ok) stop();
