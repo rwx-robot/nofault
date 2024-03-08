@@ -153,3 +153,5 @@ export class DistributedLock {
         await this.backend.release(this.name, token);
       },
     };
+  }
+}
