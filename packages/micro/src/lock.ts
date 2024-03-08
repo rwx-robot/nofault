@@ -131,3 +131,5 @@ export class DistributedLock {
       if (timer) clearInterval(timer);
       timer = undefined;
     };
+
+    if (this.options.autoRenew !== false) {
