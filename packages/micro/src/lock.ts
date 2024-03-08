@@ -148,3 +148,5 @@ export class DistributedLock {
       released,
       release: async () => {
         if (released) return;
+        released = true;
+        stop();
