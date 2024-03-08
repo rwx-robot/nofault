@@ -138,3 +138,5 @@ export class DistributedLock {
         // 否则它会一直对着一把不属于自己的锁做无用续期
         void this.backend.extend(this.name, token, ttl).then((ok) => {
           if (!ok) stop();
+        });
+      }, renewEvery);
