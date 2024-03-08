@@ -140,3 +140,4 @@ export class DistributedLock {
           if (!ok) stop();
         });
       }, renewEvery);
+      timer.unref?.();
