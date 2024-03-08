@@ -142,3 +142,6 @@ export class DistributedLock {
       }, renewEvery);
       timer.unref?.();
     }
+
+    return {
+      token,
