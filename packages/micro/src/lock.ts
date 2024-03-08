@@ -150,3 +150,4 @@ export class DistributedLock {
         if (released) return;
         released = true;
         stop();
+        await this.backend.release(this.name, token);
