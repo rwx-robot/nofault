@@ -145,3 +145,4 @@ export class DistributedLock {
 
     return {
       token,
+      released,
