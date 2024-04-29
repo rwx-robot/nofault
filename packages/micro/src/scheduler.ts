@@ -18,3 +18,6 @@ export interface CronExpression {
   daysOfMonth: Set<number>;
   months: Set<number>;
   daysOfWeek: Set<number>;
+}
+
+/**
