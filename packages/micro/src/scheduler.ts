@@ -43,3 +43,6 @@ export function parseCron(expression: string): CronExpression {
     hours: parseField(hours, 0, 23),
     daysOfMonth: parseField(daysOfMonth, 1, 31),
     months: parseField(months, 1, 12),
+    daysOfWeek: normalizeDow(parseField(daysOfWeek, 0, 7)),
+  };
+}
