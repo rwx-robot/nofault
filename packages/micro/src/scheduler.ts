@@ -40,3 +40,6 @@ export function parseCron(expression: string): CronExpression {
   ];
   return {
     minutes: parseField(minutes, 0, 59),
+    hours: parseField(hours, 0, 23),
+    daysOfMonth: parseField(daysOfMonth, 1, 31),
+    months: parseField(months, 1, 12),
