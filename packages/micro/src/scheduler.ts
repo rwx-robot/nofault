@@ -35,3 +35,6 @@ export function parseCron(expression: string): CronExpression {
   if (parts.length !== 5) {
     throw new Error(`cron expression must have 5 fields, got ${parts.length}: "${expression}"`);
   }
+  const [minutes, hours, daysOfMonth, months, daysOfWeek] = parts as [
+    string, string, string, string, string,
+  ];
