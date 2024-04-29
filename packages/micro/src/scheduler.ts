@@ -32,3 +32,6 @@ export interface CronExpression {
  */
 export function parseCron(expression: string): CronExpression {
   const parts = expression.trim().split(/\s+/);
+  if (parts.length !== 5) {
+    throw new Error(`cron expression must have 5 fields, got ${parts.length}: "${expression}"`);
+  }
