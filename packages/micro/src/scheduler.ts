@@ -29,3 +29,6 @@ export interface CronExpression {
  *
  * 写注释时要小心：星号紧跟右斜杠会提前闭合这个块注释块，
  * 后面的代码会全变成裸标识符（TS1005 一片红）。提到步长语法时用中文描述即可。
+ */
+export function parseCron(expression: string): CronExpression {
+  const parts = expression.trim().split(/\s+/);
