@@ -38,3 +38,5 @@ export function parseCron(expression: string): CronExpression {
   const [minutes, hours, daysOfMonth, months, daysOfWeek] = parts as [
     string, string, string, string, string,
   ];
+  return {
+    minutes: parseField(minutes, 0, 59),
