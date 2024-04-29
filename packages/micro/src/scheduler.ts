@@ -12,3 +12,6 @@
  *    默认**不能**（`overlap: false`）。允许重叠的话，一个慢任务会越积越多，
  *    最后变成"几十个同名任务同时跑"，也就是事实上的自我 DoS。
  */
+export interface CronExpression {
+  minutes: Set<number>;
+  hours: Set<number>;
