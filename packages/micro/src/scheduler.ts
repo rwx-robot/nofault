@@ -49,3 +49,6 @@ export function parseCron(expression: string): CronExpression {
 
 function parseField(field: string, min: number, max: number): Set<number> {
   const out = new Set<number>();
+  for (const chunk of field.split(',')) {
+    const step = chunk.includes('/') ? Number(chunk.slice(chunk.indexOf('/') + 1)) : 1;
+    if (!Number.isInteger(step) || step < 1) throw new Error(`invalid step in "${chunk}"`);
