@@ -21,3 +21,6 @@ export interface CronExpression {
 }
 
 /**
+ * 解析 5 段 cron：`分 时 日 月 周`
+ *
+ * 支持星号、步长（每 n 个单位）、区间 `a-b`、列表 `a,b,c`。
