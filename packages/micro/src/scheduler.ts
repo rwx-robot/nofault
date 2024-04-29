@@ -46,3 +46,6 @@ export function parseCron(expression: string): CronExpression {
     daysOfWeek: normalizeDow(parseField(daysOfWeek, 0, 7)),
   };
 }
+
+function parseField(field: string, min: number, max: number): Set<number> {
+  const out = new Set<number>();
