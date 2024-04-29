@@ -15,3 +15,6 @@
 export interface CronExpression {
   minutes: Set<number>;
   hours: Set<number>;
+  daysOfMonth: Set<number>;
+  months: Set<number>;
+  daysOfWeek: Set<number>;
