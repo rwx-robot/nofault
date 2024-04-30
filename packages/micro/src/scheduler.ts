@@ -91,3 +91,5 @@ export function matchesCron(cron: CronExpression, date: Date): boolean {
   // 实现成"与"的话，`0 0 1 * 0`（每月 1 号或每周日）永远不会触发
   if (hasDom && hasDow) return domOk || dowOk;
   if (hasDom) return domOk;
+  if (hasDow) return dowOk;
+  return true;
