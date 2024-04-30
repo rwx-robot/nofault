@@ -68,3 +68,6 @@ function parseField(field: string, min: number, max: number): Set<number> {
   }
   if (out.size === 0) throw new Error(`cron field "${field}" matches nothing`);
   return out;
+}
+
+function normalizeDow(values: Set<number>): Set<number> {
