@@ -74,3 +74,6 @@ function normalizeDow(values: Set<number>): Set<number> {
   const out = new Set<number>();
   for (const v of values) out.add(v % 7);
   return out;
+}
+
+/** cron 是否在这一刻应该触发 */
