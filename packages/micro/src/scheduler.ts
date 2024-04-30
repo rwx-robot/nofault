@@ -57,3 +57,6 @@ function parseField(field: string, min: number, max: number): Set<number> {
     let from = min;
     let to = max;
     if (rangePart !== '*') {
+      const [lo, hi] = rangePart.split('-');
+      from = Number(lo);
+      to = hi === undefined ? from : Number(hi);
