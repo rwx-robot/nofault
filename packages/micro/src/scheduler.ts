@@ -96,3 +96,6 @@ export function matchesCron(cron: CronExpression, date: Date): boolean {
 }
 
 export interface JobOptions {
+  name?: string;
+  /** 允许上一轮没跑完就起下一轮。默认 false */
+  overlap?: boolean;
