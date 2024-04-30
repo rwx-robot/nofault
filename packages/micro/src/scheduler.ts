@@ -85,3 +85,6 @@ export function matchesCron(cron: CronExpression, date: Date): boolean {
   const hasDom = cron.daysOfMonth.size < 31;
   const hasDow = cron.daysOfWeek.size < 7;
   const domOk = cron.daysOfMonth.has(date.getDate());
+  const dowOk = cron.daysOfWeek.has(date.getDay());
+
+  // Unix cron 的语义：日与周都给了的话是 **或** 关系。
