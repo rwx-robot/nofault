@@ -102,3 +102,6 @@ export interface JobOptions {
 }
 
 export interface CronJobOptions extends JobOptions {
+  /** 是否在恢复.Utc após跳过时补跑错过的次数。默认 false，且最多补 `maxCatchUp` 次 */
+  catchUp?: boolean;
+  maxCatchUp?: number;
