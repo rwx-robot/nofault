@@ -106,3 +106,7 @@ export interface CronJobOptions extends JobOptions {
   catchUp?: boolean;
   maxCatchUp?: number;
 }
+
+export type JobHandler = (signal: { aborted: boolean }) => Promise<void> | void;
+
+interface ScheduledJob {
