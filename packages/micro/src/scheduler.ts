@@ -63,3 +63,5 @@ function parseField(field: string, min: number, max: number): Set<number> {
     }
     if (Number.isNaN(from) || Number.isNaN(to) || from < min || to > max || from > to) {
       throw new Error(`invalid cron field "${chunk}" (expected ${min}-${max})`);
+    }
+    for (let v = from; v <= to; v += step) out.add(v);
