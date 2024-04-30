@@ -60,3 +60,6 @@ function parseField(field: string, min: number, max: number): Set<number> {
       const [lo, hi] = rangePart.split('-');
       from = Number(lo);
       to = hi === undefined ? from : Number(hi);
+    }
+    if (Number.isNaN(from) || Number.isNaN(to) || from < min || to > max || from > to) {
+      throw new Error(`invalid cron field "${chunk}" (expected ${min}-${max})`);
