@@ -79,3 +79,5 @@ function normalizeDow(values: Set<number>): Set<number> {
 /** cron 是否在这一刻应该触发 */
 export function matchesCron(cron: CronExpression, date: Date): boolean {
   if (!cron.months.has(date.getMonth() + 1)) return false;
+  if (!cron.hours.has(date.getHours())) return false;
+  if (!cron.minutes.has(date.getMinutes())) return false;
