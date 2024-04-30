@@ -81,3 +81,7 @@ export function matchesCron(cron: CronExpression, date: Date): boolean {
   if (!cron.months.has(date.getMonth() + 1)) return false;
   if (!cron.hours.has(date.getHours())) return false;
   if (!cron.minutes.has(date.getMinutes())) return false;
+
+  const hasDom = cron.daysOfMonth.size < 31;
+  const hasDow = cron.daysOfWeek.size < 7;
+  const domOk = cron.daysOfMonth.has(date.getDate());
