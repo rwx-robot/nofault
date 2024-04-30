@@ -71,3 +71,6 @@ function parseField(field: string, min: number, max: number): Set<number> {
 }
 
 function normalizeDow(values: Set<number>): Set<number> {
+  const out = new Set<number>();
+  for (const v of values) out.add(v % 7);
+  return out;
