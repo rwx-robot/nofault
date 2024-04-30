@@ -88,3 +88,6 @@ export function matchesCron(cron: CronExpression, date: Date): boolean {
   const dowOk = cron.daysOfWeek.has(date.getDay());
 
   // Unix cron 的语义：日与周都给了的话是 **或** 关系。
+  // 实现成"与"的话，`0 0 1 * 0`（每月 1 号或每周日）永远不会触发
+  if (hasDom && hasDow) return domOk || dowOk;
+  if (hasDom) return domOk;
