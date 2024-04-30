@@ -93,3 +93,6 @@ export function matchesCron(cron: CronExpression, date: Date): boolean {
   if (hasDom) return domOk;
   if (hasDow) return dowOk;
   return true;
+}
+
+export interface JobOptions {
