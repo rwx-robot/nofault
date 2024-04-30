@@ -53,3 +53,7 @@ function parseField(field: string, min: number, max: number): Set<number> {
     const step = chunk.includes('/') ? Number(chunk.slice(chunk.indexOf('/') + 1)) : 1;
     if (!Number.isInteger(step) || step < 1) throw new Error(`invalid step in "${chunk}"`);
     const rangePart = chunk.includes('/') ? chunk.slice(0, chunk.indexOf('/')) : chunk;
+
+    let from = min;
+    let to = max;
+    if (rangePart !== '*') {
