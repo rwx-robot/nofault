@@ -65,3 +65,6 @@ function parseField(field: string, min: number, max: number): Set<number> {
       throw new Error(`invalid cron field "${chunk}" (expected ${min}-${max})`);
     }
     for (let v = from; v <= to; v += step) out.add(v);
+  }
+  if (out.size === 0) throw new Error(`cron field "${field}" matches nothing`);
+  return out;
