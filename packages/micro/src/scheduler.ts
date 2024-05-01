@@ -132,3 +132,6 @@ export class Scheduler {
   private stopped = true;
 
   constructor(private readonly options: SchedulerOptions = {}) {}
+
+  /** 按 cron 表达式注册 */
+  cron(expression: string, handler: JobHandler, options: CronJobOptions = {}): string {
