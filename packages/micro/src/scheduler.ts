@@ -141,3 +141,6 @@ export class Scheduler {
       name,
       cron,
       handler,
+      options,
+      nextRunAt: this.nextMatch(cron),
+      running: false,
