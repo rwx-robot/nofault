@@ -163,3 +163,6 @@ export class Scheduler {
   }
 
   /** 固定速率（上一次**结束**后多久再跑一次）——不会因为任务慢而堆积 */
+  fixedDelay(delayMs: number, handler: JobHandler, options: JobOptions = {}): string {
+    const name = options.name ?? `delay-${delayMs}ms`;
+    this.jobs.push({
