@@ -116,3 +116,5 @@ interface ScheduledJob {
   readonly everyMs?: number;
   readonly handler: JobHandler;
   readonly options: CronJobOptions;
+  nextRunAt: number;
+  running: boolean;
