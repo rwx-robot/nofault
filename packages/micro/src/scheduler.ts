@@ -124,3 +124,6 @@ export interface SchedulerOptions {
   /** 轮询间隔。调度精度不可能高于它，默认 1s */
   tickMs?: number;
   onError?: (err: unknown, job: string) => void;
+}
+
+export class Scheduler {
