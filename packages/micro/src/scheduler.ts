@@ -130,3 +130,5 @@ export class Scheduler {
   private readonly jobs: ScheduledJob[] = [];
   private timer?: NodeJS.Timeout;
   private stopped = true;
+
+  constructor(private readonly options: SchedulerOptions = {}) {}
