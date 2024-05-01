@@ -144,3 +144,5 @@ export class Scheduler {
       options,
       nextRunAt: this.nextMatch(cron),
       running: false,
+    });
+    return name;
