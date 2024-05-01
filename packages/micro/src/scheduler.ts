@@ -160,3 +160,6 @@ export class Scheduler {
       running: false,
     });
     return name;
+  }
+
+  /** 固定速率（上一次**结束**后多久再跑一次）——不会因为任务慢而堆积 */
