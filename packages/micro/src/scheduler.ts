@@ -149,3 +149,6 @@ export class Scheduler {
   }
 
   /** 固定间隔（上一次**开始**后多久再跑一次） */
+  every(intervalMs: number, handler: JobHandler, options: JobOptions = {}): string {
+    const name = options.name ?? `every-${intervalMs}ms`;
+    this.jobs.push({
