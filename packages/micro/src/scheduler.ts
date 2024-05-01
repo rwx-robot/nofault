@@ -113,3 +113,6 @@ interface ScheduledJob {
   readonly name: string;
   readonly cron?: CronExpression;
   readonly intervalMs?: number;
+  readonly everyMs?: number;
+  readonly handler: JobHandler;
+  readonly options: CronJobOptions;
