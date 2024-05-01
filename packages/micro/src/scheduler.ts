@@ -110,3 +110,6 @@ export interface CronJobOptions extends JobOptions {
 export type JobHandler = (signal: { aborted: boolean }) => Promise<void> | void;
 
 interface ScheduledJob {
+  readonly name: string;
+  readonly cron?: CronExpression;
+  readonly intervalMs?: number;
