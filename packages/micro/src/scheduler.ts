@@ -152,3 +152,6 @@ export class Scheduler {
   every(intervalMs: number, handler: JobHandler, options: JobOptions = {}): string {
     const name = options.name ?? `every-${intervalMs}ms`;
     this.jobs.push({
+      name,
+      everyMs: intervalMs,
+      handler,
