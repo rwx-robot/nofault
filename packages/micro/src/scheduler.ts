@@ -138,3 +138,6 @@ export class Scheduler {
     const cron = parseCron(expression);
     const name = options.name ?? expression;
     this.jobs.push({
+      name,
+      cron,
+      handler,
