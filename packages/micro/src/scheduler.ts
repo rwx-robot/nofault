@@ -118,3 +118,6 @@ interface ScheduledJob {
   readonly options: CronJobOptions;
   nextRunAt: number;
   running: boolean;
+}
+
+export interface SchedulerOptions {
