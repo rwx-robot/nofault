@@ -155,3 +155,6 @@ export class Scheduler {
       name,
       everyMs: intervalMs,
       handler,
+      options,
+      nextRunAt: Date.now() + intervalMs,
+      running: false,
