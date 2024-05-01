@@ -135,3 +135,6 @@ export class Scheduler {
 
   /** 按 cron 表达式注册 */
   cron(expression: string, handler: JobHandler, options: CronJobOptions = {}): string {
+    const cron = parseCron(expression);
+    const name = options.name ?? expression;
+    this.jobs.push({
