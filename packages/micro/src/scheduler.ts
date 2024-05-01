@@ -146,3 +146,6 @@ export class Scheduler {
       running: false,
     });
     return name;
+  }
+
+  /** 固定间隔（上一次**开始**后多久再跑一次） */
