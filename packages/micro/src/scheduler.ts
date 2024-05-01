@@ -158,3 +158,5 @@ export class Scheduler {
       options,
       nextRunAt: Date.now() + intervalMs,
       running: false,
+    });
+    return name;
