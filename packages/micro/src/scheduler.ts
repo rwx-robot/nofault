@@ -216,3 +216,6 @@ export class Scheduler {
       void this.runJob(job, now);
     }
   }
+
+  private async runJob(job: ScheduledJob, now: number): Promise<void> {
+    job.running = true;
