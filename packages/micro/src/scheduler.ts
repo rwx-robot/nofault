@@ -211,3 +211,5 @@ export class Scheduler {
       // 变成"每 1 秒检查一次、每次都跳过"的空转
       if (job.running && job.options.overlap !== true) {
         job.nextRunAt = this.advanceAfterSkip(job, now);
+        continue;
+      }
