@@ -166,3 +166,6 @@ export class Scheduler {
   fixedDelay(delayMs: number, handler: JobHandler, options: JobOptions = {}): string {
     const name = options.name ?? `delay-${delayMs}ms`;
     this.jobs.push({
+      name,
+      intervalMs: delayMs,
+      handler,
