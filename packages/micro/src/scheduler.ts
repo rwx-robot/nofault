@@ -183,3 +183,4 @@ export class Scheduler {
     }, delayMs);
     timer.unref?.();
     return () => clearTimeout(timer);
+  }
