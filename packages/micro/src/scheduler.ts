@@ -208,3 +208,6 @@ export class Scheduler {
       if (job.nextRunAt > now) continue;
       // 上一轮还在跑且不允许重叠 -> 跳过这一拍。
       // 注意：这里必须把 nextRunAt 往后推，否则下一拍还会再判断一次，
+      // 变成"每 1 秒检查一次、每次都跳过"的空转
+      if (job.running && job.options.overlap !== true) {
+        job.nextRunAt = this.advanceAfterSkip(job, now);
