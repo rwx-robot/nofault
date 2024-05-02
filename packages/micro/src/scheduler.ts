@@ -184,3 +184,7 @@ export class Scheduler {
     timer.unref?.();
     return () => clearTimeout(timer);
   }
+
+  start(): void {
+    if (!this.stopped) return;
+    this.stopped = false;
