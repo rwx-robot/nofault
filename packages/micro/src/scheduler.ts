@@ -171,3 +171,6 @@ export class Scheduler {
       handler,
       options,
       nextRunAt: Date.now() + delayMs,
+      running: false,
+    });
+    return name;
