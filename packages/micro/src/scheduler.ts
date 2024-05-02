@@ -205,3 +205,6 @@ export class Scheduler {
   private tick(): void {
     const now = Date.now();
     for (const job of this.jobs) {
+      if (job.nextRunAt > now) continue;
+      // 上一轮还在跑且不允许重叠 -> 跳过这一拍。
+      // 注意：这里必须把 nextRunAt 往后推，否则下一拍还会再判断一次，
