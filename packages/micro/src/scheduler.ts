@@ -197,3 +197,5 @@ export class Scheduler {
     if (this.timer) clearInterval(this.timer);
     this.timer = undefined;
   }
+
+  list(): Array<{ name: string; nextRunAt: number; running: boolean }> {
