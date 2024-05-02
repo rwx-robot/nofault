@@ -169,3 +169,5 @@ export class Scheduler {
       name,
       intervalMs: delayMs,
       handler,
+      options,
+      nextRunAt: Date.now() + delayMs,
