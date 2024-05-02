@@ -194,3 +194,6 @@ export class Scheduler {
 
   stop(): void {
     this.stopped = true;
+    if (this.timer) clearInterval(this.timer);
+    this.timer = undefined;
+  }
