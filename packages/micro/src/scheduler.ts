@@ -180,3 +180,6 @@ export class Scheduler {
   after(delayMs: number, handler: JobHandler): () => void {
     const timer = setTimeout(() => {
       void this.safeRun(handler, 'delayed');
+    }, delayMs);
+    timer.unref?.();
+    return () => clearTimeout(timer);
