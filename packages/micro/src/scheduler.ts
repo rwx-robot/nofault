@@ -177,3 +177,6 @@ export class Scheduler {
   }
 
   /** 延时一次执行，返回取消函数 */
+  after(delayMs: number, handler: JobHandler): () => void {
+    const timer = setTimeout(() => {
+      void this.safeRun(handler, 'delayed');
