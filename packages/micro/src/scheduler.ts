@@ -219,3 +219,6 @@ export class Scheduler {
 
   private async runJob(job: ScheduledJob, now: number): Promise<void> {
     job.running = true;
+    const startedAt = Date.now();
+    try {
+      await this.safeRun(job.handler, job.name);
