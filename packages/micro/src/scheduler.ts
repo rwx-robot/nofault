@@ -213,3 +213,6 @@ export class Scheduler {
         job.nextRunAt = this.advanceAfterSkip(job, now);
         continue;
       }
+      void this.runJob(job, now);
+    }
+  }
