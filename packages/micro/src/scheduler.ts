@@ -174,3 +174,6 @@ export class Scheduler {
       running: false,
     });
     return name;
+  }
+
+  /** 延时一次执行，返回取消函数 */
