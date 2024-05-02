@@ -188,3 +188,6 @@ export class Scheduler {
   start(): void {
     if (!this.stopped) return;
     this.stopped = false;
+    this.timer = setInterval(() => this.tick(), this.options.tickMs ?? 1000);
+    this.timer.unref?.();
+  }
