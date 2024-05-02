@@ -199,3 +199,5 @@ export class Scheduler {
   }
 
   list(): Array<{ name: string; nextRunAt: number; running: boolean }> {
+    return this.jobs.map((j) => ({ name: j.name, nextRunAt: j.nextRunAt, running: j.running }));
+  }
