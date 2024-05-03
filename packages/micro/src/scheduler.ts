@@ -272,3 +272,6 @@ export class Scheduler {
     for (let i = 0; i < limit; i++) {
       if (matchesCron(cron, cursor)) return cursor.getTime();
       cursor.setTime(cursor.getTime() + 60_000);
+    }
+    throw new Error('cron expression never matches');
+  }
