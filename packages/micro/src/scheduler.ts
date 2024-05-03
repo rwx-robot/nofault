@@ -258,3 +258,6 @@ export class Scheduler {
   /**
    * 下一个匹配 cron 的时刻。
    *
+   * 从**下一分钟**开始找：同一分钟内不重复触发（否则 1 秒一次的检查会每 pass 都命中）。
+   * cron 表达式里写的是本机时间，所以直接迭代 Date 即可 ——
+   * 中间再插一层时区换算只会让 `nextRunAt` 和 `matchesCron` 用两套不同的时钟。
