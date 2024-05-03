@@ -238,3 +238,6 @@ export class Scheduler {
       void now;
     }
   }
+
+  private advanceAfterSkip(job: ScheduledJob, now: number): number {
+    if (job.cron) return this.nextMatch(job.cron, now);
