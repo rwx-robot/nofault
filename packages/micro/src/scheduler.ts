@@ -247,3 +247,6 @@ export class Scheduler {
   }
 
   private async safeRun(handler: JobHandler, name: string): Promise<void> {
+    try {
+      await handler({ aborted: this.stopped });
+    } catch (err) {
