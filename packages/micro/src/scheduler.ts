@@ -224,3 +224,6 @@ export class Scheduler {
       await this.safeRun(job.handler, job.name);
     } finally {
       job.running = false;
+      const finished = Date.now();
+      if (job.cron) {
+        job.nextRunAt = this.nextMatch(job.cron, finished);
