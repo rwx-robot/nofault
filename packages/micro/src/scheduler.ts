@@ -266,3 +266,6 @@ export class Scheduler {
     const cursor = new Date(from);
     cursor.setSeconds(0, 0);
     cursor.setTime(cursor.getTime() + 60_000);
+
+    // 最多往前找一年：表达式永远不匹配时（如 2 月 30 号）不能死循环
+    const limit = 60 * 24 * 366;
