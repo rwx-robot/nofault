@@ -244,3 +244,6 @@ export class Scheduler {
     if (job.everyMs) return now + job.everyMs;
     if (job.intervalMs) return now + job.intervalMs;
     return now + 1000;
+  }
+
+  private async safeRun(handler: JobHandler, name: string): Promise<void> {
