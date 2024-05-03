@@ -264,3 +264,5 @@ export class Scheduler {
    */
   private nextMatch(cron: CronExpression, from: number = Date.now()): number {
     const cursor = new Date(from);
+    cursor.setSeconds(0, 0);
+    cursor.setTime(cursor.getTime() + 60_000);
