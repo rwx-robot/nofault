@@ -269,3 +269,6 @@ export class Scheduler {
 
     // 最多往前找一年：表达式永远不匹配时（如 2 月 30 号）不能死循环
     const limit = 60 * 24 * 366;
+    for (let i = 0; i < limit; i++) {
+      if (matchesCron(cron, cursor)) return cursor.getTime();
+      cursor.setTime(cursor.getTime() + 60_000);
