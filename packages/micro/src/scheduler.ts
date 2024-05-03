@@ -227,3 +227,6 @@ export class Scheduler {
       const finished = Date.now();
       if (job.cron) {
         job.nextRunAt = this.nextMatch(job.cron, finished);
+      } else if (job.intervalMs) {
+        // fixedDelay：从结束时刻起算，任务慢也不会堆积
+        job.nextRunAt = finished + job.intervalMs;
