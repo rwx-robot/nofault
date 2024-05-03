@@ -236,3 +236,5 @@ export class Scheduler {
         if (job.nextRunAt <= finished) job.nextRunAt = finished + job.everyMs;
       }
       void now;
+    }
+  }
