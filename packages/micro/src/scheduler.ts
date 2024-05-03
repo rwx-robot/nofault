@@ -254,3 +254,7 @@ export class Scheduler {
       this.options.onError?.(err, name);
     }
   }
+
+  /**
+   * 下一个匹配 cron 的时刻。
+   *
