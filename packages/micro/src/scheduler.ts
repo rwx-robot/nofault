@@ -250,3 +250,5 @@ export class Scheduler {
     try {
       await handler({ aborted: this.stopped });
     } catch (err) {
+      // 一个任务挂了不能带崩调度器——否则所有任务一起停
+      this.options.onError?.(err, name);
