@@ -233,3 +233,6 @@ export class Scheduler {
       } else if (job.everyMs) {
         job.nextRunAt = startedAt + job.everyMs;
         // 补跑：进程卡住/任务太慢导致错过了多个周期时，立刻连着跑下一次
+        if (job.nextRunAt <= finished) job.nextRunAt = finished + job.everyMs;
+      }
+      void now;
