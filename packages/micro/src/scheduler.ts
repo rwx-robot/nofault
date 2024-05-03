@@ -241,3 +241,6 @@ export class Scheduler {
 
   private advanceAfterSkip(job: ScheduledJob, now: number): number {
     if (job.cron) return this.nextMatch(job.cron, now);
+    if (job.everyMs) return now + job.everyMs;
+    if (job.intervalMs) return now + job.intervalMs;
+    return now + 1000;
