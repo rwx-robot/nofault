@@ -222,3 +222,5 @@ export class Scheduler {
     const startedAt = Date.now();
     try {
       await this.safeRun(job.handler, job.name);
+    } finally {
+      job.running = false;
