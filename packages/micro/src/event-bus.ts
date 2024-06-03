@@ -31,3 +31,4 @@ export interface SubscribeOptions {
 export interface EventBridge {
   publish(name: string, payload: unknown, meta: EventMeta): Promise<void> | void;
   subscribe(handler: (name: string, payload: unknown, meta: EventMeta) => void): void;
+}
