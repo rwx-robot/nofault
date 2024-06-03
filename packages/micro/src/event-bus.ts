@@ -11,3 +11,5 @@
  * 3. **默认并行投递要小心** —— 并行下多个订阅者同时改同一份数据会互相覆盖。
  *    需要顺序保证时用 `sequential: true`
  */
+export type EventHandler<T = unknown> = (
+  payload: T,
