@@ -17,3 +17,4 @@ export type EventHandler<T = unknown> = (
 ) => Promise<void> | void;
 
 export interface EventMeta {
+  readonly name: string;
