@@ -13,3 +13,5 @@
  */
 export type EventHandler<T = unknown> = (
   payload: T,
+  meta: EventMeta,
+) => Promise<void> | void;
