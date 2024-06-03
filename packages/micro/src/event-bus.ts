@@ -24,3 +24,5 @@ export interface EventMeta {
 
 export interface SubscribeOptions {
   /** 只收一次，收到后自动退订 */
+  once?: boolean;
+}
