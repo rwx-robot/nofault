@@ -18,3 +18,5 @@ export type EventHandler<T = unknown> = (
 
 export interface EventMeta {
   readonly name: string;
+  readonly id: string;
+  readonly publishedAt: number;
