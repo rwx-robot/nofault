@@ -26,3 +26,6 @@ export interface SubscribeOptions {
   /** 只收一次，收到后自动退订 */
   once?: boolean;
 }
+
+/** 跨进程桥：把事件转发出去 / 收进来。换成 MQ 即可对接真实基础设施 */
+export interface EventBridge {
