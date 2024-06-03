@@ -21,3 +21,6 @@ export interface EventMeta {
   readonly id: string;
   readonly publishedAt: number;
 }
+
+export interface SubscribeOptions {
+  /** 只收一次，收到后自动退订 */
