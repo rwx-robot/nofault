@@ -35,3 +35,5 @@ export interface EventBridge {
 
 export interface EventBusOptions {
   onError?: (err: unknown, event: EventMeta) => void;
+  bridge?: EventBridge;
+  /** 按注册顺序串行投递（默认并行） */
