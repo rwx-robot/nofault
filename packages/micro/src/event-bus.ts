@@ -39,3 +39,6 @@ export interface EventBusOptions {
   /** 按注册顺序串行投递（默认并行） */
   sequential?: boolean;
 }
+
+interface Subscription {
+  handler: EventHandler;
