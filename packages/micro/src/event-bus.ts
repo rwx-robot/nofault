@@ -56,3 +56,5 @@ export class EventBus {
       void this.dispatch(name, payload, meta);
     });
   }
+
+  subscribe<T>(name: string, handler: EventHandler<T>, options: SubscribeOptions = {}): () => void {
