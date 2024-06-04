@@ -53,3 +53,5 @@ export class EventBus {
 
   constructor(private readonly options: EventBusOptions = {}) {
     options.bridge?.subscribe((name, payload, meta) => {
+      void this.dispatch(name, payload, meta);
+    });
