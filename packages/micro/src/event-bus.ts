@@ -61,3 +61,6 @@ export class EventBus {
     const list = this.topics.get(name) ?? [];
     list.push({ handler: handler as EventHandler, once: options.once === true });
     this.topics.set(name, list);
+
+    // 返回退订函数而不是要求持有 handler 引用：
+    // 忘记退订是事件总线最常见的内存泄漏来源
