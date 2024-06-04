@@ -38,3 +38,4 @@ export interface EventBusOptions {
   bridge?: EventBridge;
   /** 按注册顺序串行投递（默认并行） */
   sequential?: boolean;
+}
