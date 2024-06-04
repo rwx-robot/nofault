@@ -64,3 +64,5 @@ export class EventBus {
 
     // 返回退订函数而不是要求持有 handler 引用：
     // 忘记退订是事件总线最常见的内存泄漏来源
+    return () => this.unsubscribe(name, handler as EventHandler);
+  }
