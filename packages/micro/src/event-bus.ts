@@ -42,3 +42,5 @@ export interface EventBusOptions {
 
 interface Subscription {
   handler: EventHandler;
+  once: boolean;
+}
