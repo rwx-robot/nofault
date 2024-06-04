@@ -69,3 +69,4 @@ export class EventBus {
 
   once<T>(name: string, handler: EventHandler<T>): () => void {
     return this.subscribe(name, handler, { once: true });
+  }
