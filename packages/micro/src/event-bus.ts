@@ -44,3 +44,5 @@ interface Subscription {
   handler: EventHandler;
   once: boolean;
 }
+
+export class EventBus {
