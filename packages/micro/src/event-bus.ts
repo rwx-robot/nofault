@@ -66,3 +66,6 @@ export class EventBus {
     // 忘记退订是事件总线最常见的内存泄漏来源
     return () => this.unsubscribe(name, handler as EventHandler);
   }
+
+  once<T>(name: string, handler: EventHandler<T>): () => void {
+    return this.subscribe(name, handler, { once: true });
