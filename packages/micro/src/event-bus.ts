@@ -47,3 +47,5 @@ interface Subscription {
 
 export class EventBus {
   private readonly topics = new Map<string, Subscription[]>();
+  private readonly errors: unknown[] = [];
+  private published = 0;
