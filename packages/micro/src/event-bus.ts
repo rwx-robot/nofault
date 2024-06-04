@@ -50,3 +50,6 @@ export class EventBus {
   private readonly errors: unknown[] = [];
   private published = 0;
   private delivered = 0;
+
+  constructor(private readonly options: EventBusOptions = {}) {
+    options.bridge?.subscribe((name, payload, meta) => {
