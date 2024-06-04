@@ -55,3 +55,4 @@ export class EventBus {
     options.bridge?.subscribe((name, payload, meta) => {
       void this.dispatch(name, payload, meta);
     });
+  }
