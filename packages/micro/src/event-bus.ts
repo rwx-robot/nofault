@@ -60,3 +60,4 @@ export class EventBus {
   subscribe<T>(name: string, handler: EventHandler<T>, options: SubscribeOptions = {}): () => void {
     const list = this.topics.get(name) ?? [];
     list.push({ handler: handler as EventHandler, once: options.once === true });
+    this.topics.set(name, list);
