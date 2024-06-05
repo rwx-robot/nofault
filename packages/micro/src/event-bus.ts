@@ -95,3 +95,6 @@ export class EventBus {
   emit<T>(name: string, payload: T): void {
     void this.publish(name, payload);
   }
+
+  subscriberCount(name: string): number {
+    return this.topics.get(name)?.length ?? 0;
