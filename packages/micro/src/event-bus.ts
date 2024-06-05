@@ -89,3 +89,4 @@ export class EventBus {
     this.published += 1;
     this.options.bridge?.publish(name, payload, meta);
     await this.dispatch(name, payload, meta);
+  }
