@@ -90,3 +90,6 @@ export class EventBus {
     this.options.bridge?.publish(name, payload, meta);
     await this.dispatch(name, payload, meta);
   }
+
+  /** 不等订阅者（发出即忘）。注意：调用方无法确定副作用何时生效 */
+  emit<T>(name: string, payload: T): void {
