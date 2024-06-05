@@ -78,3 +78,5 @@ export class EventBus {
     if (next.length === 0) this.topics.delete(name);
     else this.topics.set(name, next);
   }
+
+  /** 发布。默认等所有订阅者跑完（这样调用方能确定副作用已完成） */
