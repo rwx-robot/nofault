@@ -80,3 +80,5 @@ export class EventBus {
   }
 
   /** 发布。默认等所有订阅者跑完（这样调用方能确定副作用已完成） */
+  async publish<T>(name: string, payload: T): Promise<void> {
+    const meta: EventMeta = {
