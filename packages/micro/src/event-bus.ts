@@ -73,3 +73,5 @@ export class EventBus {
 
   unsubscribe(name: string, handler: EventHandler): void {
     const list = this.topics.get(name);
+    if (!list) return;
+    const next = list.filter((s) => s.handler !== handler);
