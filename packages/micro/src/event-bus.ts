@@ -102,3 +102,5 @@ export class EventBus {
 
   stats(): { published: number; delivered: number; errors: number; topics: number } {
     return {
+      published: this.published,
+      delivered: this.delivered,
