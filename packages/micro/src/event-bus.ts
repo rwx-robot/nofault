@@ -70,3 +70,6 @@ export class EventBus {
   once<T>(name: string, handler: EventHandler<T>): () => void {
     return this.subscribe(name, handler, { once: true });
   }
+
+  unsubscribe(name: string, handler: EventHandler): void {
+    const list = this.topics.get(name);
