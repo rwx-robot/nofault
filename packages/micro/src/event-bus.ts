@@ -84,3 +84,4 @@ export class EventBus {
     const meta: EventMeta = {
       name,
       id: `${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 8)}`,
+      publishedAt: Date.now(),
