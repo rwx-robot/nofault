@@ -99,3 +99,6 @@ export class EventBus {
   subscriberCount(name: string): number {
     return this.topics.get(name)?.length ?? 0;
   }
+
+  stats(): { published: number; delivered: number; errors: number; topics: number } {
+    return {
