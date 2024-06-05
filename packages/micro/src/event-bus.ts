@@ -104,3 +104,4 @@ export class EventBus {
     return {
       published: this.published,
       delivered: this.delivered,
+      errors: this.errors.length,
