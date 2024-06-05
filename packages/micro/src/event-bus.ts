@@ -93,3 +93,5 @@ export class EventBus {
 
   /** 不等订阅者（发出即忘）。注意：调用方无法确定副作用何时生效 */
   emit<T>(name: string, payload: T): void {
+    void this.publish(name, payload);
+  }
