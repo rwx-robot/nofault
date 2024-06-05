@@ -75,3 +75,4 @@ export class EventBus {
     const list = this.topics.get(name);
     if (!list) return;
     const next = list.filter((s) => s.handler !== handler);
+    if (next.length === 0) this.topics.delete(name);
