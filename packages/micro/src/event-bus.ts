@@ -107,3 +107,4 @@ export class EventBus {
       errors: this.errors.length,
       topics: this.topics.size,
     };
+  }
