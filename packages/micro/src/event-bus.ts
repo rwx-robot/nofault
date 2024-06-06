@@ -138,3 +138,5 @@ export class EventBus {
       this.delivered += 1;
     } catch (err) {
       this.errors.push(err);
+      this.options.onError?.(err, meta);
+    }
