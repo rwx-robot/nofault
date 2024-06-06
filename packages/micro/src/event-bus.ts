@@ -129,3 +129,5 @@ export class EventBus {
     }
 
     // 并行：一个订阅者挂了不影响其他人（错误各自记录）
+    await Promise.all(snapshot.map((sub) => this.invoke(sub.handler, payload, meta)));
+  }
