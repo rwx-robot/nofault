@@ -136,3 +136,5 @@ export class EventBus {
     try {
       await handler(payload, meta);
       this.delivered += 1;
+    } catch (err) {
+      this.errors.push(err);
