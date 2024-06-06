@@ -116,3 +116,4 @@ export class EventBus {
 
   private async dispatch(name: string, payload: unknown, meta: EventMeta): Promise<void> {
     const list = this.topics.get(name);
+    if (!list || list.length === 0) return;
