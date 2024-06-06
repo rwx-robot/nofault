@@ -134,3 +134,5 @@ export class EventBus {
 
   private async invoke(handler: EventHandler, payload: unknown, meta: EventMeta): Promise<void> {
     try {
+      await handler(payload, meta);
+      this.delivered += 1;
