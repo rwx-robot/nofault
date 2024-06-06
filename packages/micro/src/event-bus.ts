@@ -122,3 +122,5 @@ export class EventBus {
     for (const sub of snapshot) {
       if (sub.once) this.unsubscribe(name, sub.handler);
     }
+
+    if (this.options.sequential) {
