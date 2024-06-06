@@ -113,3 +113,6 @@ export class EventBus {
   recordedErrors(): unknown[] {
     return [...this.errors];
   }
+
+  private async dispatch(name: string, payload: unknown, meta: EventMeta): Promise<void> {
+    const list = this.topics.get(name);
