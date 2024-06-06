@@ -111,3 +111,5 @@ export class EventBus {
 
   /** 测试用：拿到被吞掉的错误 */
   recordedErrors(): unknown[] {
+    return [...this.errors];
+  }
