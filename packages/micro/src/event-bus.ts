@@ -108,3 +108,6 @@ export class EventBus {
       topics: this.topics.size,
     };
   }
+
+  /** 测试用：拿到被吞掉的错误 */
+  recordedErrors(): unknown[] {
