@@ -140,3 +140,5 @@ export class EventBus {
       this.errors.push(err);
       this.options.onError?.(err, meta);
     }
+  }
+}
