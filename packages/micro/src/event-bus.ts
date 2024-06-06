@@ -133,3 +133,4 @@ export class EventBus {
   }
 
   private async invoke(handler: EventHandler, payload: unknown, meta: EventMeta): Promise<void> {
+    try {
