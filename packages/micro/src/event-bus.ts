@@ -120,3 +120,5 @@ export class EventBus {
 
     const snapshot = [...list];
     for (const sub of snapshot) {
+      if (sub.once) this.unsubscribe(name, sub.handler);
+    }
