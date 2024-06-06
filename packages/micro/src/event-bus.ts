@@ -124,3 +124,4 @@ export class EventBus {
     }
 
     if (this.options.sequential) {
+      for (const sub of snapshot) await this.invoke(sub.handler, payload, meta);
