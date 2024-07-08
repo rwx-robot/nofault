@@ -18,3 +18,5 @@ export type { LockBackend, LockHandle, LockOptions } from './lock';
 
 export { Scheduler, parseCron, matchesCron } from './scheduler';
 export type { CronExpression, CronJobOptions, JobHandler, JobOptions, SchedulerOptions } from './scheduler';
+
+export { EventBus } from './event-bus';
