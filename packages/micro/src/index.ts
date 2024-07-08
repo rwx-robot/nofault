@@ -21,3 +21,5 @@ export type { CronExpression, CronJobOptions, JobHandler, JobOptions, SchedulerO
 
 export { EventBus } from './event-bus';
 export type { EventBridge, EventBusOptions, EventHandler, EventMeta, SubscribeOptions } from './event-bus';
+
+export { Microservice, ShutdownTimeoutError } from './microservice';
