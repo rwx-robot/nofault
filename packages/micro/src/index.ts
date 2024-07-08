@@ -15,3 +15,5 @@ export type { SnowflakeOptions, SnowflakeParts } from './id';
 
 export { DistributedLock, MemoryLockBackend, LockAcquisitionError } from './lock';
 export type { LockBackend, LockHandle, LockOptions } from './lock';
+
+export { Scheduler, parseCron, matchesCron } from './scheduler';
