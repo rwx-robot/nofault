@@ -14,3 +14,4 @@ export { Snowflake, ClockMovedBackError, DEFAULT_EPOCH } from './id';
 export type { SnowflakeOptions, SnowflakeParts } from './id';
 
 export { DistributedLock, MemoryLockBackend, LockAcquisitionError } from './lock';
+export type { LockBackend, LockHandle, LockOptions } from './lock';
