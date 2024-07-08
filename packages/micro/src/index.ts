@@ -9,3 +9,5 @@
  *   没有分布式锁     → 定时任务在多实例上跑 N 遍
  *   没有 EVENT BUS   → 模块之间直接互相 import，最后变成一坨
  *   没有 BOOTSTRAP   → 五十行样板代码，且顺序错了就会出问题
+ */
+export { Snowflake, ClockMovedBackError, DEFAULT_EPOCH } from './id';
