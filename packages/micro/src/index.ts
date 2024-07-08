@@ -11,3 +11,4 @@
  *   没有 BOOTSTRAP   → 五十行样板代码，且顺序错了就会出问题
  */
 export { Snowflake, ClockMovedBackError, DEFAULT_EPOCH } from './id';
+export type { SnowflakeOptions, SnowflakeParts } from './id';
