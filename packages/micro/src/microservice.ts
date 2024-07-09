@@ -17,3 +17,9 @@
  * ```
  *
  * 停机是启动的逆序：**先注销，再停流量**，
+ * 否则会有一段时间"我已经下线了但还有请求进来"。
+ */
+export type LifecyclePhase = 'starting' | 'running' | 'stopping' | 'stopped';
+
+export interface LifecycleHook {
+  (ctx: MicroserviceContext): Promise<void> | void;
