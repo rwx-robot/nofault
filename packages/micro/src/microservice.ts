@@ -23,3 +23,9 @@ export type LifecyclePhase = 'starting' | 'running' | 'stopping' | 'stopped';
 
 export interface LifecycleHook {
   (ctx: MicroserviceContext): Promise<void> | void;
+}
+
+export interface MicroserviceContext {
+  readonly name: string;
+  readonly startedAt: number;
+  phase(): LifecyclePhase;
