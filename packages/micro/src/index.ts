@@ -28,3 +28,4 @@ export type {
   LifecyclePhase,
   MicroserviceContext,
   MicroserviceOptions,
+  ShutdownOptions,
