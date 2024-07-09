@@ -60,3 +60,9 @@ export class ShutdownTimeoutError extends Error {
     super(`graceful shutdown exceeded ${graceMs}ms`);
     this.name = 'ShutdownTimeoutError';
   }
+}
+
+export class Microservice {
+  private phaseValue: LifecyclePhase = 'stopped';
+  private readyValue = false;
+  private readonly stopHooks: LifecycleHook[] = [];
