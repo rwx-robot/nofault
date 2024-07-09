@@ -48,3 +48,9 @@ export interface MicroserviceOptions {
   /** 启动阶段的钩子，按数组顺序执行 */
   bootstrap?: LifecycleHook[];
   /** 全部就位之后、置就绪之前执行 */
+  beforeReady?: LifecycleHook[];
+  shutdown?: ShutdownOptions;
+  logger?: (message: string) => void;
+  /** 每次 `run()` 都要重跑一遍（幂等），用于 migrate 这类动作 */
+  repeated?: LifecycleHook[];
+}
