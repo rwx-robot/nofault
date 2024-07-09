@@ -35,3 +35,10 @@ export interface MicroserviceContext {
   onStop(hook: LifecycleHook): void;
   log(message: string): void;
 }
+
+export interface ShutdownOptions {
+  /** 优雅停机的最长等待时间；超时就强杀 */
+  graceMs?: number;
+  /** 是否自己接管 SIGTERM / SIGINT。多实例测试时要关掉 */
+  captureSignals?: boolean;
+}
