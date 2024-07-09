@@ -66,3 +66,10 @@ export class Microservice {
   private phaseValue: LifecyclePhase = 'stopped';
   private readyValue = false;
   private readonly stopHooks: LifecycleHook[] = [];
+  private readonly signalHandlers = new Map<NodeJS.Signals, () => void>();
+  private ctx!: MicroserviceContext;
+
+  constructor(private readonly options: MicroserviceOptions) {}
+
+  get context(): MicroserviceContext {
+    if (!this.ctx) throw new Error('microservice has not been started');
