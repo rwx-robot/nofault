@@ -79,3 +79,9 @@ export class Microservice {
   phase(): LifecyclePhase {
     return this.phaseValue;
   }
+
+  ready(): boolean {
+    return this.readyValue;
+  }
+
+  async start(): Promise<MicroserviceContext> {
