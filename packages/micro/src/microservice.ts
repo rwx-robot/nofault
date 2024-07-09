@@ -42,3 +42,9 @@ export interface ShutdownOptions {
   /** 是否自己接管 SIGTERM / SIGINT。多实例测试时要关掉 */
   captureSignals?: boolean;
 }
+
+export interface MicroserviceOptions {
+  name: string;
+  /** 启动阶段的钩子，按数组顺序执行 */
+  bootstrap?: LifecycleHook[];
+  /** 全部就位之后、置就绪之前执行 */
