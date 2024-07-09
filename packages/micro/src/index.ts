@@ -27,3 +27,4 @@ export type {
   LifecycleHook,
   LifecyclePhase,
   MicroserviceContext,
+  MicroserviceOptions,
