@@ -23,3 +23,4 @@ export { EventBus } from './event-bus';
 export type { EventBridge, EventBusOptions, EventHandler, EventMeta, SubscribeOptions } from './event-bus';
 
 export { Microservice, ShutdownTimeoutError } from './microservice';
+export type {
