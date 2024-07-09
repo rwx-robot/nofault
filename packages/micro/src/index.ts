@@ -25,3 +25,5 @@ export type { EventBridge, EventBusOptions, EventHandler, EventMeta, SubscribeOp
 export { Microservice, ShutdownTimeoutError } from './microservice';
 export type {
   LifecycleHook,
+  LifecyclePhase,
+  MicroserviceContext,
