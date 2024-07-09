@@ -73,3 +73,9 @@ export class Microservice {
 
   get context(): MicroserviceContext {
     if (!this.ctx) throw new Error('microservice has not been started');
+    return this.ctx;
+  }
+
+  phase(): LifecyclePhase {
+    return this.phaseValue;
+  }
