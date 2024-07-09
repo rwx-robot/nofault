@@ -29,3 +29,9 @@ export interface MicroserviceContext {
   readonly name: string;
   readonly startedAt: number;
   phase(): LifecyclePhase;
+  ready(): boolean;
+  setReady(value: boolean): void;
+  /** 注册停机时要跑的动作（逆序执行） */
+  onStop(hook: LifecycleHook): void;
+  log(message: string): void;
+}
