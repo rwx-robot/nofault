@@ -54,3 +54,9 @@ export interface MicroserviceOptions {
   /** 每次 `run()` 都要重跑一遍（幂等），用于 migrate 这类动作 */
   repeated?: LifecycleHook[];
 }
+
+export class ShutdownTimeoutError extends Error {
+  constructor(graceMs: number) {
+    super(`graceful shutdown exceeded ${graceMs}ms`);
+    this.name = 'ShutdownTimeoutError';
+  }
