@@ -29,3 +29,4 @@ export type {
   MicroserviceContext,
   MicroserviceOptions,
   ShutdownOptions,
+} from './microservice';
