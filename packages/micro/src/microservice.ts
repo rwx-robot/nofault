@@ -159,3 +159,8 @@ export class Microservice {
       const handler = (): void => {
         this.ctx?.log(`received ${signal}, shutting down`);
         void this.stop().then(() => process.exit(0));
+      };
+      this.signalHandlers.set(signal, handler);
+      process.on(signal, handler);
+    }
+  }
