@@ -115,3 +115,10 @@ export class Microservice {
       // 就绪标记必须**最后**打开：在此之前，探针要如实回答"还不能服务"
       ctx.setReady(true);
       ctx.log(`ready in ${Date.now() - ctx.startedAt}ms`);
+
+      if (this.options.shutdown?.captureSignals !== false) {
+        this.captureSignals();
+      }
+      return ctx;
+    } catch (err) {
+      // 启动失败要把已经申请的资源还回去：
