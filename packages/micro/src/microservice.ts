@@ -110,3 +110,8 @@ export class Microservice {
       for (const hook of this.options.bootstrap ?? []) await hook(ctx);
       for (const hook of this.options.repeated ?? []) await hook(ctx);
       for (const hook of this.options.beforeReady ?? []) await hook(ctx);
+
+      this.phaseValue = 'running';
+      // 就绪标记必须**最后**打开：在此之前，探针要如实回答"还不能服务"
+      ctx.setReady(true);
+      ctx.log(`ready in ${Date.now() - ctx.startedAt}ms`);
