@@ -85,3 +85,9 @@ export class Microservice {
   }
 
   async start(): Promise<MicroserviceContext> {
+    if (this.phaseValue === 'running' || this.phaseValue === 'starting') return this.ctx;
+
+    this.phaseValue = 'starting';
+    this.readyValue = false;
+    // 没有传 logger 时用 console：这是个默认实现，不是散落的调试打印
+    // eslint-disable-next-line no-console
