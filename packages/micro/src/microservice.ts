@@ -133,3 +133,11 @@ export class Microservice {
     this.phaseValue = 'stopping';
     // 第一件事就让探针说"不健康"：上游该开始把流量挪走了
     this.readyValue = false;
+
+    const graceMs = this.options.shutdown?.graceMs ?? 10_000;
+    this.releaseSignals();
+
+    const deadline = Date.now() + graceMs;
+    // 逆序：后装的先卸。否则先卸的东西可能还被依赖它的东西用着
+    for (const hook of [...this.stopHooks].reverse()) {
+      if (Date.now() > deadline) throw new ShutdownTimeoutError(graceMs);
