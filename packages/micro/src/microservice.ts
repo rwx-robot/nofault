@@ -122,3 +122,8 @@ export class Microservice {
       return ctx;
     } catch (err) {
       // 启动失败要把已经申请的资源还回去：
+      // 连接池、监听器、已注册的实例…… 留着就是泄漏
+      await this.stop();
+      throw err;
+    }
+  }
