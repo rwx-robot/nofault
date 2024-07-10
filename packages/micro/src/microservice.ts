@@ -91,3 +91,9 @@ export class Microservice {
     this.readyValue = false;
     // 没有传 logger 时用 console：这是个默认实现，不是散落的调试打印
     // eslint-disable-next-line no-console
+    const log = this.options.logger ?? ((m: string) => console.log(m));
+
+    const ctx: MicroserviceContext = {
+      name: this.options.name,
+      startedAt: Date.now(),
+      phase: () => this.phaseValue,
