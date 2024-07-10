@@ -127,3 +127,9 @@ export class Microservice {
       throw err;
     }
   }
+
+  async stop(): Promise<void> {
+    if (this.phaseValue === 'stopped' || this.phaseValue === 'stopping') return;
+    this.phaseValue = 'stopping';
+    // 第一件事就让探针说"不健康"：上游该开始把流量挪走了
+    this.readyValue = false;
