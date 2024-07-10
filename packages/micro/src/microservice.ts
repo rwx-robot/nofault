@@ -153,3 +153,9 @@ export class Microservice {
     this.phaseValue = 'stopped';
     this.ctx?.log('stopped');
   }
+
+  private captureSignals(): void {
+    for (const signal of ['SIGTERM', 'SIGINT'] as NodeJS.Signals[]) {
+      const handler = (): void => {
+        this.ctx?.log(`received ${signal}, shutting down`);
+        void this.stop().then(() => process.exit(0));
