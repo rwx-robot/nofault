@@ -104,3 +104,9 @@ export class Microservice {
       onStop: (hook) => this.stopHooks.push(hook),
       log: (message) => log(`[${this.options.name}] ${message}`),
     };
+    this.ctx = ctx;
+
+    try {
+      for (const hook of this.options.bootstrap ?? []) await hook(ctx);
+      for (const hook of this.options.repeated ?? []) await hook(ctx);
+      for (const hook of this.options.beforeReady ?? []) await hook(ctx);
