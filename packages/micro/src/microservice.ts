@@ -147,3 +147,9 @@ export class Microservice {
         // 停机阶段的错误不能中断停机流程：
         // 剩下的钩子还得跑，进程还是得退出
         this.ctx?.log(`stop hook failed: ${String(err)}`);
+      }
+    }
+    this.stopHooks.length = 0;
+    this.phaseValue = 'stopped';
+    this.ctx?.log('stopped');
+  }
