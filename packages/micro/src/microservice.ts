@@ -141,3 +141,9 @@ export class Microservice {
     // 逆序：后装的先卸。否则先卸的东西可能还被依赖它的东西用着
     for (const hook of [...this.stopHooks].reverse()) {
       if (Date.now() > deadline) throw new ShutdownTimeoutError(graceMs);
+      try {
+        await hook(this.ctx);
+      } catch (err) {
+        // 停机阶段的错误不能中断停机流程：
+        // 剩下的钩子还得跑，进程还是得退出
+        this.ctx?.log(`stop hook failed: ${String(err)}`);
