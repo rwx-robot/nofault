@@ -97,3 +97,10 @@ export class Microservice {
       name: this.options.name,
       startedAt: Date.now(),
       phase: () => this.phaseValue,
+      ready: () => this.readyValue,
+      setReady: (value) => {
+        this.readyValue = value;
+      },
+      onStop: (hook) => this.stopHooks.push(hook),
+      log: (message) => log(`[${this.options.name}] ${message}`),
+    };
