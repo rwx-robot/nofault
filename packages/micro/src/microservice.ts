@@ -164,3 +164,9 @@ export class Microservice {
       process.on(signal, handler);
     }
   }
+
+  private releaseSignals(): void {
+    for (const [signal, handler] of this.signalHandlers) process.off(signal, handler);
+    this.signalHandlers.clear();
+  }
+}
