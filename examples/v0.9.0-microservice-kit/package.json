@@ -1,0 +1,22 @@
+{
+  "name": "@nofault/example-v090-microservice-kit",
+  "version": "0.9.0",
+  "private": true,
+  "description": "v0.9.0 示例：Microservice.bootstrap 一键装配 ORM + 缓存 + 治理 + 可观测，外加 Snowflake ID / 分布式锁 / 定时任务 / 事件总线",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nofault/cache": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/micro": "workspace:*",
+    "@nofault/orm": "workspace:*",
+    "@nofault/resilience": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "@nofault/telemetry": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
+}
