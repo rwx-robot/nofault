@@ -21,3 +21,9 @@ curl -s http://127.0.0.1:3000/orders/$ID          # 第二次走缓存
 
 # 并发结算同一笔订单三次：只允许一次成功
 for i in 1 2 3; do curl -s -o /dev/null -w "%{http_code} " \
+  -X POST http://127.0.0.1:3000/orders/$ID/settle; done
+# → 200 409 409
+
+curl -s -X POST http://127.0.0.1:3000/orders \
+  -H 'content-type: application/json' -d '{"amount":-1}'   # 400
+```
