@@ -27,3 +27,12 @@ for i in 1 2 3; do curl -s -o /dev/null -w "%{http_code} " \
 curl -s -X POST http://127.0.0.1:3000/orders \
   -H 'content-type: application/json' -d '{"amount":-1}'   # 400
 ```
+
+启动日志：
+
+```
+[order-service] migrations applied: 001-create-orders
+[order-service] http listening on 3390
+[order-service] warmed up, generating ids like 887740540580401152
+[order-service] ready in 38ms
+```
