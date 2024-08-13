@@ -6,3 +6,10 @@
 ## 跑起来
 
 ```bash
+pnpm example v0.9.0-microservice-kit
+pnpm example v0.9.0-microservice-kit PORT=3390
+```
+
+## 试一试
+
+```bash
