@@ -36,3 +36,10 @@ curl -s -X POST http://127.0.0.1:3000/orders \
 [order-service] warmed up, generating ids like 887740540580401152
 [order-service] ready in 38ms
 ```
+
+## 文件说明
+
+| 文件 | 说明 |
+| --- | --- |
+| `src/orders.ts` | 业务：Snowflake ID、缓存、事件发布、**分布式锁保护结算** |
+| `src/main.ts` | 装配顺序：迁移 → 事件订阅 → HTTP → 定时任务 → 置就绪 |
