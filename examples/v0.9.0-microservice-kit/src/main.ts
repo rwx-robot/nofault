@@ -29,3 +29,19 @@ import {
   settleLock,
   snowflake,
   source,
+  TOPIC_ORDER_CREATED,
+} from './orders';
+
+const PORT = Number(process.env.PORT ?? 3000);
+
+const exporter = new InMemoryExporter();
+const tracer = new Tracer(exporter, () => true, 32);
+const registry = new MetricRegistry();
+const scheduler = new Scheduler({ tickMs: 1000 });
+
+/** 结算清扫任务的锁：多实例部署时同一时刻只跑一个 */
+const sweepLock = new DistributedLock('order-sweep', new MemoryLockBackend(), { ttlMs: 10_000 });
+
+// 订阅者：订单创建后打一笔审计。
+// 用事件而不是在 OrderService 里直接调用，加第二个消费者（发券、通知）时
+// 完全不用改 OrderService —— 这是事件总线存在的唯一理由
