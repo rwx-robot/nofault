@@ -41,3 +41,24 @@ export interface OrderView {
   amount: number;
   status: string;
 }
+
+@Injectable()
+export class OrderService {
+  constructor(
+    @InjectRepository(Order) private readonly repo: Repository<Order>,
+    private readonly cache: MemoryCache,
+    private readonly events: EventBus,
+    private readonly snowflake: Snowflake,
+    private readonly lock: DistributedLock,
+  ) {}
+
+  async create(amount: number): Promise<OrderView> {
+    if (!Number.isFinite(amount) || amount <= 0) {
+      // 参数错误要在最外层就挡住：它不是依赖故障，不该触发熔断
+      throw new HttpException(400, 'amount must be a positive number', 400);
+    }
+
+    const order = new Order();
+    order.publicId = this.snowflake.nextIdString();
+    order.amount = amount;
+    order.status = 'created';
