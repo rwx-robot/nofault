@@ -1,3 +1,6 @@
 {
   "name": "@nofault/example-v090-microservice-kit",
   "version": "0.9.0",
+  "private": true,
+  "description": "v0.9.0 示例：Microservice.bootstrap 一键装配 ORM + 缓存 + 治理 + 可观测，外加 Snowflake ID / 分布式锁 / 定时任务 / 事件总线",
+  "main": "dist/main.js",
