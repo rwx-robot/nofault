@@ -83,3 +83,24 @@ export class OrderService {
     await this.cache.set(`order:${publicId}`, view, { ttl: 60_000 });
     return view;
   }
+
+  /**
+   * 结算：用分布式锁保证同一笔订单只会被结算一次。
+   *
+   * 没有这把锁时，用户连点两次就会结算两遍——而且两次几乎同时发生，
+   * "先查再改"的写法根本挡不住，因为两次查到的都是"未结算"。
+   */
+  async settle(publicId: string): Promise<OrderView> {
+    return this.lock.run(async () => {
+      // 读-判-改必须整体在锁里：分段加锁等于没加
+      const current = await this.find(publicId);
+      if (current.status !== 'created') {
+        throw new HttpException(409, 'order is already settled', 409);
+      }
+      await new Promise((resolve) => setTimeout(resolve, 20));
+
+      const order = await this.repo.findOne({ publicId });
+      await this.repo.update(order!, { status: 'settled' });
+      await this.cache.delete(`order:${publicId}`);
+      return { ...current, status: 'settled' };
+    });
