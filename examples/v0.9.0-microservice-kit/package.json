@@ -13,3 +13,6 @@
     "@nofault/core": "workspace:*",
     "@nofault/logger": "workspace:*",
     "@nofault/micro": "workspace:*",
+    "@nofault/orm": "workspace:*",
+    "@nofault/resilience": "workspace:*",
+    "@nofault/rest": "workspace:*",
