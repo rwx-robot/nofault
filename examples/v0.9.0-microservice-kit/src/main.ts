@@ -60,3 +60,19 @@ const svc = new Microservice({
           async up(h) {
             await h.createTable(Order);
           },
+          async down(h) {
+            await h.dropTable(Order);
+          },
+        },
+      ]);
+      const applied = await migrator.up();
+      ctx.log(`migrations applied: ${applied.length > 0 ? applied.join(', ') : 'none'}`);
+    },
+
+    // 2. HTTP：依赖全 Greeter 之后再对外可见
+    async (ctx) => {
+      const app = await RestApplication.create(OrderModule, {
+        quiet: true,
+        // 顺序有讲究：先解析 body（后面每个中间件和 handler 都要用），
+        // 再限流（挡在业务前面），最后可观测（要量到全链路时长）
+        middleware: [
