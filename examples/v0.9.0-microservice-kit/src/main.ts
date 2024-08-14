@@ -14,3 +14,18 @@
  * 停机是它的逆序（注册顺序反过来自动执行）：先停定时任务、
  * 再关 HTTP 监听（不再收新请求）、最后释放数据源。
  */
+import 'reflect-metadata';
+import { Microservice, Scheduler, MemoryLockBackend, DistributedLock } from '@nofault/micro';
+import { Migrator } from '@nofault/orm';
+import { InMemoryExporter, MetricRegistry, Tracer, observability } from '@nofault/telemetry';
+import { rateLimit } from '@nofault/resilience';
+import { RestApplication, bodyParser } from '@nofault/rest';
+
+import {
+  Order,
+  OrderModule,
+  cache,
+  events,
+  settleLock,
+  snowflake,
+  source,
