@@ -45,3 +45,18 @@ const sweepLock = new DistributedLock('order-sweep', new MemoryLockBackend(), { 
 // 订阅者：订单创建后打一笔审计。
 // 用事件而不是在 OrderService 里直接调用，加第二个消费者（发券、通知）时
 // 完全不用改 OrderService —— 这是事件总线存在的唯一理由
+events.subscribe(TOPIC_ORDER_CREATED, (payload) => {
+  console.log(`[audit] order created ${JSON.stringify(payload)}`);
+});
+
+const svc = new Microservice({
+  name: 'order-service',
+  bootstrap: [
+    // 1. 迁移：结构没就位就接流量，等于让半初始化的实例开始处理请求
+    async (ctx) => {
+      const migrator = new Migrator(source, [
+        {
+          version: '001-create-orders',
+          async up(h) {
+            await h.createTable(Order);
+          },
