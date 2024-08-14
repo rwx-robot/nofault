@@ -76,3 +76,18 @@ const svc = new Microservice({
         // 顺序有讲究：先解析 body（后面每个中间件和 handler 都要用），
         // 再限流（挡在业务前面），最后可观测（要量到全链路时长）
         middleware: [
+          bodyParser(),
+          observability({ tracer, metrics: registry }).use,
+          rateLimit({ capacity: 200, refillPerSecond: 50 }),
+        ] as never[],
+      });
+      const { port } = await app.listen(PORT, '0.0.0.0');
+      ctx.log(`http listening on ${port}`);
+      ctx.onStop(async () => {
+        await app.close();
+      });
+    },
+
+    // 3. 定时任务
+    (ctx) => {
+      scheduler.every(
