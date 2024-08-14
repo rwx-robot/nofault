@@ -10,3 +10,6 @@
   },
   "dependencies": {
     "@nofault/cache": "workspace:*",
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/micro": "workspace:*",
