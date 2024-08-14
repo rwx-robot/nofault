@@ -107,3 +107,17 @@ const svc = new Microservice({
     async (ctx) => {
       // 假装这里有缓存预热 / Feature Flag 拉取。
       // 重点是：做完之前探针必须回答"还不能服务"
+      await cache.set('warmup', 'done', { ttl: 300_000 });
+      ctx.log(`warmed up, generating ids like ${snowflake.nextIdString()}`);
+    },
+  ],
+  // 测试里不需要接管信号，避免几个示例进程互相 kill
+  shutdown: { captureSignals: process.env.NO_SIGNALS !== '1', graceMs: 5000 },
+});
+
+void svc.start().then((ctx) => {
+  ctx.log(`ready — try: curl -X POST http://127.0.0.1:${PORT}/orders \\
+    -H 'content-type: application/json' -d '{"amount":120}'`);
+});
+
+export { svc, exporter, registry, scheduler, events, settleLock, sweepLock };
