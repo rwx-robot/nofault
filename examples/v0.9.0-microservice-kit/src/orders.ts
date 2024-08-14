@@ -104,3 +104,24 @@ export class OrderService {
       await this.cache.delete(`order:${publicId}`);
       return { ...current, status: 'settled' };
     });
+  }
+}
+
+@Controller('/orders')
+export class OrderController {
+  constructor(
+    private readonly service: OrderService,
+    private readonly events: EventBus,
+  ) {}
+
+  @Post('/')
+  async create(@Body() body: { amount: number }): Promise<OrderView> {
+    return this.service.create(body.amount);
+  }
+
+  @Get('/:id')
+  async get(@Param('id') id: string): Promise<OrderView> {
+    return this.service.find(id);
+  }
+
+  @Post('/:id/settle')
