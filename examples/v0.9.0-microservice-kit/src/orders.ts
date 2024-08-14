@@ -62,3 +62,24 @@ export class OrderService {
     order.publicId = this.snowflake.nextIdString();
     order.amount = amount;
     order.status = 'created';
+
+    await this.repo.save(order);
+    await this.events.publish(TOPIC_ORDER_CREATED, { id: order.publicId, amount });
+
+    const view = { id: order.publicId, amount, status: 'created' };
+    await this.cache.set(`order:${order.publicId}`, view, { ttl: 60_000 });
+    return view;
+  }
+
+  async find(publicId: string): Promise<OrderView> {
+    const cached = await this.cache.get<OrderView>(`order:${publicId}`);
+    if (cached !== undefined) return cached;
+
+    // findOne 按**实体属性**过滤，不是按列名
+    const found = await this.repo.findOne({ publicId });
+    if (!found) throw new HttpException(404, `order ${publicId} not found`, 404);
+
+    const view = { id: found.publicId, amount: found.amount, status: found.status };
+    await this.cache.set(`order:${publicId}`, view, { ttl: 60_000 });
+    return view;
+  }
