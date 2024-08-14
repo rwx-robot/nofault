@@ -125,3 +125,24 @@ export class OrderController {
   }
 
   @Post('/:id/settle')
+  async settle(@Param('id') id: string): Promise<OrderView> {
+    return this.service.settle(id);
+  }
+
+  /** 事件总线的订阅者数量也能查）——用来验证解耦确实生效 */
+  @Get('/_events')
+  async eventStats(@Ctx() ctx: RestContext): Promise<void> {
+    ctx.response.status(200).json({ code: 0, data: this.events.stats(), message: 'ok' });
+  }
+}
+
+/** 共享单例：这些实例在 main.ts 里也要用到，所以绝不能在 Module 里另建一份 */
+export const source = new MemoryDataSource();
+export const cache = new MemoryCache({ max: 1000 });
+export const events = new EventBus({
+  onError: (err, meta) => console.error(`[event ${meta.name}] ${String(err)}`),
+});
+export const snowflake = new Snowflake({ workerId: 1, datacenterId: 1 });
+export const settleLock = new DistributedLock('order-settle', new MemoryLockBackend(), {
+  ttlMs: 5000,
+});
