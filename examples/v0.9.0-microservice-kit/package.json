@@ -19,3 +19,4 @@
     "@nofault/telemetry": "workspace:*",
     "reflect-metadata": "^0.2.2"
   }
+}
