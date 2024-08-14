@@ -19,3 +19,25 @@ import { EventBus, Snowflake, DistributedLock, MemoryLockBackend } from '@nofaul
 import { Body, Controller, Get, Param, Post, HttpException, Ctx, RestContext } from '@nofault/rest';
 
 export const TOPIC_ORDER_CREATED = 'order.created';
+
+@Entity({ table: 'orders' })
+export class Order {
+  @PrimaryGeneratedColumn()
+  id!: number;
+
+  /** 业务主键走 Snowflake：对外暴露的 ID 不能是自增数字 */
+  @Column({ name: 'public_id' })
+  publicId!: string;
+
+  @Column({ name: 'amount', type: 'int' })
+  amount!: number;
+
+  @Column({ name: 'status' })
+  status!: string;
+}
+
+export interface OrderView {
+  id: string;
+  amount: number;
+  status: string;
+}
