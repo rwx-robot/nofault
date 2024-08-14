@@ -16,3 +16,6 @@
     "@nofault/orm": "workspace:*",
     "@nofault/resilience": "workspace:*",
     "@nofault/rest": "workspace:*",
+    "@nofault/telemetry": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
