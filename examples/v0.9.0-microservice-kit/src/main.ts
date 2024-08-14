@@ -91,3 +91,19 @@ const svc = new Microservice({
     // 3. 定时任务
     (ctx) => {
       scheduler.every(
+        5000,
+        async () => {
+          await sweepLock.run(async () => {
+            console.log('[job] sweep stale orders');
+          });
+        },
+        { name: 'sweep' },
+      );
+      scheduler.start();
+      ctx.onStop(() => scheduler.stop());
+    },
+  ],
+  beforeReady: [
+    async (ctx) => {
+      // 假装这里有缓存预热 / Feature Flag 拉取。
+      // 重点是：做完之前探针必须回答"还不能服务"
