@@ -274,3 +274,60 @@ describe('scheduler', () => {
     expect(gap).toBeGreaterThan(30);
   });
 });
+
+describe('event bus', () => {
+  it('delivers to every subscriber', async () => {
+    const bus = new EventBus();
+    const seen: string[] = [];
+    bus.subscribe('user.created', () => {
+      seen.push('a');
+    });
+    bus.subscribe('user.created', () => {
+      seen.push('b');
+    });
+    await bus.publish('user.created', { id: 1 });
+    expect(seen.sort()).toEqual(['a', 'b']);
+  });
+
+  it('isolates a throwing subscriber from the others', async () => {
+    const errors: unknown[] = [];
+    const bus = new EventBus({ onError: (e) => errors.push(e) });
+    let ok = 0;
+    bus.subscribe('x', () => {
+      throw new Error('nope');
+    });
+    bus.subscribe('x', () => {
+      ok += 1;
+    });
+
+    await bus.publish('x', 1);
+    expect(ok).toBe(1);
+    // 错误不能被吞掉：事件"发出去了却什么都没发生"是最难查的一类 bug
+    expect(errors.length).toBe(1);
+  });
+
+  it('honours once subscriptions', async () => {
+    const bus = new EventBus();
+    let count = 0;
+    bus.once('x', () => {
+      count += 1;
+    });
+    await bus.publish('x', 1);
+    await bus.publish('x', 2);
+    expect(count).toBe(1);
+    expect(bus.subscriberCount('x')).toBe(0);
+  });
+
+  it('returns an unsubscribe function to avoid leaks', async () => {
+    const bus = new EventBus();
+    let count = 0;
+    const off = bus.subscribe('x', () => {
+      count += 1;
+    });
+    off();
+    await bus.publish('x', 1);
+    expect(count).toBe(0);
+    expect(bus.subscriberCount('x')).toBe(0);
+  });
+
+  it('delivers in registration order when sequential', async () => {
