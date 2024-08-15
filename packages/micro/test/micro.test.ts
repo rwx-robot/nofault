@@ -331,3 +331,58 @@ describe('event bus', () => {
   });
 
   it('delivers in registration order when sequential', async () => {
+    const bus = new EventBus({ sequential: true });
+    const order: string[] = [];
+    bus.subscribe('x', async () => {
+      await new Promise((r) => setTimeout(r, 10));
+      order.push('slow');
+    });
+    bus.subscribe('x', () => {
+      order.push('fast');
+    });
+    await bus.publish('x', 1);
+    expect(order).toEqual(['slow', 'fast']);
+  });
+});
+
+describe('microservice lifecycle', () => {
+  it('runs hooks in order and only flips ready at the very end', async () => {
+    const trace: string[] = [];
+    const svc = new Microservice({
+      name: 'svc',
+      shutdown: { captureSignals: false },
+      bootstrap: [
+        async () => {
+          trace.push('connect');
+        },
+        async () => {
+          trace.push('migrate');
+        },
+      ],
+      beforeReady: [
+        async (ctx) => {
+          // 到这里为止探针必须还是未就绪：否则会有流量打进半初始化的实例
+          trace.push(`before-ready:${ctx.ready()}`);
+        },
+      ],
+    });
+
+    await svc.start();
+    expect(trace).toEqual(['connect', 'migrate', 'before-ready:false']);
+    expect(svc.ready()).toBe(true);
+    expect(svc.phase()).toBe('running');
+  });
+
+  it('runs stop hooks in reverse and unreadies first', async () => {
+    const trace: string[] = [];
+    const svc = new Microservice({
+      name: 'svc',
+      shutdown: { captureSignals: false },
+      bootstrap: [
+        (ctx) => {
+          ctx.onStop(() => {
+            trace.push('close-pool');
+          });
+          ctx.onStop(() => {
+            trace.push('deregister');
+          });
