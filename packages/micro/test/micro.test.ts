@@ -165,3 +165,58 @@ describe('distributed lock', () => {
 });
 
 describe('cron parsing', () => {
+  it('parses every minute', () => {
+    const cron = parseCron('* * * * *');
+    expect(cron.minutes.size).toBe(60);
+    expect(matchesCron(cron, new Date(2024, 0, 1, 12, 34))).toBe(true);
+  });
+
+  it('parses steps, ranges and lists', () => {
+    const cron = parseCron('*/15 9-17 1,15 * *');
+    expect([...cron.minutes].sort((a, b) => a - b)).toEqual([0, 15, 30, 45]);
+    expect([...cron.hours].sort((a, b) => a - b)).toEqual([9, 10, 11, 12, 13, 14, 15, 16, 17]);
+    expect([...cron.daysOfMonth].sort((a, b) => a - b)).toEqual([1, 15]);
+  });
+
+  it('treats day-of-month and day-of-week as OR, like unix cron', () => {
+    // `0 0 1 * 0` = 每月 1 号 **或** 每周日。做成 AND 就永远不会触发
+    const cron = parseCron('0 0 1 * 0');
+    const firstOfMonth = new Date(2024, 0, 1, 0, 0);
+    const someSunday = new Date(2024, 0, 7, 0, 0);
+    expect(matchesCron(cron, firstOfMonth)).toBe(true);
+    expect(someSunday.getDay()).toBe(0);
+    expect(matchesCron(cron, someSunday)).toBe(true);
+    expect(matchesCron(cron, new Date(2024, 0, 2, 0, 0))).toBe(false);
+  });
+
+  it('normalises day-of-week 7 to Sunday', () => {
+    expect([...parseCron('0 0 * * 7').daysOfWeek]).toEqual([0]);
+  });
+
+  it('rejects malformed expressions', () => {
+    expect(() => parseCron('* * * *')).toThrow(/5 fields/);
+    expect(() => parseCron('99 * * * *')).toThrow(/expected 0-59/);
+    expect(() => parseCron('*/* * * * *')).toThrow(/invalid step/);
+  });
+});
+
+describe('scheduler', () => {
+  it('skips a tick instead of stacking up when the previous run is still going', async () => {
+    const scheduler = new Scheduler({ tickMs: 5 });
+    let runs = 0;
+    let running = 0;
+    let max = 0;
+
+    scheduler.every(
+      5,
+      async () => {
+        runs += 1;
+        running += 1;
+        max = Math.max(max, running);
+        await new Promise((r) => setTimeout(r, 30));
+        running -= 1;
+      },
+      { name: 'slow' },
+    );
+
+    scheduler.start();
