@@ -146,3 +146,23 @@ export const snowflake = new Snowflake({ workerId: 1, datacenterId: 1 });
 export const settleLock = new DistributedLock('order-settle', new MemoryLockBackend(), {
   ttlMs: 5000,
 });
+
+@Module({
+  imports: [
+    // 数据源 + Repository Provider：
+    // 少了 forRoot，容器会在启动阶段就报 UnknownDependencyError，
+    // 而不是拖到第一次请求才炸
+    OrmModule.forRoot({ dataSource: source }),
+    OrmModule.forFeature([Order]),
+  ],
+  controllers: [OrderController],
+  providers: [
+    OrderService,
+    { provide: MemoryDataSource, useValue: source },
+    { provide: MemoryCache, useValue: cache },
+    { provide: EventBus, useValue: events },
+    { provide: Snowflake, useValue: snowflake },
+    { provide: DistributedLock, useValue: settleLock },
+  ],
+})
+export class OrderModule {}
