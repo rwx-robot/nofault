@@ -386,3 +386,57 @@ describe('microservice lifecycle', () => {
           ctx.onStop(() => {
             trace.push('deregister');
           });
+          ctx.onStop(() => {
+            trace.push(`ready-during-stop:${svc.ready()}`);
+          });
+        },
+      ],
+    });
+
+    await svc.start();
+    await svc.stop();
+    // 逆序：最后注册的最先跑；且第一件事就是让探针说不健康
+    expect(trace).toEqual(['ready-during-stop:false', 'deregister', 'close-pool']);
+    expect(svc.phase()).toBe('stopped');
+  });
+
+  it('tears down what it set up when startup fails', async () => {
+    let released = false;
+    const svc = new Microservice({
+      name: 'svc',
+      shutdown: { captureSignals: false },
+      bootstrap: [
+        (ctx) => {
+          ctx.onStop(() => {
+            released = true;
+          });
+        },
+        async () => {
+          throw new Error('migration failed');
+        },
+      ],
+    });
+
+    await expect(svc.start()).rejects.toThrow('migration failed');
+    // 启动失败却留着连接池/监听器 = 泄漏。这里必须已经清理干净
+    expect(released).toBe(true);
+    expect(svc.phase()).toBe('stopped');
+  });
+
+  it('is idempotent when started twice', async () => {
+    let bootstraps = 0;
+    const svc = new Microservice({
+      name: 'svc',
+      shutdown: { captureSignals: false },
+      bootstrap: [
+        () => {
+          bootstraps += 1;
+        },
+      ],
+    });
+    await svc.start();
+    await svc.start();
+    expect(bootstraps).toBe(1);
+    expect(svc.ready()).toBe(true);
+  });
+});
