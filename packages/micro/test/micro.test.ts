@@ -109,3 +109,59 @@ describe('distributed lock', () => {
       ),
     );
     expect(maxConcurrent).toBe(1);
+  });
+
+  it('refuses to release a lock it no longer owns', async () => {
+    // 持锁超时 -> 被别人抢走 -> 原持有者恢复后释放。
+    // 若不校验 token，这一步会把别人的锁删掉，两个实例同时进入临界区
+    const backend = new MemoryLockBackend();
+    const owner = new DistributedLock('job', backend, { ttlMs: 1, autoRenew: false });
+    const other = new DistributedLock('job', backend, { ttlMs: 1000, autoRenew: false });
+
+    const stolen = await owner.tryAcquire();
+    expect(stolen).not.toBeNull();
+    await new Promise((r) => setTimeout(r, 10));
+
+    const second = await other.tryAcquire();
+    expect(second).not.toBeNull();
+    await stolen!.release();
+
+    // other 的锁必须还在：third 应该拿不到
+    const third = await other.tryAcquire();
+    expect(third).toBeNull();
+    await second!.release();
+  });
+
+  it('fails fast when waitMs elapses', async () => {
+    const backend = new MemoryLockBackend();
+    const holder = new DistributedLock('job', backend, { autoRenew: false });
+    await holder.tryAcquire();
+
+    const other = new DistributedLock('job', backend, { waitMs: 30, retryMs: 10, autoRenew: false });
+    await expect(other.acquire()).rejects.toThrow(LockAcquisitionError);
+  });
+
+  it('releases even when the body throws', async () => {
+    const backend = new MemoryLockBackend();
+    const lock = new DistributedLock('job', backend, { autoRenew: false });
+    await expect(
+      lock.run(async () => {
+        throw new Error('boom');
+      }),
+    ).rejects.toThrow('boom');
+    // 忘了释放的话，锁会一直挂到 TTL 到期，整个功能在这段时间里都是停的
+    expect(await lock.tryAcquire()).not.toBeNull();
+  });
+
+  it('keeps the lock alive while auto renewing', async () => {
+    const backend = new MemoryLockBackend();
+    const lock = new DistributedLock('job', backend, { ttlMs: 40, renewEveryMs: 10 });
+    const handle = await lock.tryAcquire();
+    await new Promise((r) => setTimeout(r, 100));
+    // TTL 只有 40ms，靠 watchdog 续期才没被别人抢走
+    expect(await backend.extend('job', handle!.token, 40)).toBe(true);
+    await handle!.release();
+  });
+});
+
+describe('cron parsing', () => {
