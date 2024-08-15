@@ -54,3 +54,58 @@ describe('snowflake ids', () => {
     const seen = new Set<string>();
 
     let frozen = 1_700_000_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => frozen);
+
+    // 同一毫秒只能有 4096 个（12 位序列号），这是硬上限
+    for (let i = 0; i < 4096; i++) seen.add(gen.nextIdString());
+    expect(seen.size).toBe(4096);
+
+    // 第 4097 个必须**等到下一毫秒**，而不是回绕复用已经发过的序列号。
+    // 这里用 fake timers 之外的手段推进时钟：真去自旋会卡死事件循环
+    frozen += 1;
+    const next = gen.nextIdString();
+    expect(seen.has(next)).toBe(false);
+    seen.add(next);
+    expect(seen.size).toBe(4097);
+    vi.restoreAllMocks();
+  });
+
+  it('refuses to generate ids when the clock jumps backwards too far', () => {
+    const gen = new Snowflake({ clockRollbackToleranceMs: 10 });
+    let now = 1_700_000_000_000;
+    vi.spyOn(Date, 'now').mockImplementation(() => now);
+    gen.nextId();
+    now -= 5000;
+    expect(() => gen.nextId()).toThrow(ClockMovedBackError);
+    vi.restoreAllMocks();
+  });
+
+  it('rejects out of range worker ids', () => {
+    expect(() => new Snowflake({ workerId: 32 })).toThrow(RangeError);
+    expect(() => new Snowflake({ datacenterId: 99 })).toThrow(RangeError);
+  });
+});
+
+describe('distributed lock', () => {
+  it('is mutually exclusive', async () => {
+    const backend = new MemoryLockBackend();
+    // waitMs 要给足：20 个协程抢一把锁，不等待的话后 19 个会直接失败
+    const lock = new DistributedLock('job', backend, {
+      waitMs: 2000,
+      retryMs: 2,
+      autoRenew: false,
+    });
+    let concurrent = 0;
+    let maxConcurrent = 0;
+
+    await Promise.all(
+      Array.from({ length: 20 }, () =>
+        lock.run(async () => {
+          concurrent += 1;
+          maxConcurrent = Math.max(maxConcurrent, concurrent);
+          await new Promise((r) => setTimeout(r, 2));
+          concurrent -= 1;
+        }),
+      ),
+    );
+    expect(maxConcurrent).toBe(1);
