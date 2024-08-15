@@ -220,3 +220,57 @@ describe('scheduler', () => {
     );
 
     scheduler.start();
+    await new Promise((r) => setTimeout(r, 60));
+    scheduler.stop();
+
+    expect(runs).toBeGreaterThan(0);
+    // 默认不允许重叠：慢任务不会越积越多变成自我 DoS
+    expect(max).toBe(1);
+  });
+
+  it('lets one failing job take nobody else down with it', async () => {
+    const errors: Array<[unknown, string]> = [];
+    const scheduler = new Scheduler({ tickMs: 5, onError: (e, n) => errors.push([e, n]) });
+    let healthyRuns = 0;
+
+    scheduler.every(
+      5,
+      () => {
+        throw new Error('always fails');
+      },
+      { name: 'bad' },
+    );
+    scheduler.every(5, () => {
+      healthyRuns += 1;
+    }, { name: 'good' });
+
+    scheduler.start();
+    await new Promise((r) => setTimeout(r, 40));
+    scheduler.stop();
+
+    expect(errors.length).toBeGreaterThan(0);
+    expect(healthyRuns).toBeGreaterThan(0);
+  });
+
+  it('schedules fixed-delay runs after the previous one finishes', async () => {
+    const scheduler = new Scheduler({ tickMs: 5 });
+    const stamps: number[] = [];
+    scheduler.fixedDelay(
+      20,
+      async () => {
+        stamps.push(Date.now());
+        await new Promise((r) => setTimeout(r, 15));
+      },
+      { name: 'delay' },
+    );
+
+    scheduler.start();
+    await new Promise((r) => setTimeout(r, 90));
+    scheduler.stop();
+
+    expect(stamps.length).toBeGreaterThanOrEqual(2);
+    const gap = stamps[1]! - stamps[0]!;
+    // 15ms 的任务 + 20ms 间隔 ≈ 35ms 以上；按"开始时刻"算就会撞在一起
+    expect(gap).toBeGreaterThan(30);
+  });
+});
