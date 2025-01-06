@@ -2,7 +2,7 @@
 
 > 严格遵循 **Node.js / NestJS 生态规范**的 Node.js 微服务框架，参考行业最佳实践设计。
 
-**当前版本：v0.9.0（微服务全家桶）**
+**当前版本：v0.10.0（工程化工具链）**
 
 ---
 
@@ -10,11 +10,11 @@
 
 nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约定优于配置、内置服务治理。
 
-补齐分布式原语与一键装配：Snowflake ID、分布式锁、cron 调度、事件总线、`Microservice.bootstrap()`。
+补齐工具链：`nofaultctl openapi`（契约 → OpenAPI 3.0）、`dev` 热重载、`doctor` 环境自检。
 
 ## 架构概览
 
-前八个版本交付的是**能力**；这一版负责把它们**接起来**， 并补上微服务必需、但单进程时代可以糊弄过去的四样东西。
+**文档由契约生成，而不是手写**——手写必然漂移，而漂移的文档比没有文档更糟。 这一版补的是"写代码之外、上线之前"的那一圈工具： OpenAPI 生成、开发热重载、环境自检。
 
 ## 快速开始
 
@@ -22,13 +22,13 @@ nofault 把业界主流框架的能力矩阵搬到 Node.js：代码生成、约�
 pnpm install
 pnpm build
 pnpm test
-pnpm example v0.9.0-microservice-kit
+pnpm example v0.4.0-codegen-user-api
 ```
 
-- 运行/使用说明 → [`docs/v0.9.0/RUNNING.md`](./docs/v0.9.0/RUNNING.md)
-- 架构说明 → [`docs/v0.9.0/ARCHITECTURE.md`](./docs/v0.9.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.9.0/CHANGELOG.md`](./docs/v0.9.0/CHANGELOG.md)
-- 压测报告 → [`benchmarks/v0.9.0/REPORT.md`](./benchmarks/v0.9.0/REPORT.md)
+- 运行/使用说明 → [`docs/v0.10.0/RUNNING.md`](./docs/v0.10.0/RUNNING.md)
+- 架构说明 → [`docs/v0.10.0/ARCHITECTURE.md`](./docs/v0.10.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.10.0/CHANGELOG.md`](./docs/v0.10.0/CHANGELOG.md)
+- 压测报告 → [`benchmarks/v0.10.0/REPORT.md`](./benchmarks/v0.10.0/REPORT.md)
 
 
 ## 已发布的包
@@ -43,8 +43,8 @@ pnpm example v0.9.0-microservice-kit
 | `@nofault/context` | v0.3.0 | 请求上下文、REQUEST 作用域 |
 | `@nofault/dsl` | v0.4.0 | 契约中间表示 |
 | `@nofault/parser` | v0.4.0 | `.api` 与 `.api.ts` 解析 |
-| `@nofault/codegen` | v0.4.0 | 校验、生成、写盘策略 |
-| `@nofault/cli` | v0.4.0 | `nofaultctl` |
+| `@nofault/codegen` | v0.10.0 | 校验、生成、写盘策略、OpenAPI |
+| `@nofault/cli` | v0.10.0 | `nofaultctl`（含 openapi / dev / doctor） |
 | `@nofault/orm` | v0.5.0 | 实体映射、Repository、事务、迁移 |
 | `@nofault/cache` | v0.5.0 | TTL / LRU / 防击穿 |
 | `@nofault/rpc` | v0.6.0 | 分帧、连接池、超时重试、注册发现 |
@@ -57,15 +57,15 @@ pnpm example v0.9.0-microservice-kit
 | Tag | 年 | 主题 | 状态 |
 | --- | --- | --- | --- |
 | v0.1.0 | 2016 | 内核雏形 | ✅ |
-| v0.2.0 | 2017 | HTTP 全栈 | ✅ |
-| v0.3.0 | 2018 | 运行时基座 | ✅ |
-| v0.4.0 | 2019 | 代码生成 v1 | ✅ |
-| v0.5.0 | 2020 | 数据访问层 | ✅ |
-| v0.6.0 | 2021 | RPC 框架 | ✅ |
-| v0.7.0 | 2022 | 服务治理 | ✅ |
-| v0.8.0 | 2023 | 可观测性 | ✅ |
-| v0.9.0 | 2024 | 微服务全家桶 | ✅ |
 | v0.10.0 | 2025 | 工程化工具链 | ✅ |
+| v0.2.0 | 2017 | HTTP 全栈 | 计划 |
+| v0.3.0 | 2018 | 运行时基座 | 计划 |
+| v0.4.0 | 2019 | 代码生成 v1 | 计划 |
+| v0.5.0 | 2020 | 数据访问层 | 计划 |
+| v0.6.0 | 2021 | RPC 框架 | 计划 |
+| v0.7.0 | 2022 | 服务治理 | 计划 |
+| v0.8.0 | 2023 | 可观测性 | 计划 |
+| v0.9.0 | 2024 | 微服务全家桶 | 计划 |
 | v1.0.0 | 2026 | 全量对齐 + 生产增强 | 计划 |
 
 ## 规范红线
