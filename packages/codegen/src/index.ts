@@ -14,8 +14,16 @@ export { generateDataLayer } from './data-generator';
 export type { DataLayerOptions } from './data-generator';
 export { watchFile, debounce } from './watch';
 export type { WatchOptions, WatchHandle } from './watch';
-// [history] omitted at this version (not yet introduced): export { openApiDocument } from './openapi';
-// [history] omitted at this version (not yet introduced): export type { OpenApiDocument, OpenApiInfo, OpenApiOperation, OpenApiOptions, OpenApiParameter, OpenApiSchema, } from './openapi';
+
+export { openApiDocument } from './openapi';
+export type {
+  OpenApiDocument,
+  OpenApiInfo,
+  OpenApiOperation,
+  OpenApiOptions,
+  OpenApiParameter,
+  OpenApiSchema,
+} from './openapi';
 
 export { writeFiles } from './writer';
 export type { WriteOptions, WritePolicy, WriteResult } from './writer';
