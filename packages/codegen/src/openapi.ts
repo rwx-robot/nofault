@@ -63,3 +63,12 @@ export interface OpenApiOptions {
 function propertyName(field: FieldSpec): string {
   return field.key || field.name;
 }
+
+function scalarSchema(type: string): OpenApiSchema {
+  const base = type.replace(/\[\]$/, '').trim();
+  switch (base) {
+    case 'number':
+    case 'int':
+    case 'float':
+      return { type: 'number' };
+    case 'boolean':
