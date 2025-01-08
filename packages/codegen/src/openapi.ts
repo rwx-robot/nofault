@@ -56,3 +56,10 @@ export interface OpenApiOptions {
   version?: string;
   description?: string;
   /** 服务地址。默认 `/` */
+  serverUrl?: string;
+}
+
+/** 契约里的类型名 → 传输用的名字。与生成器保持一致：都用传输键 */
+function propertyName(field: FieldSpec): string {
+  return field.key || field.name;
+}
