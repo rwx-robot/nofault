@@ -48,3 +48,11 @@ export interface OpenApiSchema {
   properties?: Record<string, OpenApiSchema>;
   required?: string[];
   nullable?: boolean;
+  enum?: string[];
+}
+
+export interface OpenApiOptions {
+  title?: string;
+  version?: string;
+  description?: string;
+  /** 服务地址。默认 `/` */
