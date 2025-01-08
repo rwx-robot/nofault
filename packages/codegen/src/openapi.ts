@@ -39,3 +39,12 @@ export interface OpenApiParameter {
   required: boolean;
   schema: OpenApiSchema;
   description?: string;
+}
+
+export interface OpenApiSchema {
+  type?: 'string' | 'number' | 'integer' | 'boolean' | 'array' | 'object';
+  format?: string;
+  items?: OpenApiSchema;
+  properties?: Record<string, OpenApiSchema>;
+  required?: string[];
+  nullable?: boolean;
