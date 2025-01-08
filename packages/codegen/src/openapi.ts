@@ -31,3 +31,11 @@ export interface OpenApiOperation {
   parameters: OpenApiParameter[];
   requestBody?: { required: true; content: Record<string, { schema: OpenApiSchema }> };
   responses: Record<string, { description: string; content?: Record<string, { schema: OpenApiSchema }> }>;
+}
+
+export interface OpenApiParameter {
+  name: string;
+  in: 'path' | 'query' | 'header' | 'cookie';
+  required: boolean;
+  schema: OpenApiSchema;
+  description?: string;
