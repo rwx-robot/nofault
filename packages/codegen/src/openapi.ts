@@ -72,3 +72,11 @@ function scalarSchema(type: string): OpenApiSchema {
     case 'float':
       return { type: 'number' };
     case 'boolean':
+      return { type: 'boolean' };
+    case 'Date':
+    case 'date':
+      return { type: 'string', format: 'date-time' };
+    default:
+      return { type: 'string' };
+  }
+}
