@@ -23,3 +23,11 @@ export interface OpenApiInfo {
   version: string;
   description?: string;
 }
+
+export interface OpenApiOperation {
+  operationId: string;
+  summary?: string;
+  tags: string[];
+  parameters: OpenApiParameter[];
+  requestBody?: { required: true; content: Record<string, { schema: OpenApiSchema }> };
+  responses: Record<string, { description: string; content?: Record<string, { schema: OpenApiSchema }> }>;
