@@ -7,3 +7,11 @@
  *
  * 和生成器一样：`openApiDocument()` 是纯函数，写盘交给调用方。
  */
+import type { ApiSpec, FieldSpec, RouteSpec, ServiceSpec, TypeSpec } from '@nofault/dsl';
+
+export interface OpenApiDocument {
+  openapi: '3.0.3';
+  info: OpenApiInfo;
+  servers: Array<{ url: string; description?: string }>;
+  paths: Record<string, Record<string, OpenApiOperation>>;
+  components: { schemas: Record<string, OpenApiSchema> };
