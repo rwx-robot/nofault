@@ -15,3 +15,11 @@ export interface OpenApiDocument {
   servers: Array<{ url: string; description?: string }>;
   paths: Record<string, Record<string, OpenApiOperation>>;
   components: { schemas: Record<string, OpenApiSchema> };
+  tags?: Array<{ name: string; description?: string }>;
+}
+
+export interface OpenApiInfo {
+  title: string;
+  version: string;
+  description?: string;
+}
