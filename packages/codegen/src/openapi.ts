@@ -80,3 +80,12 @@ function scalarSchema(type: string): OpenApiSchema {
       return { type: 'string' };
   }
 }
+
+/** 数组类型写成 `T[]`；其余走 scalar 或 $ref */
+function refOrScalar(type: string, known: Set<string>): OpenApiSchema {
+  const trimmed = type.trim();
+  if (trimmed.endsWith('[]')) {
+    return { type: 'array', items: refOrScalar(trimmed.slice(0, -2), known) };
+  }
+  if (known.has(trimmed)) return { $ref: `#/components/schemas/${trimmed}` } as OpenApiSchema;
+  return scalarSchema(trimmed);
