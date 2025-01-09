@@ -146,3 +146,11 @@ function operation(
     ...(route.comment ? { summary: route.comment } : {}),
     tags: [service.name],
     parameters: parametersFor(route, types),
+    ...(hasBody && route.requestType
+      ? {
+          requestBody: {
+            required: true,
+            content: { 'application/json': { schema: { $ref: `#/components/schemas/${route.requestType}` } as OpenApiSchema } },
+          },
+        }
+      : {}),
