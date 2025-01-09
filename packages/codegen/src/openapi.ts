@@ -171,3 +171,11 @@ function operation(
     },
   };
 }
+
+export function openApiDocument(spec: ApiSpec, options: OpenApiOptions = {}): OpenApiDocument {
+  const types = new Map<string, TypeSpec>(spec.types.map((t) => [t.name, t]));
+  const known = new Set(types.keys());
+
+  const paths: Record<string, Record<string, OpenApiOperation>> = {};
+  for (const service of spec.services) {
+    const prefix = normalizePrefix(service.prefix);
