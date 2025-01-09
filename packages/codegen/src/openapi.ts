@@ -186,3 +186,12 @@ export function openApiDocument(spec: ApiSpec, options: OpenApiOptions = {}): Op
       (paths[path] ??= {})[route.method.toLowerCase()] = operation(route, service, types, known);
     }
   }
+
+  const schemas: Record<string, OpenApiSchema> = {};
+  for (const type of spec.types) schemas[type.name] = objectSchema(type, known);
+
+  return {
+    openapi: '3.0.3',
+    info: {
+      title: options.title ?? spec.name,
+      version: options.version ?? '1.0.0',
