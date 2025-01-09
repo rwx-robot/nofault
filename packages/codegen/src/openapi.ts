@@ -130,3 +130,11 @@ function parametersFor(route: RouteSpec, types: Map<string, TypeSpec>): OpenApiP
     }
   }
   return out;
+}
+
+function operation(
+  route: RouteSpec,
+  service: ServiceSpec,
+  types: Map<string, TypeSpec>,
+  known: Set<string>,
+): OpenApiOperation {
