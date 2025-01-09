@@ -138,3 +138,11 @@ function operation(
   types: Map<string, TypeSpec>,
   known: Set<string>,
 ): OpenApiOperation {
+  const method = route.method.toLowerCase();
+  const hasBody = route.requestType !== undefined && method !== 'get' && method !== 'delete';
+
+  return {
+    operationId: route.handler,
+    ...(route.comment ? { summary: route.comment } : {}),
+    tags: [service.name],
+    parameters: parametersFor(route, types),
