@@ -203,3 +203,10 @@ export function openApiDocument(spec: ApiSpec, options: OpenApiOptions = {}): Op
     components: { schemas },
   };
 }
+
+function normalizePrefix(prefix?: string): string {
+  if (!prefix) return '';
+  const trimmed = prefix.trim();
+  if (trimmed === '' || trimmed === '/') return '';
+  return trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+}
