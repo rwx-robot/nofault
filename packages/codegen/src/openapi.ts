@@ -121,3 +121,12 @@ function parametersFor(route: RouteSpec, types: Map<string, TypeSpec>): OpenApiP
     if (field.source === 'path') {
       out.push({ name, in: 'path', required: true, schema: refOrScalar(field.type, new Set()) });
     } else if (field.source === 'query') {
+      out.push({
+        name,
+        in: 'query',
+        required: !field.optional,
+        schema: refOrScalar(field.type, new Set()),
+      });
+    }
+  }
+  return out;
