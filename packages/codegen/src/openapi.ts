@@ -89,3 +89,11 @@ function refOrScalar(type: string, known: Set<string>): OpenApiSchema {
   }
   if (known.has(trimmed)) return { $ref: `#/components/schemas/${trimmed}` } as OpenApiSchema;
   return scalarSchema(trimmed);
+}
+
+function objectSchema(type: TypeSpec, known: Set<string>): OpenApiSchema {
+  const properties: Record<string, OpenApiSchema> = {};
+  const required: string[] = [];
+
+  for (const field of type.fields) {
+    const name = propertyName(field);
