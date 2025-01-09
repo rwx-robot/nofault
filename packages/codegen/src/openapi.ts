@@ -162,3 +162,12 @@ function operation(
               content: {
                 'application/json': {
                   schema: refOrScalar(route.responseType, known),
+                },
+              },
+            },
+          }
+        : { '204': { description: 'No Content' } }),
+      '422': { description: 'Validation failed' },
+    },
+  };
+}
