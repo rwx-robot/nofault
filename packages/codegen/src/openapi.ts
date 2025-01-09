@@ -154,3 +154,11 @@ function operation(
           },
         }
       : {}),
+    responses: {
+      ...(route.responseType
+        ? {
+            '200': {
+              description: 'OK',
+              content: {
+                'application/json': {
+                  schema: refOrScalar(route.responseType, known),
