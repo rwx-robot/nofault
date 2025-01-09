@@ -97,3 +97,11 @@ function objectSchema(type: TypeSpec, known: Set<string>): OpenApiSchema {
 
   for (const field of type.fields) {
     const name = propertyName(field);
+    properties[name] = refOrScalar(field.type, known);
+    if (!field.optional) required.push(name);
+  }
+
+  return {
+    type: 'object',
+    properties,
+    // 没有必填字段就别写 `required: []` —— 空数组在部分工具里会被当成"全部必填"
