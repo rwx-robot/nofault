@@ -195,3 +195,11 @@ export function openApiDocument(spec: ApiSpec, options: OpenApiOptions = {}): Op
     info: {
       title: options.title ?? spec.name,
       version: options.version ?? '1.0.0',
+      ...(options.description ? { description: options.description } : {}),
+    },
+    servers: [{ url: options.serverUrl ?? '/' }],
+    tags: spec.services.map((s) => ({ name: s.name })),
+    paths,
+    components: { schemas },
+  };
+}
