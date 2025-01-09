@@ -113,3 +113,11 @@ function objectSchema(type: TypeSpec, known: Set<string>): OpenApiSchema {
 function parametersFor(route: RouteSpec, types: Map<string, TypeSpec>): OpenApiParameter[] {
   if (!route.requestType) return [];
   const type = types.get(route.requestType);
+  if (!type) return [];
+
+  const out: OpenApiParameter[] = [];
+  for (const field of type.fields) {
+    const name = propertyName(field);
+    if (field.source === 'path') {
+      out.push({ name, in: 'path', required: true, schema: refOrScalar(field.type, new Set()) });
+    } else if (field.source === 'query') {
