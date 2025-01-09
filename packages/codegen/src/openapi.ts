@@ -105,3 +105,11 @@ function objectSchema(type: TypeSpec, known: Set<string>): OpenApiSchema {
     type: 'object',
     properties,
     // 没有必填字段就别写 `required: []` —— 空数组在部分工具里会被当成"全部必填"
+    ...(required.length > 0 ? { required } : {}),
+  };
+}
+
+/** 路径参数要按来源拆出来：`:id` 走 path，其余走 query */
+function parametersFor(route: RouteSpec, types: Map<string, TypeSpec>): OpenApiParameter[] {
+  if (!route.requestType) return [];
+  const type = types.get(route.requestType);
