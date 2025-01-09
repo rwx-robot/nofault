@@ -179,3 +179,10 @@ export function openApiDocument(spec: ApiSpec, options: OpenApiOptions = {}): Op
   const paths: Record<string, Record<string, OpenApiOperation>> = {};
   for (const service of spec.services) {
     const prefix = normalizePrefix(service.prefix);
+    for (const route of service.routes) {
+      const full = `${prefix}/${service.group}${route.path}`.replace(/\/{2,}/g, '/');
+      // OpenAPI 用 `{id}` 而不是 `:id`
+      const path = full.replace(/:([A-Za-z_][\w]*)/g, '{$1}');
+      (paths[path] ??= {})[route.method.toLowerCase()] = operation(route, service, types, known);
+    }
+  }
