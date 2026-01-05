@@ -1,3 +1,5 @@
 {
   "name": "@nofault/security",
   "version": "1.0.0",
+  "description": "nofault security: jwt signing and verification, scrypt password hashing, and role based access control",
+  "license": "MIT",
