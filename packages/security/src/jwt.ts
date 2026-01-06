@@ -42,3 +42,11 @@ export interface JwtOptions {
 }
 
 export class JwtError extends Error {
+  constructor(
+    readonly reason:
+      | 'malformed'
+      | 'bad-signature'
+      | 'expired'
+      | 'not-yet-valid'
+      | 'wrong-issuer'
+      | 'wrong-audience',
