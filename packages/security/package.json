@@ -22,3 +22,4 @@
     "@nofault/core": "workspace:*",
     "@nofault/rest": "workspace:*"
   }
+}
