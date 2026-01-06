@@ -7,3 +7,11 @@
  *    经典的 "alg: none" 与 RS256→HS256 混淆攻击，根源都是
  *    "照着 token 头里说的算法去验证"。这里根本不读 header 的 alg，
  *    只按服务端配置的算法验证
+ * 2. **过期必须校验，且允许少量时钟偏移**。
+ *    不校验 exp，token 就永不失效；不容忍偏移，
+ *    调用方与签发方差几秒就会大面积误判
+ * 3. **比较签名必须用定时安全比较**（`timingSafeEqual`）。
+ *    用 `===` 比字符串会在第一个不同字节就返回，
+ *    理论上可被逐字节爆破
+ */
+import { createHmac, timingSafeEqual } from 'node:crypto';
