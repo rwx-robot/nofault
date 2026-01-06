@@ -50,3 +50,12 @@ export class JwtError extends Error {
       | 'not-yet-valid'
       | 'wrong-issuer'
       | 'wrong-audience',
+    message: string,
+  ) {
+    super(message);
+    this.name = 'JwtError';
+  }
+}
+
+export class Jwt {
+  constructor(
