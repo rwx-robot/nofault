@@ -33,3 +33,12 @@ export interface JwtPayload {
 }
 
 export interface JwtOptions {
+  /** 签发方，校验时会比对 */
+  issuer?: string;
+  /** 受众，校验时会比对 */
+  audience?: string;
+  /** 允许的时间偏差（秒），默认 30 */
+  clockSkewSeconds?: number;
+}
+
+export class JwtError extends Error {
