@@ -15,3 +15,12 @@
  *    理论上可被逐字节爆破
  */
 import { createHmac, timingSafeEqual } from 'node:crypto';
+
+export type JwtAlgorithm = 'HS256';
+
+export interface JwtPayload {
+  sub?: string;
+  /** 过期时间（秒） */
+  exp?: number;
+  /** 生效时间（秒） */
+  nbf?: number;
