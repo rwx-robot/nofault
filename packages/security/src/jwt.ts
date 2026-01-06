@@ -24,3 +24,12 @@ export interface JwtPayload {
   exp?: number;
   /** 生效时间（秒） */
   nbf?: number;
+  /** 签发时间（秒） */
+  iat?: number;
+  iss?: string;
+  aud?: string;
+  roles?: string[];
+  [key: string]: unknown;
+}
+
+export interface JwtOptions {
