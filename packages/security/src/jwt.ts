@@ -128,3 +128,12 @@ export class Jwt {
 
 function header(): Record<string, unknown> {
   return { alg: 'HS256', typ: 'JWT' };
+}
+
+function signPart(data: string, secret: string): string {
+  return createHmac('sha256', secret).update(data).digest('base64url');
+}
+
+function encode(value: unknown): string {
+  return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
+}
