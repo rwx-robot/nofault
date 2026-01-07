@@ -85,3 +85,12 @@ export class Jwt {
     if (parts.length !== 3) throw new JwtError('malformed', 'token must have three parts');
 
     const [encodedHeader, encodedBody, encodedSignature] = parts as [string, string, string];
+
+    // header 只用来取 alg 并**确认它就是我们期望的那个**；
+    // 绝不能"按 header 里说的算法去验签"
+    const head = decodeJson<Record<string, unknown>>(encodedHeader);
+    if (head?.alg !== 'HS256') {
+      throw new JwtError('malformed', `unsupported alg: ${String(head?.alg)}`);
+    }
+
+    const expected = Buffer.from(signPart(`${encodedHeader}.${encodedBody}`, this.secret));
