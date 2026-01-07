@@ -67,3 +67,12 @@ export class Jwt {
       throw new Error('jwt secret must be at least 16 characters');
     }
   }
+
+  sign(payload: JwtPayload, expiresInSeconds: number): string {
+    const now = Math.floor(Date.now() / 1000);
+    const body: JwtPayload = {
+      ...payload,
+      iat: now,
+      exp: now + expiresInSeconds,
+      ...(this.options.issuer ? { iss: this.options.issuer } : {}),
+      ...(this.options.audience ? { aud: this.options.audience } : {}),
