@@ -137,3 +137,12 @@ function signPart(data: string, secret: string): string {
 function encode(value: unknown): string {
   return Buffer.from(JSON.stringify(value), 'utf8').toString('base64url');
 }
+
+function decodeJson<T>(segment: string): T | undefined {
+  try {
+    const parsed: unknown = JSON.parse(Buffer.from(segment, 'base64url').toString('utf8'));
+    return typeof parsed === 'object' && parsed !== null ? (parsed as T) : undefined;
+  } catch {
+    return undefined;
+  }
+}
