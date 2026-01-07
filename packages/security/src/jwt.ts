@@ -76,3 +76,12 @@ export class Jwt {
       exp: now + expiresInSeconds,
       ...(this.options.issuer ? { iss: this.options.issuer } : {}),
       ...(this.options.audience ? { aud: this.options.audience } : {}),
+    };
+    return `${encode(header())}.${encode(body)}.${signPart(`${encode(header())}.${encode(body)}`, this.secret)}`;
+  }
+
+  verify(token: string): JwtPayload {
+    const parts = token.split('.');
+    if (parts.length !== 3) throw new JwtError('malformed', 'token must have three parts');
+
+    const [encodedHeader, encodedBody, encodedSignature] = parts as [string, string, string];
