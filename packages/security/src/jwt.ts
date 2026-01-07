@@ -59,3 +59,11 @@ export class JwtError extends Error {
 
 export class Jwt {
   constructor(
+    private readonly secret: string,
+    private readonly options: JwtOptions = {},
+  ) {
+    if (secret.length < 16) {
+      // 弱密钥比没有密钥更危险：它会给出一种虚假的安全感
+      throw new Error('jwt secret must be at least 16 characters');
+    }
+  }
