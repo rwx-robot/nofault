@@ -111,3 +111,11 @@ export class Jwt {
     if (payload.nbf !== undefined && now + skew < payload.nbf) {
       throw new JwtError('not-yet-valid', 'token is not valid yet');
     }
+    if (this.options.issuer && payload.iss !== this.options.issuer) {
+      throw new JwtError('wrong-issuer', 'issuer mismatch');
+    }
+    if (this.options.audience && payload.aud !== this.options.audience) {
+      throw new JwtError('wrong-audience', 'audience mismatch');
+    }
+    return payload;
+  }
