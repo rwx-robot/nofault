@@ -101,3 +101,13 @@ export class Jwt {
 
     const payload = decodeJson<JwtPayload>(encodedBody);
     if (!payload) throw new JwtError('malformed', 'payload is not an object');
+
+    const now = Math.floor(Date.now() / 1000);
+    const skew = this.options.clockSkewSeconds ?? 30;
+
+    if (payload.exp !== undefined && now - skew > payload.exp) {
+      throw new JwtError('expired', 'token has expired');
+    }
+    if (payload.nbf !== undefined && now + skew < payload.nbf) {
+      throw new JwtError('not-yet-valid', 'token is not valid yet');
+    }
