@@ -94,3 +94,10 @@ export class Jwt {
     }
 
     const expected = Buffer.from(signPart(`${encodedHeader}.${encodedBody}`, this.secret));
+    const actual = Buffer.from(encodedSignature);
+    if (expected.length !== actual.length || !timingSafeEqual(expected, actual)) {
+      throw new JwtError('bad-signature', 'signature does not match');
+    }
+
+    const payload = decodeJson<JwtPayload>(encodedBody);
+    if (!payload) throw new JwtError('malformed', 'payload is not an object');
