@@ -146,3 +146,10 @@ function decodeJson<T>(segment: string): T | undefined {
     return undefined;
   }
 }
+
+/** 从 Authorization 头里取 Bearer token */
+export function bearerToken(headerValue: string | undefined): string | undefined {
+  if (!headerValue) return undefined;
+  const match = /^Bearer\s+(\S+)$/i.exec(headerValue.trim());
+  return match?.[1];
+}
