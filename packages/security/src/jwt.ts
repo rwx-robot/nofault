@@ -119,3 +119,12 @@ export class Jwt {
     }
     return payload;
   }
+
+  /** 不验签地读 payload —— 只用于排查，绝不能用于鉴权 */
+  peek(token: string): JwtPayload | undefined {
+    return decodeJson<JwtPayload>(token.split('.')[1] ?? '');
+  }
+}
+
+function header(): Record<string, unknown> {
+  return { alg: 'HS256', typ: 'JWT' };
