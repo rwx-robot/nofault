@@ -25,3 +25,4 @@ const KEY_LENGTH = 64;
 const SALT_LENGTH = 16;
 
 /**
+ * 哈希结果格式：`scrypt$N$r$p$salt$hash`
