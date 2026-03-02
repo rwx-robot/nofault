@@ -10,3 +10,5 @@
  *    理论上是可被利用的信息泄漏
  */
 import 'reflect-metadata';
+import { randomBytes, scrypt, timingSafeEqual } from 'node:crypto';
+import { promisify } from 'node:util';
