@@ -23,3 +23,5 @@ const scryptAsync = promisify(scrypt) as (
 const COST = 2048;
 const KEY_LENGTH = 64;
 const SALT_LENGTH = 16;
+
+/**
