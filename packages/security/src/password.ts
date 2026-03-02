@@ -20,3 +20,4 @@ const scryptAsync = promisify(scrypt) as (
 ) => Promise<Buffer>;
 
 /** scrypt 的 N 参数（CPU/内存成本）。2048 是安全与延迟的折中 */
+const COST = 2048;
