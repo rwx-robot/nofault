@@ -17,3 +17,4 @@ const scryptAsync = promisify(scrypt) as (
   password: string,
   salt: Buffer,
   keylen: number,
+) => Promise<Buffer>;
