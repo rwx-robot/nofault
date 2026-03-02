@@ -15,3 +15,5 @@ import { promisify } from 'node:util';
 
 const scryptAsync = promisify(scrypt) as (
   password: string,
+  salt: Buffer,
+  keylen: number,
