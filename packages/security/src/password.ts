@@ -26,3 +26,5 @@ const SALT_LENGTH = 16;
 
 /**
  * 哈希结果格式：`scrypt$N$r$p$salt$hash`
+ *
+ * 把参数写进结果里，是为了**以后能平滑升级成本**：
