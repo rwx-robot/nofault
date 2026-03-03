@@ -33,3 +33,5 @@ const SALT_LENGTH = 16;
  */
 export async function hashPassword(password: string, cost: number = COST): Promise<string> {
   const salt = randomBytes(SALT_LENGTH);
+  const derived = await scryptAsync(password, salt, KEY_LENGTH);
+  return `scrypt$${cost}$1$${salt.toString('base64url')}$${derived.toString('base64url')}`;
