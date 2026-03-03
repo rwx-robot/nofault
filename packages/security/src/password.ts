@@ -48,3 +48,4 @@ export async function verifyPassword(password: string, stored: string): Promise<
   // 用**存储时记录的参数**重新计算，这样老哈希照样能验证
   const derived = await scryptAsync(password, Buffer.from(saltPart, 'base64url'), KEY_LENGTH);
   const expected = Buffer.from(hashPart, 'base64url');
+  if (derived.length !== expected.length) return false;
