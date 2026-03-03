@@ -59,3 +59,5 @@ export function safeEqual(a: string, b: string): boolean {
   if (left.length !== right.length) return false;
   return timingSafeEqual(left, right);
 }
+
+// ------------------------------------------------------------------ RBAC
