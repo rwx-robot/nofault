@@ -38,3 +38,4 @@ export async function hashPassword(password: string, cost: number = COST): Promi
 }
 
 export async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  const parts = stored.split('$');
