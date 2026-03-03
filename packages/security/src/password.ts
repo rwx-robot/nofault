@@ -44,3 +44,5 @@ export async function verifyPassword(password: string, stored: string): Promise<
   const [, costPart, , saltPart, hashPart] = parts as [string, string, string, string, string];
   const cost = Number(costPart);
   if (!Number.isInteger(cost) || cost <= 0) return false;
+
+  // 用**存储时记录的参数**重新计算，这样老哈希照样能验证
