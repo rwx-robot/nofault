@@ -43,3 +43,4 @@ export async function verifyPassword(password: string, stored: string): Promise<
 
   const [, costPart, , saltPart, hashPart] = parts as [string, string, string, string, string];
   const cost = Number(costPart);
+  if (!Number.isInteger(cost) || cost <= 0) return false;
