@@ -61,3 +61,6 @@ export function safeEqual(a: string, b: string): boolean {
 }
 
 // ------------------------------------------------------------------ RBAC
+
+export const ROLES_METADATA = {
+  ROLES: 'nofault:security:roles',
