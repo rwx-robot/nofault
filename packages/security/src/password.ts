@@ -49,3 +49,5 @@ export async function verifyPassword(password: string, stored: string): Promise<
   const derived = await scryptAsync(password, Buffer.from(saltPart, 'base64url'), KEY_LENGTH);
   const expected = Buffer.from(hashPart, 'base64url');
   if (derived.length !== expected.length) return false;
+  return timingSafeEqual(derived, expected);
+}
