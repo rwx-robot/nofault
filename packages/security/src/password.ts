@@ -54,3 +54,5 @@ export async function verifyPassword(password: string, stored: string): Promise<
 
 /** 定时安全的字符串比较，用于 token / secret 一类敏感值 */
 export function safeEqual(a: string, b: string): boolean {
+  const left = Buffer.from(a, 'utf8');
+  const right = Buffer.from(b, 'utf8');
