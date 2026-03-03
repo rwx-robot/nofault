@@ -36,3 +36,5 @@ export async function hashPassword(password: string, cost: number = COST): Promi
   const derived = await scryptAsync(password, salt, KEY_LENGTH);
   return `scrypt$${cost}$1$${salt.toString('base64url')}$${derived.toString('base64url')}`;
 }
+
+export async function verifyPassword(password: string, stored: string): Promise<boolean> {
