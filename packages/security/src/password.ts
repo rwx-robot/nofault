@@ -31,3 +31,5 @@ const SALT_LENGTH = 16;
  * 老哈希仍能验证，新哈希用更强的参数。否则一旦想调高 COST，
  * 所有老用户的密码就都验证不过了（只能强制所有人重置）。
  */
+export async function hashPassword(password: string, cost: number = COST): Promise<string> {
+  const salt = randomBytes(SALT_LENGTH);
