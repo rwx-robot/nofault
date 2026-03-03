@@ -51,3 +51,5 @@ export async function verifyPassword(password: string, stored: string): Promise<
   if (derived.length !== expected.length) return false;
   return timingSafeEqual(derived, expected);
 }
+
+/** 定时安全的字符串比较，用于 token / secret 一类敏感值 */
