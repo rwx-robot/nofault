@@ -77,3 +77,5 @@ export function Roles(...roles: string[]): MethodDecorator & ClassDecorator {
   return ((target: object, propertyKey?: string | symbol) => {
     if (propertyKey) Reflect.defineMetadata(ROLES_METADATA.ROLES, roles, target, propertyKey);
     else Reflect.defineMetadata(ROLES_METADATA.ROLES, roles, target);
+  }) as MethodDecorator & ClassDecorator;
+}
