@@ -89,3 +89,4 @@ export function Public(): MethodDecorator & ClassDecorator {
 }
 
 export function requiredRoles(target: object, propertyKey?: string | symbol): string[] | undefined {
+  const methodRoles = propertyKey
