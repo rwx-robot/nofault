@@ -79,3 +79,6 @@ export function Roles(...roles: string[]): MethodDecorator & ClassDecorator {
     else Reflect.defineMetadata(ROLES_METADATA.ROLES, roles, target);
   }) as MethodDecorator & ClassDecorator;
 }
+
+/** 显式标记"不需要登录"。默认是**需要**，这样漏标不会造成越权 */
+export function Public(): MethodDecorator & ClassDecorator {
