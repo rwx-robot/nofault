@@ -84,3 +84,4 @@ export function Roles(...roles: string[]): MethodDecorator & ClassDecorator {
 export function Public(): MethodDecorator & ClassDecorator {
   return ((target: object, propertyKey?: string | symbol) => {
     if (propertyKey) Reflect.defineMetadata(ROLES_METADATA.PUBLIC, true, target, propertyKey);
+    else Reflect.defineMetadata(ROLES_METADATA.PUBLIC, true, target);
