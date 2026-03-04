@@ -64,3 +64,5 @@ export function safeEqual(a: string, b: string): boolean {
 
 export const ROLES_METADATA = {
   ROLES: 'nofault:security:roles',
+  PUBLIC: 'nofault:security:public',
+} as const;
