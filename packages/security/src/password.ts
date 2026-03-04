@@ -66,3 +66,6 @@ export const ROLES_METADATA = {
   ROLES: 'nofault:security:roles',
   PUBLIC: 'nofault:security:public',
 } as const;
+
+/**
+ * 要求调用方具备列出的**任一**角色。
