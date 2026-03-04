@@ -90,3 +90,5 @@ export function Public(): MethodDecorator & ClassDecorator {
 
 export function requiredRoles(target: object, propertyKey?: string | symbol): string[] | undefined {
   const methodRoles = propertyKey
+    ? (Reflect.getMetadata(ROLES_METADATA.ROLES, target, propertyKey) as string[] | undefined)
+    : undefined;
