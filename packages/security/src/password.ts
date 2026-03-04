@@ -72,3 +72,5 @@ export const ROLES_METADATA = {
  *
  * 用"任一"而不是"全部"：多角色通常是"或"的语义
  * （管理员或审计员都能看），要求全部反而会让多角色用户越权失败。
+ */
+export function Roles(...roles: string[]): MethodDecorator & ClassDecorator {
