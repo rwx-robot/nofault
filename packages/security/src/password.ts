@@ -82,3 +82,5 @@ export function Roles(...roles: string[]): MethodDecorator & ClassDecorator {
 
 /** 显式标记"不需要登录"。默认是**需要**，这样漏标不会造成越权 */
 export function Public(): MethodDecorator & ClassDecorator {
+  return ((target: object, propertyKey?: string | symbol) => {
+    if (propertyKey) Reflect.defineMetadata(ROLES_METADATA.PUBLIC, true, target, propertyKey);
