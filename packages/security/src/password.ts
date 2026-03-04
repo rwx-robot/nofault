@@ -95,3 +95,5 @@ export function requiredRoles(target: object, propertyKey?: string | symbol): st
   if (methodRoles) return methodRoles;
   return Reflect.getMetadata(ROLES_METADATA.ROLES, target.constructor ?? target) as
     | string[]
+    | undefined;
+}
