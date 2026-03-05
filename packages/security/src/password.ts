@@ -108,3 +108,5 @@ export function isPublic(target: object, propertyKey?: string | symbol): boolean
 /**
  * 判定一次访问是否被允许。
  *
+ * **默认是拒绝**：没有 @Public 也没登录 → 拒绝；
+ * 没有 @Roles 但已登录 → 允许（登录本身就是最低要求）。
