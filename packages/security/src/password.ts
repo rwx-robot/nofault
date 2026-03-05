@@ -123,3 +123,5 @@ export function authorize(
 
   const roles = requiredRoles(target, propertyKey);
   if (!roles || roles.length === 0) return { allowed: true };
+
+  const held = new Set(principal.roles);
