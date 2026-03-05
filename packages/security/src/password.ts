@@ -126,3 +126,5 @@ export function authorize(
 
   const held = new Set(principal.roles);
   if (roles.some((role) => held.has(role))) return { allowed: true };
+  return { allowed: false, reason: `requires one of roles: ${roles.join(', ')}` };
+}
