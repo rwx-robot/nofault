@@ -104,3 +104,6 @@ export function isPublic(target: object, propertyKey?: string | symbol): boolean
     : false;
   return methodPublic || Reflect.getMetadata(ROLES_METADATA.PUBLIC, target.constructor ?? target) === true;
 }
+
+/**
+ * 判定一次访问是否被允许。
