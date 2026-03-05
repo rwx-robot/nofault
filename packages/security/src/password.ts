@@ -100,3 +100,5 @@ export function requiredRoles(target: object, propertyKey?: string | symbol): st
 
 export function isPublic(target: object, propertyKey?: string | symbol): boolean {
   const methodPublic = propertyKey
+    ? Reflect.getMetadata(ROLES_METADATA.PUBLIC, target, propertyKey) === true
+    : false;
