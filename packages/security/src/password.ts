@@ -97,3 +97,6 @@ export function requiredRoles(target: object, propertyKey?: string | symbol): st
     | string[]
     | undefined;
 }
+
+export function isPublic(target: object, propertyKey?: string | symbol): boolean {
+  const methodPublic = propertyKey
