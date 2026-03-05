@@ -107,3 +107,4 @@ export function isPublic(target: object, propertyKey?: string | symbol): boolean
 
 /**
  * 判定一次访问是否被允许。
+ *
