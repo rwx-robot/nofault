@@ -116,3 +116,5 @@ export function authorize(
   target: object,
   propertyKey: string | symbol,
   principal: { roles: string[] } | undefined,
+): { allowed: boolean; reason?: string } {
+  if (isPublic(target, propertyKey)) return { allowed: true };
