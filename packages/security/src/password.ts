@@ -115,3 +115,4 @@ export function isPublic(target: object, propertyKey?: string | symbol): boolean
 export function authorize(
   target: object,
   propertyKey: string | symbol,
+  principal: { roles: string[] } | undefined,
