@@ -103,3 +103,4 @@ export function isPublic(target: object, propertyKey?: string | symbol): boolean
     ? Reflect.getMetadata(ROLES_METADATA.PUBLIC, target, propertyKey) === true
     : false;
   return methodPublic || Reflect.getMetadata(ROLES_METADATA.PUBLIC, target.constructor ?? target) === true;
+}
