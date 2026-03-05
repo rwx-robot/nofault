@@ -120,3 +120,6 @@ export function authorize(
   if (isPublic(target, propertyKey)) return { allowed: true };
 
   if (!principal) return { allowed: false, reason: 'authentication required' };
+
+  const roles = requiredRoles(target, propertyKey);
+  if (!roles || roles.length === 0) return { allowed: true };
