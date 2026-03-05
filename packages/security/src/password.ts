@@ -125,3 +125,4 @@ export function authorize(
   if (!roles || roles.length === 0) return { allowed: true };
 
   const held = new Set(principal.roles);
+  if (roles.some((role) => held.has(role))) return { allowed: true };
