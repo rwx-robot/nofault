@@ -113,3 +113,5 @@ export function isPublic(target: object, propertyKey?: string | symbol): boolean
  * 安全相关的默认值必须选"拒绝"那一侧。
  */
 export function authorize(
+  target: object,
+  propertyKey: string | symbol,
