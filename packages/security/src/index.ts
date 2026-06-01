@@ -15,3 +15,4 @@ export type { JwtAlgorithm, JwtOptions, JwtPayload } from './jwt';
 export {
   RefreshTokenService,
   RefreshTokenError,
+  InMemoryTokenStore,
