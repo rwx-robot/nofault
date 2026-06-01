@@ -10,3 +10,4 @@
  * 漏写一个装饰器应当是"调不通"，而不是"谁都能调"。
  */
 export { Jwt, JwtError, bearerToken } from './jwt';
+export type { JwtAlgorithm, JwtOptions, JwtPayload } from './jwt';
