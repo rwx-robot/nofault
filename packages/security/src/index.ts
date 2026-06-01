@@ -16,3 +16,4 @@ export {
   RefreshTokenService,
   RefreshTokenError,
   InMemoryTokenStore,
+  hashToken,
