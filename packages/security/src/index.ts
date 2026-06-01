@@ -18,3 +18,4 @@ export {
   InMemoryTokenStore,
   hashToken,
 } from './refresh';
+export type { TokenStore, RefreshTokenRecord, IssuedPair, RefreshTokenOptions } from './refresh';
