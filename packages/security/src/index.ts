@@ -17,3 +17,4 @@ export {
   RefreshTokenError,
   InMemoryTokenStore,
   hashToken,
+} from './refresh';
