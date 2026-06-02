@@ -23,3 +23,7 @@ export interface AuthMiddlewareOptions {
   /** 从哪里取当前 handler 的 target/propertyKey；由框架注入 */
   handlerOf?: () => { target: object; propertyKey: string | symbol } | undefined;
   /** 把身份放到哪里。默认写进请求上下文 */
+  setPrincipal?: (principal: Principal | undefined) => void;
+}
+
+export interface HttpContextLike {
