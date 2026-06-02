@@ -37,3 +37,7 @@ export interface HttpContextLike {
 export function authMiddleware(options: AuthMiddlewareOptions) {
   return async (ctx: HttpContextLike, next: () => Promise<void>): Promise<void> => {
     const token = bearerToken(ctx.request.header('authorization'));
+
+    let principal: Principal | undefined;
+    if (token) {
+      try {
