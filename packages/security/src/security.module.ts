@@ -6,3 +6,6 @@
  * 混在一起的结果是"鉴权逻辑散落在中间件里"，没人知道某个接口到底怎么被保护的。
  */
 import { Jwt, bearerToken } from './jwt';
+import { authorize, isPublic } from './password';
+
+export const CURRENT_PRINCIPAL = 'nofault:security:principal';
