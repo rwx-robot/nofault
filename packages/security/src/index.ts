@@ -19,3 +19,5 @@ export {
   hashToken,
 } from './refresh';
 export type { TokenStore, RefreshTokenRecord, IssuedPair, RefreshTokenOptions } from './refresh';
+
+export { hashPassword, verifyPassword, safeEqual } from './password';
