@@ -41,3 +41,6 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
     let principal: Principal | undefined;
     if (token) {
       try {
+        const payload = options.jwt.verify(token);
+        principal = {
+          sub: payload.sub ?? '',
