@@ -9,3 +9,7 @@ import { Jwt, bearerToken } from './jwt';
 import { authorize, isPublic } from './password';
 
 export const CURRENT_PRINCIPAL = 'nofault:security:principal';
+
+export interface Principal {
+  readonly sub: string;
+  readonly roles: string[];
