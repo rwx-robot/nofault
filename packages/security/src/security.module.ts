@@ -30,3 +30,6 @@ export interface HttpContextLike {
   request: { header(name: string): string | undefined; path?: string };
   response: {
     status(code: number): { json(body: unknown): unknown };
+    header(name: string, value: string): unknown;
+  };
+}
