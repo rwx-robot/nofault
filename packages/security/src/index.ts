@@ -22,3 +22,5 @@ export type { TokenStore, RefreshTokenRecord, IssuedPair, RefreshTokenOptions } 
 
 export { hashPassword, verifyPassword, safeEqual } from './password';
 export { Roles, Public, authorize, isPublic, requiredRoles, ROLES_METADATA } from './password';
+
+export { SecurityModule, authMiddleware, CURRENT_PRINCIPAL } from './security.module';
