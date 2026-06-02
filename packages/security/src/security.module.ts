@@ -27,3 +27,6 @@ export interface AuthMiddlewareOptions {
 }
 
 export interface HttpContextLike {
+  request: { header(name: string): string | undefined; path?: string };
+  response: {
+    status(code: number): { json(body: unknown): unknown };
