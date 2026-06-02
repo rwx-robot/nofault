@@ -21,3 +21,4 @@ export {
 export type { TokenStore, RefreshTokenRecord, IssuedPair, RefreshTokenOptions } from './refresh';
 
 export { hashPassword, verifyPassword, safeEqual } from './password';
+export { Roles, Public, authorize, isPublic, requiredRoles, ROLES_METADATA } from './password';
