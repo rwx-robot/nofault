@@ -15,3 +15,8 @@ export interface Principal {
   readonly roles: string[];
   readonly claims: Record<string, unknown>;
 }
+
+export interface AuthMiddlewareOptions {
+  jwt: Jwt;
+  /** 未携带有效 token 时是否放行（交给后续 authorize 决定）。默认 false = 直接 401 */
+  optional?: boolean;
