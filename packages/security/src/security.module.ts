@@ -44,3 +44,7 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
         const payload = options.jwt.verify(token);
         principal = {
           sub: payload.sub ?? '',
+          roles: payload.roles ?? [],
+          claims: payload as Record<string, unknown>,
+        };
+      } catch {
