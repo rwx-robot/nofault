@@ -33,3 +33,7 @@ export interface HttpContextLike {
     header(name: string, value: string): unknown;
   };
 }
+
+export function authMiddleware(options: AuthMiddlewareOptions) {
+  return async (ctx: HttpContextLike, next: () => Promise<void>): Promise<void> => {
+    const token = bearerToken(ctx.request.header('authorization'));
