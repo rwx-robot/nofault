@@ -13,3 +13,5 @@ export const CURRENT_PRINCIPAL = 'nofault:security:principal';
 export interface Principal {
   readonly sub: string;
   readonly roles: string[];
+  readonly claims: Record<string, unknown>;
+}
