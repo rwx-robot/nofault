@@ -20,3 +20,6 @@ export interface AuthMiddlewareOptions {
   jwt: Jwt;
   /** 未携带有效 token 时是否放行（交给后续 authorize 决定）。默认 false = 直接 401 */
   optional?: boolean;
+  /** 从哪里取当前 handler 的 target/propertyKey；由框架注入 */
+  handlerOf?: () => { target: object; propertyKey: string | symbol } | undefined;
+  /** 把身份放到哪里。默认写进请求上下文 */
