@@ -54,3 +54,8 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
         return;
       }
     }
+
+    // 必须先问 handler 是不是 @Public，再决定"没 token 要不要 401"。
+    // 顺序反了的话公开接口（/health、/login）会被一起拦掉 ——
+    // 健康检查挂了会触发误摘除，这是生产事故级别的
+    const handler = options.handlerOf?.();
