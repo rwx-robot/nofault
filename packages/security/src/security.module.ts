@@ -52,3 +52,5 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
         // 告诉调用方"签名不对"还是"过期了"都是在给攻击者递信息
         ctx.response.status(401).json({ code: 401, data: null, message: 'Unauthorized' });
         return;
+      }
+    }
