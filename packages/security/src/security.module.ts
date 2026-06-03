@@ -66,3 +66,6 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
         options.setPrincipal?.(undefined);
         return next();
       }
+      ctx.response.status(401).json({ code: 401, data: null, message: 'Unauthorized' });
+      return;
+    }
