@@ -83,3 +83,7 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
     return next();
   };
 }
+
+/** DI 装配：提供一个配置好的 Jwt 实例 */
+export class SecurityModule {
+  static forRoot(secret: string, issuer?: string) {
