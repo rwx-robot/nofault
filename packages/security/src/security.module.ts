@@ -69,3 +69,7 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
       ctx.response.status(401).json({ code: 401, data: null, message: 'Unauthorized' });
       return;
     }
+
+    // 有没有 @Roles 由 handler 自己决定：中间件只提供身份，授权交给 authorize()
+    if (handler) {
+      const verdict = authorize(handler.target, handler.propertyKey, principal);
