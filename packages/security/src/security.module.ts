@@ -62,3 +62,7 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
 
     if (!principal) {
       const publicRoute = handler ? isPublic(handler.target, handler.propertyKey) : false;
+      if (publicRoute || options.optional === true) {
+        options.setPrincipal?.(undefined);
+        return next();
+      }
