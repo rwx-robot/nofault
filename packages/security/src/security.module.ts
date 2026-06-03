@@ -73,3 +73,6 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
     // 有没有 @Roles 由 handler 自己决定：中间件只提供身份，授权交给 authorize()
     if (handler) {
       const verdict = authorize(handler.target, handler.propertyKey, principal);
+      if (!verdict.allowed) {
+        ctx.response.status(403).json({ code: 403, data: null, message: verdict.reason ?? 'Forbidden' });
+        return;
