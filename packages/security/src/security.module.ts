@@ -90,3 +90,7 @@ export class SecurityModule {
     const jwt = new Jwt(secret, issuer ? { issuer } : {});
     return {
       module: SecurityModule,
+      providers: [{ provide: Jwt, useValue: jwt }],
+      exports: [Jwt],
+      global: true,
+    };
