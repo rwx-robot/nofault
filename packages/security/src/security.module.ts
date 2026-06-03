@@ -59,3 +59,6 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
     // 顺序反了的话公开接口（/health、/login）会被一起拦掉 ——
     // 健康检查挂了会触发误摘除，这是生产事故级别的
     const handler = options.handlerOf?.();
+
+    if (!principal) {
+      const publicRoute = handler ? isPublic(handler.target, handler.propertyKey) : false;
