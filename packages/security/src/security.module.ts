@@ -94,3 +94,5 @@ export class SecurityModule {
       exports: [Jwt],
       global: true,
     };
+  }
+}
