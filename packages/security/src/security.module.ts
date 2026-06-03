@@ -76,3 +76,7 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
       if (!verdict.allowed) {
         ctx.response.status(403).json({ code: 403, data: null, message: verdict.reason ?? 'Forbidden' });
         return;
+      }
+    }
+
+    options.setPrincipal?.(principal);
