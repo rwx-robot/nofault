@@ -80,3 +80,6 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
     }
 
     options.setPrincipal?.(principal);
+    return next();
+  };
+}
