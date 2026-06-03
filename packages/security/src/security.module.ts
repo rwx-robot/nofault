@@ -87,3 +87,6 @@ export function authMiddleware(options: AuthMiddlewareOptions) {
 /** DI 装配：提供一个配置好的 Jwt 实例 */
 export class SecurityModule {
   static forRoot(secret: string, issuer?: string) {
+    const jwt = new Jwt(secret, issuer ? { issuer } : {});
+    return {
+      module: SecurityModule,
