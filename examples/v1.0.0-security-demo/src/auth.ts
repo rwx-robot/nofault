@@ -36,3 +36,41 @@ export class AuthService {
   constructor() {
     // 演示用：预置两个账号。生产环境密码来自注册接口 + hashPassword()
     void this.register('alice', 'correct-horse-battery', ['admin']);
+    void this.register('bob', 'another-passphrase-here', ['viewer']);
+  }
+
+  async register(name: string, password: string, roles: string[]): Promise<{ id: string }> {
+    const id = `u-${accounts.size + 1}`;
+    accounts.set(name, {
+      id,
+      name,
+      roles,
+      // 每次新盐；参数写进结果，以后调高 N 时老密码仍能验证
+      passwordHash: await hashPassword(password),
+    });
+    return { id };
+  }
+
+  async login(name: string, password: string): Promise<{ token: string; roles: string[] }> {
+    const account = accounts.get(name);
+    // 用户不存在与密码错误**返回同一个错误**：
+    // 区分开等于告诉攻击者"这个用户名是存在的"
+    if (!account || !(await verifyPassword(password, account.passwordHash))) {
+      throw new HttpException(401, 'invalid credentials', 401);
+    }
+    log.info('login ok', { user: account.id, roles: account.roles });
+    return {
+      token: jwt.sign({ sub: account.id, roles: account.roles }, 3600),
+      roles: account.roles,
+    };
+  }
+
+  whoami(sub: string): { id: string; name: string; roles: string[] } {
+    const account = [...accounts.values()].find((a) => a.id === sub);
+    if (!account) throw new HttpException(404, 'account not found', 404);
+    return { id: account.id, name: account.name, roles: account.roles };
+  }
+}
+
+@Controller('/auth')
+export class AuthController {
