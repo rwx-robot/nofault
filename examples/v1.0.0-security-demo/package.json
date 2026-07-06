@@ -1,0 +1,19 @@
+{
+  "name": "@nofault/example-v100-security-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "v1.0.0 示例：JWT 登录 + 角色授权 + 密码哈希 + traceId 自动注入日志，端到端可跑",
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "start": "node dist/main.js"
+  },
+  "dependencies": {
+    "@nofault/core": "workspace:*",
+    "@nofault/logger": "workspace:*",
+    "@nofault/rest": "workspace:*",
+    "@nofault/security": "workspace:*",
+    "@nofault/telemetry": "workspace:*",
+    "reflect-metadata": "^0.2.2"
+  }
+}
