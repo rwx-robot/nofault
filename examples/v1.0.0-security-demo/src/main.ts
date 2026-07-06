@@ -22,3 +22,26 @@ async function main(): Promise<void> {
       // handlerOf 直接读 ctx.route（本次新增）：
       // 鉴权要按 handler 上的 @Public / @Roles 判断，拿不到 handler 就只能瞎猜
       (ctx: { route?: { controller: object; propertyKey: string | symbol }; state: Map<string, unknown> }, next: () => Promise<void>) =>
+        authMiddleware({
+          jwt,
+          handlerOf: () => {
+            const route = (ctx as { route?: { controller: object; propertyKey: string | symbol } }).route;
+            return route ? { target: route.controller, propertyKey: route.propertyKey } : undefined;
+          },
+          // 把身份交给请求上下文，后续 handler / 日志都能取到
+          setPrincipal: (principal) => {
+            (ctx as { state: Map<string, unknown> }).state.set('principal', principal);
+          },
+        })(ctx as never, next),
+    ] as never[],
+  });
+
+  const { port } = await app.listen(PORT, '127.0.0.1');
+  const log = createLogger({ level: 'info', context: 'main' });
+  log.info(`listening on http://127.0.0.1:${port}`);
+
+  console.log(`
+试一试：
+
+  # 公开路由
+  curl -s http://127.0.0.1:${port}/auth/health
