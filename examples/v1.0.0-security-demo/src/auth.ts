@@ -74,3 +74,40 @@ export class AuthService {
 
 @Controller('/auth')
 export class AuthController {
+  constructor(private readonly service: AuthService) {}
+
+  /** 公开路由：健康检查与登录都必须免认证——顺序反了会一起被拦 */
+  @Public()
+  @Get('/health')
+  health(): { ok: true } {
+    return { ok: true };
+  }
+
+  @Public()
+  @Post('/login')
+  async login(@Body() body: { name: string; password: string }): Promise<unknown> {
+    return this.service.login(body.name, body.password);
+  }
+
+  /** 无 @Public、无 @Roles：只要登录了就能调 */
+  @Get('/me')
+  async me(): Promise<unknown> {
+    return { ok: true };
+  }
+
+  /** 多角色是"任一"语义：admin 或 auditor 都可以 */
+  @Roles('admin', 'auditor')
+  @Get('/audit')
+  async audit(): Promise<{ entries: number }> {
+    return { entries: 42 };
+  }
+
+  @Roles('admin')
+  @Post('/register')
+  async register(@Body() body: { name: string; password: string; roles?: string[] }): Promise<unknown> {
+    return this.service.register(body.name, body.password, body.roles ?? ['viewer']);
+  }
+}
+
+@Module({ controllers: [AuthController], providers: [AuthService] })
+export class AppModule {}
