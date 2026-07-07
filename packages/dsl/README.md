@@ -14,19 +14,3 @@
 
 ```ts
 import { ApiSpec, FieldSource } from '@nofault/dsl';
-
-const spec: ApiSpec = {
-  name: 'demo',
-  types: [{ name: 'User', fields: [{ name: 'id', key: 'id', type: 'number', source: FieldSource.BODY, optional: false, rules: [] }] }],
-  services: [],
-};
-```
-
-## 注意
-
-字段名（`Name`）与传输键（`name`）是两回事：**传输格式才是契约**。
-
-## 相关文档
-
-- 架构说明 → [`docs/v0.4.0/ARCHITECTURE.md`](../../docs/v0.4.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.4.0/CHANGELOG.md`](../../docs/v0.4.0/CHANGELOG.md)

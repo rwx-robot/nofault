@@ -27,3 +27,16 @@ class UserService {
   constructor(private readonly repo: UserRepository) {}
   get(id: string) { return this.repo.find(id); }
 }
+
+@Module({ providers: [UserRepository, UserService] })
+class UserModule {}
+```
+
+## 注意
+
+装饰器元数据依赖 `emitDecoratorMetadata`；关掉它 `@Inject` 会拿不到类型，且报错指不到这里。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.1.0/ARCHITECTURE.md`](../../docs/v0.1.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.1.0/CHANGELOG.md`](../../docs/v0.1.0/CHANGELOG.md)
