@@ -9,3 +9,13 @@
 - 只做一件事：把 Node 原生请求/响应包成统一形态
 - 不绑 Express / Fastify——Web 框架的抽象不该泄漏到内核
 - `@nofault/rest` 建立在它之上
+
+## 最快上手
+
+```ts
+import { createHttpApplication } from '@nofault/http';
+import { AppModule } from './app.module';
+
+const app = await createHttpApplication(AppModule);
+await app.listen(3000);
+```
