@@ -12,3 +12,16 @@ MCP 服务器模式：把 nofault 的能力暴露给 AI 客户端（stdio，换�
 - **工具错误走 result.isError**：工具自身的失败是"调用成功但结果为错误"，只有协议级错误才用 JSON-RPC error
 
 ## 最快上手
+
+```ts
+import { McpServer } from '@nofault/mcp';
+
+const server = new McpServer({
+  name: 'nofault-mcp',
+  version: '1.0.0',
+  tools: [{
+    name: 'list-users',
+    description: 'list users by page',
+    inputSchema: { type: 'object', properties: { page: { type: 'number' } } },
+    handler: (input) => users.page(input.page),
+  }],
