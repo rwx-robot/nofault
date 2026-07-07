@@ -18,3 +18,12 @@ nofaultctl generate api api/user.api.ts --out src --with-orm
 nofaultctl openapi api/user.api.ts --out openapi.json
 nofaultctl doctor
 ```
+
+## 注意
+
+进程自己崩溃时**不自动重启**：否则会在坏代码上反复启动，刷屏且看不出原因。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.10.0/ARCHITECTURE.md`](../../docs/v0.10.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.10.0/CHANGELOG.md`](../../docs/v0.10.0/CHANGELOG.md)
