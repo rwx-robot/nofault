@@ -45,3 +45,26 @@ async function main(): Promise<void> {
 
   # 公开路由
   curl -s http://127.0.0.1:${port}/auth/health
+
+  # 登录（alice / correct-horse-battery）
+  TOKEN=$(curl -s -X POST http://127.0.0.1:${port}/auth/login \\
+    -H 'content-type: application/json' \\
+    -d '{"name":"alice","password":"correct-horse-battery"}' \\
+    | python3 -c "import sys,json;print(json.load(sys.stdin)['data']['token'])")
+
+  # 需登录
+  curl -s http://127.0.0.1:${port}/auth/me -H "authorization: Bearer $TOKEN"
+
+  # 需 admin 或 auditor
+  curl -s http://127.0.0.1:${port}/auth/audit -H "authorization: Bearer $TOKEN"
+
+  # 无 token -> 401；角色不对 -> 403
+  curl -s -o /dev/null -w "%{http_code}\\n" http://127.0.0.1:${port}/auth/me
+  curl -s -X POST http://127.0.0.1:${port}/auth/login \\
+    -H 'content-type: application/json' \\
+    -d '{"name":"bob","password":"another-passphrase-here"}'   # bob 只有 viewer
+`);
+
+}
+
+void main();
