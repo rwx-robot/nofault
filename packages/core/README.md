@@ -12,3 +12,18 @@ IoC 容器、模块系统与生命周期。
 - 三种作用域：SINGLETON（默认）/ REQUEST / TRANSIENT
 
 ## 最快上手
+
+```ts
+import 'reflect-metadata';
+import { Injectable, Module, Inject } from '@nofault/core';
+
+@Injectable()
+class UserRepository {
+  find(id: string) { return { id }; }
+}
+
+@Injectable()
+class UserService {
+  constructor(private readonly repo: UserRepository) {}
+  get(id: string) { return this.repo.find(id); }
+}
