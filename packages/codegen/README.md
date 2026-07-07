@@ -20,3 +20,13 @@ const { files } = generate(spec, { withOrm: true });
 await writeFiles(files, { outDir: 'src', policy: 'generated' });
 
 const doc = openApiDocument(spec, { title: 'User API' });
+```
+
+## 注意
+
+验收标准是"生成物能编译且能跑"，不是"生成器不抛错"——必须写端到端测试。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.10.0/ARCHITECTURE.md`](../../docs/v0.10.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.10.0/CHANGELOG.md`](../../docs/v0.10.0/CHANGELOG.md)
