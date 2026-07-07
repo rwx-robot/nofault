@@ -19,3 +19,12 @@ await requestContextStore.run({ traceId: 'abc' }, async () => {
   currentContext()?.traceId;   // 'abc'
 });
 ```
+
+## 注意
+
+**"当前上下文"只能存在这里**。用模块级变量在并发下必然串号（v0.6.0 的拦截器、v0.8.0 的活动 Span 都栽过）。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.3.0/ARCHITECTURE.md`](../../docs/v0.3.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.3.0/CHANGELOG.md`](../../docs/v0.3.0/CHANGELOG.md)
