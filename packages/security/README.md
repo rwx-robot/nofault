@@ -11,3 +11,16 @@
 - 容忍 30 秒时钟偏移：不容忍的话机器差几秒就大面积误判
 - token 无效一律 401 **且不透露原因**（"签名不对"还是"过期了"都是在递信息）
 - 哈希参数写进结果（`scrypt$N$...`）：以后调高成本时老密码仍能验证
+- **默认拒绝**：漏写装饰器应当是"调不通"，而不是"谁都能调"
+
+## 最快上手
+
+```ts
+import { Jwt, Roles, Public, authMiddleware } from '@nofault/security';
+
+const jwt = new Jwt(process.env.JWT_SECRET!, { issuer: 'my-app' });
+const token = jwt.sign({ sub: user.id, roles: user.roles }, 3600);
+
+class AdminController {
+  @Public() @Get('/health') health() {}
+  @Roles('admin') @Get('/wipe') wipe() {}
