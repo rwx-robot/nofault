@@ -22,3 +22,13 @@ await server.listen(9000);
 
 const client = new RpcClient({ registry: new InMemoryRegistry() });
 const user = await client.call('user', 'get', { id: 1 });
+```
+
+## 注意
+
+超时映射成 **504**（Gateway Timeout），不是笼统的 500——504 才是"上游超时"的正确语义。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.6.0/ARCHITECTURE.md`](../../docs/v0.6.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.6.0/CHANGELOG.md`](../../docs/v0.6.0/CHANGELOG.md)
