@@ -25,3 +25,15 @@ const server = new McpServer({
     inputSchema: { type: 'object', properties: { page: { type: 'number' } } },
     handler: (input) => users.page(input.page),
   }],
+});
+server.start(); // 挂在 stdio 上，交给 MCP 客户端
+```
+
+## 注意
+
+工具的 inputSchema 是 JSON Schema；参数校验由工具自身负责，协议层只做分发。
+
+## 相关文档
+
+- 架构说明 → [`docs/v1.0.0/ARCHITECTURE.md`](../../docs/v1.0.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v1.0.0/CHANGELOG.md`](../../docs/v1.0.0/CHANGELOG.md)
