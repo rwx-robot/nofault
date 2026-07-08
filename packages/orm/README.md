@@ -12,3 +12,17 @@
 - 比较前归一化布尔——库里存 1/0，实体上是 true/false，否则"存得进取不出来"
 
 ## 最快上手
+
+```ts
+import { Entity, Column, PrimaryGeneratedColumn, Repository, InjectRepository } from '@nofault/orm';
+
+@Entity({ table: 'users' })
+class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
+  @Column({ name: 'email' })
+  email!: string;
+}
+
+class UserService {
+  constructor(@InjectRepository(User) private repo: Repository<User>) {}
