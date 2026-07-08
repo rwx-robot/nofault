@@ -24,3 +24,14 @@ const token = jwt.sign({ sub: user.id, roles: user.roles }, 3600);
 class AdminController {
   @Public() @Get('/health') health() {}
   @Roles('admin') @Get('/wipe') wipe() {}
+}
+```
+
+## 注意
+
+中间件要**先**判断 `@Public` **再**决定 401——顺序反了会把健康检查一起拦掉（误摘除，生产事故级）。
+
+## 相关文档
+
+- 架构说明 → [`docs/v1.0.0/ARCHITECTURE.md`](../../docs/v1.0.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v1.0.0/CHANGELOG.md`](../../docs/v1.0.0/CHANGELOG.md)
