@@ -20,3 +20,12 @@ const spec = await parseContractFile('api/user.api.ts');
 // 或
 const spec2 = parseApiSource('get /ping returns (Ok)', 'inline.api');
 ```
+
+## 注意
+
+`returns` 是关键字，不是路径片段——漏判会让 `/ping returns (X)` 变成路径 `/pingreturns`。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.4.0/ARCHITECTURE.md`](../../docs/v0.4.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.4.0/CHANGELOG.md`](../../docs/v0.4.0/CHANGELOG.md)
