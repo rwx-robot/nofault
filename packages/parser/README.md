@@ -9,3 +9,14 @@
 - **不引 ANTLR**：语法很小，自己写才能给出"哪一行哪一列"的报错
 - 两种格式产出同一个 `ApiSpec`
 - 错误带行列号，并指出是哪个服务 / 哪条路由 / 哪个字段
+- **不执行用户代码**——只当文本扫，避免副作用与安全风险
+
+## 最快上手
+
+```ts
+import { parseContractFile, parseApiSource } from '@nofault/parser';
+
+const spec = await parseContractFile('api/user.api.ts');
+// 或
+const spec2 = parseApiSource('get /ping returns (Ok)', 'inline.api');
+```
