@@ -20,3 +20,12 @@ import { CircuitBreaker, TokenBucket, Bulkhead, retryWithBackoff } from '@nofaul
 const breaker = new CircuitBreaker({ failureThreshold: 5, resetTimeoutMs: 3000 });
 await breaker.run(() => callDownstream());
 ```
+
+## 注意
+
+中间件顺序：**限流 → 舱壁 → 熔断**。反了会让被限流的请求也占着并发配额。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.7.0/ARCHITECTURE.md`](../../docs/v0.7.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.7.0/CHANGELOG.md`](../../docs/v0.7.0/CHANGELOG.md)
