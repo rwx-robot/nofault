@@ -12,29 +12,3 @@
 - 比较前归一化布尔——库里存 1/0，实体上是 true/false，否则"存得进取不出来"
 
 ## 最快上手
-
-```ts
-import { Entity, Column, PrimaryGeneratedColumn, Repository, InjectRepository } from '@nofault/orm';
-
-@Entity({ table: 'users' })
-class User {
-  @PrimaryGeneratedColumn()
-  id!: number;
-  @Column({ name: 'email' })
-  email!: string;
-}
-
-class UserService {
-  constructor(@InjectRepository(User) private repo: Repository<User>) {}
-  find(email: string) { return this.repo.findOne({ email }); }
-}
-```
-
-## 注意
-
-只给"被当作响应类型"的类型建表——请求 DTO 是传输对象，给它建表没意义。
-
-## 相关文档
-
-- 架构说明 → [`docs/v0.5.0/ARCHITECTURE.md`](../../docs/v0.5.0/ARCHITECTURE.md)
-- 变更记录 → [`docs/v0.5.0/CHANGELOG.md`](../../docs/v0.5.0/CHANGELOG.md)

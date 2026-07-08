@@ -22,3 +22,13 @@ const ids = new Snowflake({ workerId: 1 });
 const id = ids.nextIdString();
 
 await lock.run(async () => { /* 同一时刻只有一个实例在做 */ });
+```
+
+## 注意
+
+停机是启动的**逆序**：先停定时任务、再关监听、最后释放数据源。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.9.0/ARCHITECTURE.md`](../../docs/v0.9.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.9.0/CHANGELOG.md`](../../docs/v0.9.0/CHANGELOG.md)
