@@ -27,3 +27,17 @@ class UserController {
   @Post('/')
   @Validate(CreateUserReq)
   async create(@Body() body: CreateUserReq) { return { ok: true }; }
+
+  @Get('/:id')
+  async get(@Param('id') id: string) { return { id }; }
+}
+```
+
+## 注意
+
+错误语义：422 校验失败、400 参数错误、404 找不到、500 未处理异常。熔断/超时要显式翻译成 503/504。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.2.0/ARCHITECTURE.md`](../../docs/v0.2.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.2.0/CHANGELOG.md`](../../docs/v0.2.0/CHANGELOG.md)
