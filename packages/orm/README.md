@@ -26,3 +26,15 @@ class User {
 
 class UserService {
   constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  find(email: string) { return this.repo.findOne({ email }); }
+}
+```
+
+## 注意
+
+只给"被当作响应类型"的类型建表——请求 DTO 是传输对象，给它建表没意义。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.5.0/ARCHITECTURE.md`](../../docs/v0.5.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.5.0/CHANGELOG.md`](../../docs/v0.5.0/CHANGELOG.md)
