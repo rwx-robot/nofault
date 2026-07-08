@@ -47,3 +47,52 @@ describe('refresh tokens', () => {
     // 重放已轮换的旧 token：必须拒绝——这是轮换的全部意义
     await expect(service.refresh(first.refreshToken, 60)).rejects.toMatchObject({
       name: 'RefreshTokenError',
+      reason: 'unknown',
+    });
+    // 重用检测（F1.10）：旧 token 再次出现即泄露信号，同族的新 token 一并吊销
+    await expect(service.refresh(second.refreshToken, 60)).rejects.toMatchObject({
+      reason: 'unknown',
+    });
+    expect(store.size).toBe(0);
+  });
+
+  it('expires stale refresh tokens', async () => {
+    // ttl 0 = 立即过期，免真实等待
+    const service = new RefreshTokenService(jwt, new InMemoryTokenStore(), {
+      refreshTokenTtlSeconds: 0,
+    });
+    const pair = await service.issue({ sub: 'u1' }, 60);
+    await expect(service.refresh(pair.refreshToken, 60)).rejects.toMatchObject({
+      name: 'RefreshTokenError',
+      reason: 'expired',
+    });
+  });
+
+  it('revokes tokens so a stolen one becomes useless', async () => {
+    const service = new RefreshTokenService(jwt, new InMemoryTokenStore());
+    const pair = await service.issue({ sub: 'u1' }, 60);
+
+    expect(await service.revoke(pair.refreshToken)).toBe(true);
+    await expect(service.refresh(pair.refreshToken, 60)).rejects.toMatchObject({ reason: 'unknown' });
+    // 吊销是幂等的：再次吊销如实返回 false
+    expect(await service.revoke(pair.refreshToken)).toBe(false);
+  });
+
+  it('stores only the hash of the token', async () => {
+    const store = new InMemoryTokenStore();
+    const service = new RefreshTokenService(jwt, store);
+    const pair = await service.issue({ sub: 'u1' }, 60);
+
+    // 原始 token 不是 key——存储被拖走也还原不出可用 token
+    expect(store.find(pair.refreshToken)).toBeUndefined();
+    const record: RefreshTokenRecord | undefined = store.find(hashToken(pair.refreshToken));
+    expect(record).toBeDefined();
+    expect(record!.claims.sub).toBe('u1');
+    expect(JSON.stringify(record)).not.toContain(pair.refreshToken);
+  });
+
+  it('rejects malformed presented tokens without touching the store', async () => {
+    const service = new RefreshTokenService(jwt, new InMemoryTokenStore());
+    await expect(service.refresh('', 60)).rejects.toMatchObject({ reason: 'malformed' });
+    await expect(service.refresh('short', 60)).rejects.toMatchObject({ reason: 'malformed' });
+    await expect(service.refresh(`${'a'.repeat(20)} ${'b'.repeat(20)}`, 60)).rejects.toMatchObject({
