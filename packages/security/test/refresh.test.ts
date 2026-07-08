@@ -96,3 +96,51 @@ describe('refresh tokens', () => {
     await expect(service.refresh('', 60)).rejects.toMatchObject({ reason: 'malformed' });
     await expect(service.refresh('short', 60)).rejects.toMatchObject({ reason: 'malformed' });
     await expect(service.refresh(`${'a'.repeat(20)} ${'b'.repeat(20)}`, 60)).rejects.toMatchObject({
+      reason: 'malformed',
+    });
+  });
+
+  it('works with an async token store (redis-style seam)', async () => {
+    // 全异步的假存储：证明缝对 await 侧也是成立的
+    const records = new Map<string, RefreshTokenRecord>();
+    const asyncStore: TokenStore = {
+      save: async (record) => void records.set(record.tokenHash, record),
+      find: async (tokenHash) => records.get(tokenHash),
+      revoke: async (tokenHash) => void records.delete(tokenHash),
+    };
+    const service = new RefreshTokenService(jwt, asyncStore);
+    const pair = await service.issue({ sub: 'u1', roles: ['ops'] }, 60);
+    const next = await service.refresh(pair.refreshToken, 60);
+    expect(jwt.verify(next.accessToken).roles).toEqual(['ops']);
+    // 吊销的是"当前"token——pair 那张已在轮转时作废
+    expect(await service.revoke(next.refreshToken)).toBe(true);
+    expect(await service.revoke(pair.refreshToken)).toBe(false);
+  });
+
+  it('refuses weak refresh token entropy', () => {
+    // 与 Jwt 拒绝弱密钥同一立场：弱熵给出的是虚假的安全感
+    expect(() => new RefreshTokenService(jwt, new InMemoryTokenStore(), { tokenBytes: 16 })).toThrow(
+      /entropy/i,
+    );
+  });
+
+  it('detects reuse of a rotated token and revokes the whole family', async () => {
+    const service = new RefreshTokenService(jwt, new InMemoryTokenStore());
+    const first = await service.issue({ sub: 'u1', roles: ['ops'] }, 60);
+    const second = await service.refresh(first.refreshToken, 60);
+    // 旧 token 再次出现：本身按 unknown 拒绝……
+    await expect(service.refresh(first.refreshToken, 60)).rejects.toThrow(/not recognized/);
+    // ……但泄露信号成立：同族的新 token 也被静默吊销
+    await expect(service.refresh(second.refreshToken, 60)).rejects.toThrow(/not recognized/);
+  });
+
+  it('reuse containment stays within the family', async () => {
+    const service = new RefreshTokenService(jwt, new InMemoryTokenStore());
+    const alice = await service.issue({ sub: 'alice', roles: ['ops'] }, 60);
+    const bob = await service.issue({ sub: 'bob', roles: ['ops'] }, 60);
+    await service.refresh(alice.refreshToken, 60);
+    // alice 的旧 token 重放 → 她的全家被吊销；bob 的会话不受牵连
+    await expect(service.refresh(alice.refreshToken, 60)).rejects.toThrow(/not recognized/);
+    await expect(service.refresh(bob.refreshToken, 60)).resolves.toBeTruthy();
+  });
+});
