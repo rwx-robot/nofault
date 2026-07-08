@@ -13,3 +13,17 @@ Web 层：Radix 路由、装饰器、中间件链、DTO 校验、统一错误响
 - query string 的值永远是字符串，整对象绑 DTO 时按 `design:type` 强制转换
 
 ## 最快上手
+
+```ts
+import { Controller, Get, Post, Body, Param, Query, Validate } from '@nofault/rest';
+
+class CreateUserReq {
+  @IsEmail() email!: string;
+  @MinLength(2) name!: string;
+}
+
+@Controller('/users')
+class UserController {
+  @Post('/')
+  @Validate(CreateUserReq)
+  async create(@Body() body: CreateUserReq) { return { ok: true }; }
