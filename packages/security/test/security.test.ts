@@ -79,3 +79,84 @@ describe('jwt', () => {
 
   it('parses a bearer header', () => {
     expect(bearerToken('Bearer abc.def.ghi')).toBe('abc.def.ghi');
+    expect(bearerToken('bearer abc')).toBe('abc');
+    expect(bearerToken('Basic abc')).toBeUndefined();
+    expect(bearerToken(undefined)).toBeUndefined();
+  });
+});
+
+describe('password hashing', () => {
+  it('verifies the right password and rejects the wrong one', async () => {
+    const stored = await hashPassword('s3cret-pass');
+    expect(await verifyPassword('s3cret-pass', stored)).toBe(true);
+    expect(await verifyPassword('wrong', stored)).toBe(false);
+  });
+
+  it('never stores the password in clear text', async () => {
+    const stored = await hashPassword('s3cret-pass');
+    expect(stored).not.toContain('s3cret-pass');
+    expect(stored.startsWith('scrypt$')).toBe(true);
+  });
+
+  it('uses a fresh salt every time', async () => {
+    // 盐相同 → 相同密码哈希相同 → 拖库后能直接看出谁用了同一个密码
+    const a = await hashPassword('same');
+    const b = await hashPassword('same');
+    expect(a).not.toBe(b);
+    expect(await verifyPassword('same', a)).toBe(true);
+    expect(await verifyPassword('same', b)).toBe(true);
+  });
+
+  it('rejects a malformed stored value instead of throwing', async () => {
+    expect(await verifyPassword('x', 'not-a-hash')).toBe(false);
+    expect(await verifyPassword('x', 'scrypt$bad$1$c2FsdA$aGFzaA')).toBe(false);
+  });
+
+  it('compares secrets in constant time', () => {
+    expect(safeEqual('abc', 'abc')).toBe(true);
+    expect(safeEqual('abc', 'abd')).toBe(false);
+    expect(safeEqual('abc', 'abcd')).toBe(false);
+  });
+});
+
+describe('role based access control', () => {
+  class Admin {
+    @Public()
+    health(): string {
+      return 'ok';
+    }
+
+    secret(): string {
+      return 'secret';
+    }
+
+    @Roles('admin')
+    wipe(): string {
+      return 'wiped';
+    }
+
+    @Roles('admin', 'auditor')
+    audit(): string {
+      return 'audit';
+    }
+  }
+
+  const target = new Admin();
+
+  it('allows a public route without any principal', () => {
+    expect(authorize(target, 'health', undefined).allowed).toBe(true);
+  });
+
+  it('denies a protected route when nobody is logged in', () => {
+    // 默认拒绝：漏标装饰器应该是"调不通"，而不是"谁都能调"
+    expect(authorize(target, 'secret', undefined).allowed).toBe(false);
+  });
+
+  it('allows any logged in user when no roles are required', () => {
+    expect(authorize(target, 'secret', { roles: [] }).allowed).toBe(true);
+  });
+
+  it('requires one of the listed roles, not all of them', () => {
+    // 多角色通常是"或"的语义；要求全部会让多角色用户越权失败
+    expect(authorize(target, 'audit', { roles: ['auditor'] }).allowed).toBe(true);
+    expect(authorize(target, 'audit', { roles: ['admin'] }).allowed).toBe(true);
