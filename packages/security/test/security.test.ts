@@ -160,3 +160,83 @@ describe('role based access control', () => {
     // 多角色通常是"或"的语义；要求全部会让多角色用户越权失败
     expect(authorize(target, 'audit', { roles: ['auditor'] }).allowed).toBe(true);
     expect(authorize(target, 'audit', { roles: ['admin'] }).allowed).toBe(true);
+    expect(authorize(target, 'audit', { roles: ['user'] }).allowed).toBe(false);
+  });
+
+  it('explains why it denied', () => {
+    const verdict = authorize(target, 'wipe', { roles: ['user'] });
+    expect(verdict.allowed).toBe(false);
+    expect(verdict.reason).toContain('admin');
+  });
+});
+
+describe('auth middleware', () => {
+  function fakeContext(authorization?: string) {
+    const state: { status?: number; body?: unknown; principal?: unknown; next: boolean } = { next: false };
+    const ctx: HttpContextLike = {
+      request: { header: (name) => (name.toLowerCase() === 'authorization' ? authorization : undefined) },
+      response: {
+        status: (code: number) => {
+          state.status = code;
+          return {
+            json: (body: unknown) => {
+              state.body = body;
+              return body;
+            },
+          };
+        },
+        header: () => undefined,
+      },
+    };
+    return { ctx, state };
+  }
+
+  const jwt = new Jwt(SECRET, { issuer: 'nofault', audience: 'api' });
+
+  it('rejects a request without a token', async () => {
+    const { ctx, state } = fakeContext();
+    await authMiddleware({ jwt })(ctx, async () => {
+      state.next = true;
+    });
+    expect(state.status).toBe(401);
+    expect(state.next).toBe(false);
+  });
+
+  it('lets an authenticated request through', async () => {
+    const token = jwt.sign({ sub: 'u1', roles: ['admin'] }, 3600);
+    const { ctx, state } = fakeContext(`Bearer ${token}`);
+    let seen: unknown;
+    await authMiddleware({ jwt, setPrincipal: (p) => (seen = p) })(ctx, async () => {
+      state.next = true;
+    });
+    expect(state.next).toBe(true);
+    expect(seen).toMatchObject({ sub: 'u1', roles: ['admin'] });
+  });
+
+  it('answers 401 without telling the caller why the token failed', async () => {
+    // 不区分"签名不对"和"过期了"：那是在给攻击者递信息
+    const expired = jwt.sign({ sub: 'u1' }, -120);
+    const { ctx, state } = fakeContext(`Bearer ${expired}`);
+    await authMiddleware({ jwt })(ctx, async () => {
+      state.next = true;
+    });
+    expect(state.status).toBe(401);
+    expect(JSON.stringify(state.body)).not.toMatch(/expired/i);
+  });
+
+  it('answers 403 when the role does not match', async () => {
+    class Api {
+      @Roles('admin')
+      wipe(): void {}
+    }
+    const token = jwt.sign({ sub: 'u1', roles: ['user'] }, 3600);
+    const { ctx, state } = fakeContext(`Bearer ${token}`);
+    await authMiddleware({
+      jwt,
+      handlerOf: () => ({ target: new Api(), propertyKey: 'wipe' }),
+    })(ctx, async () => {
+      state.next = true;
+    });
+    expect(state.status).toBe(403);
+  });
+});
