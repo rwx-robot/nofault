@@ -41,3 +41,23 @@ export function traceFields(): TraceFields {
 /**
  * 包装一个字段式日志器，自动注入 traceId / spanId。
  *
+ * 调用方显式传的同名字段**优先**——偶尔要记另一条链路时不应被覆盖。
+ */
+export function withTraceFields<T extends FieldLogger>(logger: T): T {
+  const levels: Array<keyof FieldLogger> = ['debug', 'info', 'warn', 'error'];
+  // 展开成可变对象再包装：泛型 T 没有索引签名，直接赋值会被 TS 拒绝
+  const wrapped = { ...logger } as Record<string, unknown>;
+
+  for (const level of levels) {
+    const original = logger[level];
+    if (typeof original !== 'function') continue;
+
+    wrapped[level as string] = (message: string, fields?: Record<string, unknown>): void => {
+      (original as (m: string, f?: Record<string, unknown>) => void).call(logger, message, {
+        ...traceFields(),
+        ...fields,
+      });
+    };
+  }
+  return wrapped as T;
+}
