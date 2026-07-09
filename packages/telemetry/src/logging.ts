@@ -20,3 +20,24 @@ export interface FieldLogger {
 }
 
 export interface TraceFields {
+  traceId?: string;
+  spanId?: string;
+}
+
+/**
+ * 取当前的追踪字段。
+ *
+ * 优先取**活动 Span**（它知道自己在哪条链路的哪一步），
+ * 退回请求上下文里的 traceId（v0.3.0 起就有，即使没起 Span 也能串日志）。
+ */
+export function traceFields(): TraceFields {
+  const ctx = currentContext();
+  const active = ctx?.get<Span>(ACTIVE_SPAN);
+  if (active) return { traceId: active.traceId, spanId: active.spanId };
+  if (ctx?.traceId) return { traceId: ctx.traceId };
+  return {};
+}
+
+/**
+ * 包装一个字段式日志器，自动注入 traceId / spanId。
+ *
