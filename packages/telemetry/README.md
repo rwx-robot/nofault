@@ -21,3 +21,13 @@ await tracer.trace('checkout', async (span) => {
   span?.setAttributes({ orderId });
   return doWork();
 });
+```
+
+## 注意
+
+路由标签**必须收敛**（`/users/:id` 而非 `/users/1`），否则基数爆炸会同时打爆内存和抓取耗时。
+
+## 相关文档
+
+- 架构说明 → [`docs/v0.8.0/ARCHITECTURE.md`](../../docs/v0.8.0/ARCHITECTURE.md)
+- 变更记录 → [`docs/v0.8.0/CHANGELOG.md`](../../docs/v0.8.0/CHANGELOG.md)
