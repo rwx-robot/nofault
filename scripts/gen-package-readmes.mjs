@@ -212,3 +212,216 @@ const doc = openApiDocument(spec, { title: 'User API' });`,
 nofaultctl generate api api/user.api.ts --out src --with-orm
 nofaultctl openapi api/user.api.ts --out openapi.json
 nofaultctl doctor`,
+    note: '进程自己崩溃时**不自动重启**：否则会在坏代码上反复启动，刷屏且看不出原因。',
+  },
+  {
+    dir: 'orm',
+    name: '@nofault/orm',
+    version: 'v0.5.0',
+    tagline: '数据访问：实体映射、Repository、查询构造器、事务、迁移。',
+    why: [
+      '**方言只生成字符串，数据源是唯一 IO 边界** → 两边的单测完全独立',
+      '`MemoryDataSource` 开箱可跑（含迷你 SQL 引擎，供迁移用），`SqlDataSource` 不绑驱动',
+      '`save()` 把自增主键上的 0 视为"未设置"：TS 里 `new User().id` 恒为 0',
+      '比较前归一化布尔——库里存 1/0，实体上是 true/false，否则"存得进取不出来"',
+    ],
+    example: `import { Entity, Column, PrimaryGeneratedColumn, Repository, InjectRepository } from '@nofault/orm';
+
+@Entity({ table: 'users' })
+class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
+  @Column({ name: 'email' })
+  email!: string;
+}
+
+class UserService {
+  constructor(@InjectRepository(User) private repo: Repository<User>) {}
+  find(email: string) { return this.repo.findOne({ email }); }
+}`,
+    note: '只给"被当作响应类型"的类型建表——请求 DTO 是传输对象，给它建表没意义。',
+  },
+  {
+    dir: 'cache',
+    name: '@nofault/cache',
+    version: 'v0.5.0',
+    tagline: '缓存抽象与内存实现：TTL、LRU、抖动、single-flight。',
+    why: [
+      '`getOrSet()` 让**缓存击穿在源头消失**：并发同 key 只回源一次',
+      'TTL 必须带**抖动**，否则大批 key 同时过期 = 雪崩',
+      '不固化 `undefined`——固化"查不到"会让数据写入后永远读不到',
+      'LRU 淘汰 + `max` 上限，防止无界增长',
+    ],
+    example: `import { MemoryCache, NullCache } from '@nofault/cache';
+
+const cache = new MemoryCache({ max: 10_000 });
+const user = await cache.getOrSet(\`user:\${id}\`, () => db.find(id), { ttl: 60_000 });`,
+    note: '命中与回源差数量级（实测 ~12,000×），所以"能不能命中"几乎是唯一重要的问题。',
+  },
+  {
+    dir: 'rpc',
+    name: '@nofault/rpc',
+    version: 'v0.6.0',
+    tagline: 'RPC 框架：长度前缀分帧、连接池、超时重试、注册发现、拦截器。',
+    why: [
+      'TCP 是字节流、**没有消息边界** → 自己分帧（`[4 字节长度][JSON]`）',
+      '一条连接上可并发多个在途调用 → **请求必须带 id** 才能配对响应',
+      '只对"可能成功"的失败重试：网络错误、超时、解析错误；业务错误重试只会放大故障',
+      '按目标**去重在建连接**——否则 N 个并发首调各建一条，池化在最需要它时失效',
+    ],
+    example: `import { RpcServer, RpcClient, InMemoryRegistry } from '@nofault/rpc';
+
+const server = new RpcServer();
+server.registerService('user', new UserService());
+await server.listen(9000);
+
+const client = new RpcClient({ registry: new InMemoryRegistry() });
+const user = await client.call('user', 'get', { id: 1 });`,
+    note: '超时映射成 **504**（Gateway Timeout），不是笼统的 500——504 才是"上游超时"的正确语义。',
+  },
+  {
+    dir: 'resilience',
+    name: '@nofault/resilience',
+    version: 'v0.7.0',
+    tagline: '服务治理四件套：令牌桶限流、三态熔断器、舱壁隔离、指数退避。',
+    why: [
+      '**令牌桶而非固定窗口**：固定窗口在切换瞬间放过 2 倍流量',
+      '熔断打开后**绝不再打下游**；半开只放行有限探针（否则冷却结束瞬间会再打挂下游）',
+      '队列必须**有界**：无界队列只是把"立即失败"延后，还吃内存',
+      '退避必须**抖动**：所有调用方同时重试 = 重试风暴',
+      '治理判定全部 <1µs（不到 HTTP 链路的 0.2%）→ 没有理由因为性能而不加保护',
+    ],
+    example: `import { CircuitBreaker, TokenBucket, Bulkhead, retryWithBackoff } from '@nofault/resilience';
+
+const breaker = new CircuitBreaker({ failureThreshold: 5, resetTimeoutMs: 3000 });
+await breaker.run(() => callDownstream());`,
+    note: '中间件顺序：**限流 → 舱壁 → 熔断**。反了会让被限流的请求也占着并发配额。',
+  },
+  {
+    dir: 'telemetry',
+    name: '@nofault/telemetry',
+    version: 'v0.8.0',
+    tagline: '可观测性：Span（采样/批量导出）与指标（Prometheus 文本）。',
+    why: [
+      '**采样在创建时决定**：`startSpan()` 不采样直接返回 `null`，不为丢弃的链路付一分钱（0.27µs vs 5.84µs）',
+      '父子 Span 靠**请求上下文里的活动 Span** 建立，结束时自动还原',
+      'Histogram 只存桶计数（存全部样本在几千 QPS 下必然 OOM），分位数给桶上界',
+      '错误状态码要在 `catch` 里记——`finally` 里框架还没映射状态码，会读到 200',
+    ],
+    example: `import { Tracer, MetricRegistry, observability } from '@nofault/telemetry';
+
+const tracer = new Tracer(exporter, ratioSampler(0.1));
+await tracer.trace('checkout', async (span) => {
+  span?.setAttributes({ orderId });
+  return doWork();
+});`,
+    note: '路由标签**必须收敛**（`/users/:id` 而非 `/users/1`），否则基数爆炸会同时打爆内存和抓取耗时。',
+  },
+  {
+    dir: 'micro',
+    name: '@nofault/micro',
+    version: 'v0.9.0',
+    tagline: '微服务全家桶：分布式 ID、分布式锁、cron 调度、事件总线、一键装配。',
+    why: [
+      'Snowflake 返回**字符串**：63 位超过 `MAX_SAFE_INTEGER`，转 number 会静默丢精度',
+      '序列号耗尽要**等到下一毫秒**，回绕会产生重复 ID',
+      '释放锁**必须校验 token**：不校验会释放别人的锁，等于没加锁',
+      '调度器默认**不补跑、不允许重叠**（补跑会在重启瞬间涌入几十个任务）',
+      'cron 的日与周是**或**关系（Unix 语义），做成"与"则 `0 0 1 * 0` 永远不触发',
+      '装配顺序即正确性：迁移 → 订阅事件 → 监听 → 定时任务 → **最后**置就绪',
+    ],
+    example: `import { Snowflake, DistributedLock, Scheduler, EventBus, Microservice } from '@nofault/micro';
+
+const ids = new Snowflake({ workerId: 1 });
+const id = ids.nextIdString();
+
+await lock.run(async () => { /* 同一时刻只有一个实例在做 */ });`,
+    note: '停机是启动的**逆序**：先停定时任务、再关监听、最后释放数据源。',
+  },
+  {
+    dir: 'security',
+    name: '@nofault/security',
+    version: 'v1.0.0',
+    tagline: '认证与授权：JWT（HS256）、scrypt 密码哈希、RBAC。',
+    why: [
+      '**`alg` 不从 token 读**：照 header 说的算法去验证，正是 alg:none 与 RS→HS 混淆的根源',
+      '签名比较用 `timingSafeEqual`——`===` 在第一个不同字节就返回',
+      '容忍 30 秒时钟偏移：不容忍的话机器差几秒就大面积误判',
+      'token 无效一律 401 **且不透露原因**（"签名不对"还是"过期了"都是在递信息）',
+      '哈希参数写进结果（`scrypt$N$...`）：以后调高成本时老密码仍能验证',
+      '**默认拒绝**：漏写装饰器应当是"调不通"，而不是"谁都能调"',
+    ],
+    example: `import { Jwt, Roles, Public, authMiddleware } from '@nofault/security';
+
+const jwt = new Jwt(process.env.JWT_SECRET!, { issuer: 'my-app' });
+const token = jwt.sign({ sub: user.id, roles: user.roles }, 3600);
+
+class AdminController {
+  @Public() @Get('/health') health() {}
+  @Roles('admin') @Get('/wipe') wipe() {}
+}`,
+    note: '中间件要**先**判断 `@Public` **再**决定 401——顺序反了会把健康检查一起拦掉（误摘除，生产事故级）。',
+  },
+  {
+    dir: 'mcp',
+    name: '@nofault/mcp',
+    version: 'v1.0.0',
+    tagline: 'MCP 服务器模式：把 nofault 的能力暴露给 AI 客户端（stdio，换行分隔 JSON-RPC）。',
+    why: [
+      '**零依赖**：MCP 的 stdio 传输就是"一行一个 JSON"，不需要 SDK',
+      '**流可注入**：默认 stdin/stdout，测试与嵌入时传入自定义流',
+      '实现服务器侧最小面：`initialize` / `tools/list` / `tools/call` / `ping`，其余一律 -32601',
+      '**工具错误走 result.isError**：工具自身的失败是"调用成功但结果为错误"，只有协议级错误才用 JSON-RPC error',
+    ],
+    example: `import { McpServer } from '@nofault/mcp';
+
+const server = new McpServer({
+  name: 'nofault-mcp',
+  version: '1.0.0',
+  tools: [{
+    name: 'list-users',
+    description: 'list users by page',
+    inputSchema: { type: 'object', properties: { page: { type: 'number' } } },
+    handler: (input) => users.page(input.page),
+  }],
+});
+server.start(); // 挂在 stdio 上，交给 MCP 客户端`,
+    note: '工具的 inputSchema 是 JSON Schema；参数校验由工具自身负责，协议层只做分发。',
+  },
+];
+
+function render(p) {
+  const why = p.why.map((w) => `- ${w}`).join('\n');
+  return `# ${p.name}
+
+${p.tagline}
+
+**引入版本**：${p.version}
+
+## 为什么这么设计
+
+${why}
+
+## 最快上手
+
+\`\`\`ts
+${p.example}
+\`\`\`
+
+## 注意
+
+${p.note}
+
+## 相关文档
+
+- 架构说明 → [\`docs/${p.version}/ARCHITECTURE.md\`](../../docs/${p.version}/ARCHITECTURE.md)
+- 变更记录 → [\`docs/${p.version}/CHANGELOG.md\`](../../docs/${p.version}/CHANGELOG.md)
+`;
+}
+
+for (const p of PACKAGES) {
+  const file = join(packagesDir, p.dir, 'README.md');
+  writeFileSync(file, render(p));
+  console.log(`wrote packages/${p.dir}/README.md`);
+}
+console.log(`\n共 ${PACKAGES.length} 份`);
