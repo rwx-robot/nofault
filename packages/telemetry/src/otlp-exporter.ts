@@ -24,3 +24,12 @@ export interface OtlpExporterOptions {
   endpoint: string;
   /** resource 属性 service.name（在 Jaeger / Tempo 里就是服务名） */
   serviceName?: string;
+  /** 额外请求头（如 Authorization） */
+  headers?: Record<string, string>;
+  /** 单次导出超时（毫秒），默认 5000 */
+  timeoutMs?: number;
+  /** 导出失败钩子；不提供则打印一行 console.error */
+  onError?: (error: unknown, batch: FinishedSpan[]) => void;
+}
+
+/** OTLP 属性值：整数走 intValue 且必须是字符串（JSON number 丢精度） */
