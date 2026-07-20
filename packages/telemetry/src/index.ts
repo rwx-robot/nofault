@@ -14,13 +14,15 @@ export {
   ACTIVE_SPAN,
 } from './tracer';
 export type { FinishedSpan, Exporter, Sampler, SpanKind, SpanAttributes } from './tracer';
-// [history] omitted at this version (not yet introduced): export { OtlpExporter, toOtlpSpan, toOtlpRequest } from './otlp-exporter';
-// [history] omitted at this version (not yet introduced): export type { OtlpExporterOptions } from './otlp-exporter';
+
+export { OtlpExporter, toOtlpSpan, toOtlpRequest } from './otlp-exporter';
+export type { OtlpExporterOptions } from './otlp-exporter';
 
 export { MetricRegistry, Counter, Gauge, Histogram, DEFAULT_BUCKETS } from './metrics';
 export type { Labels, Sample } from './metrics';
-// [history] omitted at this version (not yet introduced): export { withTraceFields, traceFields } from './logging';
-// [history] omitted at this version (not yet introduced): export type { FieldLogger, TraceFields } from './logging';
+
+export { withTraceFields, traceFields } from './logging';
+export type { FieldLogger, TraceFields } from './logging';
 
 export { observability } from './middleware';
 export type { ObservabilityOptions, ObservabilityContext } from './middleware';
