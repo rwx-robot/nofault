@@ -33,3 +33,12 @@ export interface OtlpExporterOptions {
 }
 
 /** OTLP 属性值：整数走 intValue 且必须是字符串（JSON number 丢精度） */
+function attributeValue(value: NonNullable<SpanAttributes[string]>): Record<string, string | number | boolean> {
+  if (typeof value === 'number') {
+    return Number.isInteger(value) ? { intValue: String(value) } : { doubleValue: value };
+  }
+  if (typeof value === 'boolean') return { boolValue: value };
+  return { stringValue: String(value) };
+}
+
+function toOtlpAttributes(attributes: SpanAttributes) {
