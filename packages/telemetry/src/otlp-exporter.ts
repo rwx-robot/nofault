@@ -15,3 +15,12 @@
  * 3. **零依赖**：fetch 是 Node 20 的全局，不需要任何 HTTP 客户端包
  */
 import type { Exporter, FinishedSpan, SpanAttributes, SpanKind } from './tracer';
+
+/** OTLP SpanKind：internal=1 / server=2 / client=3（规范里的枚举值） */
+const KIND_CODES: Record<SpanKind, number> = { internal: 1, server: 2, client: 3 };
+
+export interface OtlpExporterOptions {
+  /** OTLP/HTTP traces 端点，如 http://localhost:4318/v1/traces */
+  endpoint: string;
+  /** resource 属性 service.name（在 Jaeger / Tempo 里就是服务名） */
+  serviceName?: string;
