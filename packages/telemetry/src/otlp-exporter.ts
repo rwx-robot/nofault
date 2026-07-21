@@ -110,3 +110,12 @@ export class OtlpExporter implements Exporter {
           error instanceof Error ? error.message : error,
         ));
   }
+
+  async export(spans: FinishedSpan[]): Promise<void> {
+    if (spans.length === 0) return;
+    const body = JSON.stringify(toOtlpRequest(spans, this.serviceName));
+    // 手动 AbortController 而非 AbortSignal.timeout：前者在任何 @types/node 下都有完整类型
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), this.timeoutMs);
+    try {
+      const response = await fetch(this.options.endpoint, {
