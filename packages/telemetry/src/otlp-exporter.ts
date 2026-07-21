@@ -67,3 +67,12 @@ export function toOtlpSpan(span: FinishedSpan): Record<string, unknown> {
     endTimeUnixNano: nanos(span.startTimeMs + span.durationMs),
     attributes: toOtlpAttributes(span.attributes),
     // ok → OK(1)；error → ERROR(2) + 原因。错误原因进 status.message，
+    // 在 Jaeger 的 span 详情里直接可见
+    status:
+      span.status === 'error' ? { code: 2, message: span.error ?? 'error' } : { code: 1 },
+  };
+}
+
+/** 一批 Span → 完整的 OTLP/HTTP JSON 请求体 */
+export function toOtlpRequest(spans: FinishedSpan[], serviceName: string) {
+  return {
