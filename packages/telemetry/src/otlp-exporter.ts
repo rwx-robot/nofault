@@ -85,3 +85,11 @@ export function toOtlpRequest(spans: FinishedSpan[], serviceName: string) {
           {
             scope: { name: '@nofault/telemetry' },
             spans: spans.map(toOtlpSpan),
+          },
+        ],
+      },
+    ],
+  };
+}
+
+export class OtlpExporter implements Exporter {
