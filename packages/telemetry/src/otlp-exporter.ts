@@ -76,3 +76,12 @@ export function toOtlpSpan(span: FinishedSpan): Record<string, unknown> {
 /** 一批 Span → 完整的 OTLP/HTTP JSON 请求体 */
 export function toOtlpRequest(spans: FinishedSpan[], serviceName: string) {
   return {
+    resourceSpans: [
+      {
+        resource: {
+          attributes: [{ key: 'service.name', value: { stringValue: serviceName } }],
+        },
+        scopeSpans: [
+          {
+            scope: { name: '@nofault/telemetry' },
+            spans: spans.map(toOtlpSpan),
