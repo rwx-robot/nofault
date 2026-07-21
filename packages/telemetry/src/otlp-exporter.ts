@@ -119,3 +119,12 @@ export class OtlpExporter implements Exporter {
     const timer = setTimeout(() => controller.abort(), this.timeoutMs);
     try {
       const response = await fetch(this.options.endpoint, {
+        method: 'POST',
+        headers: this.headers,
+        body,
+        signal: controller.signal,
+      });
+      if (!response.ok) {
+        throw new Error(`otlp endpoint responded ${response.status}`);
+      }
+    } catch (error) {
