@@ -50,3 +50,12 @@ function toOtlpAttributes(attributes: SpanAttributes) {
 /** 毫秒 → 纳秒字符串（BigInt 避免大数精度丢失） */
 function nanos(ms: number): string {
   return (BigInt(Math.round(ms)) * 1_000_000n).toString();
+}
+
+/**
+ * 单个 Span → OTLP JSON。
+ * 导出来便于测试与排查（不用起 collector 就能断言编码结果）。
+ */
+export function toOtlpSpan(span: FinishedSpan): Record<string, unknown> {
+  return {
+    traceId: span.traceId,
