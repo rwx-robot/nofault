@@ -128,3 +128,10 @@ export class OtlpExporter implements Exporter {
         throw new Error(`otlp endpoint responded ${response.status}`);
       }
     } catch (error) {
+      // best-effort：只报告、绝不上抛（见文件头纪律 1）
+      this.onError(error, spans);
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+}
