@@ -102,3 +102,11 @@ export class OtlpExporter implements Exporter {
     this.serviceName = options.serviceName ?? 'unknown_service';
     this.headers = { 'content-type': 'application/json', ...options.headers };
     this.timeoutMs = options.timeoutMs ?? 5000;
+    this.onError =
+      options.onError ??
+      ((error) =>
+        console.error(
+          '[telemetry] otlp export failed:',
+          error instanceof Error ? error.message : error,
+        ));
+  }
