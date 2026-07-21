@@ -42,3 +42,11 @@ function attributeValue(value: NonNullable<SpanAttributes[string]>): Record<stri
 }
 
 function toOtlpAttributes(attributes: SpanAttributes) {
+  return Object.entries(attributes)
+    .filter((entry): entry is [string, NonNullable<SpanAttributes[string]>] => entry[1] !== undefined)
+    .map(([key, value]) => ({ key, value: attributeValue(value) }));
+}
+
+/** 毫秒 → 纳秒字符串（BigInt 避免大数精度丢失） */
+function nanos(ms: number): string {
+  return (BigInt(Math.round(ms)) * 1_000_000n).toString();
