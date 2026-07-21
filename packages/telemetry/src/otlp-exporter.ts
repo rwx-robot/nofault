@@ -93,3 +93,12 @@ export function toOtlpRequest(spans: FinishedSpan[], serviceName: string) {
 }
 
 export class OtlpExporter implements Exporter {
+  private readonly serviceName: string;
+  private readonly headers: Record<string, string>;
+  private readonly timeoutMs: number;
+  private readonly onError: (error: unknown, batch: FinishedSpan[]) => void;
+
+  constructor(private readonly options: OtlpExporterOptions) {
+    this.serviceName = options.serviceName ?? 'unknown_service';
+    this.headers = { 'content-type': 'application/json', ...options.headers };
+    this.timeoutMs = options.timeoutMs ?? 5000;
