@@ -59,3 +59,11 @@ function nanos(ms: number): string {
 export function toOtlpSpan(span: FinishedSpan): Record<string, unknown> {
   return {
     traceId: span.traceId,
+    spanId: span.spanId,
+    ...(span.parentSpanId ? { parentSpanId: span.parentSpanId } : {}),
+    name: span.name,
+    kind: KIND_CODES[span.kind],
+    startTimeUnixNano: nanos(span.startTimeMs),
+    endTimeUnixNano: nanos(span.startTimeMs + span.durationMs),
+    attributes: toOtlpAttributes(span.attributes),
+    // ok → OK(1)；error → ERROR(2) + 原因。错误原因进 status.message，
