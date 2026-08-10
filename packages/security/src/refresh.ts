@@ -55,3 +55,17 @@ export interface TokenStore {
   findFamilyByUsedHash?(usedTokenHash: string): Promise<string | undefined> | string | undefined;
   /** 重用检测（可选）：吊销整个会话族的全部活跃 token */
   revokeFamily?(familyId: string): Promise<void> | void;
+}
+
+/** 内存实现：哑存储，读到什么就是什么；另存"已用 token 哈希 → 会话族"的墓碑 */
+export class InMemoryTokenStore implements TokenStore {
+  private readonly records = new Map<string, RefreshTokenRecord>();
+  private readonly used = new Map<string, string>();
+
+  save(record: RefreshTokenRecord): void {
+    this.records.set(record.tokenHash, record);
+  }
+
+  find(tokenHash: string): RefreshTokenRecord | undefined {
+    return this.records.get(tokenHash);
+  }
