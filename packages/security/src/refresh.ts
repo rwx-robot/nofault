@@ -13,3 +13,17 @@
  *    refresh token 是 256 位随机数，熵足够，不需要 scrypt 那样的慢哈希
  *    （慢哈希是给低熵的人类密码准备的）
  * 3. **每次 refresh 都轮转**：旧 token 用过即废。被偷走的 token
+ *    只有一次使用窗口
+ * 4. **重用检测**：已轮转的 token 再次出现 = 泄露信号 → 静默吊销
+ *    整个会话族（family）——偷来的 token 用一次，全家作废。
+ *    store 通过两个可选方法参与（缺省实现自动降级为"仅拒绝"）
+ */
+import { createHash, randomBytes } from 'node:crypto';
+import type { Jwt, JwtPayload } from './jwt';
+
+/** 对 refresh token 的唯一存储形态：sha256 hex。原始 token 绝不落库 */
+export function hashToken(token: string): string {
+  return createHash('sha256').update(token, 'utf8').digest('hex');
+}
+
+export interface RefreshTokenRecord {
