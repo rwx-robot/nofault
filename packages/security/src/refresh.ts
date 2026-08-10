@@ -41,3 +41,17 @@ export interface RefreshTokenRecord {
  * refresh token 的存取缝。
  *
  * 内存实现开箱可用、可测；生产换 Redis 等只需实现这三个方法。
+ * 请求/响应侧都允许同步实现——和 Exporter 的缝一个约定。
+ *
+ * **过期不是 store 的职责**：find 如实返回找到的记录（哪怕已过期），
+ * "过期"与"未知"的区分由 RefreshTokenService 统一裁定——
+ * 否则每种 store 实现都得自带一套过期语义，行为必然漂移。
+ */
+export interface TokenStore {
+  save(record: RefreshTokenRecord): Promise<void> | void;
+  find(tokenHash: string): Promise<RefreshTokenRecord | undefined> | RefreshTokenRecord | undefined;
+  revoke(tokenHash: string): Promise<void> | void;
+  /** 重用检测（可选）：按"已用过的 token 哈希"反查会话族 */
+  findFamilyByUsedHash?(usedTokenHash: string): Promise<string | undefined> | string | undefined;
+  /** 重用检测（可选）：吊销整个会话族的全部活跃 token */
+  revokeFamily?(familyId: string): Promise<void> | void;
