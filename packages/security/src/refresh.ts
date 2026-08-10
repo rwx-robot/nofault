@@ -27,3 +27,17 @@ export function hashToken(token: string): string {
 }
 
 export interface RefreshTokenRecord {
+  /** sha256(raw token) */
+  tokenHash: string;
+  /** 会话族 id：同一次登录轮转出的所有 token 同族，重用检测按族吊销 */
+  familyId: string;
+  /** 重新签发 access token 时携带的 claims（sub / roles / 业务自定义字段） */
+  claims: JwtPayload;
+  issuedAtMs: number;
+  expiresAtMs: number;
+}
+
+/**
+ * refresh token 的存取缝。
+ *
+ * 内存实现开箱可用、可测；生产换 Redis 等只需实现这三个方法。
