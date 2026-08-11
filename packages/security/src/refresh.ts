@@ -153,3 +153,17 @@ export class RefreshTokenService {
       claims,
       issuedAtMs: now,
       expiresAtMs: now + this.refreshTokenTtlSeconds * 1000,
+    });
+    return {
+      accessToken: this.jwt.sign(claims, accessTokenTtlSeconds),
+      refreshToken,
+      expiresIn: accessTokenTtlSeconds,
+    };
+  }
+
+  /**
+   * 用 refresh token 换一对新的：**先验证后轮转**。
+   * 轮转 = 吊销旧的 + 签发新的（同族）；旧 token 从此按"未知"拒绝——
+   * 若它再次出现，说明被偷了，重用检测会吊销全家。
+   */
+  async refresh(presentedToken: string, accessTokenTtlSeconds: number): Promise<IssuedPair> {
