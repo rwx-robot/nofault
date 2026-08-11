@@ -138,3 +138,18 @@ export class RefreshTokenService {
       throw new Error('refresh token entropy must be at least 32 bytes');
     }
   }
+
+  /** 登录成功后签发 access + refresh 对；familyId 缺省时开新会话族，轮转链上传入同族 */
+  async issue(
+    claims: JwtPayload,
+    accessTokenTtlSeconds: number,
+    familyId: string = newFamilyId(),
+  ): Promise<IssuedPair> {
+    const refreshToken = this.newToken();
+    const now = Date.now();
+    this.store.save({
+      tokenHash: hashToken(refreshToken),
+      familyId,
+      claims,
+      issuedAtMs: now,
+      expiresAtMs: now + this.refreshTokenTtlSeconds * 1000,
