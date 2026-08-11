@@ -111,3 +111,17 @@ export interface IssuedPair {
   refreshToken: string;
   /** access token 的有效期（秒），给客户端设置定时刷新用 */
   expiresIn: number;
+}
+
+export interface RefreshTokenOptions {
+  /** refresh token 有效期（秒），默认 14 天 */
+  refreshTokenTtlSeconds?: number;
+  /** refresh token 的随机字节数，默认 32（256 位熵）；低于 32 一律拒绝 */
+  tokenBytes?: number;
+}
+
+const DAY_SECONDS = 24 * 60 * 60;
+
+export class RefreshTokenService {
+  private readonly refreshTokenTtlSeconds: number;
+  private readonly tokenBytes: number;
