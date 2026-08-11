@@ -83,3 +83,17 @@ export class InMemoryTokenStore implements TokenStore {
   revokeFamily(familyId: string): void {
     for (const [hash, record] of this.records) {
       if (record.familyId !== familyId) continue;
+      this.records.delete(hash);
+      this.used.set(hash, familyId);
+    }
+  }
+
+  /** 当前记录数（含未清的过期记录），测试与运维观测用 */
+  get size(): number {
+    return this.records.size;
+  }
+}
+
+export class RefreshTokenError extends Error {
+  constructor(
+    readonly reason: 'malformed' | 'unknown' | 'expired',
