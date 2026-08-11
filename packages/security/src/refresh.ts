@@ -125,3 +125,16 @@ const DAY_SECONDS = 24 * 60 * 60;
 export class RefreshTokenService {
   private readonly refreshTokenTtlSeconds: number;
   private readonly tokenBytes: number;
+
+  constructor(
+    private readonly jwt: Jwt,
+    private readonly store: TokenStore,
+    options: RefreshTokenOptions = {},
+  ) {
+    this.refreshTokenTtlSeconds = options.refreshTokenTtlSeconds ?? 14 * DAY_SECONDS;
+    this.tokenBytes = options.tokenBytes ?? 32;
+    // 弱熵比没有更危险：它给出一种虚假的安全感（与 Jwt 的弱密钥检查同一立场）
+    if (this.tokenBytes < 32) {
+      throw new Error('refresh token entropy must be at least 32 bytes');
+    }
+  }
