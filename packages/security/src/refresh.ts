@@ -97,3 +97,17 @@ export class InMemoryTokenStore implements TokenStore {
 export class RefreshTokenError extends Error {
   constructor(
     readonly reason: 'malformed' | 'unknown' | 'expired',
+    message: string,
+  ) {
+    super(message);
+    this.name = 'RefreshTokenError';
+  }
+}
+
+export interface IssuedPair {
+  /** 短时效 access token（JWT，无状态校验） */
+  accessToken: string;
+  /** 不透明的 refresh token，服务端可吊销 */
+  refreshToken: string;
+  /** access token 的有效期（秒），给客户端设置定时刷新用 */
+  expiresIn: number;
