@@ -181,3 +181,17 @@ export class RefreshTokenService {
     const record = await this.store.find(tokenHash);
     if (!record) return false;
     this.store.revoke(tokenHash);
+    return true;
+  }
+
+  private async findValid(presentedToken: string): Promise<RefreshTokenRecord> {
+    if (!isPresentable(presentedToken)) {
+      throw new RefreshTokenError('malformed', 'refresh token is required');
+    }
+    const record = await this.store.find(hashToken(presentedToken));
+    // 三种失败共用"拒绝"语义，但 reason 分开：malformed 是客户端 bug，
+    // unknown 与 expired 是登录态结束——对客户端一律只回 401，不解释更多
+    if (!record) {
+      // 重用检测：这个哈希在墓碑里 = 它曾被正常轮转/吊销，现在又出现了。
+      // 按泄露处理：静默吊掉整个会话族（响应仍是同一个 401，不透露检测到了什么）
+      await this.containReusedFamily(presentedToken);
