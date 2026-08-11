@@ -167,3 +167,17 @@ export class RefreshTokenService {
    * 若它再次出现，说明被偷了，重用检测会吊销全家。
    */
   async refresh(presentedToken: string, accessTokenTtlSeconds: number): Promise<IssuedPair> {
+    const record = await this.findValid(presentedToken);
+    // 轮转：旧记录立即作废。这里 await 之后再写新记录，
+    // 保证"同一条旧 token 换两次"里至少有一次拿到 unknown
+    this.store.revoke(record.tokenHash);
+    return this.issue(record.claims, accessTokenTtlSeconds, record.familyId);
+  }
+
+  /** 吊销（登出 / 管理员踢人）。返回是否真的存在过 */
+  async revoke(presentedToken: string): Promise<boolean> {
+    if (!isPresentable(presentedToken)) return false;
+    const tokenHash = hashToken(presentedToken);
+    const record = await this.store.find(tokenHash);
+    if (!record) return false;
+    this.store.revoke(tokenHash);
