@@ -69,3 +69,17 @@ export class InMemoryTokenStore implements TokenStore {
   find(tokenHash: string): RefreshTokenRecord | undefined {
     return this.records.get(tokenHash);
   }
+
+  revoke(tokenHash: string): void {
+    const family = this.records.get(tokenHash)?.familyId;
+    this.records.delete(tokenHash);
+    if (family) this.used.set(tokenHash, family);
+  }
+
+  findFamilyByUsedHash(usedTokenHash: string): string | undefined {
+    return this.used.get(usedTokenHash);
+  }
+
+  revokeFamily(familyId: string): void {
+    for (const [hash, record] of this.records) {
+      if (record.familyId !== familyId) continue;
