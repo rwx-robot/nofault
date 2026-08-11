@@ -208,3 +208,17 @@ export class RefreshTokenService {
     const family = await this.store.findFamilyByUsedHash?.(hashToken(presentedToken));
     if (family) await this.store.revokeFamily?.(family);
   }
+
+  private newToken(): string {
+    return randomBytes(this.tokenBytes).toString('base64url');
+  }
+}
+
+/** 出示的 token 至少要像样：非空、无空白、长度合理 */
+function isPresentable(token: string): boolean {
+  return token.length >= 16 && token.length <= 512 && !/\s/.test(token);
+}
+
+function newFamilyId(): string {
+  return randomBytes(12).toString('base64url');
+}
