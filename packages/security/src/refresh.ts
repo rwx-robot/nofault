@@ -195,3 +195,16 @@ export class RefreshTokenService {
       // 重用检测：这个哈希在墓碑里 = 它曾被正常轮转/吊销，现在又出现了。
       // 按泄露处理：静默吊掉整个会话族（响应仍是同一个 401，不透露检测到了什么）
       await this.containReusedFamily(presentedToken);
+      throw new RefreshTokenError('unknown', 'refresh token is not recognized');
+    }
+    if (record.expiresAtMs <= Date.now()) {
+      this.store.revoke(record.tokenHash);
+      throw new RefreshTokenError('expired', 'refresh token has expired');
+    }
+    return record;
+  }
+
+  private async containReusedFamily(presentedToken: string): Promise<void> {
+    const family = await this.store.findFamilyByUsedHash?.(hashToken(presentedToken));
+    if (family) await this.store.revokeFamily?.(family);
+  }
