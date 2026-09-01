@@ -17,3 +17,14 @@
 import type { EntityMeta } from './decorators';
 import type { SelectOptions, WhereClause } from './dialect';
 import type { DataSource, QueryResult, Row } from './data-source';
+
+export interface ReadWriteSplitOptions {
+  primary: DataSource;
+  replicas: DataSource[];
+  /** 数据源名，默认 'read-write-split' */
+  name?: string;
+  /** 写之后的读回主库窗口（毫秒），默认 0（不粘连）。应对复制延迟下的"读己之写" */
+  stickyMs?: number;
+  /** 副本失败后的冷却时间（毫秒），默认 5000；冷却期内不再选中它 */
+  cooldownMs?: number;
+  /** 副本降级时的观测钩子（打点/告警），默认无 */
