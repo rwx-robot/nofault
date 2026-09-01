@@ -28,3 +28,13 @@ export interface ReadWriteSplitOptions {
   /** 副本失败后的冷却时间（毫秒），默认 5000；冷却期内不再选中它 */
   cooldownMs?: number;
   /** 副本降级时的观测钩子（打点/告警），默认无 */
+  onReplicaError?: (replica: DataSource, error: unknown) => void;
+}
+
+export class ReadWriteSplitDataSource implements DataSource {
+  readonly name: string;
+  private readonly primary: DataSource;
+  private readonly replicas: DataSource[];
+  private readonly stickyMs: number;
+  private readonly cooldownMs: number;
+  private readonly onReplicaError?: (replica: DataSource, error: unknown) => void;
