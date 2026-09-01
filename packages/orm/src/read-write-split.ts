@@ -38,3 +38,12 @@ export class ReadWriteSplitDataSource implements DataSource {
   private readonly stickyMs: number;
   private readonly cooldownMs: number;
   private readonly onReplicaError?: (replica: DataSource, error: unknown) => void;
+
+  /** 轮询游标：读请求在健康副本间均匀分布 */
+  private roundRobin = 0;
+  /** 副本 → 冷却截止时间。时间戳而非布尔值，冷却到点自动恢复，无需定时器 */
+  private readonly unhealthyUntil = new Map<DataSource, number>();
+  /** 本层的事务深度：>0 即"在主库事务里"，读必须回主库 */
+  private transactionDepth = 0;
+  /** 最近一次写的时间戳 + 粘连窗口 = 粘连截止时间 */
+  private stickyUntil = 0;
