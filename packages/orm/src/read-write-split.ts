@@ -8,3 +8,12 @@
  * 四条纪律：
  * 1. **写一律主库，无例外**。`raw()` 也走主库——裸 SQL 无法静态判断读写，
  *    按本项目的惯例默认选"拒绝"那一侧（宁可主库多扛，不可写丢）
+ * 2. **事务内的读必须回主库**（read-your-writes）：连接还在主库事务里时，
+ *    读副本等于放弃一致性，读到的必然是旧数据
+ * 3. **副本失败不把读拖死**：标记冷却 + 降级主库。读是可用性优先——
+ *    副本短暂不一致可以忍，读请求成片失败不能忍
+ * 4. **`createTable` 落到所有库**：只建主库，读请求打过去就是"表不存在"
+ */
+import type { EntityMeta } from './decorators';
+import type { SelectOptions, WhereClause } from './dialect';
+import type { DataSource, QueryResult, Row } from './data-source';
