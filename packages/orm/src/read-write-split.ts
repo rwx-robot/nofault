@@ -98,3 +98,13 @@ export class ReadWriteSplitDataSource implements DataSource {
       return await this.primary.transaction(fn);
     } finally {
       this.transactionDepth--;
+    }
+  }
+
+  inTransaction(): boolean {
+    return this.transactionDepth > 0;
+  }
+
+  // ---------------------------------------------------------------- 读路径
+
+  async select(meta: EntityMeta, options: SelectOptions): Promise<Row[]> {
