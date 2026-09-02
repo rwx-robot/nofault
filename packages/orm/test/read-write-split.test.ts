@@ -90,3 +90,16 @@ describe('read-write split', () => {
     // 写只进主库：副本上不该出现
     expect((await primary.select(meta, {})).map((r) => r.name)).toEqual(['primary-row']);
     expect(await replica.select(meta, {})).toEqual([]);
+
+    await seed(replica, 'replica-row');
+    // 读从副本出：读到的是副本里那行，不是主库那行
+    const rows = await split.select(meta, {});
+    expect(rows.map((r) => r.name)).toEqual(['replica-row']);
+  });
+
+  it('reads from the primary inside a transaction (read-your-writes)', async () => {
+    const primary = new MemoryDataSource();
+    const replica = new MemoryDataSource();
+    const split = new ReadWriteSplitDataSource({ primary, replicas: [replica] });
+    await seed(primary, 'primary-row');
+    await seed(replica, 'replica-row');
