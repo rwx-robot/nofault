@@ -65,3 +65,16 @@ class FlakyReplica implements DataSource {
   }
   count(m: EntityMeta) {
     return this.inner.count(m);
+  }
+  transaction<T>(fn: () => Promise<T>) {
+    return this.inner.transaction(fn);
+  }
+  inTransaction() {
+    return this.inner.inTransaction();
+  }
+  raw(sql: string, params: unknown[] = []): Promise<QueryResult> {
+    return this.inner.raw(sql, params);
+  }
+  close() {
+    return this.inner.close();
+  }
