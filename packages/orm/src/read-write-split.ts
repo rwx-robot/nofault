@@ -77,3 +77,14 @@ export class ReadWriteSplitDataSource implements DataSource {
   update(meta: EntityMeta, id: unknown, patch: Row): Promise<QueryResult> {
     return this.write(() => this.primary.update(meta, id, patch));
   }
+
+  delete(meta: EntityMeta, id: unknown): Promise<QueryResult> {
+    return this.write(() => this.primary.delete(meta, id));
+  }
+
+  /** 裸 SQL 无法静态判断读写，一律主库（默认选拒绝侧） */
+  raw(sql: string, params: unknown[] = []): Promise<QueryResult> {
+    return this.write(() => this.primary.raw(sql, params));
+  }
+
+  /**
