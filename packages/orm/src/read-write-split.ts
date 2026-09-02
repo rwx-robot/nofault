@@ -148,3 +148,11 @@ export class ReadWriteSplitDataSource implements DataSource {
 
   /** 轮询选一个健康副本；全都不健康则返回 undefined（走主库） */
   private pickReplica(): DataSource | undefined {
+    const now = Date.now();
+    const healthy = this.replicas.filter((replica) => (this.unhealthyUntil.get(replica) ?? 0) <= now);
+    if (healthy.length === 0) return undefined;
+    const replica = healthy[this.roundRobin % healthy.length]!;
+    this.roundRobin += 1;
+    return replica;
+  }
+}
