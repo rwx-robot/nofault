@@ -103,3 +103,18 @@ describe('read-write split', () => {
     const split = new ReadWriteSplitDataSource({ primary, replicas: [replica] });
     await seed(primary, 'primary-row');
     await seed(replica, 'replica-row');
+
+    // 事务外：读副本
+    expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['replica-row']);
+
+    // 事务内：必须回主库，否则复制延迟下读己之写必然踩空
+    await split.transaction(async () => {
+      expect(split.inTransaction()).toBe(true);
+      expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['primary-row']);
+      expect((await split.count(meta))).toBe(1);
+    });
+    expect(split.inTransaction()).toBe(false);
+  });
+
+  it('keeps reads on the primary for the sticky window after a write', async () => {
+    const primary = new MemoryDataSource();
