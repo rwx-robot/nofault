@@ -68,3 +68,12 @@ export class ReadWriteSplitDataSource implements DataSource {
     for (const replica of this.replicas) {
       await replica.createTable(meta);
     }
+  }
+
+  insert(meta: EntityMeta, row: Row): Promise<QueryResult> {
+    return this.write(() => this.primary.insert(meta, row));
+  }
+
+  update(meta: EntityMeta, id: unknown, patch: Row): Promise<QueryResult> {
+    return this.write(() => this.primary.update(meta, id, patch));
+  }
