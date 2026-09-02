@@ -128,3 +128,13 @@ export class ReadWriteSplitDataSource implements DataSource {
     if (this.stickyMs > 0) this.stickyUntil = Date.now() + this.stickyMs;
     return op(this.primary);
   }
+
+  private async read<T>(op: (source: DataSource) => Promise<T>): Promise<T> {
+    // 一致性优先的两条回主库路径：事务内、写后粘连窗口内
+    if (this.transactionDepth > 0 || Date.now() < this.stickyUntil) {
+      return op(this.primary);
+    }
+    const replica = this.pickReplica();
+    if (!replica) return op(this.primary);
+    try {
+      return await op(replica);
