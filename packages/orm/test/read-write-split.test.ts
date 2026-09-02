@@ -78,3 +78,15 @@ class FlakyReplica implements DataSource {
   close() {
     return this.inner.close();
   }
+}
+
+describe('read-write split', () => {
+  it('sends writes to the primary and reads to the replicas', async () => {
+    const primary = new MemoryDataSource();
+    const replica = new MemoryDataSource();
+    const split = new ReadWriteSplitDataSource({ primary, replicas: [replica] });
+
+    await split.insert(meta, { name: 'primary-row' });
+    // 写只进主库：副本上不该出现
+    expect((await primary.select(meta, {})).map((r) => r.name)).toEqual(['primary-row']);
+    expect(await replica.select(meta, {})).toEqual([]);
