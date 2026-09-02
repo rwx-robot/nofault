@@ -47,3 +47,14 @@ export class ReadWriteSplitDataSource implements DataSource {
   private transactionDepth = 0;
   /** 最近一次写的时间戳 + 粘连窗口 = 粘连截止时间 */
   private stickyUntil = 0;
+
+  constructor(options: ReadWriteSplitOptions) {
+    if (options.replicas.length === 0) {
+      throw new Error('read-write split requires at least one replica');
+    }
+    this.primary = options.primary;
+    this.replicas = [...options.replicas];
+    this.name = options.name ?? 'read-write-split';
+    this.stickyMs = options.stickyMs ?? 0;
+    this.cooldownMs = options.cooldownMs ?? 5000;
+    this.onReplicaError = options.onReplicaError;
