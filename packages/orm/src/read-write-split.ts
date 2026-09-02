@@ -88,3 +88,13 @@ export class ReadWriteSplitDataSource implements DataSource {
   }
 
   /**
+   * 事务整体在主库执行。
+   * 事务内 fn 的所有读（包括经由本层的 select/count）都会看到
+   * `transactionDepth > 0`，自动回主库——read-your-writes 不靠约定靠结构。
+   */
+  async transaction<T>(fn: () => Promise<T>): Promise<T> {
+    this.transactionDepth++;
+    try {
+      return await this.primary.transaction(fn);
+    } finally {
+      this.transactionDepth--;
