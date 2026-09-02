@@ -12,3 +12,15 @@ import {
   Entity,
   MemoryDataSource,
   PrimaryGeneratedColumn,
+  ReadWriteSplitDataSource,
+  getEntityMeta,
+  type DataSource,
+  type EntityMeta,
+  type QueryResult,
+  type Row,
+} from '../src/index';
+
+@Entity({ table: 'users' })
+class User {
+  @PrimaryGeneratedColumn()
+  id!: number;
