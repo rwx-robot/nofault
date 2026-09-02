@@ -58,3 +58,13 @@ export class ReadWriteSplitDataSource implements DataSource {
     this.stickyMs = options.stickyMs ?? 0;
     this.cooldownMs = options.cooldownMs ?? 5000;
     this.onReplicaError = options.onReplicaError;
+  }
+
+  // ---------------------------------------------------------------- 写路径
+
+  /** 建表是 schema 变更，必须落到**所有**库，而不是只建主库 */
+  async createTable(meta: EntityMeta): Promise<void> {
+    await this.primary.createTable(meta);
+    for (const replica of this.replicas) {
+      await replica.createTable(meta);
+    }
