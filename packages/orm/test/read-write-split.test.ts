@@ -50,3 +50,18 @@ class FlakyReplica implements DataSource {
     if (this.failing) throw new Error('replica is down');
     return this.inner.select(meta, {});
   }
+
+  createTable(m: EntityMeta) {
+    return this.inner.createTable(m);
+  }
+  insert(m: EntityMeta, row: Record<string, unknown>) {
+    return this.inner.insert(m, row);
+  }
+  update(m: EntityMeta, id: unknown, patch: Record<string, unknown>) {
+    return this.inner.update(m, id, patch);
+  }
+  delete(m: EntityMeta, id: unknown) {
+    return this.inner.delete(m, id);
+  }
+  count(m: EntityMeta) {
+    return this.inner.count(m);
