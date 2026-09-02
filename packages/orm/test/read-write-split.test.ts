@@ -118,3 +118,15 @@ describe('read-write split', () => {
 
   it('keeps reads on the primary for the sticky window after a write', async () => {
     const primary = new MemoryDataSource();
+    const replica = new MemoryDataSource();
+    const split = new ReadWriteSplitDataSource({ primary, replicas: [replica], stickyMs: 80 });
+    await seed(replica, 'replica-row');
+
+    await split.insert(meta, { name: 'primary-row' });
+    // 粘连窗口内：写后立刻读，回主库才看得到自己刚写的数据
+    expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['primary-row']);
+
+    // 窗口过后恢复读副本
+    await sleep(120);
+    expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['replica-row']);
+  });
