@@ -38,3 +38,15 @@ async function seed(source: DataSource, name: string): Promise<void> {
 
 /** 副本故障桩：select 可控地抛错，其余操作委托给真实内存库 */
 class FlakyReplica implements DataSource {
+  readonly name = 'flaky-replica';
+  failing = false;
+  private readonly inner = new MemoryDataSource();
+
+  constructor() {
+    void seed(this.inner, 'replica-row');
+  }
+
+  async select(): Promise<Row[]> {
+    if (this.failing) throw new Error('replica is down');
+    return this.inner.select(meta, {});
+  }
