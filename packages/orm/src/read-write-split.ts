@@ -138,3 +138,13 @@ export class ReadWriteSplitDataSource implements DataSource {
     if (!replica) return op(this.primary);
     try {
       return await op(replica);
+    } catch (error) {
+      // 副本坏了不把读拖死：标记冷却，立刻降级主库重试
+      this.unhealthyUntil.set(replica, Date.now() + this.cooldownMs);
+      this.onReplicaError?.(replica, error);
+      return op(this.primary);
+    }
+  }
+
+  /** 轮询选一个健康副本；全都不健康则返回 undefined（走主库） */
+  private pickReplica(): DataSource | undefined {
