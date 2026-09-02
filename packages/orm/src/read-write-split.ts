@@ -118,3 +118,13 @@ export class ReadWriteSplitDataSource implements DataSource {
   async close(): Promise<void> {
     await this.primary.close();
     for (const replica of this.replicas) {
+      await replica.close();
+    }
+  }
+
+  // ---------------------------------------------------------------- 路由内核
+
+  private async write<T>(op: (source: DataSource) => Promise<T>): Promise<T> {
+    if (this.stickyMs > 0) this.stickyUntil = Date.now() + this.stickyMs;
+    return op(this.primary);
+  }
