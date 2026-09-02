@@ -108,3 +108,13 @@ export class ReadWriteSplitDataSource implements DataSource {
   // ---------------------------------------------------------------- 读路径
 
   async select(meta: EntityMeta, options: SelectOptions): Promise<Row[]> {
+    return this.read((source) => source.select(meta, options));
+  }
+
+  async count(meta: EntityMeta, where?: WhereClause): Promise<number> {
+    return this.read((source) => source.count(meta, where));
+  }
+
+  async close(): Promise<void> {
+    await this.primary.close();
+    for (const replica of this.replicas) {
