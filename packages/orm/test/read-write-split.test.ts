@@ -24,3 +24,17 @@ import {
 class User {
   @PrimaryGeneratedColumn()
   id!: number;
+
+  @Column({ name: 'name', type: 'string' })
+  name!: string;
+}
+
+const meta: EntityMeta = getEntityMeta(User);
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
+
+async function seed(source: DataSource, name: string): Promise<void> {
+  await source.insert(meta, { name });
+}
+
+/** 副本故障桩：select 可控地抛错，其余操作委托给真实内存库 */
+class FlakyReplica implements DataSource {
