@@ -156,3 +156,18 @@ describe('read-write split', () => {
     await sleep(80);
     expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['replica-row']);
   });
+
+  it('rotates reads across healthy replicas', async () => {
+    const primary = new MemoryDataSource();
+    const replicaA = new MemoryDataSource();
+    const replicaB = new MemoryDataSource();
+    await seed(replicaA, 'from-a');
+    await seed(replicaB, 'from-b');
+    const split = new ReadWriteSplitDataSource({ primary, replicas: [replicaA, replicaB] });
+
+    const first = await split.select(meta, {});
+    const second = await split.select(meta, {});
+    const third = await split.select(meta, {});
+    // 轮询：依次落在 a、b、a——读压力均匀分布
+    expect(first.map((r) => r.name)).toEqual(['from-a']);
+    expect(second.map((r) => r.name)).toEqual(['from-b']);
