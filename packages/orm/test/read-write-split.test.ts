@@ -196,3 +196,16 @@ describe('read-write split', () => {
       .mockResolvedValue({ rows: [], affectedRows: 0 });
     const replicaRaw = vi.spyOn(replica, 'raw').mockResolvedValue({ rows: [], affectedRows: 0 });
     const split = new ReadWriteSplitDataSource({ primary, replicas: [replica] });
+
+    // 裸 SQL 静态看不出读写，一律主库
+    await split.raw('UPDATE whatever SET x = 1');
+    expect(primaryRaw).toHaveBeenCalledTimes(1);
+    expect(replicaRaw).not.toHaveBeenCalled();
+  });
+
+  it('refuses to build a split without replicas', () => {
+    expect(
+      () => new ReadWriteSplitDataSource({ primary: new MemoryDataSource(), replicas: [] }),
+    ).toThrow(/replica/i);
+  });
+});
