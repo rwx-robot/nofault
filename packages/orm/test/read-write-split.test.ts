@@ -171,3 +171,16 @@ describe('read-write split', () => {
     // 轮询：依次落在 a、b、a——读压力均匀分布
     expect(first.map((r) => r.name)).toEqual(['from-a']);
     expect(second.map((r) => r.name)).toEqual(['from-b']);
+    expect(third.map((r) => r.name)).toEqual(['from-a']);
+  });
+
+  it('propagates createTable to every backend', async () => {
+    const primary = new MemoryDataSource();
+    const replicaA = new MemoryDataSource();
+    const replicaB = new MemoryDataSource();
+    const spyA = vi.spyOn(replicaA, 'createTable');
+    const spyB = vi.spyOn(replicaB, 'createTable');
+    const split = new ReadWriteSplitDataSource({ primary, replicas: [replicaA, replicaB] });
+
+    // 只建主库的话，读请求打过去就是"表不存在"
+    await split.createTable(meta);
