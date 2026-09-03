@@ -130,3 +130,17 @@ describe('read-write split', () => {
     await sleep(120);
     expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['replica-row']);
   });
+
+  it('fails over to the primary and cools the replica down', async () => {
+    const primary = new MemoryDataSource();
+    const flaky = new FlakyReplica();
+    const onReplicaError = vi.fn();
+    const split = new ReadWriteSplitDataSource({
+      primary,
+      replicas: [flaky],
+      cooldownMs: 50,
+      onReplicaError,
+    });
+    await seed(primary, 'primary-row');
+
+    // 副本挂了：读降级到主库，读请求不能成片失败
