@@ -184,3 +184,15 @@ describe('read-write split', () => {
 
     // 只建主库的话，读请求打过去就是"表不存在"
     await split.createTable(meta);
+    expect(spyA).toHaveBeenCalledTimes(1);
+    expect(spyB).toHaveBeenCalledTimes(1);
+  });
+
+  it('routes raw sql to the primary (refuse side by default)', async () => {
+    const primary = new MemoryDataSource();
+    const replica = new MemoryDataSource();
+    const primaryRaw = vi
+      .spyOn(primary, 'raw')
+      .mockResolvedValue({ rows: [], affectedRows: 0 });
+    const replicaRaw = vi.spyOn(replica, 'raw').mockResolvedValue({ rows: [], affectedRows: 0 });
+    const split = new ReadWriteSplitDataSource({ primary, replicas: [replica] });
