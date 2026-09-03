@@ -144,3 +144,15 @@ describe('read-write split', () => {
     await seed(primary, 'primary-row');
 
     // 副本挂了：读降级到主库，读请求不能成片失败
+    flaky.failing = true;
+    expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['primary-row']);
+    expect(onReplicaError).toHaveBeenCalledTimes(1);
+
+    // 副本恢复但仍在冷却期内：继续走主库（不拿用户请求试错）
+    flaky.failing = false;
+    expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['primary-row']);
+
+    // 冷却到期：自动回到副本，无需人工干预
+    await sleep(80);
+    expect((await split.select(meta, {})).map((r) => r.name)).toEqual(['replica-row']);
+  });
