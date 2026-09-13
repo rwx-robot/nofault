@@ -33,3 +33,13 @@ export function openSse(ctx: RestContext): SseWriter {
   const write = (chunk: string): void => {
     stream.write(chunk);
   };
+
+  return {
+    send(event: string, data: unknown): void {
+      const payload = typeof data === 'string' ? data : JSON.stringify(data);
+      const lines = payload
+        .split('\n')
+        .map((line) => `data: ${line}`)
+        .join('\n');
+      write(`event: ${event}\n${lines}\n\n`);
+    },
