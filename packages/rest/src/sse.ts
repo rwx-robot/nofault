@@ -43,3 +43,11 @@ export function openSse(ctx: RestContext): SseWriter {
         .join('\n');
       write(`event: ${event}\n${lines}\n\n`);
     },
+    comment(text: string): void {
+      write(`: ${text}\n\n`);
+    },
+    close(): void {
+      stream.end();
+    },
+  };
+}
