@@ -16,3 +16,12 @@ import type { RestContext } from './http/context';
  * ```
  */
 export interface SseWriter {
+  /** 发送一个事件；data 为对象时自动 JSON 序列化，多行内容按 SSE 规范拆成多个 data 行 */
+  send(event: string, data: unknown): void;
+  /** 发送注释行（心跳用，防止代理把空闲连接掐断） */
+  comment(text: string): void;
+  /** 结束事件流并完成响应 */
+  close(): void;
+}
+
+export function openSse(ctx: RestContext): SseWriter {
