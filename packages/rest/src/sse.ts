@@ -25,3 +25,11 @@ export interface SseWriter {
 }
 
 export function openSse(ctx: RestContext): SseWriter {
+  const stream = new PassThrough();
+  ctx.response.header('cache-control', 'no-cache');
+  ctx.response.stream(stream, 'text/event-stream');
+  ctx.response.status(200);
+
+  const write = (chunk: string): void => {
+    stream.write(chunk);
+  };
