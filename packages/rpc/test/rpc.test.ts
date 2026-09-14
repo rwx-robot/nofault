@@ -195,3 +195,69 @@ describe('registry and load balancing', () => {
     const picks = [balancer.pick(instances)!.id, balancer.pick(instances)!.id, balancer.pick(instances)!.id];
     expect(picks).toEqual(['a', 'b', 'a']);
   });
+
+  it('honours weights', () => {
+    const balancer = new RoundRobinBalancer();
+    const instances = [
+      { id: 'a', name: 's', host: 'h', port: 1, weight: 2 },
+      { id: 'b', name: 's', host: 'h', port: 2, weight: 1 },
+    ];
+    const picks = Array.from({ length: 3 }, () => balancer.pick(instances)!.id);
+    expect(picks).toEqual(['a', 'a', 'b']);
+  });
+
+  it('lets a client resolve the target from the registry', async () => {
+    const server = new RpcServer();
+    server.register('svc', 'ping', () => 'pong');
+    const { port } = await server.listen(0, '127.0.0.1');
+    servers.push(server);
+
+    const registry = new InMemoryRegistry();
+    await registry.register({ id: 'inst-1', name: 'svc', host: '127.0.0.1', port });
+
+    const rpc = client(0, { registry, service: 'svc' });
+    await expect(rpc.call('svc', 'ping')).resolves.toBe('pong');
+  });
+
+  it('fails clearly when no instance is registered', async () => {
+    const registry = new InMemoryRegistry();
+    const rpc = client(0, { registry, service: 'missing' });
+    await expect(rpc.call('missing', 'go')).rejects.toThrow(/no instance/);
+  });
+});
+
+describe('server streaming', () => {
+  it('streams chunks in order and terminates with the final frame', async () => {
+    const server = new RpcServer();
+    server.register('tick', 'range', async function* (payload: unknown) {
+      const n = (payload as { n: number }).n;
+      for (let i = 0; i < n; i++) {
+        await new Promise((r) => setTimeout(r, 5));
+        yield { i };
+      }
+    });
+    const port = await start(server);
+    const rpc = client(port);
+    const seen: number[] = [];
+    for await (const item of rpc.callStream<{ i: number }>('tick', 'range', { n: 4 })) {
+      seen.push(item.i);
+    }
+    expect(seen).toEqual([0, 1, 2, 3]);
+  });
+
+  it('surfaces a mid-stream failure as an rpc error', async () => {
+    const server = new RpcServer();
+    server.register('tick', 'boom', async function* () {
+      yield 1;
+      throw new Error('generator exploded');
+    });
+    const port = await start(server);
+    const rpc = client(port);
+    const seen: unknown[] = [];
+    await expect(async () => {
+      for await (const item of rpc.callStream('tick', 'boom')) seen.push(item);
+    }).rejects.toThrow(/generator exploded/);
+    expect(seen).toEqual([1]);
+  });
+});
+
