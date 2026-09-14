@@ -63,3 +63,70 @@ describe('framing', () => {
     expect(() => reader.push(header)).toThrow(/too large/);
   });
 });
+
+describe('rpc round trip', () => {
+  it('calls a method and returns the result', async () => {
+    const server = new RpcServer();
+    server.register('math', 'add', (payload) => {
+      const { a, b } = payload as { a: number; b: number };
+      return a + b;
+    });
+    const port = await start(server);
+
+    await expect(client(port).call('math', 'add', { a: 2, b: 3 })).resolves.toBe(5);
+  });
+
+  it('returns a method-not-found error instead of hanging up', async () => {
+    const server = new RpcServer();
+    const port = await start(server);
+    // 业务错误也要回一帧：断连会让调用方分不清"服务挂了"和"方法不存在"
+    await expect(client(port).call('math', 'nope', {})).rejects.toThrow(/no handler/);
+  });
+
+  it('propagates handler errors with their message', async () => {
+    const server = new RpcServer();
+    server.register('boom', 'go', () => {
+      throw new Error('handler exploded');
+    });
+    const port = await start(server);
+    await expect(client(port).call('boom', 'go', {})).rejects.toThrow('handler exploded');
+  });
+
+  it('keeps concurrent calls on one connection correctly paired', async () => {
+    const server = new RpcServer();
+    server.register('slow', 'echo', async (payload) => {
+      const { value, delay } = payload as { value: number; delay: number };
+      await new Promise((r) => setTimeout(r, delay));
+      return value;
+    });
+    const port = await start(server);
+
+    const rpc = client(port);
+    // 故意让"慢"的请求先发：若靠顺序配响应，这里会全部串位
+    const results = await Promise.all([
+      rpc.call('slow', 'echo', { value: 1, delay: 60 }),
+      rpc.call('slow', 'echo', { value: 2, delay: 1 }),
+      rpc.call('slow', 'echo', { value: 3, delay: 30 }),
+    ]);
+    expect(results).toEqual([1, 2, 3]);
+    expect(rpc.poolStats.size).toBe(1);
+  });
+
+  it('times out instead of waiting forever', async () => {
+    const server = new RpcServer();
+    server.register('slow', 'go', () => new Promise((resolve) => setTimeout(resolve, 500)));
+    const port = await start(server);
+
+    const rpc = client(port, { timeoutMs: 60 });
+    await expect(rpc.call('slow', 'go', {})).rejects.toThrow(/timed out/);
+  });
+
+  it('retries retryable failures but not business errors', async () => {
+    let attempts = 0;
+    const server = new RpcServer();
+    server.register('flakey', 'go', () => {
+      attempts++;
+      if (attempts < 3) throw new RpcError(RPC_ERROR.TIMEOUT, 'transient');
+      return 'ok';
+    });
+    const port = await start(server);
