@@ -130,3 +130,68 @@ describe('rpc round trip', () => {
       return 'ok';
     });
     const port = await start(server);
+
+    await expect(client(port, { retries: 3, retryDelayMs: 5 }).call('flakey', 'go', {})).resolves.toBe('ok');
+    expect(attempts).toBe(3);
+
+    // 业务错误重试毫无意义，只会放大故障
+    const strict = new RpcServer();
+    strict.register('bad', 'go', () => {
+      throw new RpcError(RPC_ERROR.METHOD_NOT_FOUND, 'nope');
+    });
+    const strictPort = await start(strict);
+    const counting = client(strictPort, { retries: 3 });
+    await expect(counting.call('bad', 'go', {})).rejects.toThrow('nope');
+  });
+
+  it('passes the trace id through interceptors', async () => {
+    const seen: Array<string | undefined> = [];
+    const server = new RpcServer({
+      interceptors: [
+        async (payload, ctx, next) => {
+          seen.push(ctx.request.traceId);
+          return next(payload);
+        },
+      ],
+    });
+    server.register('trace', 'go', () => 'done');
+    const port = await start(server);
+
+    await client(port).call('trace', 'go', {}, 'trace-123');
+    expect(seen).toEqual(['trace-123']);
+  });
+
+  it('reuses pooled connections', async () => {
+    const server = new RpcServer();
+    server.register('p', 'go', () => 1);
+    const port = await start(server);
+    const rpc = client(port, { poolSize: 2 });
+    await Promise.all([rpc.call('p', 'go'), rpc.call('p', 'go'), rpc.call('p', 'go')]);
+    expect(rpc.poolStats.size).toBeLessThanOrEqual(2);
+  });
+});
+
+describe('registry and load balancing', () => {
+  it('deregisters and expires stale instances', async () => {
+    const registry = new InMemoryRegistry({ ttlMs: 50 });
+    await registry.register({ id: 'a', name: 'svc', host: '127.0.0.1', port: 1 });
+    expect(await registry.discover('svc')).toHaveLength(1);
+
+    await registry.deregister('a');
+    expect(await registry.discover('svc')).toHaveLength(0);
+
+    // 被 SIGKILL 的进程没机会注销自己 —— 只能靠 TTL 剔除
+    await registry.register({ id: 'b', name: 'svc', host: '127.0.0.1', port: 2 });
+    await new Promise((r) => setTimeout(r, 70));
+    expect(await registry.discover('svc')).toHaveLength(0);
+  });
+
+  it('spreads calls across instances', () => {
+    const balancer = new RoundRobinBalancer();
+    const instances = [
+      { id: 'a', name: 's', host: 'h', port: 1 },
+      { id: 'b', name: 's', host: 'h', port: 2 },
+    ];
+    const picks = [balancer.pick(instances)!.id, balancer.pick(instances)!.id, balancer.pick(instances)!.id];
+    expect(picks).toEqual(['a', 'b', 'a']);
+  });
