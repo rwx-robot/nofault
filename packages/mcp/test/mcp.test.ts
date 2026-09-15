@@ -26,3 +26,31 @@ function setup(tools: McpTool[] = []): Harness {
   const server = new McpServer({ name: 'nofault-mcp', version: '1.0.0', tools, input: client, output }).start();
   return { client, responses, server };
 }
+
+async function call(h: Harness, id: number, method: string, params?: unknown): Promise<Record<string, unknown>> {
+  const before = h.responses.length;
+  h.client.write(`${JSON.stringify({ jsonrpc: '2.0', id, method, params })}\n`);
+  await waitFor(() => h.responses.length > before);
+  return JSON.parse(h.responses[before]) as Record<string, unknown>;
+}
+
+async function waitFor(cond: () => boolean): Promise<void> {
+  for (let i = 0; i < 100 && !cond(); i++) {
+    await new Promise((r) => setTimeout(r, 5));
+  }
+}
+
+const echo: McpTool = {
+  name: 'echo',
+  description: 'echo the input back',
+  inputSchema: { type: 'object', properties: { text: { type: 'string' } }, required: ['text'] },
+  handler: (input) => ({ echoed: input.text }),
+};
+
+describe('mcp server', () => {
+  it('answers initialize with protocol version and server info', async () => {
+    const h = setup([echo]);
+    const res = await call(h, 1, 'initialize', {});
+    expect(res.result).toMatchObject({
+      protocolVersion: '2024-11-05',
+      serverInfo: { name: 'nofault-mcp', version: '1.0.0' },
