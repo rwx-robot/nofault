@@ -54,3 +54,31 @@ describe('mcp server', () => {
     expect(res.result).toMatchObject({
       protocolVersion: '2024-11-05',
       serverInfo: { name: 'nofault-mcp', version: '1.0.0' },
+    });
+    await h.server.close();
+  });
+
+  it('lists tools with name, description and input schema', async () => {
+    const h = setup([echo]);
+    const res = await call(h, 2, 'tools/list');
+    const tools = (res.result as { tools: Array<Record<string, unknown>> }).tools;
+    expect(tools).toHaveLength(1);
+    expect(tools[0]).toMatchObject({ name: 'echo', description: 'echo the input back' });
+    expect(tools[0].inputSchema).toMatchObject({ type: 'object' });
+    await h.server.close();
+  });
+
+  it('calls a tool and wraps the result as text content', async () => {
+    const h = setup([echo]);
+    const res = await call(h, 3, 'tools/call', { name: 'echo', arguments: { text: 'hi' } });
+    const result = res.result as { content: Array<{ type: string; text: string }>; isError: boolean };
+    expect(result.isError).toBe(false);
+    expect(result.content[0].text).toBe('{"echoed":"hi"}');
+    await h.server.close();
+  });
+
+  it('reports tool failures via isError and unknown tools via json-rpc error', async () => {
+    const failing: McpTool = {
+      name: 'fail',
+      description: 'always fails',
+      inputSchema: { type: 'object' },
