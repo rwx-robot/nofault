@@ -109,3 +109,57 @@ export class McpServer {
     }
     if (method === 'ping') {
       this.reply({ jsonrpc: '2.0', id, result: {} });
+      return;
+    }
+    if (method === 'tools/list') {
+      this.reply({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          tools: [...this.tools.values()].map((t) => ({
+            name: t.name,
+            description: t.description,
+            inputSchema: t.inputSchema,
+          })),
+        },
+      });
+      return;
+    }
+    if (method === 'tools/call') {
+      const name = typeof params.name === 'string' ? params.name : '';
+      const tool = this.tools.get(name);
+      if (!tool) {
+        this.reply({ jsonrpc: '2.0', id, error: { code: -32602, message: `unknown tool: ${name}` } });
+        return;
+      }
+      const args = (params.arguments ?? {}) as Record<string, unknown>;
+      try {
+        const result = await tool.handler(args);
+        this.reply({ jsonrpc: '2.0', id, result: { content: [toTextContent(result)], isError: false } });
+      } catch (err) {
+        // 工具自身的失败按 MCP 约定放进 result.isError，不让它变成协议错误
+        const text = err instanceof Error ? err.message : String(err);
+        this.reply({ jsonrpc: '2.0', id, result: { content: [toTextContent(text)], isError: true } });
+      }
+      return;
+    }
+    this.reply({ jsonrpc: '2.0', id, error: { code: -32601, message: `method not found: ${method}` } });
+  }
+
+  private reply(message: JsonRpcMessage): void {
+    this.output.write(`${JSON.stringify(message)}\n`);
+  }
+}
+
+interface JsonRpcMessage {
+  jsonrpc?: string;
+  id?: number | string | null;
+  method?: string;
+  params?: unknown;
+  result?: unknown;
+  error?: { code: number; message: string };
+}
+
+function toTextContent(result: unknown): { type: 'text'; text: string } {
+  return { type: 'text', text: typeof result === 'string' ? result : JSON.stringify(result) };
+}
