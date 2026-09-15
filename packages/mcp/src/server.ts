@@ -54,3 +54,58 @@ export class McpServer {
 
   get toolNames(): string[] {
     return [...this.tools.keys()];
+  }
+
+  /** 开始读取请求；同一实例只能 start 一次 */
+  start(): this {
+    if (this.running) return this;
+    this.running = true;
+    this.readline = createInterface({ input: this.input });
+    this.readline.on('line', (line) => this.handleLine(line));
+    return this;
+  }
+
+  async close(): Promise<void> {
+    this.readline?.close();
+    this.readline = undefined;
+    this.running = false;
+    if (this.output !== process.stdout) this.output.end();
+  }
+
+  private handleLine(line: string): void {
+    const text = line.trim();
+    if (text.length === 0) return;
+    let message: JsonRpcMessage;
+    try {
+      message = JSON.parse(text) as JsonRpcMessage;
+    } catch {
+      this.reply({ jsonrpc: '2.0', id: null, error: { code: -32700, message: 'invalid JSON' } });
+      return;
+    }
+    if (typeof message !== 'object' || message === null || message.method === undefined) {
+      this.reply({ jsonrpc: '2.0', id: message?.id ?? null, error: { code: -32600, message: 'not a request' } });
+      return;
+    }
+    // 无 id = 通知：不回帧
+    if (message.id === undefined || message.id === null) return;
+    void this.dispatch(message);
+  }
+
+  private async dispatch(message: JsonRpcMessage): Promise<void> {
+    const { method, id } = message;
+    const params = (message.params ?? {}) as Record<string, unknown>;
+
+    if (method === 'initialize') {
+      this.reply({
+        jsonrpc: '2.0',
+        id,
+        result: {
+          protocolVersion: PROTOCOL_VERSION,
+          capabilities: { tools: {} },
+          serverInfo: { name: this.options.name, version: this.options.version },
+        },
+      });
+      return;
+    }
+    if (method === 'ping') {
+      this.reply({ jsonrpc: '2.0', id, result: {} });
