@@ -82,3 +82,30 @@ describe('mcp server', () => {
       name: 'fail',
       description: 'always fails',
       inputSchema: { type: 'object' },
+      handler: () => {
+        throw new Error('tool exploded');
+      },
+    };
+    const h = setup([failing]);
+    const bad = await call(h, 4, 'tools/call', { name: 'fail' });
+    expect((bad.result as { isError: boolean }).isError).toBe(true);
+    expect((bad.result as { content: Array<{ text: string }> }).content[0].text).toBe('tool exploded');
+
+    const unknown = await call(h, 5, 'tools/call', { name: 'nope' });
+    expect(unknown.error).toMatchObject({ code: -32602 });
+
+    const missing = await call(h, 6, 'resources/list');
+    expect(missing.error).toMatchObject({ code: -32601 });
+    await h.server.close();
+  });
+
+  it('stays silent for notifications and tolerates broken json', async () => {
+    const h = setup();
+    h.client.write(`${JSON.stringify({ jsonrpc: '2.0', method: 'notifications/initialized' })}\n`);
+    h.client.write('not json\n');
+    await waitFor(() => h.responses.length >= 1);
+    expect(h.responses).toHaveLength(1); // 只有坏 JSON 的 -32700 响应
+    expect(JSON.parse(h.responses[0]).error).toMatchObject({ code: -32700 });
+    await h.server.close();
+  });
+});
